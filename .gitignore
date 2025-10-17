@@ -1,0 +1,13 @@
+# IDE-specific files
+.vs/
+.vscode/
+.idea/
+ProjectCelosia.sln.DotSettings.user
+
+# Build files
+/API/bin/
+/API/obj/
+/Game/bin/
+/Game/obj/
+/Game/Content/obj/
+/Game/Content/bin/
