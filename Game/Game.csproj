@@ -5,14 +5,24 @@
         <RollForward>Major</RollForward>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
+        <!--<PublishAot>true</PublishAot> <!-Enable to test AoT-->
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
+    <PropertyGroup>
+        <MonoGameExtendedPipelineReferencePath>$(MSBuildThisFileDirectory)pipeline-references</MonoGameExtendedPipelineReferencePath>
+    </PropertyGroup>
     <ItemGroup>
         <None Remove="Icon.ico"/>
         <None Remove="Icon.bmp"/>
+        <None Update="Content\fnt\koruri.ttf">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+        <None Update="img\eating.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Icon.ico">
@@ -24,6 +34,8 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.4.1"/>
+        <PackageReference Include="MonoGame.Extended" Version="5.1.0"/>
+        <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.1.0"/>
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.*"/>
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*"/>
         <PackageReference Include="ResolutionBuddy" Version="5.0.0"/>

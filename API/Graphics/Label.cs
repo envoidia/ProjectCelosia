@@ -1,3 +1,4 @@
+using System;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -5,23 +6,25 @@ using Microsoft.Xna.Framework.Graphics;
 namespace API.Graphics;
 
 public class Label : RenderObject {
-    private string _text;
+    private string _text; // todo remove after .NET 10 upgrade
 
     public string Text {
         get => this._text;
         set {
             this._text = value;
-            this.OriginRaw = this.CalcOriginRaw(this.Font.MeasureString(this.Text));
+            this.Size = this.Font.MeasureString(this.Text);
+            this.Origin = this.CalcOrigin();
         }
     }
 
-    public SpriteFontBase Font { get; set; }
+    public DynamicSpriteFont Font { get; set; }
 
     public sealed override Alignment Alignment {
         get => this.alignment;
         set {
             this.alignment = value;
-            this.OriginRaw = this.CalcOriginRaw(this.Font.MeasureString(this.Text));
+            this.Size = this.Font.MeasureString(this.Text);
+            this.Origin = this.CalcOrigin();
         }
     }
 
@@ -44,8 +47,8 @@ public class Label : RenderObject {
         this.AddToRenderList();
     }
 
-    public class Builder(SpriteFontBase font) {
-        internal readonly SpriteFontBase font = font;
+    public class Builder(DynamicSpriteFont font) {
+        internal readonly DynamicSpriteFont font = font;
 
         internal string text = "";
         internal Vector2 position = Vector2.Zero;
@@ -89,14 +92,13 @@ public class Label : RenderObject {
         if (!this.Visible) return;
 
         if (this.HasBackground) {
-            Vector2 size = this.Font.MeasureString(this.Text);
             spriteBatch.Draw(Core.WhitePixel, new Rectangle(
-                (int)(this.Position.X - this.BackgroundPadding.X), (int)(this.Position.Y - this.BackgroundPadding.Y),
-                (int)(size.X + (this.BackgroundPadding.X * 2)),
-                (int)(size.Y + (this.BackgroundPadding.Y * 2))), this.BackgroundColor);
+                (int) (this.Position.X - this.BackgroundPadding.X), (int) (this.Position.Y - this.BackgroundPadding.Y),
+                (int) (this.Size.X + (this.BackgroundPadding.X * 2)),
+                (int) (this.Size.Y + (this.BackgroundPadding.Y * 2))), this.BackgroundColor);
         }
 
-        this.Font.DrawText(spriteBatch, this.Text, this.Position, Color.White, 0f, this.OriginRaw);
+        spriteBatch.DrawString(this.Font, this.Text, this.Position, Color.White, 0f, this.Origin);
     }
 
     protected sealed override void AddToRenderList() {
@@ -110,6 +112,8 @@ public class Label : RenderObject {
             case RenderPriority.High:
                 Core.LabelsHigh.Add(this);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException("Priority");
         }
     }
 }

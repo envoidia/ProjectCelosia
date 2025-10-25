@@ -6,6 +6,7 @@ using API.Graphics;
 using API.Input;
 using API.Menu;
 using FontStashSharp;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,11 +24,12 @@ public class Core : Game {
     public new static GraphicsDevice GraphicsDevice { get; private set; }
     public static SpriteBatch SpriteBatch { get; private set; }
     public static Texture2D WhitePixel { get; private set; }
+    private readonly Dictionary<string, Texture2D> _textureCache = new();
 
     // Fonts
-    private static FontSystem KoruriSystem { get; set; }
-    public static SpriteFontBase Koruri25 { get; private set; }
-    public static SpriteFontBase Koruri30 { get; private set; }
+    public static FontSystem KoruriSystem { get; set; }
+    public static DynamicSpriteFont Koruri25 { get; private set; }
+    public static DynamicSpriteFont Koruri30 { get; private set; }
 
     public new static ContentManager Content { get; private set; }
 
@@ -39,24 +41,24 @@ public class Core : Game {
     /// <summary>
     /// List of menus that have been traveled through to reach the current menu location
     /// </summary>
-    public static readonly IList<MenuType> NavPath = new List<MenuType>();
+    public static readonly Stack<MenuType> NavPath = new();
 
     // Lists of things to render, in order
 
     // Low Prio
     // todo sprites
     // todo shapes
-    public static readonly IList<Label> LabelsLow = new List<Label>();
+    public static readonly List<Label> LabelsLow = [];
 
     // Med Prio
     // todo sprites
     // todo shapes
-    public static readonly IList<Label> LabelsMed = new List<Label>();
+    public static readonly List<Label> LabelsMed = [];
 
     // High Prio
     // todo sprites
     // todo shapes
-    public static readonly IList<Label> LabelsHigh = new List<Label>();
+    public static readonly List<Label> LabelsHigh = [];
 
     /// <summary>
     /// Creates a new Core instance.
@@ -83,12 +85,40 @@ public class Core : Game {
         Graphics.IsFullScreen = fullScreen;
 
         // todo settings
-        Graphics.SynchronizeWithVerticalRetrace = true; // Vsync
+        Graphics.SynchronizeWithVerticalRetrace = false; // Vsync
         this.IsFixedTimeStep = false;
 
         // Setup font
+        // todo
+        /*KoruriSystem = new FontSystem(new FontSystemSettings() {
+            TextureWidth = 16384,
+            TextureHeight = 16384
+        });*/
+        FontSystemDefaults.FontResolutionFactor = 2f;
+        FontSystemDefaults.KernelWidth = 2;
+        FontSystemDefaults.KernelHeight = 2;
+
+        // todo render atlas portion
+        // in: string, out: TextureFragment
+        // currently: filepath -> image
+        // desired: atlas id -> atlas region
+        RichTextDefaults.ImageResolver = p => {
+            if (this._textureCache.TryGetValue(p, out Texture2D texture)) {
+                return new TextureFragment(texture);
+            }
+
+            using (FileStream stream = File.OpenRead(Path.Combine("img/", p))) {
+                texture = Texture2D.FromStream(GraphicsDevice, stream);
+            }
+
+            this._textureCache[p] = texture;
+
+            return new TextureFragment(texture);
+        };
+
         KoruriSystem = new FontSystem();
-        KoruriSystem.AddFont(File.ReadAllBytes(@"fnt/koruri.ttf"));
+        KoruriSystem.AddFont(File.ReadAllBytes("fnt/koruri.ttf"));
+        Console.WriteLine("loaded koruri");
         Koruri25 = KoruriSystem.GetFont(25);
         Koruri30 = KoruriSystem.GetFont(30);
 

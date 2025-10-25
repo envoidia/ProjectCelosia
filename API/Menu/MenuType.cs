@@ -1,6 +1,7 @@
 namespace API.Menu;
 
 public enum MenuType {
+    None,
     Main,
     Popup,
     Battle,

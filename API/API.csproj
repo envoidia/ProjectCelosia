@@ -4,6 +4,8 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.4.1"/>
+        <PackageReference Include="MonoGame.Extended" Version="5.1.0"/>
+        <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.1.0"/>
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.*">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
@@ -13,4 +15,16 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+    <Target Name="GenerateBuildDate" BeforeTargets="BeforeCompile">
+        <!-- Get the current date and time -->
+        <PropertyGroup>
+            <BuildDate>$([System.DateTime]::Now.ToString("yyyy-MM-dd HH:mm:ss"))</BuildDate>
+            <Semicolon>test;</Semicolon>
+        </PropertyGroup>
+        <!-- Write the build date to a C# file -->
+        <WriteLinesToFile
+            File="BuildInfo.cs"
+            Lines="// Automatically generated on build. Do not modify%0Anamespace API%3B%0A%0Apublic static class BuildInfo {%0A    public const string BuildDate = &quot;$(BuildDate)&quot;%3B%0A}"
+            Overwrite="true" />
+    </Target>
 </Project>

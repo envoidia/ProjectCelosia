@@ -17,7 +17,7 @@ public static class MenuLib {
 
         return Math.Min(index, optCount - 1);
     }
-    
+
     public static int CheckMovement1D(int index, int optCount, Keybind dec, Keybind inc) {
         if (Core.Input.CheckInput(true, dec)) {
             return --index < 0 ? optCount - 1 : index;

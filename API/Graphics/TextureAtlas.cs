@@ -147,7 +147,7 @@ public class TextureAtlas {
                         float delayInMilliseconds = float.Parse(animationElement.Attribute("delay")?.Value ?? "0");
                         TimeSpan delay = TimeSpan.FromMilliseconds(delayInMilliseconds);
 
-                        List<TextureRegion> frames = new();
+                        List<TextureRegion> frames = [];
 
                         IEnumerable<XElement> frameElements = animationElement.Elements("Frame");
 

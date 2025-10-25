@@ -19,7 +19,7 @@ public class Animation {
     /// Creates a new animation.
     /// </summary>
     public Animation() {
-        this.Frames = new List<TextureRegion>();
+        this.Frames = [];
         this.Delay = TimeSpan.FromMilliseconds(100);
     }
 

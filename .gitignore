@@ -11,3 +11,6 @@ ProjectCelosia.sln.DotSettings.user
 /Game/obj/
 /Game/Content/obj/
 /Game/Content/bin/
+
+# Misc
+/Game/pipeline-references/

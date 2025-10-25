@@ -1,3 +1,4 @@
+using System;
 using API.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -6,8 +7,16 @@ namespace API.Debug;
 public static class DebugMenu {
     private const uint Mb = 1024 * 1024;
 
+    private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
+
     private static readonly Label DebugInfoL = new Label.Builder(Core.Koruri25)
-        .SetPosition(Vector2.One * 10).HasBackground().Build();
+        .SetText($"""
+                 Press F1 to close this menu
+                 Version: {BuildInfo.BuildDate}
+                 OS: todo
+                 CPU: todo
+                 GPU: todo
+                 """).SetPosition(Vector2.One * 10).HasBackground().Build();
 
     private static readonly Label DebugInfoR = new Label.Builder(Core.Koruri25)
         .SetPosition(new Vector2(1920 - 10, 10)).SetAlignment(Alignment.TopRight).HasBackground().Build();
@@ -22,22 +31,19 @@ public static class DebugMenu {
         DebugInfoL.Visible = true;
         DebugInfoR.Visible = true;
 
-        DebugInfoL.Text = $"""
-                           Press F3 to close this menu
-                           Version: 0a-todo
+        timeSinceUpdate += gameTime.ElapsedGameTime;
+        if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
+
+        // todo average fps
+        DebugInfoR.Text = $"""
                            FPS: {1.0f / gameTime.ElapsedGameTime.TotalSeconds}
+                           RAM: {System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb}MB
+                           Last Input Source: todo
                            Resolution: todo
                            NavPath: todo
                            Overworld Location: todo
                            Loaded Mod Count: todo
                            """;
-
-        DebugInfoR.Text = $"""
-                           OS: todo
-                           RAM: {System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb}MB
-                           CPU: todo
-                           GPU: todo
-                           Last Input Source: todo
-                           """;
+        timeSinceUpdate = TimeSpan.Zero;
     }
 }
