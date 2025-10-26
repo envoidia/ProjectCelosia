@@ -13,7 +13,6 @@ public abstract class RenderObject {
 
     protected RenderPriority Priority { get; set; }
 
-    protected Alignment alignment = Alignment.TopLeft;
     public abstract Alignment Alignment { get; set; }
 
     // Raw position of the origin. Not meant to be viewed or used directly
@@ -21,12 +20,14 @@ public abstract class RenderObject {
 
     protected abstract void AddToRenderList();
 
-    protected Vector2 CalcOrigin() => this.Alignment switch {
+    protected Vector2 CalcOrigin() {
+        return this.Alignment switch {
             Alignment.TopLeft => Vector2.Zero,
             Alignment.TopRight => new Vector2(this.Size.X * 2, 0), // todo why does this need to be * 2?????????
             Alignment.BottomLeft => new Vector2(0, this.Size.Y),
             Alignment.BottomRight => new Vector2(this.Size.X, this.Size.Y),
             Alignment.Center => new Vector2(this.Size.X * 0.5f, this.Size.Y * 0.5f),
             _ => throw new ArgumentOutOfRangeException(nameof(this.Alignment))
-    };
+        };
+    }
 }

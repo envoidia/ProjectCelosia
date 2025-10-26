@@ -10,13 +10,11 @@ public class AnimatedSprite : Sprite {
     /// <summary>
     /// Gets or Sets the animation for this animated sprite.
     /// </summary>
-    private Animation _animation;
-
     public Animation Animation {
-        get => this._animation;
+        get;
         set {
-            this._animation = value;
-            this.Region = this._animation.Frames[0];
+            field = value;
+            this.Region = field.Frames[0];
         }
     }
 
@@ -40,15 +38,15 @@ public class AnimatedSprite : Sprite {
     public void Update(GameTime gameTime) {
         this._elapsed += gameTime.ElapsedGameTime;
 
-        if (this._elapsed < this._animation.Delay) return;
+        if (this._elapsed < this.Animation.Delay) return;
 
-        this._elapsed -= this._animation.Delay;
+        this._elapsed -= this.Animation.Delay;
         this._currentFrame++;
 
-        if (this._currentFrame >= this._animation.Frames.Count) {
+        if (this._currentFrame >= this.Animation.Frames.Count) {
             this._currentFrame = 0;
         }
 
-        this.Region = this._animation.Frames[this._currentFrame];
+        this.Region = this.Animation.Frames[this._currentFrame];
     }
 }

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>Preview</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.4.1"/>
@@ -16,15 +17,13 @@
         </None>
     </ItemGroup>
     <Target Name="GenerateBuildDate" BeforeTargets="BeforeCompile">
-        <!-- Get the current date and time -->
         <PropertyGroup>
-            <BuildDate>$([System.DateTime]::Now.ToString("yyyy-MM-dd HH:mm:ss"))</BuildDate>
+            <BuildDate>$([System.DateTime]::Now.ToString("dd-MM-yyyy"))</BuildDate>
             <Semicolon>test;</Semicolon>
         </PropertyGroup>
-        <!-- Write the build date to a C# file -->
         <WriteLinesToFile
             File="BuildInfo.cs"
             Lines="// Automatically generated on build. Do not modify%0Anamespace API%3B%0A%0Apublic static class BuildInfo {%0A    public const string BuildDate = &quot;$(BuildDate)&quot;%3B%0A}"
-            Overwrite="true" />
+            Overwrite="true"/>
     </Target>
 </Project>

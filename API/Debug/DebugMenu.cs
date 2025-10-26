@@ -11,12 +11,12 @@ public static class DebugMenu {
 
     private static readonly Label DebugInfoL = new Label.Builder(Core.Koruri25)
         .SetText($"""
-                 Press F1 to close this menu
-                 Version: {BuildInfo.BuildDate}
-                 OS: todo
-                 CPU: todo
-                 GPU: todo
-                 """).SetPosition(Vector2.One * 10).HasBackground().Build();
+                  Press F1 to close this menu
+                  Version: {BuildInfo.BuildDate}
+                  OS: todo
+                  CPU: todo
+                  GPU: todo
+                  """).SetPosition(Vector2.One * 10).HasBackground().Build();
 
     private static readonly Label DebugInfoR = new Label.Builder(Core.Koruri25)
         .SetPosition(new Vector2(1920 - 10, 10)).SetAlignment(Alignment.TopRight).HasBackground().Build();

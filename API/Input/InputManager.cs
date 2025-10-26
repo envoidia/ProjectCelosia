@@ -116,13 +116,15 @@ public class InputManager {
         return this.KeyboardState.IsKeyDown(keybind.Key) || this.IsButtonDown(keybind.Button);
     }
 
-    private bool IsButtonDown(Buttons button) => button switch {
-        Buttons.DPadLeft => this.GamePadState.ThumbSticks.Left.X < -MinAxisDist,
-        Buttons.DPadRight => this.GamePadState.ThumbSticks.Left.X > MinAxisDist,
-        Buttons.DPadUp => this.GamePadState.ThumbSticks.Left.Y < -MinAxisDist,
-        Buttons.DPadDown => this.GamePadState.ThumbSticks.Left.Y > MinAxisDist,
-        Buttons.LeftTrigger => this.GamePadState.Triggers.Left > MinAxisDist,
-        Buttons.RightTrigger => this.GamePadState.Triggers.Right > MinAxisDist,
-        _ => this.GamePadState.IsButtonDown(button)
-    };
+    private bool IsButtonDown(Buttons button) {
+        return button switch {
+            Buttons.DPadLeft => this.GamePadState.ThumbSticks.Left.X < -MinAxisDist,
+            Buttons.DPadRight => this.GamePadState.ThumbSticks.Left.X > MinAxisDist,
+            Buttons.DPadUp => this.GamePadState.ThumbSticks.Left.Y < -MinAxisDist,
+            Buttons.DPadDown => this.GamePadState.ThumbSticks.Left.Y > MinAxisDist,
+            Buttons.LeftTrigger => this.GamePadState.Triggers.Left > MinAxisDist,
+            Buttons.RightTrigger => this.GamePadState.Triggers.Right > MinAxisDist,
+            _ => this.GamePadState.IsButtonDown(button)
+        };
+    }
 }

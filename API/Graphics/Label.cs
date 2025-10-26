@@ -6,12 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 namespace API.Graphics;
 
 public class Label : RenderObject {
-    private string _text; // todo remove after .NET 10 upgrade
-
     public string Text {
-        get => this._text;
+        get;
         set {
-            this._text = value;
+            field = value;
             this.Size = this.Font.MeasureString(this.Text);
             this.Origin = this.CalcOrigin();
         }
@@ -20,9 +18,9 @@ public class Label : RenderObject {
     public DynamicSpriteFont Font { get; set; }
 
     public sealed override Alignment Alignment {
-        get => this.alignment;
+        get;
         set {
-            this.alignment = value;
+            field = value;
             this.Size = this.Font.MeasureString(this.Text);
             this.Origin = this.CalcOrigin();
         }
