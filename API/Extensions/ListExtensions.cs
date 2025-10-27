@@ -11,12 +11,12 @@ public static class ListExtensions {
         public void RemoveLast() {
             list.RemoveAt(list.Count - 1);
         }
-        
+
         public void SwapRemove(int index) {
             list[index] = list[^1];
             list.RemoveLast();
         }
-        
+
         public bool SwapRemove(T item) {
             int index = list.IndexOf(item);
             if (index < 0) return false;

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +9,7 @@ using API.Graphics;
 using API.Input;
 using API.Menu;
 using FontStashSharp.RichText;
+using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 
 namespace Game;
@@ -22,43 +20,42 @@ public class Game1 : Core {
 
     private Texture2D _bg;
 
-    private AnimatedSprite _slime;
-    private AnimatedSprite _bat;
-
     // Menu stuff
     private int _index;
 
     // Debug
-    private bool _isDebugInfoEnabled = false;
+    private bool _isDebugInfoEnabled;
 
-    public Game1() : base("Project Celosia", 0, 0, false) {
-        this._resolution = new ResolutionComponent(this, Graphics, new Point(1920, 1080),
-            new Point(1920, 1080), false, false, false);
-    }
+    public Game1() : base("Project Celosia", 0, 0, false) =>
+        this._resolution = new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
+            new Point(2560, 1440), false, false, false);
 
-    private RichTextLayout _richTextLayout;
+    private static readonly Label InputPrompt = new() {
+        Position = new Vector2(300, 300)
+    };
 
     protected override void Initialize() {
         NavPath.Push(MenuType.Main);
-        
+
         base.Initialize();
     }
 
     protected override void LoadContent() {
         this._bg = Content.Load<Texture2D>("img/bg");
 
-        TextureAtlas atlas = TextureAtlas.FromFile(Content, "img/atlas-definition.xml");
+        iconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
 
-        this._slime = atlas.CreateAnimatedSprite("slime-animation");
-        this._slime.Scale = new Vector2(4.0f, 4.0f);
-        this._bat = atlas.CreateAnimatedSprite("bat-animation");
-        this._bat.Scale = new Vector2(4.0f, 4.0f);
+        RichTextDefaults.ImageResolver = p => {
+            if (TextureCache.TryGetValue(p, out Texture2DRegion region)) {
+                return new TextureFragment(region.Texture, region.Bounds);
+            }
 
-        this._richTextLayout = new RichTextLayout {
-            Font = Koruri30,
-            Text =
-                "A small tree: /i[eating.png] :3c\namong us susssy among us roblox forntite vbucks adkfhsajkasljdlskajdkahsfdjkashdlasjdlkjas\nfwejfweifuowefipwef/i[eating.png]\nsdhjfiousdhfowuefopiuwepofiew[opifopweiufouwrpofg",
-            Width = 800
+            region = iconsAtlas.GetRegion(p);
+
+            // Cache the region for future use
+            TextureCache[p] = region;
+
+            return new TextureFragment(region.Texture, region.Bounds);
         };
 
         base.LoadContent();
@@ -72,10 +69,6 @@ public class Game1 : Core {
 
         this.CheckInput(gameTime);
 
-
-        this._bat.Update(gameTime);
-        this._slime.Update(gameTime);
-
         base.Update(gameTime);
     }
 
@@ -87,12 +80,13 @@ public class Game1 : Core {
             case MenuType.Main:
                 this._index = MenuLib.CheckMovement1D(this._index, 5);
                 //Console.WriteLine(this._index);
-                //Console.WriteLine(1.0f / gameTime.ElapsedGameTime.TotalSeconds);
                 // update cursor
 
                 if (Input.CheckInput(Keybind.Confirm)) {
+                    Console.WriteLine("confirm");
                     // continue based on selected option
                 } else if (Input.CheckInput(Keybind.Back)) {
+                    Console.WriteLine("back");
                     // if (index == last) quit, else index = last
                 }
 
@@ -116,6 +110,11 @@ public class Game1 : Core {
             default:
                 throw new ArgumentOutOfRangeException(NavPath.Peek().ToString());
         }
+
+        if (Input.InputDeviceChanged) {
+            InputPrompt.Text = "Input: " + InputPrompts.Confirm.GetText() + " " + InputPrompts.Back.GetText() + "\n" +
+                               InputPrompts.Close.GetText() + "\n" + InputPrompts.MoveLeftRight.GetText();
+        }
     }
 
     protected override void Draw(GameTime gameTime) {
@@ -125,18 +124,7 @@ public class Game1 : Core {
             null, null, Resolution.TransformationMatrix());
 
         SpriteBatch.Draw(this._bg, Vector2.Zero, Color.White);
-        this._slime.Draw(SpriteBatch, Vector2.One);
-        this._bat.Draw(SpriteBatch, new Vector2(this._slime.Width + 10, 0));
 
-        // todo wip
-        /*SpriteBatch.DrawString(
-            Koruri25,              // spriteFont
-            TestStr, // text
-            Vector2.Zero, // position
-            Color.White        // color
-        );*/
-
-        this._richTextLayout.Draw(SpriteBatch, new Vector2(0, 0), Color.White);
         //Console.WriteLine(KoruriSystem.Atlases.Count); todo test with more diverse chars
 
         DrawRenderPriority(LabelsLow);

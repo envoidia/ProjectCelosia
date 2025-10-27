@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using API.Debug;
 using API.Graphics;
 using API.Input;
 using API.Menu;
 using FontStashSharp;
-using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Graphics;
 
 namespace API;
 
@@ -24,12 +23,13 @@ public class Core : Game {
     public new static GraphicsDevice GraphicsDevice { get; private set; }
     public static SpriteBatch SpriteBatch { get; private set; }
     public static Texture2D WhitePixel { get; private set; }
-    private readonly Dictionary<string, Texture2D> _textureCache = new();
+    public static readonly Dictionary<string, Texture2DRegion> TextureCache = new();
+
+    public static Texture2DAtlas iconsAtlas;
 
     // Fonts
     public static FontSystem KoruriSystem { get; set; }
-    public static DynamicSpriteFont Koruri25 { get; private set; }
-    public static DynamicSpriteFont Koruri30 { get; private set; }
+    public static DynamicSpriteFont Koruri50 { get; private set; }
 
     public new static ContentManager Content { get; private set; }
 
@@ -70,7 +70,7 @@ public class Core : Game {
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created.
         if (sInstance != null) {
-            throw new InvalidOperationException($"Only a single Core instance can be created");
+            throw new InvalidOperationException("Only a single Core instance can be created");
         }
 
         // Store reference to engine for global member access.
@@ -98,29 +98,9 @@ public class Core : Game {
         FontSystemDefaults.KernelWidth = 2;
         FontSystemDefaults.KernelHeight = 2;
 
-        // todo render atlas portion
-        // in: string, out: TextureFragment
-        // currently: filepath -> image
-        // desired: atlas id -> atlas region
-        RichTextDefaults.ImageResolver = p => {
-            if (this._textureCache.TryGetValue(p, out Texture2D texture)) {
-                return new TextureFragment(texture);
-            }
-
-            using (FileStream stream = File.OpenRead(Path.Combine("img/", p))) {
-                texture = Texture2D.FromStream(GraphicsDevice, stream);
-            }
-
-            this._textureCache[p] = texture;
-
-            return new TextureFragment(texture);
-        };
-
         KoruriSystem = new FontSystem();
         KoruriSystem.AddFont(File.ReadAllBytes("fnt/koruri.ttf"));
-        Console.WriteLine("loaded koruri");
-        Koruri25 = KoruriSystem.GetFont(25);
-        Koruri30 = KoruriSystem.GetFont(30);
+        Koruri50 = KoruriSystem.GetFont(50);
 
         // Apply the graphic presentation changes.
         Graphics.ApplyChanges();

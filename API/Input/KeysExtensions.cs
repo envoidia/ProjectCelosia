@@ -1,0 +1,78 @@
+using System;
+using Microsoft.Xna.Framework.Input;
+
+namespace API.Input;
+
+public static class KeysExtensions {
+    extension(Keys key) {
+        public string GetGlyph() => FormatGlyph(key switch {
+            Keys.Back => "Backspace",
+            Keys.Enter => "Enter",
+            Keys.Escape => "Esc",
+            Keys.Space => "Space",
+            Keys.PageUp => "PU",
+            Keys.PageDown => "PD",
+            Keys.End => "End",
+            Keys.Home => "Home",
+            Keys.Left => "Left",
+            Keys.Up => "Up",
+            Keys.Right => "Right",
+            Keys.Down => "Down",
+            Keys.Insert => "Ins",
+            Keys.A => "A",
+            Keys.B => "B",
+            Keys.C => "C",
+            Keys.D => "D",
+            Keys.E => "E",
+            Keys.F => "F",
+            Keys.G => "G",
+            Keys.H => "H",
+            Keys.I => "I",
+            Keys.J => "J",
+            Keys.K => "K",
+            Keys.L => "L",
+            Keys.M => "M",
+            Keys.N => "N",
+            Keys.O => "O",
+            Keys.P => "P",
+            Keys.Q => "Q",
+            Keys.R => "R",
+            Keys.S => "S",
+            Keys.T => "T",
+            Keys.U => "U",
+            Keys.V => "V",
+            Keys.W => "W",
+            Keys.X => "X",
+            Keys.Y => "Y",
+            Keys.Z => "Z",
+            Keys.F1 => "F1",
+            Keys.F2 => "F2",
+            Keys.F3 => "F3",
+            Keys.F4 => "F4",
+            Keys.F5 => "F5",
+            Keys.F6 => "F6",
+            Keys.F7 => "F7",
+            Keys.F8 => "F8",
+            Keys.F9 => "F9",
+            Keys.F10 => "F10",
+            Keys.F11 => "F11",
+            Keys.F12 => "F12",
+            Keys.LeftShift => "Shift",
+            Keys.LeftControl => "Ctrl",
+            Keys.LeftAlt => "Alt",
+            Keys.OemSemicolon => ";",
+            Keys.OemPlus => "+",
+            Keys.OemComma => ",",
+            Keys.OemMinus => "-",
+            Keys.OemPeriod => ".",
+            Keys.OemQuestion => "QM",
+            Keys.OemTilde => "~",
+            Keys.OemOpenBrackets => "[",
+            Keys.OemCloseBrackets => "]",
+            Keys.OemQuotes => "Quot",
+            _ => throw new ArgumentOutOfRangeException(nameof(key))
+        });
+    }
+
+    public static string FormatGlyph(string name) => $"/i[K{name}]";
+}

@@ -2,5 +2,5 @@
 namespace API;
 
 public static class BuildInfo {
-    public const string BuildDate = "25-10-2025";
+    public const string BuildDate = "26-10-2025";
 }

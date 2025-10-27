@@ -1,28 +1,21 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace API.Input;
 
 public class InputManager {
-    /// <summary>
-    /// Gets the state information of keyboard input.
-    /// todo private?
-    /// </summary>
+    // todo private?
     internal KeyboardState KeyboardState { get; private set; }
 
-    /// <summary>
-    /// Gets the state information of mouse input.
-    /// todo use
-    /// </summary>
+    // todo use
     private MouseState MouseState { get; set; }
 
-    /// <summary>
-    /// Gets the state information of a gamepad.
-    /// </summary>
-    private GamePadState GamePadState { get; set; }
+    private GamePadState GamePadState { get; set; } // todo
+
+    private InputDevice PreviousInputSource { get; set; } = InputDevice.Keyboard;
+    public InputDevice LastInputSource { get; set; } = InputDevice.Keyboard;
+    public bool InputDeviceChanged { get; private set; } = true;
 
     /// <summary>
     /// How long each keybind has been held down for
@@ -49,29 +42,24 @@ public class InputManager {
     /// </summary>
     private const float MinAxisDist = 0.4f;
 
-    /// <summary>
-    /// Creates a new InputManager.
-    /// </summary>
-    public InputManager() {
-        this.KeyboardState = new KeyboardState();
-        this.MouseState = new MouseState();
-        this.GamePadState = new GamePadState(); // todo
-        /*for (int i = 0; i < 4; i++)
+    /*for (int i = 0; i < 4; i++)
         {
             GamePads[i] = new GamePadState((PlayerIndex)i);
         }*/
-    }
 
-    /// <summary>
-    /// Updates the state information for the keyboard, mouse, and gamepad inputs.
-    /// </summary>
-    /// <param name="gameTime">A snapshot of the timing values for the current frame.</param>
     public void Update(GameTime gameTime) {
         this.KeyboardState = Keyboard.GetState();
         this.MouseState = Mouse.GetState();
         this.GamePadState = GamePad.GetState(PlayerIndex.One);
 
         this._elapsedTime = gameTime.ElapsedGameTime;
+
+        if (this.PreviousInputSource != this.LastInputSource) {
+            this.PreviousInputSource = this.LastInputSource;
+            this.InputDeviceChanged = true;
+        } else {
+            this.InputDeviceChanged = false;
+        }
     }
 
     public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) {
@@ -84,13 +72,10 @@ public class InputManager {
         return false;
     }
 
-    public bool CheckInput(bool allowHold, params Keybind[] keybinds) {
-        return this.CheckInput(allowHold, this._defaultHoldDelay, keybinds);
-    }
+    public bool CheckInput(bool allowHold, params Keybind[] keybinds) =>
+        this.CheckInput(allowHold, this._defaultHoldDelay, keybinds);
 
-    public bool CheckInput(params Keybind[] keybinds) {
-        return this.CheckInput(false, this._defaultHoldDelay, keybinds);
-    }
+    public bool CheckInput(params Keybind[] keybinds) => this.CheckInput(false, this._defaultHoldDelay, keybinds);
 
     private bool IsKeybindPressed(bool allowHold, TimeSpan holdDelay, Keybind keybind) {
         if (!this.CheckKeybind(keybind)) {
@@ -113,18 +98,47 @@ public class InputManager {
     }
 
     private bool CheckKeybind(Keybind keybind) {
-        return this.KeyboardState.IsKeyDown(keybind.Key) || this.IsButtonDown(keybind.Button);
+        if (this.IsKeyDown(keybind)) {
+            this.LastInputSource = InputDevice.Keyboard;
+            return true;
+        }
+
+        if (this.IsButtonDown(keybind)) {
+            this.LastInputSource = InputDevice.XboxController; // todo
+            return true;
+        }
+
+        return false;
     }
 
-    private bool IsButtonDown(Buttons button) {
-        return button switch {
-            Buttons.DPadLeft => this.GamePadState.ThumbSticks.Left.X < -MinAxisDist,
-            Buttons.DPadRight => this.GamePadState.ThumbSticks.Left.X > MinAxisDist,
-            Buttons.DPadUp => this.GamePadState.ThumbSticks.Left.Y < -MinAxisDist,
-            Buttons.DPadDown => this.GamePadState.ThumbSticks.Left.Y > MinAxisDist,
-            Buttons.LeftTrigger => this.GamePadState.Triggers.Left > MinAxisDist,
-            Buttons.RightTrigger => this.GamePadState.Triggers.Right > MinAxisDist,
-            _ => this.GamePadState.IsButtonDown(button)
-        };
-    }
+    private bool IsKeyDown(Keybind keybind) => keybind.Id switch {
+        KeybindId.LeftRight => this.KeyboardState.IsKeyDown(Keybind.Left.Key) ||
+                               this.KeyboardState.IsKeyDown(Keybind.Right.Key),
+        KeybindId.UpDown => this.KeyboardState.IsKeyDown(Keybind.Up.Key) ||
+                            this.KeyboardState.IsKeyDown(Keybind.Down.Key),
+        KeybindId.LeftRightUpDown => this.KeyboardState.IsKeyDown(Keybind.Left.Key) ||
+                                     this.KeyboardState.IsKeyDown(Keybind.Right.Key) ||
+                                     this.KeyboardState.IsKeyDown(Keybind.Up.Key) ||
+                                     this.KeyboardState.IsKeyDown(Keybind.Down.Key),
+        _ => this.KeyboardState.IsKeyDown(keybind.Key)
+    };
+
+    private bool IsButtonDown(Keybind keybind) => keybind.Id switch {
+        KeybindId.LeftRight => this.IsButtonDown(Keybind.Left.Button) || this.IsButtonDown(Keybind.Right.Button),
+        KeybindId.UpDown => this.IsButtonDown(Keybind.Up.Button) || this.IsButtonDown(Keybind.Down.Button),
+        KeybindId.LeftRightUpDown => this.IsButtonDown(Keybind.Left.Button) ||
+                                     this.IsButtonDown(Keybind.Right.Button) ||
+                                     this.IsButtonDown(Keybind.Up.Button) || this.IsButtonDown(Keybind.Down.Button),
+        _ => this.IsButtonDown(keybind.Button)
+    };
+
+    private bool IsButtonDown(Buttons button) => button switch {
+        Buttons.DPadLeft => this.GamePadState.ThumbSticks.Left.X < -MinAxisDist,
+        Buttons.DPadRight => this.GamePadState.ThumbSticks.Left.X > MinAxisDist,
+        Buttons.DPadUp => this.GamePadState.ThumbSticks.Left.Y < -MinAxisDist,
+        Buttons.DPadDown => this.GamePadState.ThumbSticks.Left.Y > MinAxisDist,
+        Buttons.LeftTrigger => this.GamePadState.Triggers.Left > MinAxisDist,
+        Buttons.RightTrigger => this.GamePadState.Triggers.Right > MinAxisDist,
+        _ => this.GamePadState.IsButtonDown(button)
+    };
 }

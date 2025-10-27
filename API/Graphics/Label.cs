@@ -1,89 +1,49 @@
 using System;
 using FontStashSharp;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace API.Graphics;
 
 public class Label : RenderObject {
+    private RichTextLayout RichTextLayout { get; set; } = new();
+
     public string Text {
-        get;
+        get => this.RichTextLayout.Text;
         set {
-            field = value;
-            this.Size = this.Font.MeasureString(this.Text);
+            this.RichTextLayout.Text = value;
+            this.Size = this.RichTextLayout.Font.MeasureString(value);
             this.Origin = this.CalcOrigin();
         }
     }
 
-    public DynamicSpriteFont Font { get; set; }
+    // todo RTL width, height
 
     public sealed override Alignment Alignment {
         get;
         set {
             field = value;
-            this.Size = this.Font.MeasureString(this.Text);
+            this.Size = this.RichTextLayout.Font.MeasureString(this.Text);
             this.Origin = this.CalcOrigin();
         }
-    }
+    } = Alignment.TopLeft;
 
-    public bool Visible { get; set; }
+    public bool Visible { get; set; } = true;
 
     // Background
-    public bool HasBackground { get; set; }
-    public Color BackgroundColor { get; set; }
-    public Vector2 BackgroundPadding { get; set; }
+    public bool HasBackground { get; set; } = false;
+    public Color BackgroundColor { get; set; } = Colors.TransBlack;
+    public Vector2 BackgroundPadding { get; set; } = new(10, 10);
 
-    private Label(Builder builder) {
-        this.Font = builder.font;
-        this.Text = builder.text;
-        this.Position = builder.position;
-        this.Alignment = builder.alignment;
-        this.Visible = builder.visible;
-        this.HasBackground = builder.hasBackground;
-        this.BackgroundColor = builder.backgroundColor;
-        this.BackgroundPadding = builder.backgroundPadding;
+    public Label() {
+        this.RichTextLayout.Font = Core.Koruri50;
         this.AddToRenderList();
     }
 
-    public class Builder(DynamicSpriteFont font) {
-        internal readonly DynamicSpriteFont font = font;
-
-        internal string text = "";
-        internal Vector2 position = Vector2.Zero;
-        internal Alignment alignment = Alignment.TopLeft;
-        internal bool visible = true;
-        internal bool hasBackground = false;
-        internal Color backgroundColor = Colors.TransBlack;
-        internal Vector2 backgroundPadding = Vector2.One * 10;
-
-        public Builder SetText(string text) {
-            this.text = text;
-            return this;
-        }
-
-        public Builder SetPosition(Vector2 position) {
-            this.position = position;
-            return this;
-        }
-
-        public Builder SetAlignment(Alignment alignment) {
-            this.alignment = alignment;
-            return this;
-        }
-
-        public Builder Invisible() {
-            this.visible = false;
-            return this;
-        }
-
-        public Builder HasBackground() {
-            this.hasBackground = true;
-            return this;
-        }
-
-        public Label Build() {
-            return new Label(this);
-        }
+    public Label(DynamicSpriteFont font) {
+        this.RichTextLayout.Font = font;
+        this.AddToRenderList();
     }
 
     public void Draw(SpriteBatch spriteBatch) {
@@ -96,7 +56,8 @@ public class Label : RenderObject {
                 (int) (this.Size.Y + (this.BackgroundPadding.Y * 2))), this.BackgroundColor);
         }
 
-        spriteBatch.DrawString(this.Font, this.Text, this.Position, Color.White, 0f, this.Origin);
+        this.RichTextLayout.Draw(spriteBatch, this.Position, Color.White, 0f, this.Origin);
+        //spriteBatch.DrawString(this.Font, this.Text, this.Position, Color.White, 0f, this.Origin);
     }
 
     protected sealed override void AddToRenderList() {
@@ -111,7 +72,7 @@ public class Label : RenderObject {
                 Core.LabelsHigh.Add(this);
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Priority");
+                throw new ArgumentOutOfRangeException(nameof(this.Priority));
         }
     }
 }

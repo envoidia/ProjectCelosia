@@ -17,7 +17,12 @@ public sealed class Keybind {
     public static readonly Keybind Down = new("key.down", KeybindId.Down, Keys.Down, Buttons.DPadDown);
 
     // Debug
-    public static readonly Keybind DebugInfo = new("keybind.debug", KeybindId.DebugInfo, Keys.F1, Buttons.BigButton);
+    public static readonly Keybind DebugInfo = new("keybind.debug", KeybindId.DebugInfo, Keys.F1, Buttons.Start);
+
+    // Merged
+    public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);
+    public static readonly Keybind UpDown = new("", KeybindId.UpDown, Keys.None, Buttons.None);
+    public static readonly Keybind LeftRightUpDown = new("", KeybindId.LeftRightUpDown, Keys.None, Buttons.None);
 
     public string Name { get; }
     public KeybindId Id { get; }
@@ -30,4 +35,15 @@ public sealed class Keybind {
         this.Key = key;
         this.Button = button;
     }
+
+    public string GetCurrentGlyph() => this.Id switch {
+        KeybindId.LeftRight => Core.Input.LastInputSource.GetGlyphLeftRight,
+        KeybindId.UpDown => Core.Input.LastInputSource.GetGlyphUpDown,
+        KeybindId.LeftRightUpDown => Core.Input.LastInputSource.GetGlyphLeftRightUpDown,
+        _ => this.GetGlyph()
+    };
+
+    private string GetGlyph() => Core.Input.LastInputSource == InputDevice.Keyboard
+        ? this.Key.GetGlyph()
+        : this.Button.GetGlyph(Core.Input.LastInputSource);
 }

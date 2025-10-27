@@ -13,5 +13,8 @@ public enum KeybindId {
     Right,
     Up,
     Down,
-    DebugInfo
+    DebugInfo,
+    LeftRight,
+    UpDown,
+    LeftRightUpDown
 }
