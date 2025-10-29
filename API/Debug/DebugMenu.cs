@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using API.Graphics;
 using API.Input;
+using API.Menu;
 using Microsoft.Xna.Framework;
 
 namespace API.Debug;
@@ -10,7 +12,7 @@ public static class DebugMenu {
 
     private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
 
-    private static TimeSpan avgFrameTime = TimeSpan.Zero;
+    private static TimeSpan avgFrameTime = TimeSpan.FromMilliseconds(10);
     private const float Alpha = 0.01f;
 
     private static readonly Label DebugInfoL = new() {
@@ -39,8 +41,8 @@ public static class DebugMenu {
             DebugInfoL.Text = GetDebugInfoLText();
         }
 
-        // EMA smoothed FPS counter
-        avgFrameTime = (Alpha * gameTime.ElapsedGameTime) + ((1f - Alpha) * avgFrameTime);
+        // Lerped FPS counter
+        avgFrameTime += (gameTime.ElapsedGameTime - avgFrameTime) * 0.01f;
 
         timeSinceUpdate += gameTime.ElapsedGameTime;
         if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
@@ -50,7 +52,7 @@ public static class DebugMenu {
                            RAM: {System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb}MB
                            Last Input Source: todo
                            Resolution: todo
-                           NavPath: todo
+                           NavPath: {string.Join(", ", Core.NavPath.Reverse())}
                            Overworld Location: todo
                            Loaded Mod Count: todo
                            """;

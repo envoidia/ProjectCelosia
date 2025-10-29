@@ -11,6 +11,7 @@ using API.Menu;
 using FontStashSharp.RichText;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
+using API.Battle;
 
 namespace Game;
 
@@ -78,22 +79,42 @@ public class Game1 : Core {
 
         switch (NavPath.Peek()) {
             case MenuType.Main:
-                this._index = MenuLib.CheckMovement1D(this._index, 5);
+                this._index = MenuLib.CheckMovement1D(this._index, Enum.GetValues<MainMenu>().Length);
                 //Console.WriteLine(this._index);
                 // update cursor
 
                 if (Input.CheckInput(Keybind.Confirm)) {
-                    Console.WriteLine("confirm");
-                    // continue based on selected option
+                    switch ((MainMenu) this._index) {
+                        case MainMenu.Start:
+                            // Overworld/battle
+                            NavPath.Push(MenuType.Battle);
+                            BattleHandler.Init();
+                            break;
+                        case MainMenu.Encyclopedia:
+                            // todo
+                            break;
+                        case MainMenu.Options:
+                            // todo
+                            break;
+                        case MainMenu.Mods:
+                            // todo
+                            break;
+                        case MainMenu.Credits:
+                            // todo
+                            break;
+                        case MainMenu.Quit:
+                            // todo
+                            break;
+                    }
                 } else if (Input.CheckInput(Keybind.Back)) {
-                    Console.WriteLine("back");
-                    // if (index == last) quit, else index = last
+                    if ((MainMenu) this._index == MainMenu.Quit) this.Exit();
+                    else this._index = (int) MainMenu.Quit;
                 }
 
                 break;
             case MenuType.Popup:
-                if (Input.CheckInput(Keybind.Back)) {
-                    // cancel
+                if (Input.CheckInput(Keybind.Confirm, Keybind.Back)) {
+                    // close
                 }
 
                 break;
@@ -102,7 +123,7 @@ public class Game1 : Core {
             case MenuType.Log:
             case MenuType.InspectTargeting:
             case MenuType.Inspect:
-                // Pass to BattleHandler
+                BattleHandler.Input(gameTime);
                 break;
             case MenuType.Debug:
             case MenuType.None:
