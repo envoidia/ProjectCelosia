@@ -10,14 +10,11 @@ public static class DebugMenu {
 
     private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
 
+    private static TimeSpan avgFrameTime = TimeSpan.Zero;
+    private const float Alpha = 0.01f;
+
     private static readonly Label DebugInfoL = new() {
-        Text = $"""
-                Press {Keybind.DebugInfo.GetCurrentGlyph()} to close this menu
-                Version: {BuildInfo.BuildDate}
-                OS: todo
-                CPU: todo
-                GPU: todo
-                """,
+        Text = GetDebugInfoLText(),
         Position = new Vector2(10, 10),
         HasBackground = true
     };
@@ -39,21 +36,17 @@ public static class DebugMenu {
         DebugInfoR.Visible = true;
 
         if (Core.Input.InputDeviceChanged) {
-            DebugInfoL.Text = $"""
-                               Press {Keybind.DebugInfo.GetCurrentGlyph()} to close this menu
-                               Version: {BuildInfo.BuildDate}
-                               OS: todo
-                               CPU: todo
-                               GPU: todo
-                               """;
+            DebugInfoL.Text = GetDebugInfoLText();
         }
+
+        // EMA smoothed FPS counter
+        avgFrameTime = (Alpha * gameTime.ElapsedGameTime) + ((1f - Alpha) * avgFrameTime);
 
         timeSinceUpdate += gameTime.ElapsedGameTime;
         if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
-        // todo average fps
         DebugInfoR.Text = $"""
-                           FPS: {(int) (1.0f / gameTime.ElapsedGameTime.TotalSeconds)}
+                           FPS: {(int) (1 / avgFrameTime.TotalSeconds)} ({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})
                            RAM: {System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb}MB
                            Last Input Source: todo
                            Resolution: todo
@@ -63,4 +56,13 @@ public static class DebugMenu {
                            """;
         timeSinceUpdate = TimeSpan.Zero;
     }
+
+    private static string GetDebugInfoLText() =>
+        $"""
+         Press {Keybind.DebugInfo.GetCurrentGlyph()} to close this menu
+         Version: {BuildInfo.BuildDate}
+         OS: todo
+         CPU: todo
+         GPU: todo
+         """;
 }

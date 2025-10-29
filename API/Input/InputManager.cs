@@ -14,7 +14,7 @@ public class InputManager {
     private GamePadState GamePadState { get; set; } // todo
 
     private InputDevice PreviousInputSource { get; set; } = InputDevice.Keyboard;
-    public InputDevice LastInputSource { get; set; } = InputDevice.Keyboard;
+    public InputDevice LastInputSource { get; private set; } = InputDevice.Keyboard;
     public bool InputDeviceChanged { get; private set; } = true;
 
     /// <summary>
@@ -62,6 +62,9 @@ public class InputManager {
         }
     }
 
+    /// <summary>
+    /// Call to check for inputs from any number of Keybinds
+    /// </summary>
     public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) {
         foreach (Keybind keybind in keybinds) {
             if (this.IsKeybindPressed(allowHold, holdDelay, keybind)) {
@@ -72,9 +75,15 @@ public class InputManager {
         return false;
     }
 
+    /// <summary>
+    /// Call to check for inputs from any number of Keybinds
+    /// </summary>
     public bool CheckInput(bool allowHold, params Keybind[] keybinds) =>
         this.CheckInput(allowHold, this._defaultHoldDelay, keybinds);
 
+    /// <summary>
+    /// Call to check for inputs from any number of Keybinds
+    /// </summary>
     public bool CheckInput(params Keybind[] keybinds) => this.CheckInput(false, this._defaultHoldDelay, keybinds);
 
     private bool IsKeybindPressed(bool allowHold, TimeSpan holdDelay, Keybind keybind) {
