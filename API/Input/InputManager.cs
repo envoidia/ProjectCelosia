@@ -8,9 +8,6 @@ public class InputManager {
     // todo private?
     internal KeyboardState KeyboardState { get; private set; }
 
-    // todo use
-    private MouseState MouseState { get; set; }
-
     private GamePadState GamePadState { get; set; } // todo
 
     private InputDevice PreviousInputSource { get; set; } = InputDevice.Keyboard;
@@ -49,7 +46,6 @@ public class InputManager {
 
     public void Update(GameTime gameTime) {
         this.KeyboardState = Keyboard.GetState();
-        this.MouseState = Mouse.GetState();
         this.GamePadState = GamePad.GetState(PlayerIndex.One);
 
         this._elapsedTime = gameTime.ElapsedGameTime;

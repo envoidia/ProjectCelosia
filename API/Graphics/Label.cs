@@ -13,18 +13,21 @@ public class Label : RenderObject {
         get => this.RichTextLayout.Text;
         set {
             this.RichTextLayout.Text = value;
-            this.Size = this.RichTextLayout.Font.MeasureString(value);
             this.Origin = this.CalcOrigin();
         }
     }
 
-    // todo RTL width, height
+    /*public int Width {
+        get => (int) this.RichTextLayout.Width!;
+        set => this.RichTextLayout.Width = value; // todo remeasure
+    }*/
+
+    public override Point Size => this.RichTextLayout.Size;
 
     public sealed override Alignment Alignment {
         get;
         set {
             field = value;
-            this.Size = this.RichTextLayout.Font.MeasureString(this.Text);
             this.Origin = this.CalcOrigin();
         }
     } = Alignment.TopLeft;
@@ -43,6 +46,7 @@ public class Label : RenderObject {
 
     public Label(DynamicSpriteFont font) {
         this.RichTextLayout.Font = font;
+        //this.RichTextLayout.Width = int.MaxValue;
         this.AddToRenderList();
     }
 
@@ -51,13 +55,13 @@ public class Label : RenderObject {
 
         if (this.HasBackground) {
             spriteBatch.Draw(Core.WhitePixel, new Rectangle(
-                (int) (this.Position.X - this.BackgroundPadding.X), (int) (this.Position.Y - this.BackgroundPadding.Y),
+                (int) (this.Position.X - this.BackgroundPadding.X - this.Origin.X),
+                (int) (this.Position.Y - this.BackgroundPadding.Y - this.Origin.Y),
                 (int) (this.Size.X + (this.BackgroundPadding.X * 2)),
                 (int) (this.Size.Y + (this.BackgroundPadding.Y * 2))), this.BackgroundColor);
         }
 
-        this.RichTextLayout.Draw(spriteBatch, this.Position, Color.White, 0f, this.Origin);
-        //spriteBatch.DrawString(this.Font, this.Text, this.Position, Color.White, 0f, this.Origin);
+        this.RichTextLayout.Draw(spriteBatch, this.Position, Color.White, 0f, this.Origin.ToVector2());
     }
 
     protected sealed override void AddToRenderList() {

@@ -5,6 +5,7 @@ using API.Graphics;
 using API.Input;
 using API.Menu;
 using FontStashSharp;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +26,7 @@ public class Core : Game {
     public static Texture2D WhitePixel { get; private set; }
     public static readonly Dictionary<string, Texture2DRegion> TextureCache = new();
 
-    public static Texture2DAtlas iconsAtlas;
+    public static Texture2DAtlas IconsAtlas { get; set; }
 
     // Fonts
     public static FontSystem KoruriSystem { get; set; }
@@ -60,6 +61,8 @@ public class Core : Game {
     // todo shapes
     public static readonly List<Label> LabelsHigh = [];
 
+    private static Label inputPrompt;
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -87,6 +90,7 @@ public class Core : Game {
         // todo settings
         Graphics.SynchronizeWithVerticalRetrace = false; // Vsync
         this.IsFixedTimeStep = false;
+        // todo TargetElapsedTime
 
         // Setup font
         // todo
@@ -99,7 +103,7 @@ public class Core : Game {
         FontSystemDefaults.KernelHeight = 2;
 
         KoruriSystem = new FontSystem();
-        KoruriSystem.AddFont(File.ReadAllBytes("fnt/koruri.ttf"));
+        KoruriSystem.AddFont(File.ReadAllBytes("Font/koruri.ttf"));
         Koruri50 = KoruriSystem.GetFont(50);
 
         // Apply the graphic presentation changes.
@@ -114,6 +118,26 @@ public class Core : Game {
 
         // Set the root directory for content.
         Content.RootDirectory = "Content";
+
+        // Setup stuff
+        RichTextDefaults.ImageResolver = p => {
+            if (TextureCache.TryGetValue(p, out Texture2DRegion region)) {
+                return new TextureFragmentColored(region.Texture, region.Bounds);
+            }
+
+            region = IconsAtlas.GetRegion(p);
+
+            // Cache the region for future use
+            TextureCache[p] = region;
+
+            return new TextureFragmentColored(region.Texture, region.Bounds);
+        };
+
+        inputPrompt = new Label {
+            Position = World.Vec - new Vector2(10, 10),
+            Alignment = Alignment.BottomRight,
+            HasBackground = true
+        };
 
 #if DEBUG
         this.IsMouseVisible = true;
@@ -147,5 +171,19 @@ public class Core : Game {
         }
 
         base.Update(gameTime);
+    }
+
+    public static void AddMenu(MenuType menuType) {
+        NavPath.Push(menuType);
+        UpdateInputPrompt();
+    }
+    
+    public static void RemoveMenu() {
+        NavPath.Pop();
+        UpdateInputPrompt();
+    }
+
+    public static void UpdateInputPrompt() {
+        inputPrompt.Text = NavPath.Peek().GetInputPrompt();
     }
 }

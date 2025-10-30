@@ -8,10 +8,10 @@ using API.Debug;
 using API.Graphics;
 using API.Input;
 using API.Menu;
-using FontStashSharp.RichText;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
+using static API.Menu.MenuType;
 
 namespace Game;
 
@@ -29,35 +29,55 @@ public class Game1 : Core {
 
     public Game1() : base("Project Celosia", 0, 0, false) =>
         this._resolution = new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(2560, 1440), false, false, false);
-
-    private static readonly Label InputPrompt = new() {
-        Position = new Vector2(300, 300)
-    };
+            new Point(1920, 1080), false, false, false);
 
     protected override void Initialize() {
-        NavPath.Push(MenuType.Main);
-
         base.Initialize();
+        AddMenu(Main);
+        
+        // text testing
+        Label a = new() {
+            Text = "/c[blue]/i[shield]TopLeft",
+            Position = Vector2.One * 300,
+            HasBackground = true
+        };
+        
+        Label b = new() {
+            Text = "/c[green]/i[whirlwind]TopRight",
+            Alignment = Alignment.TopRight,
+            Position = Vector2.One * 400,
+            HasBackground = true,
+            BackgroundColor = new Color(0.3f, 0, 0, 0.6f)
+        };
+        
+        Label c = new() {
+            Text = "/c[cyan]/i[earth-spit]Bottom/i[bubbles]L/c[red]eft",
+            Alignment = Alignment.BottomLeft,
+            Position = Vector2.One * 500,
+            HasBackground = true
+        };
+        
+        Label d = new() {
+            Text = "/c[yellow]/i[star-formation]BottomRight",
+            Alignment = Alignment.BottomRight,
+            Position = Vector2.One * 600,
+            HasBackground = true
+        };
+        
+        Label e = new() {
+            Text = "/c[orange]/i[dread-skull]Center",
+            Alignment = Alignment.Center,
+            Position = Vector2.One * 700,
+            HasBackground = true,
+            BackgroundColor = new Color(0, 0.3f, 0, 0.6f)
+        };
+
     }
 
     protected override void LoadContent() {
         this._bg = Content.Load<Texture2D>("img/bg");
 
-        iconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
-
-        RichTextDefaults.ImageResolver = p => {
-            if (TextureCache.TryGetValue(p, out Texture2DRegion region)) {
-                return new TextureFragment(region.Texture, region.Bounds);
-            }
-
-            region = iconsAtlas.GetRegion(p);
-
-            // Cache the region for future use
-            TextureCache[p] = region;
-
-            return new TextureFragment(region.Texture, region.Bounds);
-        };
+        IconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
 
         base.LoadContent();
     }
@@ -78,7 +98,7 @@ public class Game1 : Core {
         DebugMenu.HandleDebugInfo(this._isDebugInfoEnabled, gameTime);
 
         switch (NavPath.Peek()) {
-            case MenuType.Main:
+            case Main:
                 this._index = MenuLib.CheckMovement1D(this._index, Enum.GetValues<MainMenu>().Length);
                 //Console.WriteLine(this._index);
                 // update cursor
@@ -87,7 +107,7 @@ public class Game1 : Core {
                     switch ((MainMenu) this._index) {
                         case MainMenu.Start:
                             // Overworld/battle
-                            NavPath.Push(MenuType.Battle);
+                            AddMenu(Battle);
                             BattleHandler.Init();
                             break;
                         case MainMenu.Encyclopedia:
@@ -107,35 +127,30 @@ public class Game1 : Core {
                             break;
                     }
                 } else if (Input.CheckInput(Keybind.Back)) {
-                    if ((MainMenu) this._index == MainMenu.Quit) this.Exit();
-                    else this._index = (int) MainMenu.Quit;
+                    if ((MainMenu) this._index == MainMenu.Quit) {
+                        this.Exit();
+                    } else {
+                        this._index = (int) MainMenu.Quit;
+                    }
                 }
 
                 break;
-            case MenuType.Popup:
+            case Popup:
                 if (Input.CheckInput(Keybind.Confirm, Keybind.Back)) {
                     // close
                 }
 
                 break;
-            case MenuType.Battle:
-            case MenuType.Targeting:
-            case MenuType.Log:
-            case MenuType.InspectTargeting:
-            case MenuType.Inspect:
+            case Battle or Targeting or Log or InspectTargeting or Inspect:
                 BattleHandler.Input(gameTime);
                 break;
-            case MenuType.Debug:
-            case MenuType.None:
+            case Debug or None:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(NavPath.Peek().ToString());
         }
 
-        if (Input.InputDeviceChanged) {
-            InputPrompt.Text = "Input: " + InputPrompts.Confirm.GetText() + " " + InputPrompts.Back.GetText() + "\n" +
-                               InputPrompts.Close.GetText() + "\n" + InputPrompts.MoveLeftRight.GetText();
-        }
+        if (Input.InputDeviceChanged) UpdateInputPrompt();
     }
 
     protected override void Draw(GameTime gameTime) {

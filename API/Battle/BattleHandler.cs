@@ -7,15 +7,13 @@ using static API.Battle.BattleHandlerLib;
 namespace API.Battle;
 
 public static class BattleHandler {
-
-    public static TimeSpan delay;
+    public static TimeSpan Delay { get; private set; }
 
     public static void Init() {
         HandleSetup();
     }
 
     public static void Input(GameTime gameTime) {
-
         MenuType curMenu = Core.NavPath.Peek();
 
         if (curMenu == MenuType.Log) {
@@ -30,8 +28,8 @@ public static class BattleHandler {
             HandleTargeting();
         } else if (Core.Input.CheckInput(Keybind.Map)) {
             CreateInspectTargeting();
-        } else if (delay > TimeSpan.Zero) {
-            delay -= gameTime.ElapsedGameTime;
+        } else if (Delay > TimeSpan.Zero) {
+            Delay -= gameTime.ElapsedGameTime;
         } else if (curMenu == MenuType.Battle) {
             HandleBattle();
         }

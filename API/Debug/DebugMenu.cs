@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using API.Graphics;
 using API.Input;
-using API.Menu;
 using Microsoft.Xna.Framework;
 
 namespace API.Debug;
@@ -13,7 +12,6 @@ public static class DebugMenu {
     private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
 
     private static TimeSpan avgFrameTime = TimeSpan.FromMilliseconds(10);
-    private const float Alpha = 0.01f;
 
     private static readonly Label DebugInfoL = new() {
         Text = GetDebugInfoLText(),
@@ -37,9 +35,7 @@ public static class DebugMenu {
         DebugInfoL.Visible = true;
         DebugInfoR.Visible = true;
 
-        if (Core.Input.InputDeviceChanged) {
-            DebugInfoL.Text = GetDebugInfoLText();
-        }
+        if (Core.Input.InputDeviceChanged) DebugInfoL.Text = GetDebugInfoLText();
 
         // Lerped FPS counter
         avgFrameTime += (gameTime.ElapsedGameTime - avgFrameTime) * 0.01f;
@@ -47,24 +43,12 @@ public static class DebugMenu {
         timeSinceUpdate += gameTime.ElapsedGameTime;
         if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
-        DebugInfoR.Text = $"""
-                           FPS: {(int) (1 / avgFrameTime.TotalSeconds)} ({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})
-                           RAM: {System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb}MB
-                           Last Input Source: todo
-                           Resolution: todo
-                           NavPath: {string.Join(", ", Core.NavPath.Reverse())}
-                           Overworld Location: todo
-                           Loaded Mod Count: todo
-                           """;
+        DebugInfoR.Text = string.Format(Lang.DebugInfoR,
+            (int) (1 / avgFrameTime.TotalSeconds) + "(" + (int) (1 / gameTime.ElapsedGameTime.TotalSeconds) + ")", // todo temp
+            System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb,
+            string.Join(", ", Core.NavPath.Reverse()));
         timeSinceUpdate = TimeSpan.Zero;
     }
 
-    private static string GetDebugInfoLText() =>
-        $"""
-         Press {Keybind.DebugInfo.GetCurrentGlyph()} to close this menu
-         Version: {BuildInfo.BuildDate}
-         OS: todo
-         CPU: todo
-         GPU: todo
-         """;
+    private static string GetDebugInfoLText() => string.Format(Lang.DebugInfoL, Keybind.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
 }

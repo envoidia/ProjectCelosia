@@ -18,10 +18,7 @@
     <ItemGroup>
         <None Remove="Icon.ico"/>
         <None Remove="Icon.bmp"/>
-        <None Update="Content\fnt\koruri.ttf">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-        <None Update="img\eating.png">
+        <None Update="Font\koruri.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
@@ -31,6 +28,14 @@
         </EmbeddedResource>
         <EmbeddedResource Include="Icon.bmp">
             <LogicalName>Icon.bmp</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Lang\Lang.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Lang\Lang.de-DE.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Lang.de_DE.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
@@ -43,6 +48,18 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\API\API.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Lang\Lang.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Lang.resx</DependentUpon>
+        </Compile>
+        <Compile Update="Lang\Lang.de-DE.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Lang.de-DE.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
     <Target Name="RestoreDotnetTools" BeforeTargets="CollectPackageReferences">
         <Message Text="Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)" Importance="High"/>
