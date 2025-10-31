@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using API.Input;
 
@@ -31,15 +30,15 @@ public static class MenuTypeExtensions {
             _ => []
         });
     }
-    
+
     private static string GetInputPromptString(params InputPrompt[] inputPrompts) {
         if (inputPrompts == null) return "";
-        
+
         StringBuilder inputs = new();
 
         for (int i = 0; i < inputPrompts.Length; i++) {
             inputs.Append(inputPrompts[i].GetText());
-            if(i != inputPrompts.Length - 1) inputs.Append("  ");
+            if (i != (inputPrompts.Length - 1)) inputs.Append("  ");
         }
 
         return inputs.ToString();

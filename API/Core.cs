@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using API.Battle;
 using API.Graphics;
 using API.Input;
 using API.Menu;
@@ -63,6 +64,17 @@ public class Core : Game {
 
     private static Label inputPrompt;
 
+    // Lists of other stuff
+    public static readonly List<Element> Elements = [];
+    public static readonly List<Battle.Range> Ranges = [];
+    public static readonly List<Skill> Skills = [];
+    public static readonly List<Buff> Buffs = [];
+    public static readonly List<Passive> Passives = [];
+    public static readonly List<StageType> StageTypes = [];
+    public static readonly List<UnitType> UnitTypes = [];
+    public static readonly List<Accessory> Accessories = [];
+
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -94,10 +106,10 @@ public class Core : Game {
 
         // Setup font
         // todo
-        /*KoruriSystem = new FontSystem(new FontSystemSettings() {
-            TextureWidth = 16384,
-            TextureHeight = 16384
-        });*/
+        //FontSystemDefaults.TextureWidth = 4096;
+        //FontSystemDefaults.TextureHeight = 4096;
+
+        KoruriSystem = new FontSystem();
         FontSystemDefaults.FontResolutionFactor = 2f;
         FontSystemDefaults.KernelWidth = 2;
         FontSystemDefaults.KernelHeight = 2;
@@ -177,7 +189,7 @@ public class Core : Game {
         NavPath.Push(menuType);
         UpdateInputPrompt();
     }
-    
+
     public static void RemoveMenu() {
         NavPath.Pop();
         UpdateInputPrompt();

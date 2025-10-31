@@ -4,7 +4,7 @@
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                 xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
-            
+
         </xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
@@ -621,58 +621,58 @@ Loaded Mod Count: todo</value>
     <data name="RangeSelf" xml:space="preserve">
         <value>Self</value>
     </data>
-    <data name="RangeOther1r" xml:space="preserve">
+    <data name="RangeOther1R" xml:space="preserve">
         <value>Other 1R</value>
     </data>
-    <data name="RangeOther2r" xml:space="preserve">
+    <data name="RangeOther2R" xml:space="preserve">
         <value>Other 2R</value>
     </data>
-    <data name="RangeOther3r" xml:space="preserve">
+    <data name="RangeOther3R" xml:space="preserve">
         <value>Any Other</value>
     </data>
-    <data name="RangeOther1rOrSelf" xml:space="preserve">
+    <data name="RangeOther1ROrSelf" xml:space="preserve">
         <value>Other 1R or Self</value>
     </data>
-    <data name="RangeOther2rOrSelf" xml:space="preserve">
+    <data name="RangeOther2ROrSelf" xml:space="preserve">
         <value>Other 2R or Self</value>
     </data>
-    <data name="RangeOther3rOrSelf" xml:space="preserve">
+    <data name="RangeOther3ROrSelf" xml:space="preserve">
         <value>Any</value>
     </data>
-    <data name="RangeOthers21r" xml:space="preserve">
+    <data name="RangeOthers21R" xml:space="preserve">
         <value>2 Others 1R</value>
     </data>
-    <data name="RangeOthers22r" xml:space="preserve">
+    <data name="RangeOthers22R" xml:space="preserve">
         <value>2 Others 2R</value>
     </data>
-    <data name="RangeOthers23r" xml:space="preserve">
+    <data name="RangeOthers23R" xml:space="preserve">
         <value>Any 2 Others</value>
     </data>
-    <data name="RangeAlly1r" xml:space="preserve">
+    <data name="RangeAlly1R" xml:space="preserve">
         <value>Ally 1R</value>
     </data>
-    <data name="RangeAlly2r" xml:space="preserve">
+    <data name="RangeAlly2R" xml:space="preserve">
         <value>Ally 2R</value>
     </data>
-    <data name="RangeAlly3r" xml:space="preserve">
+    <data name="RangeAlly3R" xml:space="preserve">
         <value>Any Ally</value>
     </data>
-    <data name="RangeAllies21r" xml:space="preserve">
+    <data name="RangeAllies21R" xml:space="preserve">
         <value>2 Allies 1R</value>
     </data>
-    <data name="RangeAllies22r" xml:space="preserve">
+    <data name="RangeAllies22R" xml:space="preserve">
         <value>2 Allies 2R</value>
     </data>
-    <data name="RangeAllies23r" xml:space="preserve">
+    <data name="RangeAllies23R" xml:space="preserve">
         <value>Any 2 Allies</value>
     </data>
-    <data name="RangeOpponent1r" xml:space="preserve">
+    <data name="RangeOpponent1R" xml:space="preserve">
         <value>Opponent 1R</value>
     </data>
-    <data name="RangeOpponent2r" xml:space="preserve">
+    <data name="RangeOpponent2R" xml:space="preserve">
         <value>Opponent 2R</value>
     </data>
-    <data name="RangeOpponent3r" xml:space="preserve">
+    <data name="RangeOpponent3R" xml:space="preserve">
         <value>Any Opponent</value>
     </data>
     <data name="RangeTeam" xml:space="preserve">
@@ -696,10 +696,10 @@ Loaded Mod Count: todo</value>
     <data name="RangeAcrossUpDown" xml:space="preserve">
         <value>Across+Up+Down</value>
     </data>
-    <data name="RangeColumnOf31r" xml:space="preserve">
+    <data name="RangeColumnOf31R" xml:space="preserve">
         <value>Column of 3 1R</value>
     </data>
-    <data name="RangeColumnOf32r" xml:space="preserve">
+    <data name="RangeColumnOf32R" xml:space="preserve">
         <value>Column of 3 2R</value>
     </data>
     <!--Battle log messages-->
@@ -923,9 +923,12 @@ Loaded Mod Count: todo</value>
         <value>{0}/c[white]{1}</value>
     </data>
     <!--Skill descriptions
-    0 = cost, 1 = isBloom (0 = false, 1 = true)-->
-    <data name="SkillCost" xml:space="preserve">
-        <value>{0} {1,choice,0#SP|1#Bloom}</value>
+    0 = cost-->
+    <data name="SkillCostSP" xml:space="preserve">
+        <value>{0} SP</value>
+    </data>
+    <data name="SkillCostBloom" xml:space="preserve">
+        <value>{0} Bloom</value>
     </data>
     <!--0 = SkillType, 1 = element, 2 = range, 3 = , pow (if applicable), 4 = , prio (if applicable), 5 = skill_desc body
     Str, Ignis, Other 1R, 50 Pow\n(skill description)-->

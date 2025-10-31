@@ -50,4 +50,8 @@ public static class BattleHandlerLib {
     }
 
     public static void HandleBattle() { }
+
+    public static void AppendToLog(string str) {
+        return;
+    }
 }

@@ -44,11 +44,13 @@ public static class DebugMenu {
         if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
         DebugInfoR.Text = string.Format(Lang.DebugInfoR,
-            (int) (1 / avgFrameTime.TotalSeconds) + "(" + (int) (1 / gameTime.ElapsedGameTime.TotalSeconds) + ")", // todo temp
+            (int) (1 / avgFrameTime.TotalSeconds) + "(" + (int) (1 / gameTime.ElapsedGameTime.TotalSeconds) +
+            ")", // todo temp
             System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb,
             string.Join(", ", Core.NavPath.Reverse()));
         timeSinceUpdate = TimeSpan.Zero;
     }
 
-    private static string GetDebugInfoLText() => string.Format(Lang.DebugInfoL, Keybind.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
+    private static string GetDebugInfoLText() =>
+        string.Format(Lang.DebugInfoL, Keybind.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
 }

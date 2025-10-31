@@ -19,13 +19,12 @@ public abstract class RenderObject {
     internal Point Origin { get; set; } = Point.Zero;
 
     protected abstract void AddToRenderList();
-    
+
     protected Point CalcOrigin() => this.Alignment switch {
         Alignment.TopLeft => Point.Zero,
         Alignment.TopRight => new Point(this.Size.X, 0),
         Alignment.BottomLeft => new Point(0, this.Size.Y),
         Alignment.BottomRight => new Point(this.Size.X, this.Size.Y),
-        Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f)),
-        _ => throw new ArgumentOutOfRangeException(nameof(this.Alignment))
+        Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f))
     };
 }

@@ -14,6 +14,7 @@ public class InputPrompts {
     public static readonly InputPrompt Inspect = new(Lang.InputInspect, Keybind.Map);
 
     public static readonly InputPrompt Top = new(Lang.InputTop, Keybind.PageL2);
+
     public static readonly InputPrompt Bottom = new(Lang.InputBottom, Keybind.PageR2);
     // todo
 }

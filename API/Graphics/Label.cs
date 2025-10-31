@@ -17,10 +17,10 @@ public class Label : RenderObject {
         }
     }
 
-    /*public int Width {
+    public int Width {
         get => (int) this.RichTextLayout.Width!;
         set => this.RichTextLayout.Width = value; // todo remeasure
-    }*/
+    }
 
     public override Point Size => this.RichTextLayout.Size;
 
@@ -75,8 +75,6 @@ public class Label : RenderObject {
             case RenderPriority.High:
                 Core.LabelsHigh.Add(this);
                 break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(this.Priority));
         }
     }
 }

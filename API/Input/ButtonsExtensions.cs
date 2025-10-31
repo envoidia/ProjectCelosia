@@ -30,8 +30,7 @@ public static class ButtonsExtensions {
     public static string FormatSingleGlyph(string name, InputDevice inputDevice) => inputDevice switch {
         InputDevice.NintendoController => $"/i[N{name}]",
         InputDevice.PlaystationController => $"/i[P{name}]",
-        InputDevice.XboxController => $"/i[X{name}]",
-        _ => throw new ArgumentOutOfRangeException(nameof(inputDevice))
+        InputDevice.XboxController => $"/i[X{name}]"
     };
 
     public static string[] FormatGlyphArray(string name) => [$"/i[N{name}]", $"/i[P{name}]", $"/i[X{name}]"];

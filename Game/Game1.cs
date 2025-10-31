@@ -34,44 +34,6 @@ public class Game1 : Core {
     protected override void Initialize() {
         base.Initialize();
         AddMenu(Main);
-        
-        // text testing
-        Label a = new() {
-            Text = "/c[blue]/i[shield]TopLeft",
-            Position = Vector2.One * 300,
-            HasBackground = true
-        };
-        
-        Label b = new() {
-            Text = "/c[green]/i[whirlwind]TopRight",
-            Alignment = Alignment.TopRight,
-            Position = Vector2.One * 400,
-            HasBackground = true,
-            BackgroundColor = new Color(0.3f, 0, 0, 0.6f)
-        };
-        
-        Label c = new() {
-            Text = "/c[cyan]/i[earth-spit]Bottom/i[bubbles]L/c[red]eft",
-            Alignment = Alignment.BottomLeft,
-            Position = Vector2.One * 500,
-            HasBackground = true
-        };
-        
-        Label d = new() {
-            Text = "/c[yellow]/i[star-formation]BottomRight",
-            Alignment = Alignment.BottomRight,
-            Position = Vector2.One * 600,
-            HasBackground = true
-        };
-        
-        Label e = new() {
-            Text = "/c[orange]/i[dread-skull]Center",
-            Alignment = Alignment.Center,
-            Position = Vector2.One * 700,
-            HasBackground = true,
-            BackgroundColor = new Color(0, 0.3f, 0, 0.6f)
-        };
-
     }
 
     protected override void LoadContent() {
@@ -161,7 +123,7 @@ public class Game1 : Core {
 
         SpriteBatch.Draw(this._bg, Vector2.Zero, Color.White);
 
-        //Console.WriteLine(KoruriSystem.Atlases.Count); todo test with more diverse chars
+        //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test with more diverse chars
 
         DrawRenderPriority(LabelsLow);
         DrawRenderPriority(LabelsMed);

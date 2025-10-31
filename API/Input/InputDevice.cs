@@ -15,16 +15,14 @@ public static class InputDeviceExtensions {
             InputDevice.Keyboard => Keybind.Left.Key.GetGlyph() + Keybind.Right.Key.GetGlyph(),
             InputDevice.NintendoController => "/i[NDX]",
             InputDevice.PlaystationController => "/i[PDX]",
-            InputDevice.XboxController => "/i[XDX]",
-            _ => throw new ArgumentOutOfRangeException(nameof(inputDevice))
+            InputDevice.XboxController => "/i[XDX]"
         };
 
         public string GetGlyphUpDown => inputDevice switch {
             InputDevice.Keyboard => Keybind.Up.Key.GetGlyph() + Keybind.Down.Key.GetGlyph(),
             InputDevice.NintendoController => "/i[NDY]",
             InputDevice.PlaystationController => "/i[PDY]",
-            InputDevice.XboxController => "/i[XDY]",
-            _ => throw new ArgumentOutOfRangeException(nameof(inputDevice))
+            InputDevice.XboxController => "/i[XDY]"
         };
 
         public string GetGlyphLeftRightUpDown => inputDevice switch {
@@ -32,8 +30,7 @@ public static class InputDeviceExtensions {
                                     Keybind.Up.Key.GetGlyph() + Keybind.Down.Key.GetGlyph(),
             InputDevice.NintendoController => "/i[ND]",
             InputDevice.PlaystationController => "/i[PD]",
-            InputDevice.XboxController => "/i[XD]",
-            _ => throw new ArgumentOutOfRangeException(nameof(inputDevice))
+            InputDevice.XboxController => "/i[XD]"
         };
     }
 }

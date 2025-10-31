@@ -1149,111 +1149,111 @@ namespace API {
             }
         }
         
-        public static string RangeOther1r {
+        public static string RangeOther1R {
             get {
-                return ResourceManager.GetString("RangeOther1r", resourceCulture);
+                return ResourceManager.GetString("RangeOther1R", resourceCulture);
             }
         }
         
-        public static string RangeOther2r {
+        public static string RangeOther2R {
             get {
-                return ResourceManager.GetString("RangeOther2r", resourceCulture);
+                return ResourceManager.GetString("RangeOther2R", resourceCulture);
             }
         }
         
-        public static string RangeOther3r {
+        public static string RangeOther3R {
             get {
-                return ResourceManager.GetString("RangeOther3r", resourceCulture);
+                return ResourceManager.GetString("RangeOther3R", resourceCulture);
             }
         }
         
-        public static string RangeOther1rOrSelf {
+        public static string RangeOther1ROrSelf {
             get {
-                return ResourceManager.GetString("RangeOther1rOrSelf", resourceCulture);
+                return ResourceManager.GetString("RangeOther1ROrSelf", resourceCulture);
             }
         }
         
-        public static string RangeOther2rOrSelf {
+        public static string RangeOther2ROrSelf {
             get {
-                return ResourceManager.GetString("RangeOther2rOrSelf", resourceCulture);
+                return ResourceManager.GetString("RangeOther2ROrSelf", resourceCulture);
             }
         }
         
-        public static string RangeOther3rOrSelf {
+        public static string RangeOther3ROrSelf {
             get {
-                return ResourceManager.GetString("RangeOther3rOrSelf", resourceCulture);
+                return ResourceManager.GetString("RangeOther3ROrSelf", resourceCulture);
             }
         }
         
-        public static string RangeOthers21r {
+        public static string RangeOthers21R {
             get {
-                return ResourceManager.GetString("RangeOthers21r", resourceCulture);
+                return ResourceManager.GetString("RangeOthers21R", resourceCulture);
             }
         }
         
-        public static string RangeOthers22r {
+        public static string RangeOthers22R {
             get {
-                return ResourceManager.GetString("RangeOthers22r", resourceCulture);
+                return ResourceManager.GetString("RangeOthers22R", resourceCulture);
             }
         }
         
-        public static string RangeOthers23r {
+        public static string RangeOthers23R {
             get {
-                return ResourceManager.GetString("RangeOthers23r", resourceCulture);
+                return ResourceManager.GetString("RangeOthers23R", resourceCulture);
             }
         }
         
-        public static string RangeAlly1r {
+        public static string RangeAlly1R {
             get {
-                return ResourceManager.GetString("RangeAlly1r", resourceCulture);
+                return ResourceManager.GetString("RangeAlly1R", resourceCulture);
             }
         }
         
-        public static string RangeAlly2r {
+        public static string RangeAlly2R {
             get {
-                return ResourceManager.GetString("RangeAlly2r", resourceCulture);
+                return ResourceManager.GetString("RangeAlly2R", resourceCulture);
             }
         }
         
-        public static string RangeAlly3r {
+        public static string RangeAlly3R {
             get {
-                return ResourceManager.GetString("RangeAlly3r", resourceCulture);
+                return ResourceManager.GetString("RangeAlly3R", resourceCulture);
             }
         }
         
-        public static string RangeAllies21r {
+        public static string RangeAllies21R {
             get {
-                return ResourceManager.GetString("RangeAllies21r", resourceCulture);
+                return ResourceManager.GetString("RangeAllies21R", resourceCulture);
             }
         }
         
-        public static string RangeAllies22r {
+        public static string RangeAllies22R {
             get {
-                return ResourceManager.GetString("RangeAllies22r", resourceCulture);
+                return ResourceManager.GetString("RangeAllies22R", resourceCulture);
             }
         }
         
-        public static string RangeAllies23r {
+        public static string RangeAllies23R {
             get {
-                return ResourceManager.GetString("RangeAllies23r", resourceCulture);
+                return ResourceManager.GetString("RangeAllies23R", resourceCulture);
             }
         }
         
-        public static string RangeOpponent1r {
+        public static string RangeOpponent1R {
             get {
-                return ResourceManager.GetString("RangeOpponent1r", resourceCulture);
+                return ResourceManager.GetString("RangeOpponent1R", resourceCulture);
             }
         }
         
-        public static string RangeOpponent2r {
+        public static string RangeOpponent2R {
             get {
-                return ResourceManager.GetString("RangeOpponent2r", resourceCulture);
+                return ResourceManager.GetString("RangeOpponent2R", resourceCulture);
             }
         }
         
-        public static string RangeOpponent3r {
+        public static string RangeOpponent3R {
             get {
-                return ResourceManager.GetString("RangeOpponent3r", resourceCulture);
+                return ResourceManager.GetString("RangeOpponent3R", resourceCulture);
             }
         }
         
@@ -1299,15 +1299,15 @@ namespace API {
             }
         }
         
-        public static string RangeColumnOf31r {
+        public static string RangeColumnOf31R {
             get {
-                return ResourceManager.GetString("RangeColumnOf31r", resourceCulture);
+                return ResourceManager.GetString("RangeColumnOf31R", resourceCulture);
             }
         }
         
-        public static string RangeColumnOf32r {
+        public static string RangeColumnOf32R {
             get {
-                return ResourceManager.GetString("RangeColumnOf32r", resourceCulture);
+                return ResourceManager.GetString("RangeColumnOf32R", resourceCulture);
             }
         }
         
@@ -1581,9 +1581,15 @@ namespace API {
             }
         }
         
-        public static string SkillCost {
+        public static string SkillCostSP {
             get {
-                return ResourceManager.GetString("SkillCost", resourceCulture);
+                return ResourceManager.GetString("SkillCostSP", resourceCulture);
+            }
+        }
+        
+        public static string SkillCostBloom {
+            get {
+                return ResourceManager.GetString("SkillCostBloom", resourceCulture);
             }
         }
         
