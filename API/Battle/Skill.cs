@@ -4,7 +4,6 @@ using System.Text;
 using API.Entity;
 using API.Extensions;
 using API.Graphics;
-using Microsoft.Xna.Framework;
 
 namespace API.Battle;
 
@@ -20,8 +19,8 @@ public class Skill : ComplexDescriptionEntity {
     public SkillRole[] SkillRoles { get; init; } = [];
     public ISkillEffect[] SkillEffects { get; init; } = [];
 
-    public Skill(string name, string description, Element element, Range range, int cost)
-        : base(name, description, element.Name) {
+    public Skill(string keyName, string keyDescription, Element element, Range range, int cost)
+        : base(keyName, keyDescription, element.KeyName) {
         this.Element = element;
         this.Range = range;
         this.Cost = cost;
@@ -39,7 +38,8 @@ public class Skill : ComplexDescriptionEntity {
                                           this.HasRole(SkillRole.DebuffDefensive) ||
                                           this.HasRole(SkillRole.DebuffOffensive);
 
-    public override string Description {
+    // todo this should be a key as the name implies
+    public override string KeyDescription {
         get {
             int pow = 0;
             List<string> skillTypes = new(3);
@@ -65,8 +65,8 @@ public class Skill : ComplexDescriptionEntity {
                 skillTypesStr = Colors.Stat + SkillType.Stat.GetName() + "/c[white]";
             }
 
-            return string.Format(Lang.SkillDesc, skillTypesStr, this.Element.GetNameWithIcon(Colors.Element),
-                this.Element.Name, pow == 0 ? "" : ", " + Colors.Num + pow + " [WHITE]" + Lang.Pow, this.Prio == 0
+            return string.Format(Lang.SkillDesc, skillTypesStr, this.Element.GetName(Colors.Element),
+                this.Element.KeyName, pow == 0 ? "" : ", " + Colors.Num + pow + " [WHITE]" + Lang.Pow, this.Prio == 0
                     ? ""
                     : ", " + this.Prio.Format() + " /c[white]" + Lang.Prio, this.GetPartialDesc());
         }
@@ -87,8 +87,8 @@ public class Skill : ComplexDescriptionEntity {
         }
 
         foreach (IconEntity inclusion in inclusions) {
-            partialDesc.Append("\n/c[white](").Append(inclusion.GetNameWithIcon(Colors.Buff)).Append("/c[white]: ")
-                .Append(inclusion.Description.Replace("\n", ". ")).Append("/c[white])");
+            partialDesc.Append("\n/c[white](").Append(inclusion.GetName(Colors.Buff)).Append("/c[white]: ")
+                .Append(inclusion.KeyDescription.Replace("\n", ". ")).Append("/c[white])");
         }
 
         return partialDesc.ToString();

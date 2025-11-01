@@ -2,9 +2,11 @@
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <LangVersion>Preview</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.4.1"/>
+        <PackageReference Include="MessageFormat" Version="7.1.3" />
         <PackageReference Include="MonoGame.Extended" Version="5.1.0"/>
         <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="5.1.0"/>
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.*">

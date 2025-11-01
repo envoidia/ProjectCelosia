@@ -3,12 +3,13 @@ using API.Entity;
 namespace API.Battle;
 
 public class Accessory : ComplexDescriptionEntity, IEquippable {
-    public Skill[] Skills { get; init; }
-    public Passive[] Passives { get; init; }
+    public Skill[] Skills { get; init; } = [];
+    public Passive[] Passives { get; init; } = [];
 
-    public override string Description => string.Format(Lang.AccessoryDesc, this.GetPartialDesc());
+    // todo this should be a key as the name implies
+    public override string KeyDescription => string.Format(Lang.AccessoryDesc, this.GetPartialDesc());
 
-    public Accessory(string name, string description, string icon) : base(name, description, icon) {
+    public Accessory(string keyName, string keyDescription, string icon) : base(keyName, keyDescription, icon) {
         Core.Accessories.Add(this);
     }
 

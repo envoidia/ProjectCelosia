@@ -10,20 +10,20 @@ public static class BattleHandlerLib {
     }
 
     public static void HandleLog() {
-        if (Core.Input.CheckInput(Keybind.Back, Keybind.Menu)) {
+        if (Core.Input.CheckInput(Keybinds.Back, Keybinds.Menu)) {
             Core.RemoveMenu();
         }
     }
 
     public static void HandleTargeting() {
-        if (Core.Input.CheckInput(Keybind.Back)) {
+        if (Core.Input.CheckInput(Keybinds.Back)) {
             Core.RemoveMenu();
             return;
         }
     }
 
     public static void HandleInspect() {
-        if (Core.Input.CheckInput(Keybind.Back)) {
+        if (Core.Input.CheckInput(Keybinds.Back)) {
             Core.RemoveMenu();
             return;
         }
@@ -34,12 +34,12 @@ public static class BattleHandlerLib {
     }
 
     public static void HandleInspectTargeting() {
-        if (Core.Input.CheckInput(Keybind.Back)) {
+        if (Core.Input.CheckInput(Keybinds.Back)) {
             Core.RemoveMenu();
             return;
         }
 
-        if (Core.Input.CheckInput(Keybind.Confirm, Keybind.Map)) {
+        if (Core.Input.CheckInput(Keybinds.Confirm, Keybinds.Map)) {
             CreateInspect();
         }
     }

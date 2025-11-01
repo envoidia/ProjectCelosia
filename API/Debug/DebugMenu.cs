@@ -25,17 +25,29 @@ public static class DebugMenu {
         HasBackground = true
     };
 
+    private static readonly Label DebugInfoHelp = new() {
+        Text = GetDebugInfoHelpText(),
+        Position = new Vector2(10, World.H - 10),
+        Alignment = Alignment.BottomLeft,
+        HasBackground = true
+    };
+
     public static void HandleDebugInfo(bool isDebugInfoEnabled, GameTime gameTime) {
         if (!isDebugInfoEnabled) {
             DebugInfoL.Visible = false;
             DebugInfoR.Visible = false;
+            DebugInfoHelp.Visible = false;
             return;
         }
 
         DebugInfoL.Visible = true;
         DebugInfoR.Visible = true;
+        DebugInfoHelp.Visible ^= Core.Input.CheckInput(Keybinds.DebugHelp);
 
-        if (Core.Input.InputDeviceChanged) DebugInfoL.Text = GetDebugInfoLText();
+        if (Core.Input.InputDeviceChanged) {
+            DebugInfoL.Text = GetDebugInfoLText();
+            DebugInfoHelp.Text = GetDebugInfoHelpText();
+        }
 
         // Lerped FPS counter
         avgFrameTime += (gameTime.ElapsedGameTime - avgFrameTime) * 0.01f;
@@ -52,5 +64,8 @@ public static class DebugMenu {
     }
 
     private static string GetDebugInfoLText() =>
-        string.Format(Lang.DebugInfoL, Keybind.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
+        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph(), BuildInfo.BuildDate);
+    
+    private static string GetDebugInfoHelpText() =>
+        string.Format(Lang.DebugInfoHelp, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph());
 }

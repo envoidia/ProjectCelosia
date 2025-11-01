@@ -1,5 +1,3 @@
-using System;
-
 namespace API.Input;
 
 public enum InputDevice {
@@ -12,22 +10,22 @@ public enum InputDevice {
 public static class InputDeviceExtensions {
     extension(InputDevice inputDevice) {
         public string GetGlyphLeftRight => inputDevice switch {
-            InputDevice.Keyboard => Keybind.Left.Key.GetGlyph() + Keybind.Right.Key.GetGlyph(),
+            InputDevice.Keyboard => Keybinds.Left.Key.GetGlyph() + Keybinds.Right.Key.GetGlyph(),
             InputDevice.NintendoController => "/i[NDX]",
             InputDevice.PlaystationController => "/i[PDX]",
             InputDevice.XboxController => "/i[XDX]"
         };
 
         public string GetGlyphUpDown => inputDevice switch {
-            InputDevice.Keyboard => Keybind.Up.Key.GetGlyph() + Keybind.Down.Key.GetGlyph(),
+            InputDevice.Keyboard => Keybinds.Up.Key.GetGlyph() + Keybinds.Down.Key.GetGlyph(),
             InputDevice.NintendoController => "/i[NDY]",
             InputDevice.PlaystationController => "/i[PDY]",
             InputDevice.XboxController => "/i[XDY]"
         };
 
         public string GetGlyphLeftRightUpDown => inputDevice switch {
-            InputDevice.Keyboard => Keybind.Left.Key.GetGlyph() + Keybind.Right.Key.GetGlyph() +
-                                    Keybind.Up.Key.GetGlyph() + Keybind.Down.Key.GetGlyph(),
+            InputDevice.Keyboard => Keybinds.Left.Key.GetGlyph() + Keybinds.Right.Key.GetGlyph() +
+                                    Keybinds.Up.Key.GetGlyph() + Keybinds.Down.Key.GetGlyph(),
             InputDevice.NintendoController => "/i[ND]",
             InputDevice.PlaystationController => "/i[PD]",
             InputDevice.XboxController => "/i[XD]"

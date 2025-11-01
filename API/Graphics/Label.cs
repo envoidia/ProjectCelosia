@@ -1,4 +1,3 @@
-using System;
 using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;

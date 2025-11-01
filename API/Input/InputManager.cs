@@ -17,7 +17,7 @@ public class InputManager {
     /// <summary>
     /// How long each keybind has been held down for
     /// </summary>
-    private readonly TimeSpan[] _held = new TimeSpan[13];
+    private readonly TimeSpan[] _held = new TimeSpan[Keybinds.KeybindCount];
 
     /// <summary>
     /// Default time between triggers when holding keybind down
@@ -117,23 +117,23 @@ public class InputManager {
     }
 
     private bool IsKeyDown(Keybind keybind) => keybind.Id switch {
-        KeybindId.LeftRight => this.KeyboardState.IsKeyDown(Keybind.Left.Key) ||
-                               this.KeyboardState.IsKeyDown(Keybind.Right.Key),
-        KeybindId.UpDown => this.KeyboardState.IsKeyDown(Keybind.Up.Key) ||
-                            this.KeyboardState.IsKeyDown(Keybind.Down.Key),
-        KeybindId.LeftRightUpDown => this.KeyboardState.IsKeyDown(Keybind.Left.Key) ||
-                                     this.KeyboardState.IsKeyDown(Keybind.Right.Key) ||
-                                     this.KeyboardState.IsKeyDown(Keybind.Up.Key) ||
-                                     this.KeyboardState.IsKeyDown(Keybind.Down.Key),
+        KeybindId.LeftRight => this.KeyboardState.IsKeyDown(Keybinds.Left.Key) ||
+                               this.KeyboardState.IsKeyDown(Keybinds.Right.Key),
+        KeybindId.UpDown => this.KeyboardState.IsKeyDown(Keybinds.Up.Key) ||
+                            this.KeyboardState.IsKeyDown(Keybinds.Down.Key),
+        KeybindId.LeftRightUpDown => this.KeyboardState.IsKeyDown(Keybinds.Left.Key) ||
+                                     this.KeyboardState.IsKeyDown(Keybinds.Right.Key) ||
+                                     this.KeyboardState.IsKeyDown(Keybinds.Up.Key) ||
+                                     this.KeyboardState.IsKeyDown(Keybinds.Down.Key),
         _ => this.KeyboardState.IsKeyDown(keybind.Key)
     };
 
     private bool IsButtonDown(Keybind keybind) => keybind.Id switch {
-        KeybindId.LeftRight => this.IsButtonDown(Keybind.Left.Button) || this.IsButtonDown(Keybind.Right.Button),
-        KeybindId.UpDown => this.IsButtonDown(Keybind.Up.Button) || this.IsButtonDown(Keybind.Down.Button),
-        KeybindId.LeftRightUpDown => this.IsButtonDown(Keybind.Left.Button) ||
-                                     this.IsButtonDown(Keybind.Right.Button) ||
-                                     this.IsButtonDown(Keybind.Up.Button) || this.IsButtonDown(Keybind.Down.Button),
+        KeybindId.LeftRight => this.IsButtonDown(Keybinds.Left.Button) || this.IsButtonDown(Keybinds.Right.Button),
+        KeybindId.UpDown => this.IsButtonDown(Keybinds.Up.Button) || this.IsButtonDown(Keybinds.Down.Button),
+        KeybindId.LeftRightUpDown => this.IsButtonDown(Keybinds.Left.Button) ||
+                                     this.IsButtonDown(Keybinds.Right.Button) ||
+                                     this.IsButtonDown(Keybinds.Up.Button) || this.IsButtonDown(Keybinds.Down.Button),
         _ => this.IsButtonDown(keybind.Button)
     };
 

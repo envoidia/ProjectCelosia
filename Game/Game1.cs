@@ -11,6 +11,7 @@ using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
+using API.Extensions;
 using static API.Menu.MenuType;
 
 namespace Game;
@@ -26,6 +27,11 @@ public class Game1 : Core {
 
     // Debug
     private bool _isDebugInfoEnabled;
+    private static readonly Label _testLabel = new() {
+        Position = new Vector2(1000, 800),
+        Text = "",
+        Width = 2000
+    };
 
     public Game1() : base("Project Celosia", 0, 0, false) =>
         this._resolution = new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
@@ -34,6 +40,8 @@ public class Game1 : Core {
     protected override void Initialize() {
         base.Initialize();
         AddMenu(Main);
+
+        _testLabel.Text = "RangeAllies21R".GetLang();
     }
 
     protected override void LoadContent() {
@@ -56,7 +64,8 @@ public class Game1 : Core {
     }
 
     private void CheckInput(GameTime gameTime) {
-        this._isDebugInfoEnabled ^= Input.CheckInput(Keybind.DebugInfo);
+        this._isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
+
         DebugMenu.HandleDebugInfo(this._isDebugInfoEnabled, gameTime);
 
         switch (NavPath.Peek()) {
@@ -65,7 +74,7 @@ public class Game1 : Core {
                 //Console.WriteLine(this._index);
                 // update cursor
 
-                if (Input.CheckInput(Keybind.Confirm)) {
+                if (Input.CheckInput(Keybinds.Confirm)) {
                     switch ((MainMenu) this._index) {
                         case MainMenu.Start:
                             // Overworld/battle
@@ -88,7 +97,7 @@ public class Game1 : Core {
                             // todo
                             break;
                     }
-                } else if (Input.CheckInput(Keybind.Back)) {
+                } else if (Input.CheckInput(Keybinds.Back)) {
                     if ((MainMenu) this._index == MainMenu.Quit) {
                         this.Exit();
                     } else {
@@ -98,7 +107,7 @@ public class Game1 : Core {
 
                 break;
             case Popup:
-                if (Input.CheckInput(Keybind.Confirm, Keybind.Back)) {
+                if (Input.CheckInput(Keybinds.Confirm, Keybinds.Back)) {
                     // close
                 }
 

@@ -1,9 +1,9 @@
 namespace API.Entity;
 
-public abstract class IconEntity(string name, string description, string icon) : NamedEntity(name, description) {
+public abstract class IconEntity(string keyName, string keyDescription, string icon) : NamedEntity(keyName, keyDescription) {
     public string Icon { get; set; } = icon;
 
-    public string GetNameWithIcon() => icon + " [WHITE]" + this.Name;
+    public override string GetName() => this.Icon + " /c[white]" + this.KeyName; // todo
 
-    public string GetNameWithIcon(string color) => icon + " " + color + this.Name;
+    public string GetName(string color) => this.Icon + " " + color + this.KeyName; // todo
 }

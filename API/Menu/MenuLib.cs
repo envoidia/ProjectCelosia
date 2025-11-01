@@ -7,11 +7,11 @@ public static class MenuLib {
     private static readonly TimeSpan LogScrollDelay = TimeSpan.FromSeconds(0.005f);
 
     public static int CheckMovement1D(int index, int optCount) {
-        if (Core.Input.CheckInput(true, Keybind.Up, Keybind.Left)) {
+        if (Core.Input.CheckInput(true, Keybinds.Up, Keybinds.Left)) {
             return --index < 0 ? optCount - 1 : index;
         }
 
-        if (Core.Input.CheckInput(true, Keybind.Down, Keybind.Right)) {
+        if (Core.Input.CheckInput(true, Keybinds.Down, Keybinds.Right)) {
             return ++index >= optCount ? 0 : index;
         }
 
@@ -39,21 +39,21 @@ public static class MenuLib {
         int newIndex = index;
 
         // Move selection
-        if (Core.Input.CheckInput(true, Keybind.Up)) {
+        if (Core.Input.CheckInput(true, Keybinds.Up)) {
             if (index < 4) {
                 // On player side
                 newIndex = (index - 1) < 0 ? 3 : index - 1;
             } else {
                 newIndex = (index - 1) < 4 ? 7 : index - 1;
             }
-        } else if (Core.Input.CheckInput(true, Keybind.Down)) {
+        } else if (Core.Input.CheckInput(true, Keybinds.Down)) {
             if (index < 4) {
                 // On player side
                 newIndex = (index + 1) >= 4 ? 0 : index + 1;
             } else {
                 newIndex = (index + 1) >= 8 ? 4 : index + 1;
             }
-        } else if (Core.Input.CheckInput(true, Keybind.Left, Keybind.Right)) {
+        } else if (Core.Input.CheckInput(true, Keybinds.Left, Keybinds.Right)) {
             newIndex = index < 4 ? index + 4 : index - 4;
         }
 
@@ -71,22 +71,22 @@ public static class MenuLib {
 
     public static int CheckLogScroll(int logScroll, int lines, int off) {
         // Up
-        if (Core.Input.CheckInput(true, LogScrollDelay, Keybind.Up)) {
+        if (Core.Input.CheckInput(true, LogScrollDelay, Keybinds.Up)) {
             return Math.Min(++logScroll, Math.Max(lines - off, 0));
         }
 
         // Down
-        if (Core.Input.CheckInput(true, LogScrollDelay, Keybind.Down)) {
+        if (Core.Input.CheckInput(true, LogScrollDelay, Keybinds.Down)) {
             return Math.Max(--logScroll, 0);
         }
 
         // To top
-        if (Core.Input.CheckInput(false, Keybind.PageL2)) {
+        if (Core.Input.CheckInput(false, Keybinds.PageL2)) {
             return Math.Max(lines - off, 0);
         }
 
         // To bottom
-        if (Core.Input.CheckInput(false, Keybind.PageR2)) {
+        if (Core.Input.CheckInput(false, Keybinds.PageR2)) {
             return 0;
         }
 

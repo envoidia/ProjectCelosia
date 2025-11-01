@@ -20,13 +20,13 @@ public static class BattleHandler {
             HandleLog();
         } else if (curMenu == MenuType.Inspect) {
             HandleInspect();
-        } else if (Core.Input.CheckInput(Keybind.Menu)) {
+        } else if (Core.Input.CheckInput(Keybinds.Menu)) {
             CreateLog();
         } else if (curMenu == MenuType.InspectTargeting) {
             HandleInspectTargeting();
         } else if (curMenu == MenuType.Targeting) {
             HandleTargeting();
-        } else if (Core.Input.CheckInput(Keybind.Map)) {
+        } else if (Core.Input.CheckInput(Keybinds.Map)) {
             CreateInspectTargeting();
         } else if (Delay > TimeSpan.Zero) {
             Delay -= gameTime.ElapsedGameTime;

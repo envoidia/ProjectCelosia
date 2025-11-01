@@ -1,48 +1,28 @@
-using System;
-
 namespace API.Battle;
 
-public enum StatMod {
-    DurationBuffDealt,
-    DurationBuffTaken,
-    DurationDebuffDealt,
-    DurationDebuffTaken,
-    StacksBuffDealt,
-    StacksBuffTaken,
-    StacksDebuffDealt,
-    StacksDebuffTaken,
-    Range
+public class StatMod {
+    public string KeyName { get; }
+    public bool IsPositive { get; }
+
+    public StatMod(string keyName, bool isPositive) {
+        this.KeyName = keyName;
+        this.IsPositive = isPositive;
+        Core.StatMods.Add(this);
+    }
+
+    public override int GetHashCode() => this.KeyName.GetHashCode();
+    
+    public string FormatVal(int val) => "todo"; // todo Color + sign
 }
 
-public static class StatModExtensions {
-    private record StatModData(string Name, bool Positive);
-
-    private static readonly StatModData[] Data = CreateData();
-
-    private static StatModData[] CreateData() {
-        StatMod[] values = Enum.GetValues<StatMod>();
-        StatModData[] data = new StatModData[values.Length];
-
-        for (int i = 0; i < values.Length; i++) {
-            data[i] = values[i] switch {
-                StatMod.DurationBuffDealt => new StatModData(Lang.ModDurationBuffDealt, true),
-                StatMod.DurationBuffTaken => new StatModData(Lang.ModDurationBuffTaken, true),
-                StatMod.DurationDebuffDealt => new StatModData(Lang.ModDurationDebuffDealt, true),
-                StatMod.DurationDebuffTaken => new StatModData(Lang.ModDurationBuffTaken, false),
-                StatMod.StacksBuffDealt => new StatModData(Lang.ModStacksBuffDealt, true),
-                StatMod.StacksBuffTaken => new StatModData(Lang.ModStacksBuffTaken, true),
-                StatMod.StacksDebuffDealt => new StatModData(Lang.ModStacksDebuffDealt, true),
-                StatMod.StacksDebuffTaken => new StatModData(Lang.ModStacksBuffTaken, false),
-                StatMod.Range => new StatModData(Lang.ModRange, true)
-            };
-        }
-
-        return data;
-    }
-
-    extension(StatMod statMod) {
-        public string GetName() => Data[(int) statMod].Name;
-
-        public bool IsPositive() => Data[(int) statMod].Positive;
-    }
+public static class StatMods {
+    public static readonly StatMod DurationBuffDealt = new("ModDurationBuffDealt", true);
+    public static readonly StatMod DurationBuffTaken = new("ModDurationBuffTaken", true);
+    public static readonly StatMod DurationDebuffDealt = new("ModDurationDebuffDealt", true);
+    public static readonly StatMod DurationDebuffTaken = new("ModDurationDebuffTaken", false);
+    public static readonly StatMod StacksBuffDealt = new("ModStacksBuffDealt", true);
+    public static readonly StatMod StacksBuffTaken = new("ModStacksBuffTaken", true);
+    public static readonly StatMod StacksDebuffDealt = new("ModStacksDebuffDealt", true);
+    public static readonly StatMod StacksDebuffTaken = new("ModStacksDebuffTaken", false);
+    public static readonly StatMod Range = new("ModRange", true);
 }

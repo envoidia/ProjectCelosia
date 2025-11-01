@@ -2,5 +2,5 @@ namespace API.Battle;
 
 public class SkillInstance(Skill skill) {
     public Skill Skill { get; } = skill;
-    public int Cooldown { get; set; } = 0;
+    public uint Cooldown { get; set; } = 0;
 }

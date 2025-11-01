@@ -1,5 +1,3 @@
-using API.Entity;
-
 namespace API.Battle;
 
 public interface IEquippable {
