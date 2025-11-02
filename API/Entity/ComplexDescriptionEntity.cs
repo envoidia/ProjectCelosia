@@ -6,24 +6,24 @@ namespace API.Entity;
 
 public abstract class ComplexDescriptionEntity(string name, string keyDescription, string icon)
     : IconEntity(name, keyDescription, icon) {
-    public string[] DescArgs { get; init; }
-    public IconEntity[] DescInclusions { get; init; }
+    public string[] DescriptionArgs { get; init; } = [];
+    public IconEntity[] DescriptionInclusions { get; init; } = [];
 
     // Force inheritors to reimplement
-    public override string KeyDescription { get; } = keyDescription;
+    public abstract override string GetDescription();
 
-    public virtual string GetPartialDesc() {
-        StringBuilder partialDesc = new(string.Format(base.KeyDescription, this.DescArgs));
-        if (this.DescInclusions.Length > 0) {
-            partialDesc.Append('\n');
+    public virtual string GetPartialDescription() {
+        StringBuilder partialDescription = new(string.Format(this.GetDescription(), this.DescriptionArgs));
+        if (this.DescriptionInclusions.Length > 0) {
+            partialDescription.Append('\n');
         }
 
-        foreach (IconEntity entity in this.DescInclusions) {
+        foreach (IconEntity entity in this.DescriptionInclusions) {
             string color = entity is Skill ? Colors.Skill : Colors.Buff;
-            partialDesc.Append("\n/c[white](").Append(entity.GetName(color)).Append("/c[white]: ")
-                .Append(entity.KeyDescription.Replace("\n", ". ")).Append("/c[white])");
+            partialDescription.Append("\n/c[white](").Append(entity.GetName(color)).Append("/c[white]: ")
+                .Append(entity.GetDescription().Replace("\n", ". ")).Append("/c[white])");
         }
 
-        return partialDesc.ToString();
+        return partialDescription.ToString();
     }
 }

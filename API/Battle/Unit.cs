@@ -12,23 +12,7 @@ namespace API.Battle;
 public class Unit {
     public UnitType UnitType { get; }
     public uint Lvl { get; }
-
     public uint Hp { get; set; }
-
-    // Equipped item (Accessory or Weapon)
-    public IEquippable Equipped {
-        get;
-        set {
-            field.Unequip(this);
-            field = value;
-            field.Equip(this);
-        }
-    }
-
-    public List<SkillInstance> SkillInstances { get; }
-    public List<BuffInstance> BuffInstances { get; } = [];
-    public List<Passive> Passives { get; }
-
     public int Sp { get; set; } = 200;
 
     // Position on the battlefield
@@ -37,6 +21,15 @@ public class Unit {
     // 2 6
     // 3 7
     public uint Pos { get; set; }
+
+    // Shield is hit before HP, and Defend before Shield
+    // Together they cannot exceed max HP
+    public uint Shield { get; set; } = 0;
+    public uint Defend { get; set; } = 0;
+
+    public List<SkillInstance> SkillInstances { get; }
+    public List<BuffInstance> BuffInstances { get; } = [];
+    public List<Passive> Passives { get; }
 
     // Stats
     // _statsMult is treated as multipliers applied to _stats, in 10ths of a % (1000 = 100%), min 10%
@@ -49,25 +42,33 @@ public class Unit {
     private readonly Dictionary<BoolStat, uint> _boolStats = new();
     private readonly Dictionary<StatMod, int> _statMods = new();
 
-    // Shield is hit before HP, and Defend before Shield
-    // Together they cannot exceed max HP
-    public uint Shield { get; set; } = 0;
-    public uint Defend { get; set; } = 0;
+    // Equipped item (Accessory or Weapon)
+    public IEquippable Equipped {
+        get;
+        set {
+            field.Unequip(this);
+            field = value;
+            field.Equip(this);
+        }
+    }
 
     public uint ExtraActions { get; set; } = 0;
 
     public Unit(UnitType unitType, uint lvl, IEquippable equipped, uint pos, params Skill[] skills) {
         this.UnitType = unitType;
         this.Lvl = lvl;
+        this.Pos = pos;
+
         this._stats = unitType.Stats.ToDictionary(kvp => kvp.Key,
             kvp => kvp.Value + ((kvp.Value / 2) * this.Lvl * BattleLib.StatMult));
         this.Hp = this._stats[Stats.Hp];
-        this.Equipped = equipped;
-        this.Equipped.Equip(this);
+
         this.SkillInstances = skills.Select(skill => (SkillInstance) skill).ToList();
         this.Passives = new List<Passive>(unitType.Passives);
         this._affinities = unitType._affinities;
-        this.Pos = pos;
+
+        this.Equipped = equipped;
+        this.Equipped.Equip(this);
     }
 
     public void AddSkills(params Skill[] skills) {
@@ -144,7 +145,7 @@ public class Unit {
             uint statOld = this.GetStat(stat);
             uint statNew = this.GetStatWithStage(stat, stageNew);
             int change = (int) (statNew - statOld);
-            // todo choiceformat and actually format the langkeys
+            // todo choiceformat
             builder.Append(string.Format(Lang.LogStageStat, Colors.Stat + stat.KeyName,
                 TextLib.GetStatColor(statOld, statDefault) + TextLib.FormatNum(statOld),
                 TextLib.GetStatColor(statNew, statDefault) + TextLib.FormatNum(statNew), Colors.Num +
@@ -193,16 +194,15 @@ public class Unit {
         || ((boolStat == BoolStats.EquipDisabled) &&
             (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0u) > 0));
 
-    public string GetOtherStatsString()
-    {
+    public string GetOtherStatsString() {
         StringBuilder str = new();
         foreach (BoolStat stat in Core.BoolStats) {
-            if (stat.IsVisible) str.Append(GetBoolStatString(stat)).Append('\n');
+            if (stat.IsVisible) str.Append(this.GetBoolStatString(stat)).Append('\n');
         }
-        
-        return str.Append(ExtraActions.Format()).ToString();
+
+        return str.Append(this.ExtraActions.Format()).ToString();
     }
-    
+
     public string GetBoolStatString(BoolStat stat) => this.IsImmuneToBoolStat(stat)
         ? Colors.Pos + Lang.Immune
         : this.IsBoolStat(stat)
@@ -228,7 +228,7 @@ public class Unit {
     public int GetStacksModBuffTypeTaken(BuffType buffType) =>
         this._statMods.GetValueOrDefault(
             buffType == BuffType.Buff ? StatMods.StacksBuffTaken : StatMods.StacksDebuffTaken, 0);
-    
+
     public string GetStatModsString() {
         StringBuilder str = new();
         foreach (StatMod mod in Core.StatMods) str.Append(mod.FormatVal(this.GetStatMod(mod))).Append("\n");
@@ -294,8 +294,7 @@ public class Unit {
             if ((stage != 0) && (--this._stageTurns[stageType] == 0)) {
                 // todo choiceformat
                 BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseStage, this.UnitType.FormatName(this.Pos, false),
-                    stage, stage.Format(),
-                    StageTypes.Atk.Icon + Colors.Buff + StageTypes.Atk.KeyName,
+                    stage, stage.Format(), StageTypes.Atk.GetName(Colors.Buff),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
             }
@@ -311,8 +310,8 @@ public class Unit {
                 buffInstance.Turns = turns - 1;
             } else {
                 BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseBuff, this.UnitType.FormatName(this.Pos, false),
-                    buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks, buffInstance.Buff.Icon + Colors.Buff
-                    + buffInstance.Buff.KeyName, string.Format(Lang.LogStacksPlural, buffInstance.Stacks)));
+                    buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
+                    buffInstance.Buff.GetName(Colors.Buff), string.Format(Lang.LogStacksPlural, buffInstance.Stacks)));
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
                     buffEffect.OnRemove(this, buffInstance.Stacks);
@@ -329,84 +328,79 @@ public class Unit {
     }
 
     public Result Damage(uint dmg, bool pierce, bool useName) {
-            uint dmgFull = dmg;
-            uint defendOld = Defend;
-            List<string> msg = [];
-            string name = (useName) ? UnitType.FormatName(Pos, false) + " " : "";
-            string nameS = (useName) ? UnitType.FormatName(Pos) + " " : "";
+        uint dmgFull = dmg;
+        uint defendOld = this.Defend;
+        List<string> msg = [];
+        string name = useName ? this.UnitType.FormatName(this.Pos, false) + " " : "";
+        string nameS = useName ? this.UnitType.FormatName(this.Pos) + " " : "";
 
-            // Pierce skips Defend and Shield
-            if (!pierce) {
-                if (Defend > 0 && dmg > 0) {
-
-                    // Only hit Defend
-                    if (Defend > dmg) {
-                        Defend -= dmg;
-                        // todo choiceformat
-                        return new Result(ResultType.HitShield, string.Format(Lang.LogChangeShield, nameS,
-                            Colors.Shield + (defendOld + Shield).Format(), Colors.Shield + (Defend + Shield).Format(),
-                            this.GetStat(Stats.Hp).Format(Colors.Hp), Colors.Neg + dmgFull.Format()));
-                    } 
-                    
-                    // Destroy Defend and proceed to Shield
-                    dmg -= this.Defend;
-                    this.Defend = 0;
-
-                    // todo this should come after the dmg message; is this needed now that shield is a buff
-                    if (this.Shield == 0 && this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
-                        msg.Add(string.Format(Lang.LogChangeBooleanStatEffectBlock, name, 0));
-                    }
+        // Pierce skips Defend and Shield
+        if (!pierce) {
+            if ((this.Defend > 0) && (dmg > 0)) {
+                // Only hit Defend
+                if (this.Defend > dmg) {
+                    this.Defend -= dmg;
+                    // todo choiceformat
+                    return new Result(ResultType.HitShield, string.Format(Lang.LogChangeShield, nameS,
+                        Colors.Shield + (defendOld + this.Shield).Format(),
+                        Colors.Shield + (this.Defend + this.Shield).Format(),
+                        this.GetStat(Stats.Hp).Format(Colors.Hp), Colors.Neg + dmgFull.Format()));
                 }
 
-                if (Shield > 0 && dmg > 0) {
+                // Destroy Defend and proceed to Shield
+                dmg -= this.Defend;
+                this.Defend = 0;
 
-                    // Only hit Shield
-                    if (Shield > dmg)
-                    {
-                        long shieldOld = Shield;
-                        Shield -= dmg;
-                        return new Result(ResultType.HitShield, string.Format(Lang.LogChangeShield,
-                            nameS /*, C_SHIELD + FormatNum((defendOld + shieldOld) / STAT_MULT_HIDDEN), C_SHIELD + 
-                            FormatNum(shield / STAT_MULT_HIDDEN), C_HP + FormatNum(statsDefault.GetDisplayHp()),
-                            C_NEG + "-" + FormatNum(dmgFull / STAT_MULT_HIDDEN) todo*/));
-                    }
-
-                    // Destroy Shield and proceed to HP
-                    msg.Add(string.Format(Lang.LogChangeShield, nameS
-                        /*,  todo C_SHIELD + FormatNum((defendOld + shield) / STAT_MULT_HIDDEN), C_SHIELD + 0, C_HP +
-                             FormatNum(statsDefault.GetDisplayHp()), C_NEG + "-" + FormatNum((defendOld + shield) / 
-                             STAT_MULT_HIDDEN)*/));
-                    dmg -= this.Shield;
-                    this.Shield = 0;
-                    if (this.GetBoolStat(BoolStats.EffectBlock) <= 0)
-                    {
-                        // todo is this needed
-                        msg.Add(string.Format(Lang.LogChangeBooleanStatEffectBlock, name, 0));
-                    }
+                // todo this should come after the dmg message; is this needed now that shield is a buff
+                if ((this.Shield == 0) && (this.GetBoolStat(BoolStats.EffectBlock) <= 0)) {
+                    msg.Add(string.Format(Lang.LogChangeBooleanStatEffectBlock, name, 0));
                 }
             }
 
-            uint hpOldDisp = this.Hp;
-            Hp = Math.Clamp(Hp - dmg, 0, this._stats[Stats.Hp]);
-            uint hpNewDisp = this.Hp;
-            msg.Add(string.Format(Lang.LogChangeHp, nameS
-                /*todo, C_HP + FormatNum(hpOldDisp), C_HP + FormatNum(hpNewDisp), C_HP +
-                 FormatNum(statsDefault.GetDisplayHp()), C_NEG + "-" + FormatNum(dmg / STAT_MULT_HIDDEN)*/));
+            if ((this.Shield > 0) && (dmg > 0)) {
+                // Only hit Shield
+                if (this.Shield > dmg) {
+                    long shieldOld = this.Shield;
+                    this.Shield -= dmg;
+                    return new Result(ResultType.HitShield, string.Format(Lang.LogChangeShield,
+                        nameS /*, C_SHIELD + FormatNum((defendOld + shieldOld) / STAT_MULT_HIDDEN), C_SHIELD +
+                        FormatNum(shield / STAT_MULT_HIDDEN), C_HP + FormatNum(statsDefault.GetDisplayHp()),
+                        C_NEG + "-" + FormatNum(dmgFull / STAT_MULT_HIDDEN) todo*/));
+                }
 
-            // todo should this be a separate result from hitting shield
-            if (this.GetBoolStat(BoolStats.EffectBlock) > 0)
-            {
-                return new Result(ResultType.HitShield, msg);
+                // Destroy Shield and proceed to HP
+                msg.Add(string.Format(Lang.LogChangeShield, nameS
+                    /*,  todo C_SHIELD + FormatNum((defendOld + shield) / STAT_MULT_HIDDEN), C_SHIELD + 0, C_HP +
+                         FormatNum(statsDefault.GetDisplayHp()), C_NEG + "-" + FormatNum((defendOld + shield) /
+                         STAT_MULT_HIDDEN)*/));
+                dmg -= this.Shield;
+                this.Shield = 0;
+                if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
+                    // todo is this needed
+                    msg.Add(string.Format(Lang.LogChangeBooleanStatEffectBlock, name, 0));
+                }
             }
-
-            if (dmg > 0)
-            {
-                return new Result(ResultType.Success, msg);
-            }
-
-            return new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
         }
 
-        public Result Damage(uint dmg, bool pierce) => this.Damage(dmg, pierce, true);
-        public Result Damage(uint dmg) => this.Damage(dmg, false, true);
+        uint hpOldDisp = this.Hp;
+        this.Hp = Math.Clamp(this.Hp - dmg, 0, this._stats[Stats.Hp]);
+        uint hpNewDisp = this.Hp;
+        msg.Add(string.Format(Lang.LogChangeHp, nameS
+            /*todo, C_HP + FormatNum(hpOldDisp), C_HP + FormatNum(hpNewDisp), C_HP +
+             FormatNum(statsDefault.GetDisplayHp()), C_NEG + "-" + FormatNum(dmg / STAT_MULT_HIDDEN)*/));
+
+        // todo should this be a separate result from hitting shield
+        if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {
+            return new Result(ResultType.HitShield, msg);
+        }
+
+        if (dmg > 0) {
+            return new Result(ResultType.Success, msg);
+        }
+
+        return new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
+    }
+
+    public Result Damage(uint dmg, bool pierce) => this.Damage(dmg, pierce, true);
+    public Result Damage(uint dmg) => this.Damage(dmg, false, true);
 }

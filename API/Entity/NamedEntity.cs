@@ -1,8 +1,9 @@
+using API.Extensions;
+
 namespace API.Entity;
 
-public abstract class NamedEntity(string keyName, string keyDescription) {
-    public string KeyName { get; } = keyName;
-    public virtual string KeyDescription { get; } = keyDescription;
+public abstract class NamedEntity(string keyName) {
+    internal string KeyName { get; } = keyName;
 
-    public virtual string GetName() => this.KeyName; // todo
+    public virtual string GetName() => this.KeyName.GetLang();
 }

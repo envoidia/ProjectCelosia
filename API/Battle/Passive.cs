@@ -11,5 +11,5 @@ public class Passive : ComplexDescriptionEntity {
         Core.Passives.Add(this);
     }
 
-    // todo getdescription
+    public override string GetDescription() => "todo";
 }

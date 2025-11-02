@@ -64,8 +64,9 @@ public static class DebugMenu {
     }
 
     private static string GetDebugInfoLText() =>
-        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph(), BuildInfo.BuildDate);
-    
+        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph(),
+            BuildInfo.BuildDate);
+
     private static string GetDebugInfoHelpText() =>
         string.Format(Lang.DebugInfoHelp, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph());
 }

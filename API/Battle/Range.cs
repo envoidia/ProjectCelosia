@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using API.Entity;
 using static API.Battle.PosLib;
 using static API.Battle.Target;
 
 namespace API.Battle;
 
-public class Range {
-    public string KeyName { get; }
+public class Range : NamedEntity {
     public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] Targets { get; }
@@ -13,8 +13,7 @@ public class Range {
     public bool CanTargetSelf { get; init; } = false;
     public int TargetCount { get; init; } = 1;
 
-    public Range(string keyName, int rangeVertical, Side side, params Target[] targets) {
-        this.KeyName = keyName;
+    public Range(string keyName, int rangeVertical, Side side, params Target[] targets) : base(keyName) {
         this.RangeVertical = rangeVertical;
         this.Side = side;
         this.Targets = targets;
@@ -119,38 +118,38 @@ public static class Ranges {
     public static readonly Range Opponent2R = new("RangeOpponent2R", 2, Side.Opponent, Target.Target);
     public static readonly Range Opponent3R = new("RangeOpponent3R", 3, Side.Opponent, Target.Target);
 
-    public static readonly Range Team = new("RangeTeam", 3, Side.Both, Target.Target, Target.TargetTeam) {
+    public static readonly Range Team = new("RangeTeam", 3, Side.Both, Target.Target, TargetTeam) {
         CanTargetSelf = true
     };
 
     public static readonly Range All =
-        new("RangeAll", 3, Side.Both, Target.Self, Target.SelfTeam, Target.Target, Target.TargetTeam) {
+        new("RangeAll", 3, Side.Both, Target.Self, SelfTeam, Target.Target, TargetTeam) {
             CanTargetSelf = true
         };
 
-    public static readonly Range AllOthers = new("RangeAllOthers", 3, Side.Both, Target.SelfTeam, Target.Target,
-        Target.TargetTeam);
+    public static readonly Range AllOthers = new("RangeAllOthers", 3, Side.Both, SelfTeam, Target.Target,
+        TargetTeam);
 
-    public static readonly Range Adjacent = new("RangeAdjacent", 1, Side.Both, Target.SelfUp, Target.SelfDown,
-        Target.SelfAcross, Target.SelfAcrossUp, Target.SelfAcrossDown);
+    public static readonly Range Adjacent = new("RangeAdjacent", 1, Side.Both, SelfUp, SelfDown,
+        SelfAcross, SelfAcrossUp, SelfAcrossDown);
 
     public static readonly Range SelfUpDown =
-        new("RangeSelfUpDown", 3, Side.Ally, Target.Self, Target.SelfUp, Target.SelfDown) {
+        new("RangeSelfUpDown", 3, Side.Ally, Target.Self, SelfUp, SelfDown) {
             CanTargetSelf = true
         };
 
-    public static readonly Range Across = new("RangeAcross", 1, Side.Opponent, Target.SelfAcross);
+    public static readonly Range Across = new("RangeAcross", 1, Side.Opponent, SelfAcross);
 
-    public static readonly Range AcrossUpDown = new("RangeAcrossUpDown", 0, Side.Opponent, Target.SelfAcross,
-        Target.SelfAcrossUp, Target.SelfAcrossDown);
+    public static readonly Range AcrossUpDown = new("RangeAcrossUpDown", 0, Side.Opponent, SelfAcross,
+        SelfAcrossUp, SelfAcrossDown);
 
     public static readonly Range ColumnOf31R =
-        new("RangeColumnOf31R", 1, Side.Both, Target.Target, Target.TargetUp, Target.TargetDown) {
+        new("RangeColumnOf31R", 1, Side.Both, Target.Target, TargetUp, TargetDown) {
             CanTargetSelf = true
         };
 
     public static readonly Range ColumnOf32R =
-        new("RangeColumnOf32R", 2, Side.Both, Target.Target, Target.TargetUp, Target.TargetDown) {
+        new("RangeColumnOf32R", 2, Side.Both, Target.Target, TargetUp, TargetDown) {
             CanTargetSelf = true
         };
 }

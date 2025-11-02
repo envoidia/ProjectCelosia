@@ -23,7 +23,7 @@ public class Label : RenderObject {
 
     public override Point Size => this.RichTextLayout.Size;
 
-    public sealed override Alignment Alignment {
+    public override Alignment Alignment {
         get;
         set {
             field = value;
@@ -63,7 +63,7 @@ public class Label : RenderObject {
         this.RichTextLayout.Draw(spriteBatch, this.Position, Color.White, 0f, this.Origin.ToVector2());
     }
 
-    protected sealed override void AddToRenderList() {
+    protected override void AddToRenderList() {
         switch (this.Priority) {
             case RenderPriority.Low:
                 Core.LabelsLow.Add(this);

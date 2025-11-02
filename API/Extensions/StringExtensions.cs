@@ -5,24 +5,24 @@ using Jeffijoe.MessageFormat;
 namespace API.Extensions;
 
 public static class StringExtensions {
-    private static readonly MessageFormatter Formatter = new(useCache: true, locale: "en");
-    
+    private static readonly MessageFormatter Formatter = new(true, "en");
+
     extension(string str) {
         /// <summary>
         /// Gets a string from a lang key
         /// Crashes on invalid key
         /// </summary>
-        public string GetLang() => 
+        public string GetLang() =>
             Lang.ResourceManager.GetString(str, Lang.Culture) ?? throw new ArgumentException("Invalid key");
 
         /// <summary>
         /// Gets a formatted string from a lang key
         /// Crashes on invalid key or 0 args
         /// </summary>
-        public string FormatLang(params object?[] args) => (args.Length == 0)
+        public string FormatLang(params object?[] args) => args.Length == 0
             ? throw new ArgumentException("Must pass at least 1 arg")
             : string.Format(Lang.ResourceManager.GetString(str, Lang.Culture)!, args);
-        
+
         /// <summary>
         /// Gets an ICU MessageFormat-formatted string from a lang key
         /// Crashes on invalid key or 0 args

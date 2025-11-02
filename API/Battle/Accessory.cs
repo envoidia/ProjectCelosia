@@ -6,12 +6,11 @@ public class Accessory : ComplexDescriptionEntity, IEquippable {
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-    // todo this should be a key as the name implies
-    public override string KeyDescription => string.Format(Lang.AccessoryDesc, this.GetPartialDesc());
-
     public Accessory(string keyName, string keyDescription, string icon) : base(keyName, keyDescription, icon) {
         Core.Accessories.Add(this);
     }
+
+    public override string GetDescription() => string.Format(Lang.AccessoryDesc, this.GetPartialDescription());
 
     public void Apply(Unit unit, bool give) {
         if (give) {

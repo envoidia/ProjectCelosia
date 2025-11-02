@@ -15,11 +15,14 @@ public enum KeybindId {
     Right,
     Up,
     Down,
+
     // Debug
     DebugInfo,
     DebugHelp,
+
     // Marker. Always add non-merged keybinds above this
     LastBeforeMerged,
+
     // Merged (must be last)
     LeftRight,
     UpDown,
@@ -59,12 +62,12 @@ public static class Keybinds {
     public static readonly Keybind Right = new("KeyRight", KeybindId.Right, Keys.Right, Buttons.DPadRight);
     public static readonly Keybind Up = new("KeyUp", KeybindId.Up, Keys.Up, Buttons.DPadUp);
     public static readonly Keybind Down = new("KeyDown", KeybindId.Down, Keys.Down, Buttons.DPadDown);
-    
+
     // Debug
     // todo remake icons with more buttons (like stick clicks)
     public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.None);
     public static readonly Keybind DebugHelp = new("", KeybindId.DebugHelp, Keys.F2, Buttons.LeftStick);
-    
+
     // Merged
     public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);
     public static readonly Keybind UpDown = new("", KeybindId.UpDown, Keys.None, Buttons.None);

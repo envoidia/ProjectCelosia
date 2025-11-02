@@ -91,6 +91,7 @@ public class Core : Game {
     /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created.
+        // You would think this should just be static, but I didn't write MonoGame. There's probably a good reason
         if (sInstance != null) {
             throw new InvalidOperationException("Only a single Core instance can be created");
         }
@@ -131,8 +132,7 @@ public class Core : Game {
         // Set the window title.
         this.Window.Title = title;
 
-        // Set the core's content manager to a reference of the base Game's
-        // content manager.
+        // Set the core's content manager to a reference of the base Game's content manager.
         Content = base.Content;
 
         // Set the root directory for content.
@@ -140,7 +140,7 @@ public class Core : Game {
 
         // Setup stuff
         RichTextDefaults.ImageResolver = p => {
-            if (TextureCache.TryGetValue(p, out Texture2DRegion region)) {
+            if (TextureCache.TryGetValue(p, out Texture2DRegion? region)) {
                 return new TextureFragmentColored(region.Texture, region.Bounds);
             }
 
@@ -167,8 +167,7 @@ public class Core : Game {
     protected override void Initialize() {
         base.Initialize();
 
-        // Set the core's graphics device to a reference of the base Game's
-        // graphics device.
+        // Set the core's graphics device to a reference of the base Game's graphics device.
         GraphicsDevice = base.GraphicsDevice;
 
         // Create the sprite batch instance.

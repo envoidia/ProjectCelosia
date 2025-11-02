@@ -18,34 +18,33 @@ namespace Game;
 
 public class Game1 : Core {
     // Rendering
-    private IResolution _resolution; // Ignore unused warning
-
-    private Texture2D _bg;
+    private static Texture2D bg;
 
     // Menu stuff
-    private int _index;
+    private static int index;
 
     // Debug
-    private bool _isDebugInfoEnabled;
-    private static readonly Label _testLabel = new() {
+    private static bool isDebugInfoEnabled;
+
+    private static readonly Label TestLabel = new() {
         Position = new Vector2(1000, 800),
         Text = "",
         Width = 2000
     };
 
     public Game1() : base("Project Celosia", 0, 0, false) =>
-        this._resolution = new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(1920, 1080), false, false, false);
+        Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
+            new Point(1920, 1080), false, false, false));
 
     protected override void Initialize() {
         base.Initialize();
         AddMenu(Main);
 
-        _testLabel.Text = "RangeAllies21R".GetLang();
+        TestLabel.Text = "fldsg".GetLang();
     }
 
     protected override void LoadContent() {
-        this._bg = Content.Load<Texture2D>("img/bg");
+        bg = Content.Load<Texture2D>("img/bg");
 
         IconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
 
@@ -64,18 +63,18 @@ public class Game1 : Core {
     }
 
     private void CheckInput(GameTime gameTime) {
-        this._isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
+        isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
 
-        DebugMenu.HandleDebugInfo(this._isDebugInfoEnabled, gameTime);
+        DebugMenu.HandleDebugInfo(isDebugInfoEnabled, gameTime);
 
         switch (NavPath.Peek()) {
             case Main:
-                this._index = MenuLib.CheckMovement1D(this._index, Enum.GetValues<MainMenu>().Length);
-                //Console.WriteLine(this._index);
+                index = MenuLib.CheckMovement1D(index, Enum.GetValues<MainMenu>().Length);
+                //Console.WriteLine(_index);
                 // update cursor
 
                 if (Input.CheckInput(Keybinds.Confirm)) {
-                    switch ((MainMenu) this._index) {
+                    switch ((MainMenu) index) {
                         case MainMenu.Start:
                             // Overworld/battle
                             AddMenu(Battle);
@@ -98,10 +97,10 @@ public class Game1 : Core {
                             break;
                     }
                 } else if (Input.CheckInput(Keybinds.Back)) {
-                    if ((MainMenu) this._index == MainMenu.Quit) {
+                    if ((MainMenu) index == MainMenu.Quit) {
                         this.Exit();
                     } else {
-                        this._index = (int) MainMenu.Quit;
+                        index = (int) MainMenu.Quit;
                     }
                 }
 
@@ -130,7 +129,7 @@ public class Game1 : Core {
         SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null,
             null, null, Resolution.TransformationMatrix());
 
-        SpriteBatch.Draw(this._bg, Vector2.Zero, Color.White);
+        SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test with more diverse chars
 

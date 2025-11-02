@@ -4,7 +4,7 @@ using API.Entity;
 namespace API.Battle;
 
 // todo represent available and equipped skills and equipped item
-public class UnitType : NamedEntity {
+public class UnitType : DescriptionEntity {
     public Dictionary<Stat, uint> Stats { get; }
     internal readonly Dictionary<Element, int> _affinities;
     public Passive[] Passives { get; }

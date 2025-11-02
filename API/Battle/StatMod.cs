@@ -11,7 +11,7 @@ public class StatMod {
     }
 
     public override int GetHashCode() => this.KeyName.GetHashCode();
-    
+
     public string FormatVal(int val) => "todo"; // todo Color + sign
 }
 

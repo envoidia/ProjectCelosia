@@ -38,57 +38,51 @@ public class Skill : ComplexDescriptionEntity {
                                           this.HasRole(SkillRole.DebuffDefensive) ||
                                           this.HasRole(SkillRole.DebuffOffensive);
 
-    // todo this should be a key as the name implies
-    public override string KeyDescription {
-        get {
-            int pow = 0;
-            List<string> skillTypes = new(3);
-            foreach (ISkillEffect skillEffect in this.SkillEffects) {
-                // todo better pow logic
-                // multihit should output eg 60+20*2
-                int effectPow = skillEffect.Pow;
-                if (effectPow > pow) {
-                    pow = effectPow;
-                }
-
-                SkillType effectType = skillEffect.SkillType;
-                string str = Colors.Stat + effectType.GetName() + "/c[white]";
-                if ((effectType != SkillType.Stat) && !skillTypes.Contains(str)) {
-                    skillTypes.Add(str);
-                }
-            }
-
-            string skillTypesStr;
-            if (skillTypes.Count != 0) {
-                skillTypesStr = string.Join(", ", skillTypes);
-            } else {
-                skillTypesStr = Colors.Stat + SkillType.Stat.GetName() + "/c[white]";
-            }
-
-            return string.Format(Lang.SkillDesc, skillTypesStr, this.Element.GetName(Colors.Element),
-                this.Element.KeyName, pow == 0 ? "" : ", " + Colors.Num + pow + " [WHITE]" + Lang.Pow, this.Prio == 0
-                    ? ""
-                    : ", " + this.Prio.Format() + " /c[white]" + Lang.Prio, this.GetPartialDesc());
-        }
-    }
-
     public static explicit operator SkillInstance(Skill skill) => new(skill);
 
-    public override string GetPartialDesc() {
-        StringBuilder partialDesc = new(base.GetPartialDesc());
-        if (this.DescInclusions.Length == 0) {
+    public override string GetDescription() {
+        int pow = 0;
+        List<string> skillTypes = new(3);
+        foreach (ISkillEffect skillEffect in this.SkillEffects) {
+            // todo better pow logic
+            // multihit should output eg 60+20*2
+            int effectPow = skillEffect.Pow;
+            if (effectPow > pow) {
+                pow = effectPow;
+            }
+
+            SkillType effectType = skillEffect.SkillType;
+            string str = Colors.Stat + effectType.GetName() + "/c[white]";
+            if ((effectType != SkillType.Stat) && !skillTypes.Contains(str)) {
+                skillTypes.Add(str);
+            }
+        }
+
+        string skillTypesStr = skillTypes.Count != 0
+            ? string.Join(", ", skillTypes)
+            : Colors.Stat + SkillType.Stat.GetName() + "/c[white]";
+
+        return string.Format(Lang.SkillDesc, skillTypesStr, this.Element.GetName(Colors.Element),
+            this.Range.GetName(), pow == 0 ? "" : ", " + Colors.Num + pow + " [WHITE]" + Lang.Pow, this.Prio == 0
+                ? ""
+                : ", " + this.Prio.Format() + " /c[white]" + Lang.Prio, this.GetPartialDescription());
+    }
+
+    public override string GetPartialDescription() {
+        StringBuilder partialDesc = new(base.GetPartialDescription());
+        if (this.DescriptionInclusions.Length == 0) {
             partialDesc.Append('\n');
         }
 
         HashSet<IconEntity> inclusions = new(8);
         foreach (ISkillEffect skillEffect in this.SkillEffects) {
-            IconEntity inclusion = skillEffect.DescInclusion;
+            IconEntity? inclusion = skillEffect.DescInclusion;
             if (inclusion != null) inclusions.Add(inclusion);
         }
 
         foreach (IconEntity inclusion in inclusions) {
             partialDesc.Append("\n/c[white](").Append(inclusion.GetName(Colors.Buff)).Append("/c[white]: ")
-                .Append(inclusion.KeyDescription.Replace("\n", ". ")).Append("/c[white])");
+                .Append(inclusion.GetDescription().Replace("\n", ". ")).Append("/c[white])");
         }
 
         return partialDesc.ToString();
