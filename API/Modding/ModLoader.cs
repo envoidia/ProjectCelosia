@@ -8,15 +8,23 @@ using Microsoft.Xna.Framework;
 
 namespace API.Modding;
 
-// todo add mod dependency loading, mod unloading, mod disabling, and saving logs to a temporary file
+// todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
 public static class ModLoader {
 #if !NATIVE_AOT
-    private static readonly List<AssemblyLoadContext> ALCs = [];
+    private static readonly List<AssemblyLoadContext> ALCs = []; // todo do i need this
     public static readonly List<GameMod> LoadedMods = [];
 
     private static readonly string ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
 
-    public static void LoadAllMods() {
+    public static void InitializeAllMods() {
+        LoadAllMods();
+
+        foreach (GameMod mod in LoadedMods) {
+            mod.Initialize();
+        }
+    }
+    
+    private static void LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.TopDirectoryOnly);
 
         foreach (string dllPath in dllFiles) {
@@ -63,9 +71,7 @@ public static class ModLoader {
             alc.Unload();
             return;
         }
-
-        instance.Initialize();
-
+        
         ALCs.Add(alc);
         LoadedMods.Add(instance);
 

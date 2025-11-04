@@ -50,7 +50,7 @@ public class Game1 : Core {
 #else
         if (Settings.EnableModLoader) {
             // Load arbitrary mods
-            ModLoader.LoadAllMods();
+            ModLoader.InitializeAllMods();
         } else {
             // Just load main game
             celosiaMain = new Celosia.Main();

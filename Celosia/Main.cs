@@ -1,3 +1,4 @@
+using System.Resources;
 using Microsoft.Xna.Framework;
 using API.Battle;
 using API.Extensions;
@@ -7,7 +8,10 @@ using API.Graphics;
 namespace Celosia;
 
 public class Main : GameMod {
-    public override string ModName { get; } = "Celosia";
+    public override string ModId { get; } = "Celosia";
+    public override string[] DependencyIds { get; } = [];
+
+    public override ResourceManager ResourceManager { get; } = Lang.ResourceManager;
 
     public static Element Vis;
 
@@ -19,7 +23,7 @@ public class Main : GameMod {
 
     public override void Initialize() {
         Vis = new Element(this, "ElementVis", "ElementVisDesc", "/c[lightGray]/i[rolling-energy]");
-        TestLabel.Text = Vis.KeyName.GetLang();
+        TestLabel.Text = this.GetLang("ElementVis");
     }
 
     public override void Update(GameTime gameTime) { }
