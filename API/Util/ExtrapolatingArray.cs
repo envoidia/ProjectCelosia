@@ -2,27 +2,29 @@ using System;
 
 namespace API.Util;
 
-public record ExtrapolatingArray(int[] Core, int Offset, int StepUp, int StepDown) {
-    public int Get(int index) {
-        // Real index
-        int i = index + this.Offset;
+public class ExtrapolatingArray(int[] core, int offset, int stepUp, int stepDown) {
+    public int this[int i] {
+        get {
+            // Real index
+            int index = i + offset;
 
-        int value;
+            int value;
 
-        // In bounds
-        if ((i >= 0) && (i < this.Core.Length)) {
-            value = this.Core[i];
-        }
-        // Above bounds
-        else if (i >= this.Core.Length) {
-            value = this.Core[^1] + ((this.StepUp * i) - (this.Core.Length - 1));
-        }
-        // Below bounds
-        else {
-            value = this.Core[0] + (this.StepDown * Math.Abs(i));
-        }
+            // In bounds
+            if ((index >= 0) && (index < core.Length)) {
+                value = core[index];
+            }
+            // Above bounds
+            else if (i >= core.Length) {
+                value = core[^1] + ((stepUp * index) - (core.Length - 1));
+            }
+            // Below bounds
+            else {
+                value = core[0] + (stepDown * Math.Abs(index));
+            }
 
-        // Max to 0
-        return Math.Max(value, 0);
+            // Max to 0
+            return Math.Max(value, 0);
+        }
     }
 }

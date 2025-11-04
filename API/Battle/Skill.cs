@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using API.Battle.SkillEffects;
 using API.Entity;
 using API.Extensions;
 using API.Graphics;
@@ -17,7 +18,7 @@ public class Skill : ComplexDescriptionEntity {
     public bool IsBloom { get; init; } = false;
 
     public SkillRole[] SkillRoles { get; init; } = [];
-    public ISkillEffect[] SkillEffects { get; init; } = [];
+    public SkillEffect[] SkillEffects { get; init; } = [];
 
     public Skill(string keyName, string keyDescription, Element element, Range range, int cost)
         : base(keyName, keyDescription, element.KeyName) {
@@ -41,12 +42,12 @@ public class Skill : ComplexDescriptionEntity {
     public static explicit operator SkillInstance(Skill skill) => new(skill);
 
     public override string GetDescription() {
-        int pow = 0;
+        uint pow = 0;
         List<string> skillTypes = new(3);
-        foreach (ISkillEffect skillEffect in this.SkillEffects) {
+        foreach (SkillEffect skillEffect in this.SkillEffects) {
             // todo better pow logic
             // multihit should output eg 60+20*2
-            int effectPow = skillEffect.Pow;
+            uint effectPow = skillEffect.Pow;
             if (effectPow > pow) {
                 pow = effectPow;
             }
@@ -65,7 +66,7 @@ public class Skill : ComplexDescriptionEntity {
         return string.Format(Lang.SkillDesc, skillTypesStr, this.Element.GetName(Colors.Element),
             this.Range.GetName(), pow == 0 ? "" : ", " + Colors.Num + pow + " [WHITE]" + Lang.Pow, this.Prio == 0
                 ? ""
-                : ", " + this.Prio.Format() + " /c[white]" + Lang.Prio, this.GetPartialDescription());
+                : ", " + ((int) this.Prio).Format() + " /c[white]" + Lang.Prio, this.GetPartialDescription());
     }
 
     public override string GetPartialDescription() {
@@ -75,7 +76,7 @@ public class Skill : ComplexDescriptionEntity {
         }
 
         HashSet<IconEntity> inclusions = new(8);
-        foreach (ISkillEffect skillEffect in this.SkillEffects) {
+        foreach (SkillEffect skillEffect in this.SkillEffects) {
             IconEntity? inclusion = skillEffect.DescInclusion;
             if (inclusion != null) inclusions.Add(inclusion);
         }

@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using API.Input;
 
 namespace API.Battle;
 
 public static class BattleHandlerLib {
+    public static Battle Battle { get; private set; } // todo
+
     public static void HandleSetup() { }
 
     public static void CreateLog() {
@@ -50,8 +53,12 @@ public static class BattleHandlerLib {
     }
 
     public static void HandleBattle() { }
-
-    public static void AppendToLog(string str) {
+    
+    public static void AppendToLog(params List<string> str) {
+        return;
+    }
+    
+    public static void AppendToLog(string[] str) {
         return;
     }
 }

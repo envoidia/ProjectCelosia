@@ -8,7 +8,7 @@ namespace API.Graphics;
 public abstract class RenderObject {
     public Vector2 Position { get; set; } = Vector2.Zero;
 
-    public virtual Point Size { get; } = Point.Zero;
+    public abstract Point Size { get; }
 
     public RenderPriority Priority { get; set; } = RenderPriority.Low;
 
@@ -17,9 +17,9 @@ public abstract class RenderObject {
     // Raw position of the origin. Not meant to be viewed or used directly
     internal Point Origin { get; set; } = Point.Zero;
 
-    protected abstract void AddToRenderList();
+    internal abstract void AddToRenderList();
 
-    protected Point CalcOrigin() => this.Alignment switch {
+    internal Point CalcOrigin() => this.Alignment switch {
         Alignment.TopLeft => Point.Zero,
         Alignment.TopRight => new Point(this.Size.X, 0),
         Alignment.BottomLeft => new Point(0, this.Size.Y),

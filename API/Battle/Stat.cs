@@ -1,12 +1,13 @@
+using API.Entity;
+
 namespace API.Battle;
 
-public class Stat {
-    public string KeyName { get; }
+public class Stat : NamedEntity {
     public StageType StageType { get; }
 
-    public Stat(string keyName, StageType stageType) {
-        this.KeyName = keyName;
+    public Stat(string keyName, StageType stageType) : base(keyName) {
         this.StageType = stageType;
+        Core.Stats.Add(this);
     }
 
     public override int GetHashCode() => this.KeyName.GetHashCode();

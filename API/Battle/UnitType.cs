@@ -16,7 +16,4 @@ public class UnitType : DescriptionEntity {
         this.Passives = passives;
         Core.UnitTypes.Add(this);
     }
-
-    public string FormatName(uint pos, bool possessive) => "todo";
-    public string FormatName(uint pos) => this.FormatName(pos, true);
 }

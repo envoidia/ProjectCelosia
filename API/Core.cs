@@ -70,10 +70,8 @@ public class Core : Game {
     public static readonly List<Buff> Buffs = [];
     public static readonly List<Passive> Passives = [];
     public static readonly List<UnitType> UnitTypes = [];
-
     public static readonly List<Accessory> Accessories = [];
-
-    //public static readonly List<Weapon> Weapons = [];
+    public static readonly List<Weapon> Weapons = [];
     public static readonly List<Stat> Stats = [];
     public static readonly List<Element> Elements = [];
     public static readonly List<StageType> StageTypes = [];

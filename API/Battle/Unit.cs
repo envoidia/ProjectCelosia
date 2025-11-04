@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using API.Battle.BuffEffects;
 using API.Extensions;
 using API.Graphics;
-using API.Util;
 using MonoGame.Extended.Collections;
 
 namespace API.Battle;
@@ -13,7 +13,7 @@ public class Unit {
     public UnitType UnitType { get; }
     public uint Lvl { get; }
     public uint Hp { get; set; }
-    public int Sp { get; set; } = 200;
+    public uint Sp { get; set; } = 200;
 
     // Position on the battlefield
     // 0 4
@@ -103,6 +103,7 @@ public class Unit {
     }
 
     public uint GetStat(Stat stat) => this.GetStatWithStage(stat, this.GetStage(stat.StageType));
+    public uint GetBaseStat(Stat stat) => this._stats.GetValueOrDefault(stat, 0u);
 
     public uint GetStatMult(Stat stat) => this._statsMult.GetValueOrDefault(stat, 1000u);
     public void SetStatMult(Stat stat, uint set) => this._statsMult[stat] = set;
@@ -137,7 +138,7 @@ public class Unit {
 
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
-        builder.Append("[WHITE] (");
+        builder.Append("/c[white] (");
         int statCount = stageType.Stats.Length;
         for (int i = 0; i < statCount; i++) {
             Stat stat = stageType.Stats[i];
@@ -147,9 +148,9 @@ public class Unit {
             int change = (int) (statNew - statOld);
             // todo choiceformat
             builder.Append(string.Format(Lang.LogStageStat, Colors.Stat + stat.KeyName,
-                TextLib.GetStatColor(statOld, statDefault) + TextLib.FormatNum(statOld),
-                TextLib.GetStatColor(statNew, statDefault) + TextLib.FormatNum(statNew), Colors.Num +
-                TextLib.FormatNum(statDefault), change.Format()));
+                statOld.FormatStat(statDefault),
+                statNew.FormatStat(statDefault),
+                statDefault.Format(Colors.Num), change.Format()));
             builder.Append(i == (statCount - 1) ? ")" : ", ");
         }
 
@@ -157,14 +158,15 @@ public class Unit {
     }
 
     // Mults
-    public uint GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u);
-    public void SetMult(Mult mult, uint set) => this._mults[mult] = set;
+    public double GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u) / 1000d;
+    public uint GetRawMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u);
+    public void SetMult(Mult mult, uint set) => this._mults[mult] = set; // todo ensure these dont crash
 
     public string GetMultsString() {
         StringBuilder str = new();
         foreach (Mult mult in Core.Mults) {
-            uint curMult = this.GetMult(mult);
-            str.Append(mult.FormatVal(curMult)).Append('\n');
+            uint curMult = this._mults[mult];
+            str.Append(mult.Format(curMult)).Append('\n');
         }
 
         return str.ToString();
@@ -215,11 +217,13 @@ public class Unit {
 
     public int GetDurationModBuffTypeDealt(BuffType buffType) =>
         this._statMods.GetValueOrDefault(
-            buffType == BuffType.Buff ? StatMods.DurationBuffDealt : StatMods.DurationDebuffDealt, 0);
+            buffType == BuffType.Buff ? StatMods.DurationBuffDealt : StatMods.DurationDebuffDealt,
+            0);
 
     public int GetDurationModBuffTypeTaken(BuffType buffType) =>
         this._statMods.GetValueOrDefault(
-            buffType == BuffType.Buff ? StatMods.DurationBuffTaken : StatMods.DurationDebuffTaken, 0);
+            buffType == BuffType.Buff ? StatMods.DurationBuffTaken : StatMods.DurationDebuffTaken,
+            0);
 
     public int GetStacksModBuffTypeDealt(BuffType buffType) =>
         this._statMods.GetValueOrDefault(
@@ -231,7 +235,7 @@ public class Unit {
 
     public string GetStatModsString() {
         StringBuilder str = new();
-        foreach (StatMod mod in Core.StatMods) str.Append(mod.FormatVal(this.GetStatMod(mod))).Append("\n");
+        foreach (StatMod mod in Core.StatMods) str.Append(mod.Format(this.GetStatMod(mod))).Append("\n");
         return str.ToString();
     }
 
@@ -264,7 +268,7 @@ public class Unit {
         (effect, s, t, stacks) => effect.OnDealDamage(s, t, stacks, damage, element));
 
     public void OnTakeDamage(Unit target, uint damage, Element element) => this.NotifyBuffEffects(target,
-        (effect, s, t, stacks) => effect.OnDealDamage(s, t, stacks, damage, element));
+        (effect, s, t, stacks) => effect.OnTakeDamage(s, t, stacks, damage, element));
 
     public void OnDealHeal(Unit target, uint heal, uint overheal) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnDealHeal(s, t, stacks, heal, overheal));
@@ -278,12 +282,12 @@ public class Unit {
     public void OnTakeShield(Unit target, uint turns, uint heal) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnTakeShield(s, t, stacks, turns, heal));
 
-    public void OnGiveBuff(Unit target, Buff buff, uint turnsMod, int stacksChange) => this.NotifyBuffEffects(target,
-        (effect, s, t, stacks) => effect.OnGiveBuff(s, t, stacks, buff, turnsMod, stacksChange));
+    public void OnGiveBuff(Unit target, Buff buff, uint turns, uint stacksChange) => this.NotifyBuffEffects(target,
+        (effect, s, t, stacks) => effect.OnGiveBuff(s, t, stacks, buff, turns, stacksChange));
 
-    public void OnChangeStage(Unit target, StageType stageType, uint turnsMod, int stacksChange) =>
+    public void OnChangeStage(Unit target, StageType stageType, uint turns, int stacksChange) =>
         this.NotifyBuffEffects(target,
-            (effect, s, t, stacks) => effect.OnChangeStage(s, t, stacks, stageType, turnsMod, stacksChange));
+            (effect, s, t, stacks) => effect.OnChangeStage(s, t, stacks, stageType, turns, stacksChange));
 
     public Side GetSide() => this.Pos < 4 ? Side.Ally : Side.Opponent;
 
@@ -293,7 +297,7 @@ public class Unit {
             int stage = this.GetStage(stageType);
             if ((stage != 0) && (--this._stageTurns[stageType] == 0)) {
                 // todo choiceformat
-                BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseStage, this.UnitType.FormatName(this.Pos, false),
+                BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseStage, this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(Colors.Buff),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
@@ -309,9 +313,9 @@ public class Unit {
             if (turns is >= 2 and < 1000) {
                 buffInstance.Turns = turns - 1;
             } else {
-                BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseBuff, this.UnitType.FormatName(this.Pos, false),
+                BattleHandlerLib.AppendToLog(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
                     buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
-                    buffInstance.Buff.GetName(Colors.Buff), string.Format(Lang.LogStacksPlural, buffInstance.Stacks)));
+                    buffInstance.Buff.GetName(Colors.Buff), buffInstance.Stacks));
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
                     buffEffect.OnRemove(this, buffInstance.Stacks);
@@ -331,8 +335,8 @@ public class Unit {
         uint dmgFull = dmg;
         uint defendOld = this.Defend;
         List<string> msg = [];
-        string name = useName ? this.UnitType.FormatName(this.Pos, false) + " " : "";
-        string nameS = useName ? this.UnitType.FormatName(this.Pos) + " " : "";
+        string name = useName ? this.FormatName(false) + " " : "";
+        string nameS = useName ? this.FormatName() + " " : "";
 
         // Pierce skips Defend and Shield
         if (!pierce) {
@@ -341,10 +345,10 @@ public class Unit {
                 if (this.Defend > dmg) {
                     this.Defend -= dmg;
                     // todo choiceformat
-                    return new Result(ResultType.HitShield, string.Format(Lang.LogChangeShield, nameS,
-                        Colors.Shield + (defendOld + this.Shield).Format(),
-                        Colors.Shield + (this.Defend + this.Shield).Format(),
-                        this.GetStat(Stats.Hp).Format(Colors.Hp), Colors.Neg + dmgFull.Format()));
+                    return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield, nameS,
+                        (defendOld + this.Shield).Format(Colors.Shield),
+                        (this.Defend + this.Shield).Format(Colors.Shield),
+                        this.GetStat(Stats.Hp).Format(Colors.Hp), dmgFull.Format()));
                 }
 
                 // Destroy Defend and proceed to Shield
@@ -360,9 +364,9 @@ public class Unit {
             if ((this.Shield > 0) && (dmg > 0)) {
                 // Only hit Shield
                 if (this.Shield > dmg) {
-                    long shieldOld = this.Shield;
+                    uint shieldOld = this.Shield;
                     this.Shield -= dmg;
-                    return new Result(ResultType.HitShield, string.Format(Lang.LogChangeShield,
+                    return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield,
                         nameS /*, C_SHIELD + FormatNum((defendOld + shieldOld) / STAT_MULT_HIDDEN), C_SHIELD +
                         FormatNum(shield / STAT_MULT_HIDDEN), C_HP + FormatNum(statsDefault.GetDisplayHp()),
                         C_NEG + "-" + FormatNum(dmgFull / STAT_MULT_HIDDEN) todo*/));
@@ -391,16 +395,27 @@ public class Unit {
 
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {
-            return new Result(ResultType.HitShield, msg);
+            return new Result(ResultType.HitEffectBlock, msg);
         }
 
-        if (dmg > 0) {
-            return new Result(ResultType.Success, msg);
-        }
-
-        return new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
+        return dmg > 0
+            ? new Result(ResultType.Success, msg)
+            : new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
     }
 
     public Result Damage(uint dmg, bool pierce) => this.Damage(dmg, pierce, true);
     public Result Damage(uint dmg) => this.Damage(dmg, false, true);
+
+    // todo support other langs + different names for multiples of the same UnitType (+ nicknames?)
+    public string FormatName(bool possessive) {
+        string name = this.UnitType.GetName();
+
+        string suffix = possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "";
+
+        string color = this.GetSide() == Side.Ally ? Colors.Ally : Colors.Opp;
+
+        return color + name + suffix + Colors.White;
+    }
+
+    public string FormatName() => this.FormatName(true);
 }

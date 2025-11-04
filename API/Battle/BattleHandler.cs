@@ -30,8 +30,6 @@ public static class BattleHandler {
             CreateInspectTargeting();
         } else if (Delay > TimeSpan.Zero) {
             Delay -= gameTime.ElapsedGameTime;
-        } else if (curMenu == MenuType.Battle) {
-            HandleBattle();
-        }
+        } else if (curMenu == MenuType.Battle) HandleBattle();
     }
 }

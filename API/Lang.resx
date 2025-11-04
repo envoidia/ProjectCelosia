@@ -612,9 +612,6 @@ etc todo</value>
     <data name="Stages" xml:space="preserve">
         <value>stages</value>
     </data>
-    <data name="StagePlural" xml:space="preserve">
-        <value>{0,plural,=-1{stage}=1{stage}other{stages}}</value>
-    </data>
     <!--The other stage type names use the same lang as stats-->
     <data name="StageAtk" xml:space="preserve">
         <value>Atk</value>
@@ -788,27 +785,10 @@ etc todo</value>
     <data name="LogChangeMod" xml:space="preserve">
         <value>{0} {1} {2} /c[white]→ {3}</value>
     </data>
-    <!--ChangeMult
-    todo remove
-    0 = exponent color, 1 = exp, 2 = mult with exp
-    ^a (b%)-->
-    <data name="LogChangeMultCalced" xml:space="preserve">
-        <value>{0}^{1} /c[#a034ff]({2}%/c[#a034ff])/c[white]</value>
-    </data>
-    <!--0 = exp change color, 1 = display-formatted exp change, 2 = mult with exp change color, 3 = display-formatted mult with exp change
-    ^+a) (+b%)-->
-    <data name="LogChangeMultCalcedChange" xml:space="preserve">
-        <value>{0}^{1}/c[white]) /c[#a034ff]({2}{3}%/c[#a034ff])/c[white]</value>
-    </data>
-    <data name="LogChangeMultCalcedChangeDefault" xml:space="preserve">
-        <value>/c[white])</value>
-    </data>
-    <!--0 = name, 1 = mult name, 2 = old mult, 3 = old log.change_mult.calced, 4 = new mult, 5 = new log.change_mult.calced,
-    6 = mult change, 7 = log.change_mult.calced.change
-    Name's mult a%^b (c%) → d%^e (f%) (+g%^+h) (+i%)
-    Name's mult a%{calcedOld} → d%{calcedNew} (+g%{calcedChange}-->
+    <!--0 = name, 1 = mult name, 2 = old mult, 3 = new mult, 4 = mult change
+    Name's mult a% → b% (+c%)-->
     <data name="LogChangeMult" xml:space="preserve">
-        <value>{0} {1} {2}%{3} /c[white]→ {4}%{5} /c[white]({6}%{7}</value>
+        <value>{0} {1} {2} /c[white]→ {3} /c[white]({4})</value>
     </data>
     <!--0 = name, 1 = old shield, 2 = new shield, 3 = max HP, 4 = shield change
     Name's shield a → b/c (+d)-->
@@ -840,21 +820,17 @@ etc todo</value>
     <data name="LogGiveBuffTurns" xml:space="preserve">
         <value>{0} {1} /c[white]turns {2} /c[white]→ {3}</value>
     </data>
-    <!--0 = name, 1 = buff name, 2 = buff max stacks, 3 = stacks, 4 = "stack" or "stacks", 5 = display-formatted turns, 6 = raw turns
+    <!--0 = name, 1 = buff name, 2 = buff max stacks, 3 = display-formatted stacks, 4 = raw stacks, 5 = display-formatted turns, 6 = raw turns
     Max stacks > 1: Name gains buff with a stacks and b turns
     Max stacks = 1: Name gains buff for b turns-->
     <data name="LogGiveBuffGain" xml:space="preserve">
-        <value>{0} gains {1} /c[white]{2,plural,=1{for}other{with}} {3} /c[white]{4} and} {5} /c[white]{6,plural,=1{turn}other{turns}}</value>
+        <value>{0} gains {1} /c[white]{2,plural,=1{for}other{with}} {3} /c[white]/c[white]{4,plural,=1{stack}other{stacks}} and} {5} /c[white]{6,plural,=1{turn}other{turns}}</value>
     </data>
-    <!--0 = stacks-->
-    <data name="LogStacksPlural" xml:space="preserve">
-        <value>/c[white]{0,plural,=1{stack}other{stacks}}</value>
-    </data>
-    <!--0 = name, 1 = max stacks, 2 = stacks, 3 = buff name, 4 = log.stack_s
+    <!--0 = name, 1 = max stacks, 2 = display-formatted stacks, 3 = buff name, 4 = raw stacks
     Max stacks > 1: Name loses 3 buff stacks
     Max stacks = 1: Name loses buff-->
     <data name="LogLoseBuff" xml:space="preserve">
-        <value>{0} /c[white]loses {1,plural,1#|2#{{2} }}{3} {1,plural,=2{{4}}other{}}</value>
+        <value>{0} /c[white]loses {1,plural,1#|2#{{2} }}{3} {1,plural,=2{{4,plural,=1{stack}other{stacks}}}other{}}</value>
     </data>
     <!--0 = name, 1 = stages, 2 = display-formatted stages, 3 = stage name, 4 = stageStatString
     Name loses a Atk/Def/Fth/Agi stage(s) (stageStatString)-->
@@ -863,7 +839,7 @@ etc todo</value>
     </data>
     <!--0 = name, 1 = shield
     Name loses a Shield-->
-    <data name="LogLoseShield" xml:space="preserve">
+    <data name="LogLoseShield" xml:space="preserve">`
         <value>{0} /c[white]loses {1} /c[#c6a1ff]Shield</value>
     </data>
     <!--0 = name, 1 = old turns, 2 = new turns
@@ -1281,7 +1257,11 @@ etc todo</value>
         <value>Fireborn Ring</value>
     </data>
     <!--Weapon descriptions
-    Weapon names
+    0 = desc-->
+    <data name="WeaponDesc" xml:space="preserve">
+        <value>Weapon. Gives the following:\n{0}</value>
+    </data>
+    <!--Weapon names
     Popups
     Tutorials-->
     <data name="TutorialDamage" xml:space="preserve">

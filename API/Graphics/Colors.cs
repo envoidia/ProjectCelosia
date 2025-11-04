@@ -6,6 +6,7 @@ public static class Colors {
     public static readonly Color TransBlack = new(0f, 0f, 0f, 0.6f);
 
     // Text colors
+    public const string White = "/c[white]";
     public const string Ally = "/c[#2d74f5]";
     public const string AllyL = "/c[#528cf5]";
     public const string Opp = "/c[#ff4545]";

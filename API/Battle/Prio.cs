@@ -10,9 +10,3 @@ public enum Prio {
     BeforeAllAttacks,
     Immediate
 }
-
-public static class PrioExtensions {
-    extension(Prio prio) {
-        public string Format() => "todo";
-    }
-}

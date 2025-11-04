@@ -4,7 +4,7 @@ using API.Graphics;
 using API.Input;
 using Microsoft.Xna.Framework;
 
-namespace API.Debug;
+namespace API.Menu;
 
 public static class DebugMenu {
     private const uint Mb = 1024 * 1024;

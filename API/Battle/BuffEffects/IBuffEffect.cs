@@ -1,4 +1,4 @@
-namespace API.Battle;
+namespace API.Battle.BuffEffects;
 
 public interface IBuffEffect {
     void OnGive(Unit self, uint stacks) { }
@@ -10,7 +10,7 @@ public interface IBuffEffect {
     // target = skill user
     void OnTargetedBySkill(Unit self, Unit target, uint stacks, Skill skill) { }
 
-    string[] OnTurnEnd(Unit self, uint stacks) => [""];
+    string[] OnTurnEnd(Unit self, uint stacks) => [];
 
     void OnDealDamage(Unit self, Unit target, uint stacks, uint damage, Element element) { }
 
@@ -27,7 +27,7 @@ public interface IBuffEffect {
     // target = shielder if there is one, otherwise target = self
     void OnTakeShield(Unit self, Unit target, uint stacks, uint turns, uint heal) { }
 
-    void OnGiveBuff(Unit self, Unit target, uint stacks, Buff buff, uint turns, int stacksChange) { }
+    void OnGiveBuff(Unit self, Unit target, uint stacks, Buff buff, uint turns, uint stacksChange) { }
 
     void OnChangeStage(Unit self, Unit target, uint stacks, StageType stageType, uint turns, int stacksChange) { }
 }

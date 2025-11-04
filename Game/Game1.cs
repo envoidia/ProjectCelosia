@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using API;
-using API.Debug;
 using API.Graphics;
 using API.Input;
 using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
-using API.Extensions;
 using static API.Menu.MenuType;
 
 namespace Game;
@@ -40,25 +37,18 @@ public class Game1 : Core {
         base.Initialize();
         AddMenu(Main);
 
-        TestLabel.Text = "fldsg".GetLang();
+        TestLabel.Text = "fldsg";
     }
 
     protected override void LoadContent() {
         bg = Content.Load<Texture2D>("img/bg");
-
         IconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
 
         base.LoadContent();
     }
 
     protected override void Update(GameTime gameTime) {
-        if ((GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-            this.Exit();
-        }
-
         this.CheckInput(gameTime);
-
         base.Update(gameTime);
     }
 
@@ -77,7 +67,7 @@ public class Game1 : Core {
                     switch ((MainMenu) index) {
                         case MainMenu.Start:
                             // Overworld/battle
-                            AddMenu(Battle);
+                            AddMenu(MenuType.Battle);
                             BattleHandler.Init();
                             break;
                         case MainMenu.Encyclopedia:
@@ -111,7 +101,7 @@ public class Game1 : Core {
                 }
 
                 break;
-            case Battle or Targeting or Log or InspectTargeting or Inspect:
+            case MenuType.Battle or Targeting or Log or InspectTargeting or Inspect:
                 BattleHandler.Input(gameTime);
                 break;
             case Debug or None:

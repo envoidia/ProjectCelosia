@@ -63,7 +63,7 @@ public class Label : RenderObject {
         this.RichTextLayout.Draw(spriteBatch, this.Position, Color.White, 0f, this.Origin.ToVector2());
     }
 
-    protected override void AddToRenderList() {
+    internal sealed override void AddToRenderList() {
         switch (this.Priority) {
             case RenderPriority.Low:
                 Core.LabelsLow.Add(this);
