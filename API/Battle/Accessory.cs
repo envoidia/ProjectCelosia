@@ -3,10 +3,14 @@ using API.Entity;
 namespace API.Battle;
 
 public class Accessory : ComplexDescriptionEntity, IEquippable {
+    //public string Source { get; }
+
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-    public Accessory(string keyName, string keyDescription, string icon) : base(keyName, keyDescription, icon) {
+    public Accessory(string source, string keyName, string keyDescription, string icon) : base(keyName, keyDescription,
+        icon) {
+        //this.Source = source;
         Core.Accessories.Add(this);
     }
 

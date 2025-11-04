@@ -11,7 +11,7 @@ public class ChangeStatMod(StatMod mod, int change) : IBuffEffect {
         int modNew = modOld + changeFull;
 
         self.SetStatMod(mod, modNew);
-        
+
         BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeMod, self.FormatName()),
             Colors.Stat + mod.GetName(), mod.Format(modOld), mod.Format(modNew));
     }

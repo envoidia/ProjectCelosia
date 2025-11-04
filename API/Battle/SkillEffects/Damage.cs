@@ -33,17 +33,12 @@ public class Damage(Element element, uint pow, SkillType skillType) : SkillEffec
         double multWeakDmgDealt = 1;
         double multWeakDmgTaken = 1;
 
-        if (element == Elements.Vis) {
-            affMultDmgDealt = 1;
-            affMultDmgTaken = 1;
-        } else {
-            affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(element)] / 1000d;
-            affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(element)] / 1000d;
+        affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(element)] / 1000d;
+        affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(element)] / 1000d;
 
-            if (target.IsWeakTo(element)) {
-                multWeakDmgDealt = self.GetMult(Mults.WeakDmgDealt);
-                multWeakDmgTaken = target.GetMult(Mults.WeakDmgTaken);
-            }
+        if (target.IsWeakTo(element)) {
+            multWeakDmgDealt = self.GetMult(Mults.WeakDmgDealt);
+            multWeakDmgTaken = target.GetMult(Mults.WeakDmgTaken);
         }
 
         double multFollowUpDmgDealt = 1;

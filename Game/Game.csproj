@@ -7,7 +7,10 @@
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
         <Nullable>enable</Nullable>
-        <!--<PublishAot>true</PublishAot> <!-Enable to test AoT-->
+        <PublishAot>false</PublishAot>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(PublishAot)' == 'true'">
+        <DefineConstants>$(DefineConstants);NATIVE_AOT</DefineConstants>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -50,6 +53,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\API\API.csproj"/>
+        <ProjectReference Include="..\Celosia\Celosia.csproj"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Lang\Lang.Designer.cs">
@@ -69,5 +73,22 @@
     </Target>
     <Target Name="EnsureContentOutputPath" BeforeTargets="CopyFilesToOutputDirectory">
         <MakeDir Directories="$(OutDir)Content/img"/>
+    </Target>
+    <Target Name="CopyCelosiaToMods" AfterTargets="Build">
+        <ItemGroup>
+            <CelosiaDll Include="$(SolutionDir)Celosia\bin\$(Configuration)\$(TargetFramework)\Celosia.dll"/>
+        </ItemGroup>
+        <MakeDir Directories="$(TargetDir)mods" Condition="!Exists('$(TargetDir)mods')"/>
+        <ItemGroup>
+            <CelosiaFiles Include="$(TargetDir)\Celosia.dll"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(CelosiaFiles)"
+              DestinationFolder="$(TargetDir)mods\"
+              SkipUnchangedFiles="true"
+              OverwriteReadOnlyFiles="true">
+            <Output TaskParameter="CopiedFiles" ItemName="CopiedCelosiaFiles"/>
+        </Copy>
+        <!--todo fix (doesn't work)-->
+        <Delete Files="@(CelosiaFiles)" Condition="@(CopiedFiles) != ''"/>
     </Target>
 </Project>

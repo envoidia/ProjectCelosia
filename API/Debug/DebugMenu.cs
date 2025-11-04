@@ -1,10 +1,15 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Text;
 using API.Graphics;
 using API.Input;
+using API.Modding;
 using Microsoft.Xna.Framework;
 
-namespace API.Menu;
+namespace API.Debug;
 
 public static class DebugMenu {
     private const uint Mb = 1024 * 1024;
@@ -42,31 +47,40 @@ public static class DebugMenu {
 
         DebugInfoL.Visible = true;
         DebugInfoR.Visible = true;
-        DebugInfoHelp.Visible ^= Core.Input.CheckInput(Keybinds.DebugHelp);
 
-        if (Core.Input.InputDeviceChanged) {
-            DebugInfoL.Text = GetDebugInfoLText();
-            DebugInfoHelp.Text = GetDebugInfoHelpText();
-        }
+        if (Core.Input.InputDeviceChanged) DebugInfoL.Text = GetDebugInfoLText();
+
+        // todo update text if lang changed
 
         // Lerped FPS counter
         avgFrameTime += (gameTime.ElapsedGameTime - avgFrameTime) * 0.01f;
 
         timeSinceUpdate += gameTime.ElapsedGameTime;
+
+        // Check for inputs
+        DebugInfoHelp.Visible ^= Core.Input.CheckInput(Keybinds.DebugHelp);
+
+        if (Core.Input.CheckInput(Keybinds.DebugDumpMods)) {
+            Console.WriteLine(string.Join(", ", ModLoader.LoadedMods).Replace(".Main", ""));
+        }
+
+        // Update timed text
         if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
         DebugInfoR.Text = string.Format(Lang.DebugInfoR,
             (int) (1 / avgFrameTime.TotalSeconds) + "(" + (int) (1 / gameTime.ElapsedGameTime.TotalSeconds) +
             ")", // todo temp
-            System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / Mb,
-            string.Join(", ", Core.NavPath.Reverse()));
+            Process.GetCurrentProcess().PrivateMemorySize64 / Mb,
+            "todo",
+            "todo",
+            string.Join(", ", Core.NavPath.Reverse()),
+            "todo",
+            ModLoader.LoadedMods.Count);
         timeSinceUpdate = TimeSpan.Zero;
     }
 
     private static string GetDebugInfoLText() =>
-        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph(),
-            BuildInfo.BuildDate);
+        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
 
-    private static string GetDebugInfoHelpText() =>
-        string.Format(Lang.DebugInfoHelp, Keybinds.DebugInfo.GetCurrentGlyph(), Keybinds.DebugHelp.GetCurrentGlyph());
+    private static string GetDebugInfoHelpText() => Lang.DebugInfoHelp;
 }

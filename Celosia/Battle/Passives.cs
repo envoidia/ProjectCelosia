@@ -1,6 +1,6 @@
 using API.Battle;
 
-namespace Game.Battle;
+namespace Celosia.Battle;
 
 public class Passives {
     public static readonly Passive IgnisAffUp = new("PassiveIgnisAffUp", "PassiveIgnisAffUpDesc", "todo") {

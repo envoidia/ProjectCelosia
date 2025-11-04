@@ -11,7 +11,7 @@ public class ChangeExtraActions(int change) : IBuffEffect {
         uint exAOld = self.ExtraActions;
         uint exANew = (uint) (exAOld + changeFull);
         self.ExtraActions = exANew;
-        
+
         BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
             Math.Max(exAOld, 0).Format(), Math.Max(exANew, 0).Format()));
     }

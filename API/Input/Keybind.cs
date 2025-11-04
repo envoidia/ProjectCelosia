@@ -19,6 +19,7 @@ public enum KeybindId {
     // Debug
     DebugInfo,
     DebugHelp,
+    DebugDumpMods,
 
     // Marker. Always add non-merged keybinds above this
     LastBeforeMerged,
@@ -65,8 +66,9 @@ public static class Keybinds {
 
     // Debug
     // todo remake icons with more buttons (like stick clicks)
-    public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.None);
-    public static readonly Keybind DebugHelp = new("", KeybindId.DebugHelp, Keys.F2, Buttons.LeftStick);
+    public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Start);
+    public static readonly Keybind DebugHelp = new("", KeybindId.DebugHelp, Keys.F2, Buttons.None);
+    public static readonly Keybind DebugDumpMods = new("", KeybindId.DebugDumpMods, Keys.F3, Buttons.None);
 
     // Merged
     public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);

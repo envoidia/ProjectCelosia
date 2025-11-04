@@ -23,7 +23,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <!--Note to translators:
+    <!--todo move stuff to Celosia.Lang-->
+    <!--Note to translators: (todo move this to a separate md file)
         This game's battle mechanics make an effort to use extremely consistent language and formatting across all situations so that someone familiar with the game's terminology can interpret mechanics much more quickly
         Please try to keep this consistency as best you can (and if you see a place where I broke my own rules, please let me know so I can correct it)
         This game makes many references. Most references are notated in this file, to make them much easier to preserve in translation
@@ -55,11 +56,57 @@
                 {0,number,integer} formats as int
                 {0,number,percent} formats as percentage
                 These aren't text, so they won't need editing-->
+    <!--Debug info-->
+    <data name="ModName" xml:space="preserve">
+        <value>API</value>
+    </data>
     <data name="Blank" xml:space="preserve">
         <value/>
     </data>
     <data name="Todo" xml:space="preserve">
         <value>todo</value>
+    </data>
+    <!-- 0 = lang key, 1 = mod that requested it -->
+    <data name="LangError" xml:space="preserve">
+        <value>Invalid key {0} requested by {1}</value>
+    </data>
+    <!--Modloader info-->
+    <!-- 0 = mod name, 1 = exception message -->
+    <data name="ModLoadFail" xml:space="preserve">
+        <value>Failed to load {0}: {1}</value>
+    </data>
+    <data name="ModFindInititalizeFail" xml:space="preserve">
+        <value>Failed to load {0}: Does it have a public Main class that extends API.Modding.GameMod and overrides Initialize?</value>
+    </data>
+    <data name="ModLoaded" xml:space="preserve">
+        <value>Successfully loaded {0}</value>
+    </data>
+    <data name="FallingBackToAPILang" xml:space="preserve">
+        <value>Could not find the Lang class for {0}, falling back to API.Lang</value>
+    </data>
+    <!--Debug info menu
+    0 = Close button glpyh, 1 = version-->
+    <data name="DebugInfoL" xml:space="preserve">
+        <value>{0}: Close, /i[KF2]: Help 
+Version: {1}
+OS: todo
+CPU: todo
+GPU: todo</value>
+    </data>
+    <!--0 = FPS, 1 = RAM usage, 2 = Last input source, 3 = Resolution, 4 = Path taken through menus, 5 = OW location (Area, X, Y), 6 = Amount of mods loaded-->
+    <data name="DebugInfoR" xml:space="preserve">
+        <value>FPS: {0}
+RAM: {1}MB
+Last Input Source: {2}
+Resolution: {3}
+NavPath: {4}
+Overworld Location: {5}
+Loaded Mods: {6}</value>
+    </data>
+    <data name="DebugInfoHelp" xml:space="preserve">
+        <value>/i[KF3]: Write loaded mod list to log
+/i[KF4]: todo
+etc todo</value>
     </data>
     <!--Basic options-->
     <data name="Yes" xml:space="preserve">
@@ -73,28 +120,6 @@
     </data>
     <data name="Down" xml:space="preserve">
         <value>Down</value>
-    </data>
-    <!--Debug info menu-->
-    <data name="DebugInfoL" xml:space="preserve">
-        <value>{0}: Close, {1}: Help 
-Version: {2}
-OS: todo
-CPU: todo
-GPU: todo</value>
-    </data>
-    <data name="DebugInfoR" xml:space="preserve">
-        <value>FPS: {0}
-RAM: {1}MB
-Last Input Source: todo
-Resolution: todo
-NavPath: {2}
-Overworld Location: todo
-Loaded Mod Count: todo</value>
-    </data>
-    <data name="DebugInfoHelp" xml:space="preserve">
-        <value>{0}: todo
-{1}: todo
-etc todo</value>
     </data>
     <!--Keybinds-->
     <data name="KeyConfirm" xml:space="preserve">

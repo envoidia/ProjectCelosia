@@ -17,7 +17,7 @@ public class ChangeMult(Mult mult, int change) : IBuffEffect {
         double changeDisplay = (Math.Max(multNew, multMin) - Math.Max(multOld, multMin)) / 10d;
 
         self.SetMult(mult, multNew);
-        
+
         BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeMult, self.FormatName(), Colors.Stat + mult.GetName(),
             mult.Format(multOld), mult.Format(multNew), mult.FormatChange(changeDisplay)));
     }

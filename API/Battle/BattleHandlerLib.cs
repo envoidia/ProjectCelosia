@@ -53,11 +53,11 @@ public static class BattleHandlerLib {
     }
 
     public static void HandleBattle() { }
-    
+
     public static void AppendToLog(params List<string> str) {
         return;
     }
-    
+
     public static void AppendToLog(string[] str) {
         return;
     }

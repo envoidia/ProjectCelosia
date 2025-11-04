@@ -4,9 +4,8 @@ using API.Graphics;
 namespace API.Battle.BuffEffects;
 
 public class ChangeShield : IBuffEffect {
-    
     // Actual value is set in SkillEffects/GiveBuff.Apply() (todo)
-    
+
     public void OnRemove(Unit self, int stacks) {
         uint shieldOld = self.Shield;
         self.Shield = 0;

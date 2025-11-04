@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using API.Battle.BuffEffects;
 using API.Extensions;
 using API.Graphics;
@@ -267,7 +268,7 @@ public class Unit {
     public void OnDealDamage(Unit target, uint damage, Element element) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnDealDamage(s, t, stacks, damage, element));
 
-    public void OnTakeDamage(Unit target, uint damage, Element element) => this.NotifyBuffEffects(target,
+    public void OnTakeDamage(Unit target, uint damage, Element? element = null) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnTakeDamage(s, t, stacks, damage, element));
 
     public void OnDealHeal(Unit target, uint heal, uint overheal) => this.NotifyBuffEffects(target,

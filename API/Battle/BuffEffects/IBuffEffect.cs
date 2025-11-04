@@ -15,7 +15,7 @@ public interface IBuffEffect {
     void OnDealDamage(Unit self, Unit target, uint stacks, uint damage, Element element) { }
 
     // target = attacker if there is one, otherwise target = self
-    void OnTakeDamage(Unit self, Unit target, uint stacks, uint damage, Element element) { }
+    void OnTakeDamage(Unit self, Unit target, uint stacks, uint damage, Element? element) { }
 
     void OnDealHeal(Unit self, Unit target, uint stacks, uint heal, uint overHeal) { }
 

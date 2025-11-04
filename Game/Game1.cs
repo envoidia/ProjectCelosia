@@ -9,19 +9,26 @@ using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
+using API.Debug;
+using API.Extensions;
+using API.Modding;
+using API.Save;
 using static API.Menu.MenuType;
 
 namespace Game;
 
 public class Game1 : Core {
     // Rendering
-    private static Texture2D bg;
+    private static Texture2D bg = null!;
 
     // Menu stuff
     private static int index;
 
     // Debug
     private static bool isDebugInfoEnabled;
+
+    // Celosia.Main
+    private static Celosia.Main celosiaMain = null!;
 
     private static readonly Label TestLabel = new() {
         Position = new Vector2(1000, 800),
@@ -36,8 +43,22 @@ public class Game1 : Core {
     protected override void Initialize() {
         base.Initialize();
         AddMenu(Main);
+#if NATIVE_AOT
+        // Load main game
+        celosiaMain = new Celosia.Main();
+        celosiMain.Initialize();
+#else
+        if (Settings.EnableModLoader) {
+            // Load arbitrary mods
+            ModLoader.LoadAllMods();
+        } else {
+            // Just load main game
+            celosiaMain = new Celosia.Main();
+            celosiaMain.Initialize();
+        }
+#endif
 
-        TestLabel.Text = "fldsg";
+        TestLabel.Text = "ElementVis".GetLang();
     }
 
     protected override void LoadContent() {
@@ -50,6 +71,17 @@ public class Game1 : Core {
     protected override void Update(GameTime gameTime) {
         this.CheckInput(gameTime);
         base.Update(gameTime);
+
+        // Update mods
+#if NATIVE_AOT
+        celosiaMain.Update(gameTime);
+#else
+        if (Settings.EnableModLoader) {
+            ModLoader.UpdateAllMods(gameTime);
+        } else {
+            celosiaMain.Update(gameTime);
+        }
+#endif
     }
 
     private void CheckInput(GameTime gameTime) {

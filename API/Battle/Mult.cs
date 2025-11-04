@@ -17,7 +17,7 @@ public class Mult : NamedEntity {
     public override int GetHashCode() => this.KeyName.GetHashCode();
 
     public string Format(uint val) {
-       (string c1, string c2) = this.GetColors();
+        (string c1, string c2) = this.GetColors();
 
         return Math.Max(val, this.MinValue)
             .Format(val > 1000 ? c1 : val < 1000 ? c2 : Colors.Num, "%", 10d);
