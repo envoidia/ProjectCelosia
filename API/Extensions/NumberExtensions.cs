@@ -6,10 +6,10 @@ public static class NumberExtensions {
     public const string NumberFormat = "N";
 
     extension(int val) {
-        public string Format(string color, string suffix = "", double? divisor = null) {
+        public string Format(string color, string suffix = "", float? divisor = null) {
             string sign = val > 0 ? "+" : "";
 
-            if (divisor != null) return color + sign + ((double) (val / divisor)).ToString(NumberFormat) + suffix;
+            if (divisor != null) return color + sign + ((float) (val / divisor)).ToString(NumberFormat) + suffix;
 
             return color + sign + val.ToString(NumberFormat) + suffix;
         }
@@ -25,19 +25,19 @@ public static class NumberExtensions {
     }
 
     extension(uint val) {
-        public string Format(string color, string suffix = "", double divisor = 1) {
+        public string Format(string color, string suffix = "", float divisor = 1) {
             string sign = val == 0 ? "" : "+";
             return color + sign + (val / divisor).ToString(NumberFormat) + suffix;
         }
 
         public string Format() => val.Format(Colors.Num);
 
-        public string FormatStat(uint statDefault) =>
-            val > statDefault ? Colors.Pos : val < statDefault ? Colors.Neg : Colors.Num;
+        public string Format(uint threshold) =>
+            val.Format(val > threshold ? Colors.Pos : val < threshold ? Colors.Neg : Colors.Num);
     }
 
-    extension(double val) {
-        public string Format(string color, string suffix = "", double divisor = 1) {
+    extension(float val) {
+        public string Format(string color, string suffix = "", float divisor = 1) {
             string sign = val > 0 ? "+" : "";
             return color + sign + (val / divisor).ToString(NumberFormat) + suffix;
         }

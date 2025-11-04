@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using API.Battle.BuffEffects;
 using API.Extensions;
 using API.Graphics;
@@ -149,8 +148,8 @@ public class Unit {
             int change = (int) (statNew - statOld);
             // todo choiceformat
             builder.Append(string.Format(Lang.LogStageStat, Colors.Stat + stat.KeyName,
-                statOld.FormatStat(statDefault),
-                statNew.FormatStat(statDefault),
+                statOld.Format(statDefault),
+                statNew.Format(statDefault),
                 statDefault.Format(Colors.Num), change.Format()));
             builder.Append(i == (statCount - 1) ? ")" : ", ");
         }
@@ -159,7 +158,7 @@ public class Unit {
     }
 
     // Mults
-    public double GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u) / 1000d;
+    public float GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u) / 1000f;
     public uint GetRawMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u);
     public void SetMult(Mult mult, uint set) => this._mults[mult] = set; // todo ensure these dont crash
 

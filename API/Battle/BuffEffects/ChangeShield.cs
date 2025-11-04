@@ -14,7 +14,7 @@ public class ChangeShield : IBuffEffect {
         if (self.Defend > 0) {
             BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeShield, self.FormatName()),
                 (defend + shieldOld).Format(Colors.Shield), defend.Format(Colors.Shield),
-                self.GetBaseStat(Stats.Hp).Format(Colors.Hp), ((int) (shieldOld * -1)).Format(Colors.Shield));
+                self.GetBaseStat(Stats.Hp).Format(Colors.Hp), ((int) -shieldOld).Format(Colors.Shield));
         } else {
             BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseShield, self.FormatName(false),
                 shieldOld.Format(Colors.Shield)));

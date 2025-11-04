@@ -1,12 +1,11 @@
 using System;
-using API.Extensions;
 using API.Graphics;
 
 namespace API.Battle.BuffEffects;
 
 public class ChangeMult(Mult mult, int change) : IBuffEffect {
     public void OnGive(Unit self, uint stacks) => this.Calc(self, (int) (change * stacks));
-    public void OnRemove(Unit self, uint stacks) => this.Calc(self, (int) (change * stacks * -1));
+    public void OnRemove(Unit self, uint stacks) => this.Calc(self, (int) (change * -stacks));
 
     private void Calc(Unit self, int changeFull) {
         // Minimum mult to display
@@ -14,7 +13,7 @@ public class ChangeMult(Mult mult, int change) : IBuffEffect {
 
         uint multOld = self.GetRawMult(mult);
         uint multNew = (uint) (multOld + changeFull);
-        double changeDisplay = (Math.Max(multNew, multMin) - Math.Max(multOld, multMin)) / 10d;
+        float changeDisplay = (Math.Max(multNew, multMin) - Math.Max(multOld, multMin)) / 10f;
 
         self.SetMult(mult, multNew);
 

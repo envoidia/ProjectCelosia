@@ -13,36 +13,30 @@ public class Damage(Element element, uint pow, SkillType skillType) : SkillEffec
             return ResultType.PseudoSuccess;
         }
 
-        uint atk = 1;
-        uint def = 1;
+        uint atk;
+        uint def;
 
-        switch (this.SkillType) {
-            case SkillType.Str:
-                atk = self.GetStat(Stats.Str);
-                def = target.GetStat(Stats.Amr);
-                break;
-            case SkillType.Mag:
-                atk = self.GetStat(Stats.Mag);
-                def = target.GetStat(Stats.Res);
-                break;
+        if (this.SkillType == SkillTypes.Str) {
+            atk = self.GetStat(Stats.Str);
+            def = target.GetStat(Stats.Amr);
+        } else {
+            atk = self.GetStat(Stats.Mag);
+            def = target.GetStat(Stats.Res);
         }
 
-        double affMultDmgDealt;
-        double affMultDmgTaken;
-
-        double multWeakDmgDealt = 1;
-        double multWeakDmgTaken = 1;
-
-        affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(element)] / 1000d;
-        affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(element)] / 1000d;
-
+        float affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(element)] / 1000f;
+        float affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(element)] / 1000f;
+        
+        float multWeakDmgDealt = 1;
+        float multWeakDmgTaken = 1;
+        
         if (target.IsWeakTo(element)) {
             multWeakDmgDealt = self.GetMult(Mults.WeakDmgDealt);
             multWeakDmgTaken = target.GetMult(Mults.WeakDmgTaken);
         }
 
-        double multFollowUpDmgDealt = 1;
-        double multFollowUpDmgTaken = 1;
+        float multFollowUpDmgDealt = 1;
+        float multFollowUpDmgTaken = 1;
 
         if (this.IsFollowUp) {
             multFollowUpDmgDealt = self.GetMult(Mults.FollowUpDmgDealt);
@@ -56,7 +50,7 @@ public class Damage(Element element, uint pow, SkillType skillType) : SkillEffec
             dmg = 0;
         } else {
             // todo null safety
-            dmg = BattleLib.StatMult * (uint) (((double) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
+            dmg = BattleLib.StatMult * (uint) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
                                                self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) *
                                                self.GetMult(element.MultDmgDealt) *
                                                target.GetMult(element.MultDmgTaken) * multWeakDmgDealt *

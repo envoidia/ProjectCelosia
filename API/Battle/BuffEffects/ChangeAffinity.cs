@@ -9,7 +9,7 @@ public class ChangeAffinity(Element element, int change) : IBuffEffect {
     }
 
     public void OnRemove(Unit self, uint stacks) {
-        this.Calc(self, (int) (change * stacks * -1));
+        this.Calc(self, (int) (change * -stacks));
     }
 
     private void Calc(Unit self, int changeFull) {

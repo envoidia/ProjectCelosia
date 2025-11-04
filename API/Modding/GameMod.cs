@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 namespace API.Modding;
 
 public abstract class GameMod {
+    /// <summary>
+    /// Lang key that should be used for the mod's display name
+    /// </summary>
     public const string ModNameKey = "ModName";
     
     /// <summary>
@@ -33,7 +36,7 @@ public abstract class GameMod {
     public abstract void Update(GameTime gameTime);
 
     /// <summary>
-    /// Gets a string from a lang key from this mod's specified ResourceManager. Crashes on invalid key
+    /// Gets a string from a lang key from this mod's ResourceManager. Crashes on invalid key
     /// </summary>
     public string GetLang(string str) => str.GetLangRm(this.ResourceManager);
 

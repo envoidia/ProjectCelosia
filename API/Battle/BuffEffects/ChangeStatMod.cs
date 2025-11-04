@@ -4,7 +4,7 @@ namespace API.Battle.BuffEffects;
 
 public class ChangeStatMod(StatMod mod, int change) : IBuffEffect {
     public void OnGive(Unit self, uint stacks) => this.Calc(self, (int) (change * stacks));
-    public void OnRemove(Unit self, uint stacks) => this.Calc(self, (int) (change * stacks * -1));
+    public void OnRemove(Unit self, uint stacks) => this.Calc(self, (int) (change * -stacks));
 
     private void Calc(Unit self, int changeFull) {
         int modOld = self.GetStatMod(mod);

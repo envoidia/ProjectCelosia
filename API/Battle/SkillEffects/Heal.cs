@@ -5,7 +5,7 @@ using API.Graphics;
 
 namespace API.Battle.SkillEffects;
 
-public class Heal(uint pow) : SkillEffect(pow, SkillType.Fth) {
+public class Heal(uint pow) : SkillEffect(pow, SkillTypes.Fth) {
     public uint Overheal { get; init; } = 0;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {

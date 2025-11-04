@@ -11,7 +11,6 @@ namespace API.Modding;
 // todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
 public static class ModLoader {
 #if !NATIVE_AOT
-    private static readonly List<AssemblyLoadContext> ALCs = []; // todo do i need this
     public static readonly List<GameMod> LoadedMods = [];
 
     private static readonly string ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
@@ -43,37 +42,19 @@ public static class ModLoader {
         using (FileStream fs = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
             asm = alc.LoadFromStream(fs);
         }
-
-        // Find Initialize()
+        
         Type? modType = asm.GetTypes()
-            .Where(t => typeof(GameMod).IsAssignableFrom(t) && !t.IsAbstract)
-            .FirstOrDefault(t => {
-                MethodInfo? initMethod = t.GetMethod(
-                    "Initialize",
-                    BindingFlags.Public | BindingFlags.Instance,
-                    null,
-                    CallingConventions.Any,
-                    Type.EmptyTypes,
-                    null);
+            .FirstOrDefault(t => t.Name == "Main" && typeof(GameMod).IsAssignableFrom(t));
 
-                return (initMethod != null) && (initMethod.DeclaringType == t);
-            });
-
-        // Couldn't find Initialize()
+        // Couldn't find Main
         if (modType == null) {
-            Console.WriteLine(Lang.ModFindInititalizeFail, Path.GetFileName(dllPath));
-            alc.Unload();
-            return;
-        }
-
-        // Invoke Initialize()
-        if (Activator.CreateInstance(modType) is not GameMod instance) {
+            Console.WriteLine(Lang.ModCantFindMain, Path.GetFileName(dllPath));
             alc.Unload();
             return;
         }
         
-        ALCs.Add(alc);
-        LoadedMods.Add(instance);
+        // todo ensure this doesn't crash
+        LoadedMods.Add((GameMod) Activator.CreateInstance(modType)!);
 
         Console.WriteLine(Lang.ModLoaded, Path.GetFileName(dllPath));
     }

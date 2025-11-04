@@ -5,6 +5,7 @@ using API.Battle;
 using API.Graphics;
 using API.Input;
 using API.Menu;
+using API.Save;
 using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
@@ -65,19 +66,20 @@ public class Core : Game {
     private static Label inputPrompt;
 
     // Lists of other stuff
+    public static readonly List<Accessory> Accessories = [];
+    public static readonly List<BoolStat> BoolStats = [];
+    public static readonly List<Buff> Buffs = [];
+    public static readonly List<Element> Elements = [];
+    public static readonly List<Mult> Mults = [];
+    public static readonly List<Passive> Passives = [];
     public static readonly List<Battle.Range> Ranges = [];
     public static readonly List<Skill> Skills = [];
-    public static readonly List<Buff> Buffs = [];
-    public static readonly List<Passive> Passives = [];
-    public static readonly List<UnitType> UnitTypes = [];
-    public static readonly List<Accessory> Accessories = [];
-    public static readonly List<Weapon> Weapons = [];
-    public static readonly List<Stat> Stats = [];
-    public static readonly List<Element> Elements = [];
+    public static readonly List<SkillType> SkillTypes = [];
     public static readonly List<StageType> StageTypes = [];
-    public static readonly List<Mult> Mults = [];
-    public static readonly List<BoolStat> BoolStats = [];
     public static readonly List<StatMod> StatMods = [];
+    public static readonly List<Stat> Stats = [];
+    public static readonly List<UnitType> UnitTypes = [];
+    public static readonly List<Weapon> Weapons = [];
 
 
     /// <summary>
@@ -157,6 +159,7 @@ public class Core : Game {
         };
 
 #if DEBUG
+        Settings.EnableModLoader = true;
         this.IsMouseVisible = true;
         ExitOnEscape = true;
 #endif

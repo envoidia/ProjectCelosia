@@ -17,7 +17,7 @@ public class ChangeHp(int change, bool isImmediate = false, bool isPercentage = 
     private string[] Calc(Unit self, uint stacks) {
         // Damage
         if (change < 0) {
-            double multDoTDmgTaken = isImmediate ? 1 : self.GetMult(Mults.DoTDmgTaken);
+            float multDoTDmgTaken = isImmediate ? 1 : self.GetMult(Mults.DoTDmgTaken);
 
             uint dmg = isPercentage
                 ? (uint) Math.Abs(self.GetBaseStat(Stats.Hp) * (change / 1000d) * stacks * self.GetMult(Mults.DmgTaken)

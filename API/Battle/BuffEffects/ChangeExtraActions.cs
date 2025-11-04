@@ -5,7 +5,7 @@ namespace API.Battle.BuffEffects;
 
 public class ChangeExtraActions(int change) : IBuffEffect {
     public void OnGive(Unit self, uint stacks) => Calc(self, (int) (change * stacks));
-    public void OnRemove(Unit self, uint stacks) => Calc(self, (int) (change * stacks * -1));
+    public void OnRemove(Unit self, uint stacks) => Calc(self, (int) (change * -stacks));
 
     private static void Calc(Unit self, int changeFull) {
         uint exAOld = self.ExtraActions;

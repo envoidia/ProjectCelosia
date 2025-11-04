@@ -5,10 +5,11 @@ using API.Battle.SkillEffects;
 using API.Entity;
 using API.Extensions;
 using API.Graphics;
+using API.Modding;
 
 namespace API.Battle;
 
-public class Skill : ComplexDescriptionEntity {
+public class Skill : ComplexDescriptionEntity, IModItem {
     public Element Element { get; }
     public Range Range { get; }
     public int Cost { get; }
@@ -19,9 +20,12 @@ public class Skill : ComplexDescriptionEntity {
 
     public SkillRole[] SkillRoles { get; init; } = [];
     public SkillEffect[] SkillEffects { get; init; } = [];
+    
+    public GameMod? Source { get; }
 
-    public Skill(string keyName, string keyDescription, Element element, Range range, int cost)
+    public Skill(GameMod? source, string keyName, string keyDescription, Element element, Range range, int cost)
         : base(keyName, keyDescription, element.KeyName) {
+        this.Source = source;
         this.Element = element;
         this.Range = range;
         this.Cost = cost;
@@ -41,6 +45,7 @@ public class Skill : ComplexDescriptionEntity {
 
     public static explicit operator SkillInstance(Skill skill) => new(skill);
 
+    // todo stat skills
     public override string GetDescription() {
         uint pow = 0;
         List<string> skillTypes = new(3);
@@ -52,16 +57,19 @@ public class Skill : ComplexDescriptionEntity {
                 pow = effectPow;
             }
 
-            SkillType effectType = skillEffect.SkillType;
+            SkillType? effectType = skillEffect.SkillType;
+
+            if (effectType is null) continue;
+            
             string str = Colors.Stat + effectType.GetName() + "/c[white]";
-            if ((effectType != SkillType.Stat) && !skillTypes.Contains(str)) {
+            if (!skillTypes.Contains(str)) {
                 skillTypes.Add(str);
             }
         }
 
         string skillTypesStr = skillTypes.Count != 0
             ? string.Join(", ", skillTypes)
-            : Colors.Stat + SkillType.Stat.GetName() + "/c[white]";
+            : Colors.Stat + SkillTypes.Stat.GetName() + "/c[white]";
 
         return string.Format(Lang.SkillDesc, skillTypesStr, this.Element.GetName(Colors.Element),
             this.Range.GetName(), pow == 0 ? "" : ", " + Colors.Num + pow + " [WHITE]" + Lang.Pow, this.Prio == 0

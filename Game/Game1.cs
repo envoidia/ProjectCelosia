@@ -58,7 +58,7 @@ public class Game1 : Core {
         }
 #endif
 
-        TestLabel.Text = "ElementVis".GetLang();
+        TestLabel.Text = "";
     }
 
     protected override void LoadContent() {

@@ -23,39 +23,6 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <!--todo move stuff to Celosia.Lang-->
-    <!--Note to translators: (todo move this to a separate md file)
-        This game's battle mechanics make an effort to use extremely consistent language and formatting across all situations so that someone familiar with the game's terminology can interpret mechanics much more quickly
-        Please try to keep this consistency as best you can (and if you see a place where I broke my own rules, please let me know so I can correct it)
-        This game makes many references. Most references are notated in this file, to make them much easier to preserve in translation
-        Many skills/passives also share names with skills/passives from Pokémon and Shin Megami Tensei, which is not notated in every case
-        You don't have to preserve every reference in translation, since some may not make sense when translated
-        For skills/etc where the name is not a reference, it is not particularly important that the translation keeps the exact same meaning as long as it conveys the same vibe
-        (For instance, "Thunder Spear" could easily be replaced with anything that just as strongly implies a Str-based Fulgur attack; just make it sound cool and intuitive)
-
-    Quick guide to text formatting:
-        Only change the content in the <value> tags. Do not change the <data name=""> field
-        Text is whitespace-sensitive, so mind indentation/newlines
-        /c[white] or /c[#ffffff] is a color
-        /i[image-name] is an image
-        {0} embeds the 1st parameter, {1} the 2nd, and so on. A description of each parameter is usually written above the entry
-        
-        Selection formats:
-            Some entries use ICU MessageFormat for advanced formatting: https://unicode-org.github.io/icu/userguide/format_parse/messages/
-            I only use a very small subset of its features, which are summarized below
-            If you don't understand this, it's probably fine; you shouldn't have to edit them. Just change the contents of their inner {} and nothing else
-            
-            Example selector that checks parameter 0:
-                {0,plural,=0{it's exactly zero}=1{it's exactly one}other{it's #}
-                # prints the parameter itself, so if you provide 50, you'll get "it's 50"
-
-                {0,select,foo{lorem}bar{ipsum}other{dolor}}
-                A basic selector
-                
-                {0,number} formats a number
-                {0,number,integer} formats as int
-                {0,number,percent} formats as percentage
-                These aren't text, so they won't need editing-->
     <!--Debug info-->
     <data name="ModName" xml:space="preserve">
         <value>API</value>
@@ -79,8 +46,8 @@
     <data name="ModLoadFail" xml:space="preserve">
         <value>Failed to load {0}: {1}</value>
     </data>
-    <data name="ModFindInititalizeFail" xml:space="preserve">
-        <value>Failed to load {0}: Does it have a public Main class that extends API.Modding.GameMod and overrides Initialize?</value>
+    <data name="ModCantFindMain" xml:space="preserve">
+        <value>Failed to load {0}: Main class must be named Main and extend API.Modding.GameMod</value>
     </data>
     <data name="ModLoaded" xml:space="preserve">
         <value>Successfully loaded {0}</value>
@@ -97,7 +64,7 @@ OS: todo
 CPU: todo
 GPU: todo</value>
     </data>
-    <!--0 = FPS, 1 = RAM usage, 2 = Last input source, 3 = Resolution, 4 = Path taken through menus, 5 = OW location (Area, X, Y), 6 = Amount of mods loaded-->
+    <!-- 0 = FPS, 1 = RAM usage, 2 = Last input source, 3 = Resolution, 4 = Path taken through menus, 5 = OW location (Area, X, Y), 6 = Amount of mods loaded-->
     <data name="DebugInfoR" xml:space="preserve">
         <value>FPS: {0}
 RAM: {1}MB
@@ -176,7 +143,7 @@ etc todo</value>
     <data name="ButtonX" xml:space="preserve">
         <value>X</value>
     </data>
-    <!--button.(direction) uses key.(direction) as its name-->
+    <!--Button(direction) uses Key(direction) as its name-->
     <data name="ButtonL1" xml:space="preserve">
         <value>L1</value>
     </data>
@@ -321,55 +288,6 @@ etc todo</value>
     <data name="Prio" xml:space="preserve">
         <value>Prio</value>
     </data>
-    <!--Elements-->
-    <data name="ElementVis" xml:space="preserve">
-        <value>Vis</value>
-    </data>
-    <data name="ElementVisDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementIgnis" xml:space="preserve">
-        <value>Ignis</value>
-    </data>
-    <data name="ElementIgnisDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementGlacies" xml:space="preserve">
-        <value>Glacies</value>
-    </data>
-    <data name="ElementGlaciesDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementFulgur" xml:space="preserve">
-        <value>Fulgur</value>
-    </data>
-    <data name="ElementFulgurDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementVentus" xml:space="preserve">
-        <value>Ventus</value>
-    </data>
-    <data name="ElementVentusDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementTerra" xml:space="preserve">
-        <value>Terra</value>
-    </data>
-    <data name="ElementTerraDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementLux" xml:space="preserve">
-        <value>Lux</value>
-    </data>
-    <data name="ElementLuxDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ElementMalum" xml:space="preserve">
-        <value>Malum</value>
-    </data>
-    <data name="ElementMalumDesc" xml:space="preserve">
-        <value/>
-    </data>
     <!--Stats-->
     <data name="Stat" xml:space="preserve">
         <value>Stat</value>
@@ -430,158 +348,38 @@ etc todo</value>
     <data name="MultDmgDealt" xml:space="preserve">
         <value>Dmg Dealt</value>
     </data>
-    <data name="MultDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
     <data name="MultDmgTaken" xml:space="preserve">
         <value>Dmg Taken</value>
-    </data>
-    <data name="MultDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultIgnisDmgDealt" xml:space="preserve">
-        <value>Ignis Dmg Dealt</value>
-    </data>
-    <data name="MultIgnisDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultIgnisDmgTaken" xml:space="preserve">
-        <value>Ignis Dmg Taken</value>
-    </data>
-    <data name="MultIgnisDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultGlaciesDmgDealt" xml:space="preserve">
-        <value>Glacies Dmg Dealt</value>
-    </data>
-    <data name="MultGlaciesDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultGlaciesDmgTaken" xml:space="preserve">
-        <value>Glacies Dmg Taken</value>
-    </data>
-    <data name="MultGlaciesDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultFulgurDmgDealt" xml:space="preserve">
-        <value>Fulgur Dmg Dealt</value>
-    </data>
-    <data name="MultFulgurDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultFulgurDmgTaken" xml:space="preserve">
-        <value>Fulgur Dmg Taken</value>
-    </data>
-    <data name="MultFulgurDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultVentusDmgDealt" xml:space="preserve">
-        <value>Ventus Dmg Dealt</value>
-    </data>
-    <data name="MultVentusDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultVentusDmgTaken" xml:space="preserve">
-        <value>Ventus Dmg Taken</value>
-    </data>
-    <data name="MultVentusDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultTerraDmgDealt" xml:space="preserve">
-        <value>Terra Dmg Dealt</value>
-    </data>
-    <data name="MultTerraDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultTerraDmgTaken" xml:space="preserve">
-        <value>Terra Dmg Taken</value>
-    </data>
-    <data name="MultTerraDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultLuxDmgDealt" xml:space="preserve">
-        <value>Lux Dmg Dealt</value>
-    </data>
-    <data name="MultLuxDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultLuxDmgTaken" xml:space="preserve">
-        <value>Lux Dmg Taken</value>
-    </data>
-    <data name="MultLuxDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultMalumDmgDealt" xml:space="preserve">
-        <value>Malum Dmg Dealt</value>
-    </data>
-    <data name="MultMalumDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="MultMalumDmgTaken" xml:space="preserve">
-        <value>Malum Dmg Taken</value>
-    </data>
-    <data name="MultMalumDmgTakenDesc" xml:space="preserve">
-        <value/>
     </data>
     <data name="MultWeakDmgDealt" xml:space="preserve">
         <value>Weakness Dmg Dealt</value>
     </data>
-    <data name="MultWeakDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
     <data name="MultWeakDmgTaken" xml:space="preserve">
         <value>Weakness Dmg Taken</value>
-    </data>
-    <data name="MultWeakDmgTakenDesc" xml:space="preserve">
-        <value/>
     </data>
     <data name="MultFollowUpDmgDealt" xml:space="preserve">
         <value>Follow-Up Dmg Dealt</value>
     </data>
-    <data name="MultFollowUpDmgDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
     <data name="MultFollowUpDmgTaken" xml:space="preserve">
         <value>Follow-Up Dmg Taken</value>
-    </data>
-    <data name="MultFollowUpDmgTakenDesc" xml:space="preserve">
-        <value/>
     </data>
     <data name="MultDotDmgTaken" xml:space="preserve">
         <value>DoT Dmg Taken</value>
     </data>
-    <data name="MultDotDmgTakenDesc" xml:space="preserve">
-        <value/>
-    </data>
     <data name="MultPercentageDmgTaken" xml:space="preserve">
         <value>Percentage Dmg Taken</value>
-    </data>
-    <data name="MultPercentageDmgTakenDesc" xml:space="preserve">
-        <value/>
     </data>
     <data name="MultHealingDealt" xml:space="preserve">
         <value>Healing/Shield Given</value>
     </data>
-    <data name="MultHealingDealtDesc" xml:space="preserve">
-        <value/>
-    </data>
     <data name="MultHealingTaken" xml:space="preserve">
         <value>Healing/Shield Received</value>
-    </data>
-    <data name="MultHealingTakenDesc" xml:space="preserve">
-        <value/>
     </data>
     <data name="MultSpGain" xml:space="preserve">
         <value>SP Gain</value>
     </data>
-    <data name="MultSpGainDesc" xml:space="preserve">
-        <value/>
-    </data>
     <data name="MultSpUse" xml:space="preserve">
         <value>SP Use</value>
-    </data>
-    <data name="MultSpUseDesc" xml:space="preserve">
-        <value/>
     </data>
     <!--Modifiers-->
     <data name="ModDurationBuffDealt" xml:space="preserve">
@@ -982,137 +780,6 @@ etc todo</value>
     <data name="SkillDescMultihitBuff" xml:space="preserve">
         <value>Hits /c[#ffff00]{0} /c[white]times. Each hit gives {1} {2} /c[white](/c[#ffff00]{3} /c[white]turns)</value>
     </data>
-    <!--Skill names
-    Basic skills-->
-    <data name="SkillNothing" xml:space="preserve">
-        <value>Do Nothing</value>
-    </data>
-    <data name="SkillDefend" xml:space="preserve">
-        <value>Defend</value>
-    </data>
-    <data name="SkillProtect" xml:space="preserve">
-        <value>Protect</value>
-    </data>
-    <data name="SkillBlossom" xml:space="preserve">
-        <value>Blossom</value>
-    </data>
-    <!--Stage changers-->
-    <data name="SkillAtkUp" xml:space="preserve">
-        <value>Attack Up</value>
-    </data>
-    <data name="SkillAtkDown" xml:space="preserve">
-        <value>Attack Down</value>
-    </data>
-    <data name="SkillDefUp" xml:space="preserve">
-        <value>Defense Up</value>
-    </data>
-    <data name="SkillDefDown" xml:space="preserve">
-        <value>Defense Down</value>
-    </data>
-    <data name="SkillFthUp" xml:space="preserve">
-        <value>Faith Up</value>
-    </data>
-    <data name="SkillFthDown" xml:space="preserve">
-        <value>Faith Down</value>
-    </data>
-    <data name="SkillAgiUp" xml:space="preserve">
-        <value>Agility Up</value>
-    </data>
-    <data name="SkillAgiDown" xml:space="preserve">
-        <value>Agility Down</value>
-    </data>
-    <data name="SkillAtkUpGroup" xml:space="preserve">
-        <value>Group Attack Up</value>
-    </data>
-    <data name="SkillAtkDownGroup" xml:space="preserve">
-        <value>Group Attack Down</value>
-    </data>
-    <data name="SkillDefUpGroup" xml:space="preserve">
-        <value>Group Defense Up</value>
-    </data>
-    <data name="SkillDefDownGroup" xml:space="preserve">
-        <value>Group Defense Down</value>
-    </data>
-    <data name="SkillFthUpGroup" xml:space="preserve">
-        <value>Group Faith Up</value>
-    </data>
-    <data name="SkillFthDownGroup" xml:space="preserve">
-        <value>Group Faith Down</value>
-    </data>
-    <data name="SkillAgiUpGroup" xml:space="preserve">
-        <value>Group Agility Up</value>
-    </data>
-    <data name="SkillAgiDownGroup" xml:space="preserve">
-        <value>Group Agility Down</value>
-    </data>
-    <!--Heals-->
-    <data name="SkillHeal" xml:space="preserve">
-        <value>Heal</value>
-    </data>
-    <data name="SkillAmbrosia" xml:space="preserve">
-        <value>Ambrosia</value>
-    </data>
-    <data name="SkillHealGroup" xml:space="preserve">
-        <value>Group Heal</value>
-    </data>
-    <!--Shields-->
-    <data name="SkillShield" xml:space="preserve">
-        <value>Shield</value>
-    </data>
-    <data name="SkillShieldGroup" xml:space="preserve">
-        <value>Group Shield</value>
-    </data>
-    <!--Ignis
-    Str
-    Mag-->
-    <data name="SkillFireball" xml:space="preserve">
-        <value>Fireball</value>
-    </data>
-    <data name="SkillHeatWave" xml:space="preserve">
-        <value>Heat Wave</value>
-    </data>
-    <!--Glacies
-    Str
-    Mag-->
-    <data name="SkillIceBeam" xml:space="preserve">
-        <value>Ice Beam</value>
-    </data>
-    <!--Fulgur
-    Str
-    Mag-->
-    <data name="SkillThunderbolt" xml:space="preserve">
-        <value>Thunderbolt</value>
-    </data>
-    <!--Ventus
-    Str-->
-    <data name="SkillJetStream" xml:space="preserve">
-        <value>Jet Stream</value>
-    </data>
-    <!--Mag
-    Terra
-    Str
-    Mag
-    Lux
-    Str
-    Mag
-    Malum
-    Str
-    Mag
-    Ref: Terraria-->
-    <data name="SkillDemonScythe" xml:space="preserve">
-        <value>Demon Scythe</value>
-    </data>
-    <!--Unique skills
-    Bloom skills
-    Stages
-    Heals
-    Shields
-    Attacks
-    Ignis
-    Glacies-->
-    <data name="SkillIceAge" xml:space="preserve">
-        <value>Ice Age</value>
-    </data>
     <!--Fulgur
     Ventus
     Terra
@@ -1145,137 +812,6 @@ etc todo</value>
     <data name="BuffDesc2PerStackHp" xml:space="preserve">
         <value>{0} HP /c[white]each turn and {1} /c[white]per stack</value>
     </data>
-    <!--Buff names
-    Basic-->
-    <data name="BuffDefend" xml:space="preserve">
-        <value>Defend</value>
-    </data>
-    <data name="BuffShield" xml:space="preserve">
-        <value>Shield</value>
-    </data>
-    <data name="BuffProtect" xml:space="preserve">
-        <value>Protect</value>
-    </data>
-    <data name="BuffStunned" xml:space="preserve">
-        <value>Stunned</value>
-    </data>
-    <!--Elemental debuffs-->
-    <data name="BuffBurn" xml:space="preserve">
-        <value>Burn</value>
-    </data>
-    <data name="BuffFrostbite" xml:space="preserve">
-        <value>Frostbite</value>
-    </data>
-    <data name="BuffShock" xml:space="preserve">
-        <value>Shock</value>
-    </data>
-    <data name="BuffWindswept" xml:space="preserve">
-        <value>Windswept</value>
-    </data>
-    <data name="BuffTremor" xml:space="preserve">
-        <value>Tremor</value>
-    </data>
-    <data name="BuffDazzled" xml:space="preserve">
-        <value>Dazzled</value>
-    </data>
-    <data name="BuffCurse" xml:space="preserve">
-        <value>Curse</value>
-    </data>
-    <data name="BuffPoison" xml:space="preserve">
-        <value>Poison</value>
-    </data>
-    <data name="BuffRadiation" xml:space="preserve">
-        <value>Radiation</value>
-    </data>
-    <!--Superior elemental debuffs-->
-    <data name="BuffBurntOut" xml:space="preserve">
-        <value>Burnt Out</value>
-    </data>
-    <data name="BuffFrostbound" xml:space="preserve">
-        <value>Frostbound</value>
-    </data>
-    <data name="BuffOverloaded" xml:space="preserve">
-        <value>Overloaded</value>
-    </data>
-    <data name="BuffTempest" xml:space="preserve">
-        <value>Tempest</value>
-    </data>
-    <data name="BuffShattered" xml:space="preserve">
-        <value>Shattered</value>
-    </data>
-    <data name="BuffStarstruck" xml:space="preserve">
-        <value>Starstruck</value>
-    </data>
-    <data name="BuffDoomed" xml:space="preserve">
-        <value>Doomed</value>
-    </data>
-    <data name="BuffBlighted" xml:space="preserve">
-        <value>Blighted</value>
-    </data>
-    <data name="BuffDecay" xml:space="preserve">
-        <value>Decay</value>
-    </data>
-    <!--Other
-    todo remove descs-->
-    <data name="BuffRegeneration" xml:space="preserve">
-        <value>Regeneration</value>
-    </data>
-    <data name="BuffRegenerationDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="BuffExtraAction" xml:space="preserve">
-        <value>Extra Action</value>
-    </data>
-    <data name="BuffExtraActionDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <!--Passives-->
-    <data name="PassiveRestoration" xml:space="preserve">
-        <value>Restoration</value>
-    </data>
-    <data name="PassiveRestorationDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <!--Change Affinities-->
-    <data name="PassiveIgnisAffUp" xml:space="preserve">
-        <value>Ignis Affinity Up</value>
-    </data>
-    <data name="PassiveIgnisAffUpDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <!--Change Mults-->
-    <data name="PassivePercentageDmgTakenDown50" xml:space="preserve">
-        <value>Percentage Dmg Taken Down (50%)</value>
-    </data>
-    <data name="PassivePercentageDmgTakenDown50Desc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="PassivePercentageDmgTakenDown999" xml:space="preserve">
-        <value>Percentage Dmg Taken Down (99.9%)</value>
-    </data>
-    <data name="PassivePercentageDmgTakenDown999Desc" xml:space="preserve">
-        <value/>
-    </data>
-    <!--Change Mods-->
-    <data name="PassiveBuffDurationUp" xml:space="preserve">
-        <value>Buff Duration Up</value>
-    </data>
-    <data name="PassiveBuffDurationUpDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="PassiveDebuffDurationUp" xml:space="preserve">
-        <value>Debuff Duration Up</value>
-    </data>
-    <data name="PassiveDebuffDurationUpDesc" xml:space="preserve">
-        <value/>
-    </data>
-    <!--Change other stats-->
-    <data name="PassiveEternalWellspring" xml:space="preserve">
-        <value>Eternal Wellspring</value>
-    </data>
-    <data name="PassiveEternalWellspringDesc" xml:space="preserve">
-        <value/>
-    </data>
     <!--Accessory descriptions
     0 = desc-->
     <data name="AccessoryDesc" xml:space="preserve">
@@ -1290,8 +826,7 @@ etc todo</value>
     <data name="WeaponDesc" xml:space="preserve">
         <value>Weapon. Gives the following:\n{0}</value>
     </data>
-    <!--Weapon names
-    Popups
+    <!--Popups
     Tutorials-->
     <data name="TutorialDamage" xml:space="preserve">
         <value>Damage</value>
