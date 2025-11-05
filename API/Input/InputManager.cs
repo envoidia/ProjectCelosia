@@ -39,7 +39,7 @@ public class InputManager {
     /// </summary>
     private const float MinAxisDist = 0.4f;
 
-    /*for (int i = 0; i < 4; i++)
+    /*for (uint i = 0; i < 4; i++)
         {
             GamePads[i] = new GamePadState((PlayerIndex)i);
         }*/

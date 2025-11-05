@@ -1,4 +1,5 @@
 using System.Resources;
+using API;
 using Microsoft.Xna.Framework;
 using API.Modding;
 using API.Graphics;
@@ -7,10 +8,7 @@ using Celosia.Battle;
 namespace Celosia;
 
 public class Main : GameMod {
-    public override string ModId { get; } = "Celosia";
-    
-    public override string[] DependencyIds { get; } = [];
-
+    public override string Id { get; } = "Celosia";
     public override ResourceManager ResourceManager { get; } = Lang.ResourceManager;
 
     private static readonly Label TestLabel = new() {
@@ -28,8 +26,8 @@ public class Main : GameMod {
         // todo Skills
         // todo UnitTypes
         // todo Weapons
-        
-        TestLabel.Text = this.GetLang("ElementIgnis");
+
+        TestLabel.Text = Lang.ElementIgnis + "/i[KF1]/i[fire-ring]";
     }
 
     public override void Update(GameTime gameTime) { }

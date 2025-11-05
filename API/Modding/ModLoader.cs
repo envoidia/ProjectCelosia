@@ -22,7 +22,7 @@ public static class ModLoader {
             mod.Initialize();
         }
     }
-    
+
     private static void LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.TopDirectoryOnly);
 
@@ -42,9 +42,9 @@ public static class ModLoader {
         using (FileStream fs = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
             asm = alc.LoadFromStream(fs);
         }
-        
+
         Type? modType = asm.GetTypes()
-            .FirstOrDefault(t => t.Name == "Main" && typeof(GameMod).IsAssignableFrom(t));
+            .FirstOrDefault(t => (t.Name == "Main") && typeof(GameMod).IsAssignableFrom(t));
 
         // Couldn't find Main
         if (modType == null) {
@@ -52,7 +52,7 @@ public static class ModLoader {
             alc.Unload();
             return;
         }
-        
+
         // todo ensure this doesn't crash
         LoadedMods.Add((GameMod) Activator.CreateInstance(modType)!);
 

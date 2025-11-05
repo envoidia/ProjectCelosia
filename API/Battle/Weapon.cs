@@ -5,7 +5,7 @@ namespace API.Battle;
 
 public class Weapon : ComplexDescriptionEntity, IEquippable {
     public required FrozenDictionary<Element, int> Affinities { get; init; }
-    
+
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 

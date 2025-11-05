@@ -4,13 +4,13 @@ using API.Modding;
 namespace API.Battle;
 
 public class Accessory : ComplexDescriptionEntity, IEquippable, IModItem {
-
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
-    
+
     public GameMod? Source { get; }
 
-    public Accessory(GameMod? source, string keyName, string keyDescription, string icon) : base(keyName, keyDescription,
+    public Accessory(GameMod? source, string keyName, string keyDescription, string icon) : base(keyName,
+        keyDescription,
         icon) {
         this.Source = source;
         Core.Accessories.Add(this);

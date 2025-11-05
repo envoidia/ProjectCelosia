@@ -8,8 +8,9 @@ public class Passive : ComplexDescriptionEntity, IModItem {
     public IBuffEffect[] BuffEffects { get; init; }
 
     public GameMod? Source { get; }
-    
-    public Passive(GameMod? source, string keyName, string keyDescription, string icon, params IBuffEffect[] buffEffects)
+
+    public Passive(GameMod? source, string keyName, string keyDescription, string icon,
+        params IBuffEffect[] buffEffects)
         : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.BuffEffects = buffEffects;

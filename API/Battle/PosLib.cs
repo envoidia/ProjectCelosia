@@ -32,7 +32,7 @@ public static class PosLib {
     }
 
     // Returns the height 0-3 of pos
-    public static int GetHeight(uint pos) => (int) (pos < 4 ? pos : pos - 4);
+    public static uint GetHeight(uint pos) => pos < 4 ? pos : pos - 4;
 
     // Returns the Side of pos
     public static Side GetSide(uint pos) => pos < 4u ? Side.Ally : Side.Opponent;

@@ -6,7 +6,7 @@ namespace API.Battle;
 public class Element : IconEntity, IModItem {
     public Mult? MultDmgDealt { get; }
     public Mult? MultDmgTaken { get; }
-    
+
     public GameMod? Source { get; }
 
     public Element(GameMod? source, string keyName, string keyDescription, string icon,

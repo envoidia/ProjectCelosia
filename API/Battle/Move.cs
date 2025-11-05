@@ -12,7 +12,7 @@ public record Move(SkillInstance SkillInstance, Unit Self, uint TargetPos) {
         }
 
         // Check if target is within vertical range
-        if (Math.Abs(PosLib.GetHeight(this.Self.Pos) - PosLib.GetHeight(this.TargetPos)) >
+        if (Math.Abs((int) PosLib.GetHeight(this.Self.Pos) - (int) PosLib.GetHeight(this.TargetPos)) >
             (range.RangeVertical + this.Self.GetStatMod(StatMods.Range))) {
             return false;
         }

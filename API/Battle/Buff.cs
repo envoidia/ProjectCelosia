@@ -9,7 +9,7 @@ public class Buff : ComplexDescriptionEntity, IModItem {
     public BuffType BuffType { get; }
     public uint MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }
-    
+
     public GameMod? Source { get; }
 
     public Buff(GameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, uint maxStacks,

@@ -6,5 +6,8 @@ public enum MainMenu {
     Options,
     Mods,
     Credits,
-    Quit
+    Quit,
+
+    // Marker
+    LastValue
 }

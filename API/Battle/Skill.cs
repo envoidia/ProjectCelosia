@@ -20,7 +20,7 @@ public class Skill : ComplexDescriptionEntity, IModItem {
 
     public SkillRole[] SkillRoles { get; init; } = [];
     public SkillEffect[] SkillEffects { get; init; } = [];
-    
+
     public GameMod? Source { get; }
 
     public Skill(GameMod? source, string keyName, string keyDescription, Element element, Range range, int cost)
@@ -60,7 +60,7 @@ public class Skill : ComplexDescriptionEntity, IModItem {
             SkillType? effectType = skillEffect.SkillType;
 
             if (effectType is null) continue;
-            
+
             string str = Colors.Stat + effectType.GetName() + "/c[white]";
             if (!skillTypes.Contains(str)) {
                 skillTypes.Add(str);

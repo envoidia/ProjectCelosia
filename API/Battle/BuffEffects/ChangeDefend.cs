@@ -6,7 +6,7 @@ namespace API.Battle.BuffEffects;
 public class ChangeDefend(int change) : IBuffEffect {
     public void OnGive(Unit self, uint stacks) {
         uint hpMax = self.GetBaseStat(Stats.Hp);
-        
+
         // Add defend (shield + defend cannot exceed max HP)
         uint defendOld = self.Defend;
         uint defendNew = (uint) ((self.Shield + defendOld + ((change / 1000d) * hpMax * stacks)) > hpMax

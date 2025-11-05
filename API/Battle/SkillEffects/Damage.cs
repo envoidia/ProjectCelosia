@@ -26,10 +26,10 @@ public class Damage(Element element, uint pow, SkillType skillType) : SkillEffec
 
         float affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(element)] / 1000f;
         float affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(element)] / 1000f;
-        
+
         float multWeakDmgDealt = 1;
         float multWeakDmgTaken = 1;
-        
+
         if (target.IsWeakTo(element)) {
             multWeakDmgDealt = self.GetMult(Mults.WeakDmgDealt);
             multWeakDmgTaken = target.GetMult(Mults.WeakDmgTaken);

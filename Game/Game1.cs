@@ -22,7 +22,8 @@ public class Game1 : Core {
     private static Texture2D bg = null!;
 
     // Menu stuff
-    private static int index;
+    private static uint index;
+    private const uint OptCountMain = (uint) MainMenu.LastValue - 1;
 
     // Debug
     private static bool isDebugInfoEnabled;
@@ -46,7 +47,7 @@ public class Game1 : Core {
 #if NATIVE_AOT
         // Load main game
         celosiaMain = new Celosia.Main();
-        celosiMain.Initialize();
+        celosiaMain.Initialize();
 #else
         if (Settings.EnableModLoader) {
             // Load arbitrary mods
@@ -57,7 +58,6 @@ public class Game1 : Core {
             celosiaMain.Initialize();
         }
 #endif
-
         TestLabel.Text = "";
     }
 
@@ -91,7 +91,7 @@ public class Game1 : Core {
 
         switch (NavPath.Peek()) {
             case Main:
-                index = MenuLib.CheckMovement1D(index, Enum.GetValues<MainMenu>().Length);
+                index = MenuLib.CheckMovement1D(index, OptCountMain);
                 //Console.WriteLine(_index);
                 // update cursor
 
@@ -122,7 +122,7 @@ public class Game1 : Core {
                     if ((MainMenu) index == MainMenu.Quit) {
                         this.Exit();
                     } else {
-                        index = (int) MainMenu.Quit;
+                        index = (uint) MainMenu.Quit;
                     }
                 }
 
@@ -153,7 +153,7 @@ public class Game1 : Core {
 
         SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
 
-        //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test with more diverse chars
+        //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
         DrawRenderPriority(LabelsLow);
         DrawRenderPriority(LabelsMed);

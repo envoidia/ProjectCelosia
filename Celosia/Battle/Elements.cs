@@ -13,7 +13,7 @@ public static class Elements {
     public static Element Terra;
     public static Element Lux;
     public static Element Malum;
-    
+
     public static void Initialize(GameMod mod) {
         Vis = new Element(mod, "ElementVis", "ElementVisDesc", "/c[lightGray]/i[rolling-energy]");
         Ignis = new Element(mod, "ElementIgnis", "ElementIgnisDesc",

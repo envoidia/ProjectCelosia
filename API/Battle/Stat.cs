@@ -7,7 +7,7 @@ public class Stat : NamedEntity, IModItem {
     public StageType StageType { get; }
 
     public GameMod? Source { get; }
-    
+
     public Stat(GameMod? source, string keyName, StageType stageType) : base(keyName) {
         this.Source = source;
         this.StageType = stageType;

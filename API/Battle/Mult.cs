@@ -9,7 +9,7 @@ namespace API.Battle;
 public class Mult : NamedEntity, IModItem {
     public bool IsPositive { get; }
     public uint MinValue { get; init; } = 100;
-    
+
     public GameMod? Source { get; }
 
     public Mult(GameMod? source, string keyName, bool isPositive) : base(keyName) {
@@ -48,6 +48,7 @@ public static class Mults {
     public static readonly Mult HealingTaken = new(null, "MultHealingTaken", true);
     public static readonly Mult SpGain = new(null, "MultSpGain", true);
     public static readonly Mult SpUse = new(null, "MultSpUse", false);
+
     public static readonly Mult PercentageDmgTaken = new(null, "MultPercentageDmgTaken", false) {
         MinValue = 1
     };

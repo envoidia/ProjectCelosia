@@ -34,7 +34,7 @@ public static class MenuTypeExtensions {
     private static string GetInputPromptString(params InputPrompt[] inputPrompts) {
         StringBuilder inputs = new();
 
-        for (int i = 0; i < inputPrompts.Length; i++) {
+        for (uint i = 0; i < inputPrompts.Length; i++) {
             inputs.Append(inputPrompts[i].GetText());
             if (i != (inputPrompts.Length - 1)) inputs.Append("  ");
         }

@@ -9,7 +9,7 @@ public class UnitType : DescriptionEntity, IModItem {
     public Dictionary<Stat, uint> Stats { get; }
     internal readonly Dictionary<Element, int> _affinities;
     public Passive[] Passives { get; }
-    
+
     public GameMod? Source { get; }
 
     public UnitType(GameMod? source, string keyName, string keyDescription, Dictionary<Stat, uint> stats,

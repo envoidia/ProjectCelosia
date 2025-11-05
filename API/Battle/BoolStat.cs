@@ -4,15 +4,14 @@ using API.Modding;
 namespace API.Battle;
 
 public class BoolStat : NamedEntity, IModItem {
-
     public string LogMsgKey { get; }
     public bool IsPositive { get; }
     public bool PossessiveNameInLogMsg { get; }
     public bool IsVisible { get; }
-    
+
     public GameMod? Source { get; }
 
-    public BoolStat(GameMod? source, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg, 
+    public BoolStat(GameMod? source, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
         bool isVisible) : base(keyName) {
         this.Source = source;
         this.LogMsgKey = logMsgKey;

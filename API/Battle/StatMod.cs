@@ -6,7 +6,6 @@ using API.Modding;
 namespace API.Battle;
 
 public class StatMod : NamedEntity, IModItem {
-
     private readonly bool _isPositive;
 
     public GameMod? Source { get; }

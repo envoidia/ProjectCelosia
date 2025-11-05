@@ -13,7 +13,8 @@ public static class StringExtensions {
         /// Gets a string from a lang key from the specified ResourceManager. Crashes on invalid key
         /// </summary>
         public string GetLangRm(ResourceManager rm) => rm.GetString(str, Lang.Culture)
-            ?? throw new ArgumentException(string.Format(Lang.KeyNotFound, str, rm.BaseName));
+                                                       ?? throw new ArgumentException(string.Format(Lang.KeyNotFound,
+                                                           str, rm.BaseName));
 
         /// <summary>
         /// Gets a string from a lang key from API.Lang.ResourceManager. Crashes on invalid key
@@ -40,7 +41,7 @@ public static class StringExtensions {
 
             Dictionary<string, object?> dict = new(args.Length);
 
-            for (int i = 0; i < args.Length; i++) dict[i.ToString()] = args[i];
+            for (uint i = 0; i < args.Length; i++) dict[i.ToString()] = args[i];
 
             return Formatter.FormatMessage(str.GetLangRm(rm), dict);
         }

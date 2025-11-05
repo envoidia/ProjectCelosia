@@ -139,8 +139,8 @@ public class Unit {
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
         builder.Append("/c[white] (");
-        int statCount = stageType.Stats.Length;
-        for (int i = 0; i < statCount; i++) {
+        uint statCount = (uint) stageType.Stats.Length;
+        for (uint i = 0; i < statCount; i++) {
             Stat stat = stageType.Stats[i];
             uint statDefault = this._stats[stat];
             uint statOld = this.GetStat(stat);

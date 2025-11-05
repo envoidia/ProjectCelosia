@@ -9,17 +9,22 @@ public abstract class GameMod {
     /// Lang key that should be used for the mod's display name
     /// </summary>
     public const string ModNameKey = "ModName";
-    
+
     /// <summary>
     /// Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters
     /// </summary>
-    public abstract string ModId { get; }
-    
+    public abstract string Id { get; }
+
     /// <summary>
-    /// ModIds for all mods that this mod depends on
+    /// Ids for all mods that this mod depends on
     /// </summary>
-    public abstract string[] DependencyIds { get; }
-    
+    public virtual string[] DependencyIds { get; } = [];
+
+    /// <summary>
+    /// Mod version
+    /// </summary>
+    public virtual string Version { get; } = BuildInfo.BuildDate;
+
     /// <summary>
     /// Mod's Lang.ResourceManager
     /// </summary>
