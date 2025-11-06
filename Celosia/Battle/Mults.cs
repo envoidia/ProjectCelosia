@@ -19,7 +19,7 @@ public static class Mults {
     public static Mult MalumDmgDealt;
     public static Mult MalumDmgTaken;
 
-    public static void Initialize(GameMod mod) {
+    public static void Initialize(IGameMod mod) {
         IgnisDmgDealt = new Mult(mod, "MultIgnisDmgDealt", true);
         IgnisDmgTaken = new Mult(mod, "MultIgnisDmgTaken", false);
         GlaciesDmgDealt = new Mult(mod, "MultGlaciesDmgDealt", true);

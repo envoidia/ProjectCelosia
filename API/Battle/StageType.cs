@@ -6,9 +6,9 @@ namespace API.Battle;
 public class StageType : IconEntity, IModItem {
     public Stat[] Stats { get; }
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public StageType(GameMod? source, string keyName, string descKey, string icon, params Stat[] stats)
+    public StageType(IGameMod? source, string keyName, string descKey, string icon, params Stat[] stats)
         : base(keyName, descKey, icon) {
         this.Source = source;
         this.Stats = stats;

@@ -10,9 +10,9 @@ public class Mult : NamedEntity, IModItem {
     public bool IsPositive { get; }
     public uint MinValue { get; init; } = 100;
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public Mult(GameMod? source, string keyName, bool isPositive) : base(keyName) {
+    public Mult(IGameMod? source, string keyName, bool isPositive) : base(keyName) {
         this.Source = source;
         this.IsPositive = isPositive;
         Core.Mults.Add(this);

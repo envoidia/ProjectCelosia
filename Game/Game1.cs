@@ -10,9 +10,13 @@ using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
 using API.Debug;
-using API.Extensions;
-using API.Modding;
 using API.Save;
+#if NATIVE_AOT
+using Microsoft.Xna.Framework.Content;
+using MonoGame.Extended.Content.ContentReaders;
+#else
+using API.Modding;
+#endif
 using static API.Menu.MenuType;
 
 namespace Game;
@@ -28,8 +32,9 @@ public class Game1 : Core {
     // Debug
     private static bool isDebugInfoEnabled;
 
-    // Celosia.Main
+#if NATIVE_AOT
     private static Celosia.Main celosiaMain = null!;
+#endif
 
     private static readonly Label TestLabel = new() {
         Position = new Vector2(1000, 800),
@@ -37,9 +42,18 @@ public class Game1 : Core {
         Width = 2000
     };
 
-    public Game1() : base("Project Celosia", 0, 0, false) =>
+    public Game1() : base("Project Celosia", 0, 0, false) {
+#if NATIVE_AOT
+        // Make sure to change this after updating MGE
+        ContentTypeReaderManager.AddTypeCreator(
+            "MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader, MonoGame.Extended, Version=5.2.0.0, Culture=neutral, PublicKeyToken=null",
+            () => new Texture2DAtlasReader()
+        );
+#endif
+
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
             new Point(1920, 1080), false, false, false));
+    }
 
     protected override void Initialize() {
         base.Initialize();
@@ -54,8 +68,7 @@ public class Game1 : Core {
             ModLoader.InitializeAllMods();
         } else {
             // Just load main game
-            celosiaMain = new Celosia.Main();
-            celosiaMain.Initialize();
+            ModLoader.InitializeCelosiaMod();
         }
 #endif
         TestLabel.Text = "";
@@ -76,11 +89,7 @@ public class Game1 : Core {
 #if NATIVE_AOT
         celosiaMain.Update(gameTime);
 #else
-        if (Settings.EnableModLoader) {
-            ModLoader.UpdateAllMods(gameTime);
-        } else {
-            celosiaMain.Update(gameTime);
-        }
+        ModLoader.UpdateAllMods(gameTime);
 #endif
     }
 

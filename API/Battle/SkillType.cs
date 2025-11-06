@@ -4,9 +4,9 @@ using API.Modding;
 namespace API.Battle;
 
 public class SkillType : NamedEntity, IModItem {
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public SkillType(GameMod? source, string keyName) : base(keyName) {
+    public SkillType(IGameMod? source, string keyName) : base(keyName) {
         this.Source = source;
         Core.SkillTypes.Add(this);
     }

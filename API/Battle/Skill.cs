@@ -21,9 +21,9 @@ public class Skill : ComplexDescriptionEntity, IModItem {
     public SkillRole[] SkillRoles { get; init; } = [];
     public SkillEffect[] SkillEffects { get; init; } = [];
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public Skill(GameMod? source, string keyName, string keyDescription, Element element, Range range, int cost)
+    public Skill(IGameMod? source, string keyName, string keyDescription, Element element, Range range, int cost)
         : base(keyName, keyDescription, element.KeyName) {
         this.Source = source;
         this.Element = element;
@@ -86,7 +86,7 @@ public class Skill : ComplexDescriptionEntity, IModItem {
         HashSet<IconEntity> inclusions = new(8);
         foreach (SkillEffect skillEffect in this.SkillEffects) {
             IconEntity? inclusion = skillEffect.DescInclusion;
-            if (inclusion != null) inclusions.Add(inclusion);
+            if (inclusion is not null) inclusions.Add(inclusion);
         }
 
         foreach (IconEntity inclusion in inclusions) {

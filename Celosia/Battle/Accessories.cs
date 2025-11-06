@@ -6,7 +6,7 @@ namespace Celosia.Battle;
 public static class Accessories {
     public static Accessory FirebornRing;
 
-    public static void Initialize(GameMod mod) {
+    public static void Initialize(IGameMod mod) {
         FirebornRing = new Accessory(mod, "AccessoryFirebornRing", "todo",
             "/c[orange]/i[fire-ring]") {
             Passives = [Passives.IgnisAffUp]

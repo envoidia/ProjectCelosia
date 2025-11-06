@@ -4,7 +4,7 @@ using API.Extensions;
 namespace API.Input;
 
 public class InputPrompt(string keyName, params Keybind[] keybinds) {
-    public Keybind[] Keybinds { get; } = keybinds;
+    public Keybind[] Keybinds => keybinds;
 
     public string GetText() {
         StringBuilder builder = new();

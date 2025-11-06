@@ -10,9 +10,9 @@ public class Buff : ComplexDescriptionEntity, IModItem {
     public uint MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public Buff(GameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, uint maxStacks,
+    public Buff(IGameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, uint maxStacks,
         params IBuffEffect[] buffEffects) : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.BuffType = buffType;

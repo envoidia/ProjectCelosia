@@ -43,6 +43,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Early returns are usually **but not always** better
 - Use the most restrictive possible access modifier
 - Large functions should be split apart when possible
+- Use `is`/`is not` over `==`/`!=` when checking for types or `null`
 
 # Numbers
 - Default to `uint`
@@ -73,7 +74,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Only have unused methods if they're important for mod support
 
 # Abusable features
-- Avoid using advanced, complex features when not necessary
+- Avoid using advanced/complex features when not necessary
 - Do not cast arbitrary values to an enum unless absolutely necessary
 - Only create structs for very small constructs that are frequently created and destroyed
 - Only create operator overloads if they clearly represent a form of the operator's meaning that is immediately obvious to anyone

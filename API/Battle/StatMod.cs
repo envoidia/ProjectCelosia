@@ -8,9 +8,9 @@ namespace API.Battle;
 public class StatMod : NamedEntity, IModItem {
     private readonly bool _isPositive;
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public StatMod(GameMod? source, string keyName, bool isPositive) : base(keyName) {
+    public StatMod(IGameMod? source, string keyName, bool isPositive) : base(keyName) {
         this.Source = source;
         this._isPositive = isPositive;
         Core.StatMods.Add(this);

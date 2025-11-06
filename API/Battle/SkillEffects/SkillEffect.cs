@@ -6,8 +6,8 @@ public abstract class SkillEffect(
     uint pow = 0,
     SkillType? skillType = null,
     IconEntity? descInclusion = null) {
-    public uint Pow { get; } = pow;
-    public SkillType? SkillType { get; } = skillType;
+    public uint Pow => pow;
+    public SkillType? SkillType => skillType;
 
     public bool GiveToSelf { get; init; } = false;
     public bool MainTargetOnly { get; init; } = false;

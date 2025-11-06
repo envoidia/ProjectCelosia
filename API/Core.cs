@@ -92,7 +92,7 @@ public class Core : Game {
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created.
         // You would think this should just be static, but I didn't write MonoGame. There's probably a good reason
-        if (sInstance != null) {
+        if (sInstance is not null) {
             throw new InvalidOperationException("Only a single Core instance can be created");
         }
 
@@ -158,6 +158,7 @@ public class Core : Game {
             HasBackground = true
         };
 
+        //ContentTypeReaderManager.AddTypeCreator("MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader", () => new Texture2DAtlasReader());
 #if DEBUG
         Settings.EnableModLoader = true;
         this.IsMouseVisible = true;

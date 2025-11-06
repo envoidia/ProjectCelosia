@@ -6,7 +6,7 @@ namespace Celosia.Battle;
 public static class Passives {
     public static Passive IgnisAffUp;
 
-    public static void Initialize(GameMod mod) {
+    public static void Initialize(IGameMod mod) {
         IgnisAffUp = new Passive(mod, "PassiveIgnisAffUp", "PassiveIgnisAffUpDesc", "todo") {
             BuffEffects = [] // todo
         };

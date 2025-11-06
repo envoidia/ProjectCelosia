@@ -7,9 +7,10 @@ using Celosia.Battle;
 
 namespace Celosia;
 
-public class Main : GameMod {
-    public override string Id { get; } = "Celosia";
-    public override ResourceManager ResourceManager { get; } = Lang.ResourceManager;
+public class Main : IGameMod {
+    public string Id => "Celosia";
+    public string Version => BuildInfo.BuildDate;
+    public ResourceManager ResourceManager => Lang.ResourceManager;
 
     private static readonly Label TestLabel = new() {
         Position = new Vector2(1800, 1400),
@@ -17,7 +18,7 @@ public class Main : GameMod {
         Width = 2000
     };
 
-    public override void Initialize() {
+    public void Initialize() {
         Accessories.Initialize(this);
         // todo Buffs
         Elements.Initialize(this);
@@ -30,5 +31,5 @@ public class Main : GameMod {
         TestLabel.Text = Lang.ElementIgnis + "/i[KF1]/i[fire-ring]";
     }
 
-    public override void Update(GameTime gameTime) { }
+    public void Update(GameTime gameTime) { }
 }

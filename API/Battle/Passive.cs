@@ -7,9 +7,9 @@ namespace API.Battle;
 public class Passive : ComplexDescriptionEntity, IModItem {
     public IBuffEffect[] BuffEffects { get; init; }
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public Passive(GameMod? source, string keyName, string keyDescription, string icon,
+    public Passive(IGameMod? source, string keyName, string keyDescription, string icon,
         params IBuffEffect[] buffEffects)
         : base(keyName, keyDescription, icon) {
         this.Source = source;

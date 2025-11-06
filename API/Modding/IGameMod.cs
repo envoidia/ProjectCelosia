@@ -4,54 +4,54 @@ using Microsoft.Xna.Framework;
 
 namespace API.Modding;
 
-public abstract class GameMod {
+public interface IGameMod {
     /// <summary>
     /// Lang key that should be used for the mod's display name
     /// </summary>
-    public const string ModNameKey = "ModName";
+    const string ModNameKey = "ModName";
 
     /// <summary>
     /// Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters
     /// </summary>
-    public abstract string Id { get; }
+    string Id { get; }
 
     /// <summary>
     /// Ids for all mods that this mod depends on
     /// </summary>
-    public virtual string[] DependencyIds { get; } = [];
+    string[] DependencyIds => [];
 
     /// <summary>
     /// Mod version
     /// </summary>
-    public virtual string Version { get; } = BuildInfo.BuildDate;
+    string Version { get; }
 
     /// <summary>
     /// Mod's Lang.ResourceManager
     /// </summary>
-    public abstract ResourceManager ResourceManager { get; }
+    ResourceManager ResourceManager { get; }
 
     /// <summary>
     /// Called once, on mod load
     /// </summary>
-    public abstract void Initialize();
+    void Initialize();
 
     /// <summary>
     /// Called every frame
     /// </summary>
-    public abstract void Update(GameTime gameTime);
+    void Update(GameTime gameTime);
 
     /// <summary>
     /// Gets a string from a lang key from this mod's ResourceManager. Crashes on invalid key
     /// </summary>
-    public string GetLang(string str) => str.GetLangRm(this.ResourceManager);
+    string GetLang(string str) => str.GetLangRm(this.ResourceManager);
 
     /// <summary>
     /// Gets a formatted string from a lang key from this mod's ResourceManager. Crashes on invalid key or 0 args
     /// </summary>
-    public string FormatLang(string str, params object?[] args) => str.FormatLangRm(this.ResourceManager, args);
+    string FormatLang(string str, params object?[] args) => str.FormatLangRm(this.ResourceManager, args);
 
     /// <summary>
     /// Gets an ICU MessageFormat-formatted string from a lang key from this mod's ResourceManager. Crashes on invalid key or 0 args
     /// </summary>
-    public string FormatIcu(string str, params object?[] args) => str.FormatIcuRm(this.ResourceManager, args);
+    string FormatIcu(string str, params object?[] args) => str.FormatIcuRm(this.ResourceManager, args);
 }

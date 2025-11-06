@@ -10,9 +10,9 @@ public class UnitType : DescriptionEntity, IModItem {
     internal readonly Dictionary<Element, int> _affinities;
     public Passive[] Passives { get; }
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public UnitType(GameMod? source, string keyName, string keyDescription, Dictionary<Stat, uint> stats,
+    public UnitType(IGameMod? source, string keyName, string keyDescription, Dictionary<Stat, uint> stats,
         Dictionary<Element, int> affinities, params Passive[] passives) : base(keyName, keyDescription) {
         this.Source = source;
         this.Stats = stats;

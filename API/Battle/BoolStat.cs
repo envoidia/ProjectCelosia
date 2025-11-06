@@ -9,9 +9,9 @@ public class BoolStat : NamedEntity, IModItem {
     public bool PossessiveNameInLogMsg { get; }
     public bool IsVisible { get; }
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public BoolStat(GameMod? source, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
+    public BoolStat(IGameMod? source, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
         bool isVisible) : base(keyName) {
         this.Source = source;
         this.LogMsgKey = logMsgKey;

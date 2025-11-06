@@ -7,9 +7,9 @@ public class Element : IconEntity, IModItem {
     public Mult? MultDmgDealt { get; }
     public Mult? MultDmgTaken { get; }
 
-    public GameMod? Source { get; }
+    public IGameMod? Source { get; }
 
-    public Element(GameMod? source, string keyName, string keyDescription, string icon,
+    public Element(IGameMod? source, string keyName, string keyDescription, string icon,
         Mult? multDmgDealt = null, Mult? multDmgTaken = null) : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.MultDmgDealt = multDmgDealt;

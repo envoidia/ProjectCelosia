@@ -35,7 +35,7 @@ public class GiveBuff(Buff buff, uint turns, uint stacks) : SkillEffect(descIncl
         // Already has buff
         string buffName = buff.GetName(Colors.Buff);
 
-        if (buffInstance != null) {
+        if (buffInstance is not null) {
             StringBuilder str = new();
 
             uint stacksOld = buffInstance.Stacks;

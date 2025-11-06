@@ -14,7 +14,7 @@ public static class Elements {
     public static Element Lux;
     public static Element Malum;
 
-    public static void Initialize(GameMod mod) {
+    public static void Initialize(IGameMod mod) {
         Vis = new Element(mod, "ElementVis", "ElementVisDesc", "/c[lightGray]/i[rolling-energy]");
         Ignis = new Element(mod, "ElementIgnis", "ElementIgnisDesc",
             "/c[orange]/i[fire]", Mults.IgnisDmgDealt, Mults.IgnisDmgTaken);

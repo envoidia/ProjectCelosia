@@ -12751,9 +12751,6 @@
 	],
 
 	"meta": {
-		"app": "https://www.codeandweb.com/texturepacker",
-		"dataformat": "monogame-extended",
-		"version": "1.2",
-		"smartupdate": "$TexturePacker:SmartUpdate:cfc5ec1dbd58f5b3d4eaabb1164083b7:dee07717a5efb8beab451a466c672a40:7564906555e487ff7a621b1d15179274$"
+		"dataformat": "monogame-extended"
 	}
 }

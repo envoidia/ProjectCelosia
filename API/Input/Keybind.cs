@@ -31,8 +31,8 @@ public enum KeybindId {
 }
 
 public class Keybind(string keyName, KeybindId id, Keys key, Buttons button) {
-    public string KeyName { get; } = keyName;
-    public KeybindId Id { get; } = id;
+    public string KeyName => keyName;
+    public KeybindId Id => id;
     public Keys Key { get; set; } = key;
     public Buttons Button { get; set; } = button;
 

@@ -6,12 +6,9 @@ public static class NumberExtensions {
     public const string NumberFormat = "N";
 
     extension(int val) {
-        public string Format(string color, string suffix = "", float? divisor = null) {
+        public string Format(string color, string suffix = "", float divisor = 1) {
             string sign = val > 0 ? "+" : "";
-
-            if (divisor != null) return color + sign + ((float) (val / divisor)).ToString(NumberFormat) + suffix;
-
-            return color + sign + val.ToString(NumberFormat) + suffix;
+            return color + sign + (val / divisor).ToString(NumberFormat) + suffix;
         }
 
         public string Format(bool invertColors) {

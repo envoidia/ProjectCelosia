@@ -49,6 +49,9 @@
     <data name="ModCantFindMain" xml:space="preserve">
         <value>Failed to load {0}: Main class must be named Main and extend API.Modding.GameMod</value>
     </data>
+    <data name="ModCantCreateInstance" xml:space="preserve">
+        <value>Failed to load {0}: Could not create a new instance of the Main class. Is it instantiable?</value>
+    </data>
     <data name="ModLoaded" xml:space="preserve">
         <value>Successfully loaded {0}</value>
     </data>

@@ -28,7 +28,7 @@ public class Unit {
     public uint Defend { get; set; } = 0;
 
     public List<SkillInstance> SkillInstances { get; }
-    public List<BuffInstance> BuffInstances { get; } = [];
+    public List<BuffInstance> BuffInstances => [];
     public List<Passive> Passives { get; }
 
     // Stats
