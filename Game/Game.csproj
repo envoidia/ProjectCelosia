@@ -73,7 +73,7 @@
         <Exec Command="dotnet tool restore"/>
     </Target>
     <Target Name="EnsureContentOutputPath" BeforeTargets="CopyFilesToOutputDirectory">
-        <MakeDir Directories="$(OutDir)Contedont/img"/>
+        <MakeDir Directories="$(OutDir)Content/img"/>
     </Target>
     <Target Name="MoveFiles" AfterTargets="Build" Condition="'$(PublishAot)' != 'true'">
         <Move SourceFiles="$(TargetDir)Celosia.dll" DestinationFolder="$(TargetDir)mods"/>
