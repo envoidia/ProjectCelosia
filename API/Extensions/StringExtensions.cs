@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using API.Modding;
 using Jeffijoe.MessageFormat;
 
@@ -29,7 +30,12 @@ public static class StringExtensions {
                 if (lang is not null) return lang;
             }
 
-            throw new ArgumentException(string.Format(Lang.KeyNotFound, str, mod?.ResourceManager.BaseName));
+#if NATIVE_AOT
+            throw new ArgumentException(string.Format(Lang.ErrKeyNotFoundAOT, str, mod?.GetName()));
+#else
+            throw new ArgumentException(string.Format(Lang.ErrKeyNotFound, str, 
+                Assembly.GetCallingAssembly().GetName().Name));
+#endif
         }
 
         /// <summary>

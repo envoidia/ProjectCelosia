@@ -1,4 +1,5 @@
 using System.Resources;
+using API.Extensions;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
@@ -38,4 +39,9 @@ public interface IGameMod {
     /// Called every frame
     /// </summary>
     void Update(GameTime gameTime);
+
+    /// <summary>
+    /// Returns this mod's name
+    /// </summary>
+    string GetName() => ModNameKey.GetLang(this);
 }

@@ -36,24 +36,25 @@
     <data name="Todo" xml:space="preserve">
         <value>todo</value>
     </data>
-    <!-- 0 = lang key, 1 = mod that it wasn't found in -->
-    <data name="KeyNotFound" xml:space="preserve">
-        <value>Invalid key {0} not found in {1}</value>
+    <!--Errors
+    0 = lang key, 1 = mod that requested it -->
+    <data name="ErrKeyNotFoundAOT" xml:space="preserve">
+        <value>Invalid key {0}. The first mod it looked in (probably the mod that requested it) was {1}</value>
     </data>
-    <!-- 0 = lang key, 1 = mod that requested it -->
-    <data name="KeyNotFoundRequestedBy" xml:space="preserve">
+    <!--0 = lang key, 1 = mod that requested it -->
+    <data name="ErrKeyNotFound" xml:space="preserve">
         <value>Invalid key {0} requested by {1}</value>
+    </data>
+    <data name="ErrGetMergedGlyphKeybindId" xml:space="preserve">
+        <value>KeybindId must be LeftRight, UpDown, or LeftRightUpDown</value>
     </data>
     <!--Modloader info-->
     <!-- 0 = mod name, 1 = exception message -->
-    <data name="ModLoadFail" xml:space="preserve">
+    <data name="ErrModLoadFail" xml:space="preserve">
         <value>Failed to load {0}: {1}</value>
     </data>
-    <data name="ModCantFindMain" xml:space="preserve">
+    <data name="ErrModCantFindMain" xml:space="preserve">
         <value>Failed to load {0}: Main class must be named Main and extend API.Modding.GameMod</value>
-    </data>
-    <data name="ModCantCreateInstance" xml:space="preserve">
-        <value>Failed to load {0}: Could not create a new instance of the Main class. Is it instantiable?</value>
     </data>
     <data name="ModLoaded" xml:space="preserve">
         <value>Successfully loaded {0}</value>

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Input;
 
+// todo if closed enums get added, use them in various places
 public enum KeybindId {
     Confirm,
     Back,
@@ -37,9 +38,8 @@ public class Keybind(string keyName, KeybindId id, Keys key, Buttons button) {
     public Buttons Button { get; set; } = button;
 
     public string GetCurrentGlyph() => this.Id switch {
-        KeybindId.LeftRight => Core.Input.LastInputSource.GetGlyphLeftRight,
-        KeybindId.UpDown => Core.Input.LastInputSource.GetGlyphUpDown,
-        KeybindId.LeftRightUpDown => Core.Input.LastInputSource.GetGlyphLeftRightUpDown,
+        KeybindId.LeftRight or KeybindId.UpDown or KeybindId.LeftRightUpDown =>
+            Core.Input.LastInputSource.GetMergedGlyph(this.Id),
         _ => this.GetGlyph()
     };
 

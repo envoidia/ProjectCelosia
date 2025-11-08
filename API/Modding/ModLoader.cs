@@ -30,7 +30,7 @@ public static class ModLoader {
             try {
                 LoadSingleMod(dllPath);
             } catch (Exception ex) {
-                Console.WriteLine(Lang.ModLoadFail, Path.GetFileName(dllPath), ex.Message);
+                Console.WriteLine(Lang.ErrModLoadFail, Path.GetFileName(dllPath), ex.Message);
             }
         }
     }
@@ -46,8 +46,7 @@ public static class ModLoader {
 
         // Couldn't find Main
         if (modType is null) {
-            Console.WriteLine(Lang.ModCantFindMain, Path.GetFileName(dllPath));
-            return;
+            throw new ModLoadException(string.Format(Lang.ErrModCantFindMain, Path.GetFileName(dllPath)));
         }
 
         // Instantiate Main
