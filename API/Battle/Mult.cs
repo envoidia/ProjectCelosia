@@ -3,6 +3,7 @@ using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Util;
 
 namespace API.Battle;
 
@@ -18,22 +19,18 @@ public class Mult : NamedEntity, IModItem {
         Core.Mults.Add(this);
     }
 
-    public override int GetHashCode() => this.KeyName.GetHashCode();
-
     public string Format(uint val) {
-        (string c1, string c2) = this.GetColors();
+        (string c1, string c2) = TextLib.GetColors(this.IsPositive);
 
         return Math.Max(val, this.MinValue)
             .Format(val > 1000 ? c1 : val < 1000 ? c2 : Colors.Num, "%", 10f);
     }
 
     public string FormatChange(float val) {
-        (string c1, string c2) = this.GetColors();
+        (string c1, string c2) = TextLib.GetColors(this.IsPositive);
 
         return Math.Max(val, this.MinValue).Format(val > 0 ? c1 : val < 0 ? c2 : Colors.Num, "%");
     }
-
-    public (string, string) GetColors() => this.IsPositive ? (Colors.Pos, Colors.Neg) : (Colors.Neg, Colors.Pos);
 }
 
 public static class Mults {

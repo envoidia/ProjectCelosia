@@ -2,18 +2,16 @@ using API.Entity;
 
 namespace API.Battle.SkillEffects;
 
-public abstract class SkillEffect(
-    uint pow = 0,
-    SkillType? skillType = null,
-    IconEntity? descInclusion = null) {
+// todo arbitrary predicates (here and IBuffEffect)
+public abstract class SkillEffect(uint pow = 0, SkillType? skillType = null, IconEntity? descInclusion = null) {
     public uint Pow => pow;
     public SkillType? SkillType => skillType;
+    public DescriptionEntity? DescInclusion { get; init; } = descInclusion;
 
     public bool GiveToSelf { get; init; } = false;
     public bool MainTargetOnly { get; init; } = false;
     public bool IsInstant { get; init; } = false;
-
-    public IconEntity? DescInclusion { get; init; } = descInclusion;
+    public Element Element { get; init; } = Elements.Vis;
 
     public abstract ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType);
 }

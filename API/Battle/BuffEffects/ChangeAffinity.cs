@@ -1,5 +1,4 @@
 using API.Extensions;
-using API.Graphics;
 
 namespace API.Battle.BuffEffects;
 
@@ -18,6 +17,6 @@ public class ChangeAffinity(Element element, int change) : IBuffEffect {
         self.SetAffinity(element, affNew);
 
         BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeAff, self.FormatName(),
-            element.GetName(Colors.Element), affOld.Format(), affNew.Format()));
+            element.GetName(), affOld.Format(), affNew.Format()));
     }
 }

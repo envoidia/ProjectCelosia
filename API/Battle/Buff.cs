@@ -21,7 +21,10 @@ public class Buff : ComplexDescriptionEntity, IModItem {
         Core.Buffs.Add(this);
     }
 
-    public override string GetDescription() => string.Format(Lang.BuffDesc, this.BuffType.GetName(),
-        this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
-        this.GetPartialDescription());
+    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Buff);
+
+    public override string GetDescriptionWithInclusions(IGameMod? mod = null) =>
+        string.Format(Lang.BuffDesc, this.BuffType.GetName(),
+            this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
+            this.GetFormattedDescriptionInclusions(mod));
 }

@@ -1,9 +1,11 @@
 namespace API.Battle.SkillEffects;
 
-public class Damage(Element element, uint pow, SkillType skillType) : SkillEffect(pow, skillType) {
+public class Damage : SkillEffect {
     public ResultType MinResultType { get; init; } = ResultType.HitEffectBlock;
     public bool IsPierce { get; init; } = false;
     public bool IsFollowUp { get; init; } = false;
+
+    public Damage(uint pow, SkillType skillType, Element element) : base(pow, skillType) => this.Element = element;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
         // If the previous hit failed entirely, this one wouldn't have been reached. If this return statement is ever
@@ -24,13 +26,13 @@ public class Damage(Element element, uint pow, SkillType skillType) : SkillEffec
             def = target.GetStat(Stats.Res);
         }
 
-        float affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(element)] / 1000f;
-        float affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(element)] / 1000f;
+        float affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(this.Element)] / 1000f;
+        float affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(this.Element)] / 1000f;
 
         float multWeakDmgDealt = 1;
         float multWeakDmgTaken = 1;
 
-        if (target.IsWeakTo(element)) {
+        if (target.IsWeakTo(this.Element)) {
             multWeakDmgDealt = self.GetMult(Mults.WeakDmgDealt);
             multWeakDmgTaken = target.GetMult(Mults.WeakDmgTaken);
         }
@@ -52,12 +54,12 @@ public class Damage(Element element, uint pow, SkillType skillType) : SkillEffec
             // todo null safety
             dmg = BattleLib.StatMult * (uint) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
                                                self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) *
-                                               self.GetMult(element.MultDmgDealt) *
-                                               target.GetMult(element.MultDmgTaken) * multWeakDmgDealt *
+                                               self.GetMult(this.Element.MultDmgDealt) *
+                                               target.GetMult(this.Element.MultDmgTaken) * multWeakDmgDealt *
                                                multWeakDmgTaken * multFollowUpDmgDealt * multFollowUpDmgTaken);
 
-            self.OnDealDamage(target, dmg, element);
-            target.OnTakeDamage(self, dmg, element);
+            self.OnDealDamage(target, dmg, this.Element);
+            target.OnTakeDamage(self, dmg, this.Element);
         }
 
         // Deal damage

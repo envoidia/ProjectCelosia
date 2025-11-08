@@ -120,7 +120,7 @@ public class Unit {
         StringBuilder str = new();
         foreach (Element element in Core.Elements) {
             this._affinities.TryGetValue(element, out int aff);
-            str.Append(element.Icon).Append(aff.Format()).Append("/c[white]  ");
+            str.Append(element.Icon).Append(aff.Format()).Append(Colors.White).Append("  ");
         }
 
         return str.ToString();
@@ -138,7 +138,7 @@ public class Unit {
 
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
-        builder.Append("/c[white] (");
+        builder.Append(Colors.White).Append(" (");
         uint statCount = (uint) stageType.Stats.Length;
         for (uint i = 0; i < statCount; i++) {
             Stat stat = stageType.Stats[i];
@@ -298,7 +298,7 @@ public class Unit {
             if ((stage != 0) && (--this._stageTurns[stageType] == 0)) {
                 // todo choiceformat
                 BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseStage, this.FormatName(false),
-                    stage, stage.Format(), StageTypes.Atk.GetName(Colors.Buff),
+                    stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
             }
@@ -315,7 +315,7 @@ public class Unit {
             } else {
                 BattleHandlerLib.AppendToLog(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
                     buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
-                    buffInstance.Buff.GetName(Colors.Buff), buffInstance.Stacks));
+                    buffInstance.Buff.GetName(), buffInstance.Stacks));
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
                     buffEffect.OnRemove(this, buffInstance.Stacks);

@@ -8,6 +8,7 @@ public enum InputDevice {
 }
 
 public static class InputDeviceExtensions {
+    // todo support controller remapping
     extension(InputDevice inputDevice) {
         public string GetGlyphLeftRight => inputDevice switch {
             InputDevice.Keyboard => Keybinds.Left.Key.GetGlyph() + Keybinds.Right.Key.GetGlyph(),

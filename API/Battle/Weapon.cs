@@ -1,5 +1,7 @@
 using System.Collections.Frozen;
+using System.Collections.Generic;
 using API.Entity;
+using API.Modding;
 
 namespace API.Battle;
 
@@ -13,7 +15,17 @@ public class Weapon : ComplexDescriptionEntity, IEquippable {
         Core.Weapons.Add(this);
     }
 
-    public override string GetDescription() => string.Format(Lang.WeaponDesc, this.GetPartialDescription());
+    protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
+        HashSet<DescriptionEntity> inclusions = new(this.DescriptionInclusions);
+
+        inclusions.UnionWith(this.Skills);
+        inclusions.UnionWith(this.Passives);
+
+        return inclusions;
+    }
+
+    public override string GetDescriptionWithInclusions(IGameMod? mod = null) =>
+        string.Format(Lang.WeaponDesc, this.GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {
         int multiplier = give ? 1 : -1;

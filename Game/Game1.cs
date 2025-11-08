@@ -10,7 +10,6 @@ using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
 using API.Debug;
-using API.Save;
 #if NATIVE_AOT
 using Microsoft.Xna.Framework.Content;
 using MonoGame.Extended.Content.ContentReaders;
@@ -44,6 +43,7 @@ public class Game1 : Core {
 
     public Game1() : base("Project Celosia", 0, 0, false) {
 #if NATIVE_AOT
+        // Prevent crash caused by reflection in the atlas reader
         // Make sure to change this after updating MGE
         ContentTypeReaderManager.AddTypeCreator(
             "MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader, MonoGame.Extended, Version=5.2.0.0, Culture=neutral, PublicKeyToken=null",
@@ -59,17 +59,10 @@ public class Game1 : Core {
         base.Initialize();
         AddMenu(Main);
 #if NATIVE_AOT
-        // Load main game
         celosiaMain = new Celosia.Main();
         celosiaMain.Initialize();
 #else
-        if (Settings.EnableModLoader) {
-            // Load arbitrary mods
-            ModLoader.InitializeAllMods();
-        } else {
-            // Just load main game
-            ModLoader.InitializeCelosiaMod();
-        }
+        ModLoader.InitializeAllMods();
 #endif
         TestLabel.Text = "";
     }

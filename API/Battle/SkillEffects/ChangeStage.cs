@@ -27,7 +27,7 @@ public class ChangeStage(StageType stageType, uint turns, int stacks) : SkillEff
         int stageOld = target.GetStage(stageType);
         int stageNew = Math.Clamp(stageOld + stacksMod, -5, 5);
 
-        string stageName = stageType.GetName(Colors.Buff);
+        string stageName = stageType.GetName();
 
         if (stageNew != stageOld) {
             str = string.Format(Lang.LogChangeStageStacks, unit.FormatName(),

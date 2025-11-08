@@ -9,9 +9,7 @@ public class InputPrompt(string keyName, params Keybind[] keybinds) {
     public string GetText() {
         StringBuilder builder = new();
 
-        foreach (Keybind keybind in this.Keybinds) {
-            builder.Append(keybind.GetCurrentGlyph());
-        }
+        foreach (Keybind keybind in this.Keybinds) builder.Append(keybind.GetCurrentGlyph());
 
         return builder.Append(' ').Append(keyName.GetLang()).ToString();
     }

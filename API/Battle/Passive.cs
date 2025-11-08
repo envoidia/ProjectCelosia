@@ -1,5 +1,6 @@
 using API.Battle.BuffEffects;
 using API.Entity;
+using API.Graphics;
 using API.Modding;
 
 namespace API.Battle;
@@ -17,5 +18,7 @@ public class Passive : ComplexDescriptionEntity, IModItem {
         Core.Passives.Add(this);
     }
 
-    public override string GetDescription() => "todo";
+    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Passive);
+
+    public override string GetDescriptionWithInclusions(IGameMod? mod = null) => "todo";
 }

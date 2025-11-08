@@ -5,7 +5,6 @@ using API.Battle;
 using API.Graphics;
 using API.Input;
 using API.Menu;
-using API.Save;
 using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
@@ -90,19 +89,18 @@ public class Core : Game {
     /// <param name="height">The initial height, in pixels, of the game window.</param>
     /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
     public Core(string title, int width, int height, bool fullScreen) {
-        // Ensure that multiple cores are not created.
-        // You would think this should just be static, but I didn't write MonoGame. There's probably a good reason
+        // Ensure that multiple cores are not created
         if (sInstance is not null) {
-            throw new InvalidOperationException("Only a single Core instance can be created");
+            throw new InvalidOperationException(Lang.MultipleInstance);
         }
 
-        // Store reference to engine for global member access.
+        // Store reference to engine for global member access
         sInstance = this;
 
-        // Create a new graphics device manager.
+        // Create a new graphics device manager
         Graphics = new GraphicsDeviceManager(this);
 
-        // Set the graphics defaults.
+        // Set the graphics defaults
         Graphics.PreferredBackBufferWidth = width;
         Graphics.PreferredBackBufferHeight = height;
         Graphics.IsFullScreen = fullScreen;
@@ -158,9 +156,7 @@ public class Core : Game {
             HasBackground = true
         };
 
-        //ContentTypeReaderManager.AddTypeCreator("MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader", () => new Texture2DAtlasReader());
 #if DEBUG
-        Settings.EnableModLoader = true;
         this.IsMouseVisible = true;
         ExitOnEscape = true;
 #endif

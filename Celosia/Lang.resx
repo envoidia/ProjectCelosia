@@ -23,8 +23,12 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <!--Meta-->
     <data name="ModName" xml:space="preserve">
         <value>Celosia</value>
+    </data>
+    <data name="MultipleInstance" xml:space="preserve">
+        <value>Only a single Celosia.Main instance can be created</value>
     </data>
     <!--Buff names
     Basic-->
@@ -104,9 +108,6 @@
         <value>Extra Action</value>
     </data>
     <!--Elements-->
-    <data name="ElementVis" xml:space="preserve">
-        <value>Vis</value>
-    </data>
     <data name="ElementIgnis" xml:space="preserve">
         <value>Ignis</value>
     </data>

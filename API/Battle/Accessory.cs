@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using API.Entity;
 using API.Modding;
 
@@ -15,7 +16,17 @@ public class Accessory : ComplexDescriptionEntity, IEquippable, IModItem {
         Core.Accessories.Add(this);
     }
 
-    public override string GetDescription() => string.Format(Lang.AccessoryDesc, this.GetPartialDescription());
+    protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
+        HashSet<DescriptionEntity> inclusions = new(this.DescriptionInclusions);
+
+        inclusions.UnionWith(this.Skills);
+        inclusions.UnionWith(this.Passives);
+
+        return inclusions;
+    }
+
+    public override string GetDescriptionWithInclusions(IGameMod? mod = null) =>
+        string.Format(Lang.AccessoryDesc, this.GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {
         if (give) {

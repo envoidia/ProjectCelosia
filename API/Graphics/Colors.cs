@@ -13,7 +13,7 @@ public static class Colors {
     public const string OppL = "/c[#ff6060]";
     public const string Turn = "/c[#a034ff]";
     public const string Pos = "/c[#00ff00]"; // Positive numbers
-    public const string Neg = "/c[#ff0000]"; // Negative numbers
+    public const string Neg = "/c[#ff5151]"; // Negative numbers
     public const string Num = "/c[#ffff00]"; // General numbers (turns, stacks)
     public const string Hp = "/c[#1ae132]";
     public const string Sp = "/c[#bb00ff]";

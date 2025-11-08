@@ -7,7 +7,7 @@ using API.Graphics;
 namespace API.Battle.SkillEffects;
 
 // todo special case for shield
-public class GiveBuff(Buff buff, uint turns, uint stacks) : SkillEffect(descInclusion: buff) {
+public class GiveBuff(Buff buff, uint turns, uint stacks = 1) : SkillEffect(descInclusion: buff) {
     public ResultType MinResultType { get; init; } = ResultType.Success;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
@@ -33,7 +33,7 @@ public class GiveBuff(Buff buff, uint turns, uint stacks) : SkillEffect(descIncl
         }
 
         // Already has buff
-        string buffName = buff.GetName(Colors.Buff);
+        string buffName = buff.GetName();
 
         if (buffInstance is not null) {
             StringBuilder str = new();
@@ -63,10 +63,11 @@ public class GiveBuff(Buff buff, uint turns, uint stacks) : SkillEffect(descIncl
             BattleHandlerLib.AppendToLog(str.ToString());
 
             uint stacksAdded = stacksNew - stacksOld;
-            if (stacksAdded > 0) {
-                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
-                    buffEffect.OnGive(unit, stacksAdded);
-                }
+
+            if (stacksAdded <= 0) return ResultType.PseudoSuccess;
+
+            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
+                buffEffect.OnGive(unit, stacksAdded);
             }
         } else {
             // Add buff

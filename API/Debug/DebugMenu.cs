@@ -73,6 +73,7 @@ public static class DebugMenu {
             string.Join(", ", Core.NavPath.Reverse()),
             "todo",
             ModLoader.LoadedMods.Count);
+
         timeSinceUpdate = TimeSpan.Zero;
     }
 

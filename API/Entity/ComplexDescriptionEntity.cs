@@ -1,29 +1,63 @@
+using System.Collections.Generic;
 using System.Text;
 using API.Battle;
+using API.Extensions;
 using API.Graphics;
+using API.Modding;
+using OneOf;
 
 namespace API.Entity;
 
 public abstract class ComplexDescriptionEntity(string name, string keyDescription, string icon)
     : IconEntity(name, keyDescription, icon) {
-    public string[] DescriptionArgs { get; init; } = [];
-    public IconEntity[] DescriptionInclusions { get; init; } = [];
+    public DescriptionArg[] DescriptionArgs { private get; init; } = [];
+    public HashSet<DescriptionEntity> DescriptionInclusions { protected get; init; } = [];
 
-    // Force inheritors to reimplement
-    public abstract override string GetDescription();
+    private string[] GetDescriptionArgs(IGameMod? mod = null) {
+        string[] args = new string[this.DescriptionArgs.Length];
 
-    public virtual string GetPartialDescription() {
-        StringBuilder partialDescription = new(string.Format(this.GetDescription(), this.DescriptionArgs));
-        if (this.DescriptionInclusions.Length > 0) {
-            partialDescription.Append('\n');
+        for (uint i = 0; i < this.DescriptionArgs.Length; i++) {
+            args[i] = this.DescriptionArgs[i].GetString(mod);
         }
 
-        foreach (IconEntity entity in this.DescriptionInclusions) {
-            string color = entity is Skill ? Colors.Skill : Colors.Buff;
-            partialDescription.Append("\n/c[white](").Append(entity.GetName(color)).Append("/c[white]: ")
-                .Append(entity.GetDescription().Replace("\n", ". ")).Append("/c[white])");
-        }
-
-        return partialDescription.ToString();
+        return args;
     }
+
+    protected virtual HashSet<DescriptionEntity> GetDescriptionInclusions() => this.DescriptionInclusions;
+
+    protected string GetFormattedDescriptionInclusions(IGameMod? mod = null) {
+        StringBuilder formattedInclusions = new(string.Format(base.GetDescription(mod), this.GetDescriptionArgs(mod)));
+        if (this.DescriptionInclusions.Count > 0) formattedInclusions.Append('\n');
+
+        foreach (DescriptionEntity entity in this.GetDescriptionInclusions()) {
+            string color = entity is Skill ? Colors.Skill : Colors.Buff; // todo more thorough
+            formattedInclusions.Append('\n').Append(Colors.White).Append('(').Append(entity.GetName(color, mod))
+                .Append(Colors.White).Append(": ").Append(entity.GetDescription().Replace("\n", ". "))
+                .Append(Colors.White).Append(')');
+        }
+
+        return formattedInclusions.ToString();
+    }
+
+    public abstract string GetDescriptionWithInclusions(IGameMod? mod = null);
+}
+
+public enum DescriptionArgType {
+    PlainText,
+    LangKey
+}
+
+// todo if base C# gets unions, use that
+public class DescriptionArg(
+    OneOf<string, NamedEntity> value,
+    DescriptionArgType descriptionArgType = DescriptionArgType.PlainText) {
+    public string GetString(IGameMod? mod) => value.Match(
+        str => descriptionArgType switch {
+            DescriptionArgType.PlainText => str,
+            DescriptionArgType.LangKey => str.GetLang(mod)
+        },
+        ne => ne.GetName(mod));
+
+    public static implicit operator DescriptionArg(string val) => new(val);
+    public static implicit operator DescriptionArg(NamedEntity val) => new(val);
 }

@@ -18,9 +18,11 @@ Actively supports [modding](MODDING.md)
   - [MonoGame](https://monogame.net/)
   - [MonoGame Extended](https://www.monogameextended.net/)
   - [MessageFormat.NET](https://github.com/jeffijoe/messageformat.net)
+  - [OneOf](https://github.com/mcintyre321/OneOf)
   - [ResolutionBuddy](https://github.com/dmanning23/ResolutionBuddy)
   - todo add more
 - Assets:
+  - [Koruri](https://github.com/Koruri/Koruri) 
   - [icons-texture.png](Game/Content/img/icons-texture.png)
     - Input prompts by [juliocacko](https://juliocacko.itch.io/free-input-prompts)
     - Other icons from [Game-icons.net](https://game-icons.net/about.html#authors)

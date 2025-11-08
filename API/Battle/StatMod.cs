@@ -2,33 +2,23 @@ using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Util;
 
 namespace API.Battle;
 
 public class StatMod : NamedEntity, IModItem {
-    private readonly bool _isPositive;
+    public bool IsPositive { get; }
 
     public IGameMod? Source { get; }
 
     public StatMod(IGameMod? source, string keyName, bool isPositive) : base(keyName) {
         this.Source = source;
-        this._isPositive = isPositive;
+        this.IsPositive = isPositive;
         Core.StatMods.Add(this);
     }
 
-    public override int GetHashCode() => this.KeyName.GetHashCode();
-
     public string Format(int val) {
-        string c1; // Increased
-        string c2; // Decreased
-
-        if (this._isPositive) {
-            c1 = Colors.Pos;
-            c2 = Colors.Neg;
-        } else {
-            c1 = Colors.Neg;
-            c2 = Colors.Pos;
-        }
+        (string c1, string c2) = TextLib.GetColors(this.IsPositive);
 
         return val.Format(val > 1000 ? c1 : val < 1000 ? c2 : Colors.Num);
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -61,15 +62,8 @@ public class InputManager {
     /// <summary>
     /// Call to check for inputs from any number of Keybinds
     /// </summary>
-    public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) {
-        foreach (Keybind keybind in keybinds) {
-            if (this.IsKeybindPressed(allowHold, holdDelay, keybind)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) =>
+        keybinds.Any(keybind => this.IsKeybindPressed(allowHold, holdDelay, keybind));
 
     /// <summary>
     /// Call to check for inputs from any number of Keybinds
@@ -80,7 +74,8 @@ public class InputManager {
     /// <summary>
     /// Call to check for inputs from any number of Keybinds
     /// </summary>
-    public bool CheckInput(params Keybind[] keybinds) => this.CheckInput(false, this._defaultHoldDelay, keybinds);
+    public bool CheckInput(params Keybind[] keybinds) =>
+        this.CheckInput(false, this._defaultHoldDelay, keybinds);
 
     private bool IsKeybindPressed(bool allowHold, TimeSpan holdDelay, Keybind keybind) {
         if (!this.CheckKeybind(keybind)) {

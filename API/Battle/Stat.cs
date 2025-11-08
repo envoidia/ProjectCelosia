@@ -1,4 +1,5 @@
 using API.Entity;
+using API.Graphics;
 using API.Modding;
 
 namespace API.Battle;
@@ -14,7 +15,7 @@ public class Stat : NamedEntity, IModItem {
         Core.Stats.Add(this);
     }
 
-    public override int GetHashCode() => this.KeyName.GetHashCode();
+    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Stat);
 }
 
 public static class Stats {

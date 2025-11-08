@@ -1,14 +1,11 @@
 using API.Battle;
-using API.Modding;
+using API.Battle.BuffEffects;
 
 namespace Celosia.Battle;
 
 public static class Passives {
-    public static Passive IgnisAffUp;
-
-    public static void Initialize(IGameMod mod) {
-        IgnisAffUp = new Passive(mod, "PassiveIgnisAffUp", "PassiveIgnisAffUpDesc", "todo") {
-            BuffEffects = [] // todo
-        };
-    }
+    public static readonly Passive IgnisAffUp = new(Main.ModInstance, "PassiveIgnisAffUp",
+        "PassiveIgnisAffUpDesc", "todo") {
+        BuffEffects = [new ChangeAffinity(Elements.Ignis, 1)]
+    };
 }

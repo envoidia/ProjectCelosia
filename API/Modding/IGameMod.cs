@@ -1,5 +1,4 @@
 using System.Resources;
-using API.Extensions;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
@@ -39,19 +38,4 @@ public interface IGameMod {
     /// Called every frame
     /// </summary>
     void Update(GameTime gameTime);
-
-    /// <summary>
-    /// Gets a string from a lang key from this mod's ResourceManager. Crashes on invalid key
-    /// </summary>
-    string GetLang(string str) => str.GetLangRm(this.ResourceManager);
-
-    /// <summary>
-    /// Gets a formatted string from a lang key from this mod's ResourceManager. Crashes on invalid key or 0 args
-    /// </summary>
-    string FormatLang(string str, params object?[] args) => str.FormatLangRm(this.ResourceManager, args);
-
-    /// <summary>
-    /// Gets an ICU MessageFormat-formatted string from a lang key from this mod's ResourceManager. Crashes on invalid key or 0 args
-    /// </summary>
-    string FormatIcu(string str, params object?[] args) => str.FormatIcuRm(this.ResourceManager, args);
 }

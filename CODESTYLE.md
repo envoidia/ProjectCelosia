@@ -61,8 +61,8 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 # Performance
 - Avoid heap allocation during the game loop
 - Cache and reuse data that is expensive to fetch
-- Avoid using `try`/`catch` for control flow when possible
-- Avoid LINQ in most cases
+- Avoid using `try`/`catch` for control flow
+- Be careful when using LINQ
 
 # Compatibility
 - Place NativeAOT-incompatible code behind `#if !NATIVE_AOT`

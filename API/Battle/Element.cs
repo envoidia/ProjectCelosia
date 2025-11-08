@@ -1,4 +1,5 @@
 using API.Entity;
+using API.Graphics;
 using API.Modding;
 
 namespace API.Battle;
@@ -17,5 +18,10 @@ public class Element : IconEntity, IModItem {
         Core.Elements.Add(this);
     }
 
-    public override int GetHashCode() => this.KeyName.GetHashCode();
+    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Element);
+}
+
+public static class Elements {
+    public static readonly Element Vis = new(null, "ElementVis", "ElementVisDesc",
+        "/c[lightGray]/i[rolling-energy]");
 }

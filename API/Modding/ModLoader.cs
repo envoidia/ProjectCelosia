@@ -23,11 +23,6 @@ public static class ModLoader {
         }
     }
 
-    public static void InitializeCelosiaMod() {
-        LoadSingleMod(Path.Combine(ModsFolder, "Celosia.dll"));
-        LoadedMods[0].Initialize();
-    }
-
     private static void LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.TopDirectoryOnly);
 
@@ -47,7 +42,7 @@ public static class ModLoader {
 
         // Find Main class
         Type? modType = asm.GetTypes()
-            .FirstOrDefault(t => (t.Name == "Main") && typeof(IGameMod).IsAssignableFrom(t));
+            .FirstOrDefault(type => (type.Name == "Main") && typeof(IGameMod).IsAssignableFrom(type));
 
         // Couldn't find Main
         if (modType is null) {

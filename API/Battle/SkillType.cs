@@ -1,4 +1,5 @@
 using API.Entity;
+using API.Graphics;
 using API.Modding;
 
 namespace API.Battle;
@@ -10,6 +11,8 @@ public class SkillType : NamedEntity, IModItem {
         this.Source = source;
         Core.SkillTypes.Add(this);
     }
+
+    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Stat);
 }
 
 public static class SkillTypes {

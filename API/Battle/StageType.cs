@@ -1,4 +1,5 @@
 using API.Entity;
+using API.Graphics;
 using API.Modding;
 
 namespace API.Battle;
@@ -17,7 +18,7 @@ public class StageType : IconEntity, IModItem {
 
     public string GetNameWithSign(int stage) => this.GetName() + " " + (stage > 0 ? "Up" : "Down");
 
-    public override int GetHashCode() => this.KeyName.GetHashCode();
+    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Buff);
 }
 
 public class StageTypes {

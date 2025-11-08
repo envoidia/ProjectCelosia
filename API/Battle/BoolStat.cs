@@ -21,7 +21,7 @@ public class BoolStat : NamedEntity, IModItem {
         Core.BoolStats.Add(this);
     }
 
-    public override int GetHashCode() => this.KeyName.GetHashCode();
+    // todo format?
 }
 
 public static class BoolStats {

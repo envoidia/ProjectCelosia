@@ -27,6 +27,9 @@
     <data name="ModName" xml:space="preserve">
         <value>API</value>
     </data>
+    <data name="MultipleInstance" xml:space="preserve">
+        <value>Only a single API.Core instance can be created</value>
+    </data>
     <data name="Blank" xml:space="preserve">
         <value/>
     </data>
@@ -54,9 +57,6 @@
     </data>
     <data name="ModLoaded" xml:space="preserve">
         <value>Successfully loaded {0}</value>
-    </data>
-    <data name="FallingBackToAPILang" xml:space="preserve">
-        <value>Could not find the Lang class for {0}, falling back to API.Lang</value>
     </data>
     <!--Debug info menu
     0 = Close button glpyh, 1 = version-->
@@ -346,6 +346,10 @@ etc todo</value>
     </data>
     <data name="StatAgiFull" xml:space="preserve">
         <value>Agility</value>
+    </data>
+    <!--Elements-->
+    <data name="ElementVis" xml:space="preserve">
+        <value>Vis</value>
     </data>
     <!--Mult types-->
     <data name="MultDmgDealt" xml:space="preserve">
@@ -707,7 +711,7 @@ etc todo</value>
     <!--0 = name
     No effect on Name-->
     <data name="LogNoEffect" xml:space="preserve">
-        <value>/c[#ff0000]No effect /c[white]on {0}</value>
+        <value>/c[#ff5151]No effect /c[white]on {0}</value>
     </data>
     <!--0 = name, 1 = skill name
     Name tries to use skill-->
@@ -764,9 +768,11 @@ etc todo</value>
         <value>{0} Bloom</value>
     </data>
     <!--0 = SkillType, 1 = element, 2 = range, 3 = , pow (if applicable), 4 = , prio (if applicable), 5 = skill_desc body
-    Str, Ignis, Other 1R, 50 Pow\n(skill description)-->
+    Str, Ignis, Other 1R, 50 Pow
+    (skill description)-->
     <data name="SkillDesc" xml:space="preserve">
-        <value>{0}, {1}/c[white], {2}{3}{4}\n/c[white]{5}</value>
+        <value>{0}, {1}/c[white], {2}{3}{4}
+/c[white]{5}</value>
     </data>
     <!--0 = stacks, 1 = buff, 2 = turns
     Gives +a Buff (b turns)-->
@@ -793,7 +799,8 @@ etc todo</value>
     0 = (De)Buff, 1 = ", Stacks to a" or nothing, 2 = Description
     (De)Buff, Stacks to a. (description)-->
     <data name="BuffDesc" xml:space="preserve">
-        <value>{0}{1}/c[white]\n{2}</value>
+        <value>{0}{1}/c[white]
+{2}</value>
     </data>
     <!--0 = max stacks-->
     <data name="BuffDescStacksTo" xml:space="preserve">
@@ -818,7 +825,8 @@ etc todo</value>
     <!--Accessory descriptions
     0 = desc-->
     <data name="AccessoryDesc" xml:space="preserve">
-        <value>Accessory. Gives the following:\n{0}</value>
+        <value>Accessory. Gives the following:
+{0}</value>
     </data>
     <!--Accessory names-->
     <data name="AccessoryFirebornRing" xml:space="preserve">
@@ -827,7 +835,8 @@ etc todo</value>
     <!--Weapon descriptions
     0 = desc-->
     <data name="WeaponDesc" xml:space="preserve">
-        <value>Weapon. Gives the following:\n{0}</value>
+        <value>Weapon. Gives the following:
+{0}</value>
     </data>
     <!--Popups
     Tutorials-->
@@ -835,7 +844,10 @@ etc todo</value>
         <value>Damage</value>
     </data>
     <data name="TutorialDamageDesc" xml:space="preserve">
-        <value>Damage is calculated with the following formula:\nAtk = User's Str or Mag, depending on the skill's type\nDef = Target's Amr or Res, depending on the skill's type\nDamage = (Atk / Def) * (pow * 10) * damage modifier for user's affinity * damage modifier for target's affinity * user's Dmg Dealt * target's Dmg Taken * user's (Element) Dmg Dealt * target's (Element) Dmg Dealt * (if hitting a weakness) user's Weakness Dmg Dealt * target's Weakness Dmg Taken * (if the skill is a Follow-Up) user's Follow-Up Dmg Dealt * target's Follow-Up Dmg Taken</value>
+        <value>Damage is calculated with the following formula:
+Atk = User's Str or Mag, depending on the skill's type
+Def = Target's Amr or Res, depending on the skill's type
+Damage = (Atk / Def) * (pow * 10) * damage modifier for user's affinity * damage modifier for target's affinity * user's Dmg Dealt * target's Dmg Taken * user's (Element) Dmg Dealt * target's (Element) Dmg Dealt * (if hitting a weakness) user's Weakness Dmg Dealt * target's Weakness Dmg Taken * (if the skill is a Follow-Up) user's Follow-Up Dmg Dealt * target's Follow-Up Dmg Taken</value>
     </data>
     <!--Info-->
     <data name="InfoStat" xml:space="preserve">
@@ -873,7 +885,10 @@ etc todo</value>
         <value>Invalid Move</value>
     </data>
     <data name="WarningInvalidMoveDesc" xml:space="preserve">
-        <value>The move you have selected is invalid because {REASON}\nThe move may become valid before it executes, but if not, it will fail\nAre you sure you want to select this move?\n(This warning can be disabled in the Settings)</value>
+        <value>The move you have selected is invalid because {REASON}
+The move may become valid before it executes, but if not, it will fail
+Are you sure you want to select this move?
+(This warning can be disabled in the Settings)</value>
     </data>
     <data name="WarningInvalidMoveIsOutOfRange" xml:space="preserve">
         <value>is out of range</value>
