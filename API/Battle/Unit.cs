@@ -146,7 +146,6 @@ public class Unit {
             uint statOld = this.GetStat(stat);
             uint statNew = this.GetStatWithStage(stat, stageNew);
             int change = (int) (statNew - statOld);
-            // todo choiceformat
             builder.Append(string.Format(Lang.LogStageStat, Colors.Stat + stat.KeyName,
                 statOld.Format(statDefault),
                 statNew.Format(statDefault),
@@ -296,8 +295,7 @@ public class Unit {
         foreach (StageType stageType in Core.StageTypes) {
             int stage = this.GetStage(stageType);
             if ((stage != 0) && (--this._stageTurns[stageType] == 0)) {
-                // todo choiceformat
-                BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseStage, this.FormatName(false),
+                BattleHandlerLib.AppendToLog(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
@@ -344,7 +342,6 @@ public class Unit {
                 // Only hit Defend
                 if (this.Defend > dmg) {
                     this.Defend -= dmg;
-                    // todo choiceformat
                     return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield, nameS,
                         (defendOld + this.Shield).Format(Colors.Shield),
                         (this.Defend + this.Shield).Format(Colors.Shield),
@@ -367,16 +364,14 @@ public class Unit {
                     uint shieldOld = this.Shield;
                     this.Shield -= dmg;
                     return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield,
-                        nameS /*, C_SHIELD + FormatNum((defendOld + shieldOld) / STAT_MULT_HIDDEN), C_SHIELD +
-                        FormatNum(shield / STAT_MULT_HIDDEN), C_HP + FormatNum(statsDefault.GetDisplayHp()),
-                        C_NEG + "-" + FormatNum(dmgFull / STAT_MULT_HIDDEN) todo*/));
+                        nameS, (defendOld + shieldOld).Format(Colors.Shield), Shield.Format(Colors.Shield),
+                        this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-(int) dmgFull).Format()));
                 }
 
                 // Destroy Shield and proceed to HP
-                msg.Add(string.Format(Lang.LogChangeShield, nameS
-                    /*,  todo C_SHIELD + FormatNum((defendOld + shield) / STAT_MULT_HIDDEN), C_SHIELD + 0, C_HP +
-                         FormatNum(statsDefault.GetDisplayHp()), C_NEG + "-" + FormatNum((defendOld + shield) /
-                         STAT_MULT_HIDDEN)*/));
+                msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(Colors.Shield), 
+                        Colors.Shield + 0,  this.GetBaseStat(Stats.Hp).Format(Colors.Hp),
+                        (-(int) (defendOld + this.Shield)).Format()));
                 dmg -= this.Shield;
                 this.Shield = 0;
                 if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
@@ -386,12 +381,11 @@ public class Unit {
             }
         }
 
-        uint hpOldDisp = this.Hp;
+        uint hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._stats[Stats.Hp]);
-        uint hpNewDisp = this.Hp;
-        msg.Add(string.Format(Lang.LogChangeHp, nameS
-            /*todo, C_HP + FormatNum(hpOldDisp), C_HP + FormatNum(hpNewDisp), C_HP +
-             FormatNum(statsDefault.GetDisplayHp()), C_NEG + "-" + FormatNum(dmg / STAT_MULT_HIDDEN)*/));
+        uint hpNew = this.Hp;
+        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp), hpNew.Format(Colors.Hp), 
+            this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-(int) dmg).Format()));
 
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {

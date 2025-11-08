@@ -40,6 +40,9 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
     }
 
     public abstract string GetDescriptionWithInclusions(IGameMod? mod = null);
+
+    public override string GetDescription(IGameMod? mod = null) => 
+        string.Format(base.GetDescription(mod), this.GetDescriptionArgs(mod));
 }
 
 public enum DescriptionArgType {

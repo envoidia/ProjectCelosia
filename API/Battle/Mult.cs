@@ -20,16 +20,16 @@ public class Mult : NamedEntity, IModItem {
     }
 
     public string Format(uint val) {
-        (string c1, string c2) = TextLib.GetColors(this.IsPositive);
+        (string pos, string neg) = TextLib.GetColors(this.IsPositive);
 
         return Math.Max(val, this.MinValue)
-            .Format(val > 1000 ? c1 : val < 1000 ? c2 : Colors.Num, "%", 10f);
+            .Format(val > 1000 ? pos : val < 1000 ? neg : Colors.Num, "%", 10f);
     }
 
     public string FormatChange(float val) {
-        (string c1, string c2) = TextLib.GetColors(this.IsPositive);
+        (string pos, string neg) = TextLib.GetColors(this.IsPositive);
 
-        return Math.Max(val, this.MinValue).Format(val > 0 ? c1 : val < 0 ? c2 : Colors.Num, "%");
+        return Math.Max(val, this.MinValue).Format(val > 0 ? pos : val < 0 ? neg : Colors.Num, "%");
     }
 }
 

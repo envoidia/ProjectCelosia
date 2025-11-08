@@ -18,9 +18,9 @@ public class StatMod : NamedEntity, IModItem {
     }
 
     public string Format(int val) {
-        (string c1, string c2) = TextLib.GetColors(this.IsPositive);
+        (string pos, string neg) = TextLib.GetColors(this.IsPositive);
 
-        return val.Format(val > 1000 ? c1 : val < 1000 ? c2 : Colors.Num);
+        return val.Format(val > 1000 ? pos : val < 1000 ? neg : Colors.Num);
     }
 }
 
