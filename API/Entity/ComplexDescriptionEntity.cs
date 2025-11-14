@@ -5,6 +5,7 @@ using API.Extensions;
 using API.Graphics;
 using API.Modding;
 using OneOf;
+using static API.Entity.DescriptionArgType;
 
 namespace API.Entity;
 
@@ -26,7 +27,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
     protected virtual HashSet<DescriptionEntity> GetDescriptionInclusions() => this.DescriptionInclusions;
 
     protected string GetFormattedDescriptionInclusions(IGameMod? mod = null) {
-        StringBuilder formattedInclusions = new(string.Format(base.GetDescription(mod), this.GetDescriptionArgs(mod)));
+        StringBuilder formattedInclusions = new(this.GetDescription(mod));
         if (this.DescriptionInclusions.Count > 0) formattedInclusions.Append('\n');
 
         foreach (DescriptionEntity entity in this.GetDescriptionInclusions()) {
@@ -41,7 +42,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
 
     public abstract string GetDescriptionWithInclusions(IGameMod? mod = null);
 
-    public override string GetDescription(IGameMod? mod = null) => 
+    public override string GetDescription(IGameMod? mod = null) =>
         string.Format(base.GetDescription(mod), this.GetDescriptionArgs(mod));
 }
 
@@ -51,14 +52,9 @@ public enum DescriptionArgType {
 }
 
 // todo if base C# gets unions, use that
-public class DescriptionArg(
-    OneOf<string, NamedEntity> value,
-    DescriptionArgType descriptionArgType = DescriptionArgType.PlainText) {
+public class DescriptionArg(OneOf<string, NamedEntity> value, DescriptionArgType descriptionArgType = PlainText) {
     public string GetString(IGameMod? mod) => value.Match(
-        str => descriptionArgType switch {
-            DescriptionArgType.PlainText => str,
-            DescriptionArgType.LangKey => str.GetLang(mod)
-        },
+        str => descriptionArgType == PlainText ? str : str.GetLang(),
         ne => ne.GetName(mod));
 
     public static implicit operator DescriptionArg(string val) => new(val);

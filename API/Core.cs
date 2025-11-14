@@ -98,15 +98,15 @@ public class Core : Game {
         sInstance = this;
 
         // Create a new graphics device manager
-        Graphics = new GraphicsDeviceManager(this);
-
-        // Set the graphics defaults
-        Graphics.PreferredBackBufferWidth = width;
-        Graphics.PreferredBackBufferHeight = height;
-        Graphics.IsFullScreen = fullScreen;
+        Graphics = new GraphicsDeviceManager(this) {
+            PreferredBackBufferWidth = width,
+            PreferredBackBufferHeight = height,
+            IsFullScreen = fullScreen,
+            SynchronizeWithVerticalRetrace = false // Vsync
+            //PreferMultiSampling = true
+        };
 
         // todo settings
-        Graphics.SynchronizeWithVerticalRetrace = false; // Vsync
         this.IsFixedTimeStep = false;
         // todo TargetElapsedTime
 
@@ -125,6 +125,7 @@ public class Core : Game {
         Koruri50 = KoruriSystem.GetFont(50);
 
         // Apply the graphic presentation changes.
+        //Graphics.PreferMultiSampling = true;
         Graphics.ApplyChanges();
 
         // Set the window title.

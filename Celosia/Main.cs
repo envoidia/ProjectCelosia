@@ -32,7 +32,7 @@ public class Main : IGameMod {
 
         ModInstance = this;
 
-        TestLabel.Text = Skills.Fireball.GetDescriptionWithInclusions(this);
+        //TestLabel.Text = Skills.Fireball.GetDescriptionWithInclusions(this);
     }
 
     public void Update(GameTime gameTime) { }

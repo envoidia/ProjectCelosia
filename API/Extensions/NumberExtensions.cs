@@ -3,6 +3,7 @@ using API.Util;
 
 namespace API.Extensions;
 
+// todo can i use a mock union (struct with explicit layout) as input
 public static class NumberExtensions {
     public const string NumberFormat = "N";
     public const string IntegerFormat = "N0";

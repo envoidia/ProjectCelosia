@@ -23,6 +23,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 ## Whitespace
 - Indent with 4 spaces
 - Wrap at 120 columns
+- Spaces between operators (including casts)
 - Wrap after operators
 - Opening brackets on the same line with 1 preceding space
 - 1 statement per line
@@ -30,7 +31,6 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Set `else`/`catch` statements against the closing bracket of the `if`/`try` statement
 - Bracketless statements must be contained to a single line. They should generally be avoided
 - Any `else` statement combination is allowed (`else if`, `else for`, etc)
-- 1 space after casts
 
 ## General
 - For clarity, always use `this` when able
@@ -74,8 +74,10 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Only have unused methods if they're important for mod support
 
 # Abusable features
+- Avoid nested ternaries
 - Avoid using advanced/complex features when not necessary
-- Do not cast arbitrary values to an enum unless absolutely necessary
+- Avoid casting arbitrary values to an enum
+- Avoid inheritance and interface default impls
 - Only create structs for very small constructs that are frequently created and destroyed
 - Only create operator overloads if they clearly represent a form of the operator's meaning that is immediately obvious to anyone
   - For example, `a * b` should always be performing something that can easily be understood as multiplication on the core concept of the object itself (not just some field it contains)

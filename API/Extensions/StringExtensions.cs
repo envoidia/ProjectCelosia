@@ -16,15 +16,15 @@ public static class StringExtensions {
         /// then all mod ResourceManagers. Throws on invalid key
         /// </summary>
         public string GetLang(IGameMod? mod = null) {
-            // Check provided RM
+            // Check provided mod
             string? lang = mod?.ResourceManager.GetString(str, Lang.Culture);
             if (lang is not null) return lang;
 
-            // Check API RM
+            // Check API
             lang = Lang.ResourceManager.GetString(str, Lang.Culture);
             if (lang is not null) return lang;
 
-            // Check all mod RMs
+            // Check all mods
             foreach (IGameMod gameMod in ModLoader.LoadedMods) {
                 lang = gameMod.ResourceManager.GetString(str, Lang.Culture);
                 if (lang is not null) return lang;
@@ -33,7 +33,7 @@ public static class StringExtensions {
 #if NATIVE_AOT
             throw new ArgumentException(string.Format(Lang.ErrKeyNotFoundAOT, str, mod?.GetName()));
 #else
-            throw new ArgumentException(string.Format(Lang.ErrKeyNotFound, str, 
+            throw new ArgumentException(string.Format(Lang.ErrKeyNotFound, str,
                 Assembly.GetCallingAssembly().GetName().Name));
 #endif
         }

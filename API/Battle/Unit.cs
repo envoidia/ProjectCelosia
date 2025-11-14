@@ -364,14 +364,14 @@ public class Unit {
                     uint shieldOld = this.Shield;
                     this.Shield -= dmg;
                     return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield,
-                        nameS, (defendOld + shieldOld).Format(Colors.Shield), Shield.Format(Colors.Shield),
+                        nameS, (defendOld + shieldOld).Format(Colors.Shield), this.Shield.Format(Colors.Shield),
                         this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-(int) dmgFull).Format()));
                 }
 
                 // Destroy Shield and proceed to HP
-                msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(Colors.Shield), 
-                        Colors.Shield + 0,  this.GetBaseStat(Stats.Hp).Format(Colors.Hp),
-                        (-(int) (defendOld + this.Shield)).Format()));
+                msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(Colors.Shield),
+                    Colors.Shield + 0, this.GetBaseStat(Stats.Hp).Format(Colors.Hp),
+                    (-(int) (defendOld + this.Shield)).Format()));
                 dmg -= this.Shield;
                 this.Shield = 0;
                 if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
@@ -384,7 +384,7 @@ public class Unit {
         uint hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._stats[Stats.Hp]);
         uint hpNew = this.Hp;
-        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp), hpNew.Format(Colors.Hp), 
+        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp), hpNew.Format(Colors.Hp),
             this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-(int) dmg).Format()));
 
         // todo should this be a separate result from hitting shield

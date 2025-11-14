@@ -33,13 +33,13 @@ public class Skill : ComplexDescriptionEntity, IModItem {
     public string GetCostFormatted() =>
         string.Format(this.IsBloom ? Lang.SkillCostBloom : Lang.SkillCostSP, this.Cost.Format());
 
-    public bool HasRole(SkillRole skillRole) => this.SkillRoles.Contains(skillRole);
-
     public bool IsRangeSelf() => (this.Range == Ranges.Self) || (this.Range == Ranges.SelfUpDown);
 
-    public bool ShouldTargetOpponent() => (this.Range.Side == Side.Opponent) || this.HasRole(SkillRole.Attack) ||
-                                          this.HasRole(SkillRole.DebuffDefensive) ||
-                                          this.HasRole(SkillRole.DebuffOffensive);
+    // todo i guess this would be better written with a contains form that searches for all 3 of them at once but this isnt perf critical anyway
+    public bool ShouldTargetOpponent() => (this.Range.Side == Side.Opponent) ||
+                                          this.SkillRoles.Contains(SkillRole.Attack) ||
+                                          this.SkillRoles.Contains(SkillRole.DebuffDefensive) ||
+                                          this.SkillRoles.Contains(SkillRole.DebuffOffensive);
 
     // todo multiple elements
     public Element GetElement() {

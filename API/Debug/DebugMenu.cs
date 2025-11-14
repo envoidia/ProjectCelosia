@@ -11,6 +11,8 @@ namespace API.Debug;
 public static class DebugMenu {
     private const uint Mb = 1024 * 1024;
 
+    private static readonly Process Process = Process.GetCurrentProcess();
+
     private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
 
     private static TimeSpan avgFrameTime = TimeSpan.FromMilliseconds(10);
@@ -67,7 +69,7 @@ public static class DebugMenu {
         DebugInfoR.Text = string.Format(Lang.DebugInfoR,
             (int) (1 / avgFrameTime.TotalSeconds) + "(" + (int) (1 / gameTime.ElapsedGameTime.TotalSeconds) +
             ")", // todo temp
-            Process.GetCurrentProcess().PrivateMemorySize64 / Mb,
+            GC.GetTotalMemory(false) / Mb,
             "todo",
             "todo",
             string.Join(", ", Core.NavPath.Reverse()),
