@@ -77,8 +77,7 @@ public class Game1 : Core {
             () => new Texture2DAtlasReader()
         );
 #endif
-
-        //Graphics.PreferMultiSampling = true;
+        
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
             new Point(1920, 1080), false, false, false));
     }
