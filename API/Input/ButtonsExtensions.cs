@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Input;
 namespace API.Input;
 
 public static class ButtonsExtensions {
-    extension(Buttons button) {
-        public string GetGlyph(InputDevice inputDevice) => inputDevice.FormatSingleGlyph(button.GetSingleGlyph());
+    extension(Buttons @this) {
+        public string GetGlyph(InputDevice inputDevice) => inputDevice.FormatSingleGlyph(@this.GetSingleGlyph());
 
-        public string[] GetGlyphs() => FormatGlyphArray(button.GetSingleGlyph());
+        public string[] GetGlyphs() => FormatGlyphArray(@this.GetSingleGlyph());
 
-        private string GetSingleGlyph() => button switch {
+        private string GetSingleGlyph() => @this switch {
             Buttons.DPadUp => "DU",
             Buttons.DPadDown => "DD",
             Buttons.DPadLeft => "DL",
@@ -23,7 +23,7 @@ public static class ButtonsExtensions {
             Buttons.Y => "Y",
             Buttons.RightTrigger => "RT",
             Buttons.LeftTrigger => "LT",
-            _ => throw new ArgumentOutOfRangeException(nameof(button))
+            _ => throw new ArgumentOutOfRangeException(nameof(@this))
         };
     }
 

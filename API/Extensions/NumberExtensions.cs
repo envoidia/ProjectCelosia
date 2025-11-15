@@ -8,37 +8,37 @@ public static class NumberExtensions {
     public const string NumberFormat = "N";
     public const string IntegerFormat = "N0";
 
-    extension(int val) {
+    extension(int @this) {
         public string Format(string color, string suffix = "", float divisor = 1) {
-            string sign = val > 0 ? "+" : "";
-            return color + sign + ((int) (val / divisor)).ToString(IntegerFormat) + suffix;
+            string sign = @this > 0 ? "+" : "";
+            return color + sign + ((int) (@this / divisor)).ToString(IntegerFormat) + suffix;
         }
 
         public string Format(bool isPositive) {
             (string pos, string neg) = TextLib.GetColors(isPositive);
 
-            return val.Format(val > 0 ? pos : val < 0 ? neg : Colors.Num);
+            return @this.Format(@this > 0 ? pos : @this < 0 ? neg : Colors.Num);
         }
 
-        public string Format() => val.Format(true);
+        public string Format() => @this.Format(true);
     }
 
-    extension(uint val) {
+    extension(uint @this) {
         public string Format(string color, string suffix = "", float divisor = 1) {
-            string sign = val == 0 ? "" : "+";
-            return color + sign + ((int) (val / divisor)).ToString(IntegerFormat) + suffix;
+            string sign = @this == 0 ? "" : "+";
+            return color + sign + ((int) (@this / divisor)).ToString(IntegerFormat) + suffix;
         }
 
-        public string Format() => val.Format(Colors.Num);
+        public string Format() => @this.Format(Colors.Num);
 
         public string Format(uint threshold) =>
-            val.Format(val > threshold ? Colors.Pos : val < threshold ? Colors.Neg : Colors.Num);
+            @this.Format(@this > threshold ? Colors.Pos : @this < threshold ? Colors.Neg : Colors.Num);
     }
 
-    extension(float val) {
+    extension(float @this) {
         public string Format(string color, string suffix = "", float divisor = 1) {
-            string sign = val > 0 ? "+" : "";
-            return color + sign + (val / divisor).ToString(NumberFormat) + suffix;
+            string sign = @this > 0 ? "+" : "";
+            return color + sign + (@this / divisor).ToString(NumberFormat) + suffix;
         }
     }
 }

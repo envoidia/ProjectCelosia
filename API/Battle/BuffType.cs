@@ -7,8 +7,8 @@ public enum BuffType {
 }
 
 public static class BuffTypeExtensions {
-    extension(BuffType buffType) {
-        public string GetName() => buffType switch {
+    extension(BuffType @this) {
+        public string GetName() => @this switch {
             BuffType.Buff => Lang.Buff,
             BuffType.Debuff => Lang.Debuff
         };

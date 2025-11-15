@@ -19,8 +19,8 @@ public enum MenuType {
 }
 
 public static class MenuTypeExtensions {
-    extension(MenuType menuType) {
-        public string GetInputPrompt() => GetInputPromptString(menuType switch {
+    extension(MenuType @this) {
+        public string GetInputPrompt() => GetInputPromptString(@this switch {
             Main => [MoveUpDown, Confirm],
             Popup => [Close],
             Battle => [MoveUpDown, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect],

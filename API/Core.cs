@@ -5,6 +5,7 @@ using API.Battle;
 using API.Graphics;
 using API.Input;
 using API.Menu;
+using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
@@ -24,6 +25,7 @@ public class Core : Game {
     public static GraphicsDeviceManager Graphics { get; private set; }
     public new static GraphicsDevice GraphicsDevice { get; private set; }
     public static SpriteBatch SpriteBatch { get; private set; }
+    public static ShapeBatch ShapeBatch { get; private set; }
     public static Texture2D WhitePixel { get; private set; }
     public static readonly Dictionary<string, Texture2DRegion> TextureCache = new();
 
@@ -61,6 +63,9 @@ public class Core : Game {
     // todo sprites
     // todo shapes
     public static readonly List<Label> LabelsHigh = [];
+    public static readonly List<GuiBox> GuiBoxesHigh = [];
+    public static readonly List<GuiBoxChain> GuiBoxChainsHigh = [];
+    public static readonly List<GuiBoxBar> GuiBoxBarsHigh = [];
 
     private static Label inputPrompt;
 
@@ -102,7 +107,8 @@ public class Core : Game {
             PreferredBackBufferWidth = width,
             PreferredBackBufferHeight = height,
             IsFullScreen = fullScreen,
-            SynchronizeWithVerticalRetrace = false // Vsync
+            SynchronizeWithVerticalRetrace = false, // Vsync
+            GraphicsProfile = GraphicsProfile.HiDef
             //PreferMultiSampling = true
         };
 
@@ -169,8 +175,9 @@ public class Core : Game {
         // Set the core's graphics device to a reference of the base Game's graphics device.
         GraphicsDevice = base.GraphicsDevice;
 
-        // Create the sprite batch instance.
+        // Create sprite and shape batches
         SpriteBatch = new SpriteBatch(GraphicsDevice);
+        ShapeBatch = new ShapeBatch(GraphicsDevice, Content);
 
         WhitePixel = new Texture2D(GraphicsDevice, 1, 1);
         WhitePixel.SetData([Color.White]);

@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Input;
 namespace API.Input;
 
 public static class KeysExtensions {
-    extension(Keys key) {
-        public string GetGlyph() => FormatGlyph(key switch {
+    extension(Keys @this) {
+        public string GetGlyph() => FormatGlyph(@this switch {
             Keys.Back => "Backspace",
             Keys.Enter => "Enter",
             Keys.Escape => "Esc",
@@ -70,7 +70,7 @@ public static class KeysExtensions {
             Keys.OemOpenBrackets => "[",
             Keys.OemCloseBrackets => "]",
             Keys.OemQuotes => "Quot",
-            _ => throw new ArgumentOutOfRangeException(nameof(key))
+            _ => throw new ArgumentOutOfRangeException(nameof(@this)) // todo
         });
     }
 

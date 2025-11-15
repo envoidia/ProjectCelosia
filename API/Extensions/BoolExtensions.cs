@@ -1,9 +1,9 @@
 namespace API.Extensions;
 
 public static class BoolExtensions {
-    extension(bool val) {
-        public int ToInt() => val ? 1 : 0;
+    extension(bool @this) {
+        public int ToInt() => @this ? 1 : 0;
 
-        public int ToSign() => val ? 1 : -1;
+        public int ToSign() => @this ? 1 : -1;
     }
 }

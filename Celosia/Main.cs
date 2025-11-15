@@ -3,7 +3,6 @@ using API;
 using Microsoft.Xna.Framework;
 using API.Modding;
 using API.Graphics;
-using Celosia.Battle;
 using JetBrains.Annotations;
 
 namespace Celosia;
