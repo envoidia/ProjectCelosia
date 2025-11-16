@@ -2,7 +2,6 @@ using System.Resources;
 using API;
 using Microsoft.Xna.Framework;
 using API.Modding;
-using API.Graphics;
 using JetBrains.Annotations;
 
 namespace Celosia;
@@ -10,28 +9,21 @@ namespace Celosia;
 [UsedImplicitly]
 public class Main : IGameMod {
     /// <summary>
-    /// Globally accessible Main instance
+    /// Publicly accessible instance of <c>Main</c>
     /// </summary>
-    public static IGameMod ModInstance { get; private set; } = null!;
+    public static IGameMod ModInstance { get; set; } = null!;
 
     public string Id => "Celosia";
     public string Version => BuildInfo.BuildDate;
     public ResourceManager ResourceManager => Lang.ResourceManager;
 
-    private static readonly Label TestLabel = new() {
-        Position = new Vector2(1800, 800),
-        Text = "",
-        Width = 2000
-    };
-
     public void Initialize() {
+        // Ensure that only 1 instance of Main is created
         if (ModInstance is not null) {
-            throw new InvalidOperationException(Lang.MultipleInstance);
+            throw new InvalidOperationException(string.Format(API.Lang.ModMultipleInstance, Lang.ModName));
         }
 
         ModInstance = this;
-
-        //TestLabel.Text = Skills.Fireball.GetDescriptionWithInclusions(this);
     }
 
     public void Update(GameTime gameTime) { }

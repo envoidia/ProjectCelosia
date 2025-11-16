@@ -16,22 +16,22 @@ public class InputManager {
     public bool InputDeviceChanged { get; private set; } = true;
 
     /// <summary>
-    /// How long each keybind has been held down for
+    /// How long each <c>Keybind</c> has been held down for
     /// </summary>
     private readonly TimeSpan[] _held = new TimeSpan[Keybinds.KeybindCount];
 
     /// <summary>
-    /// Default time between triggers when holding keybind down
+    /// Default time between triggers when holding <c>Keybind</c> down
     /// </summary>
     private readonly TimeSpan _defaultHoldDelay = TimeSpan.FromSeconds(0.1);
 
     /// <summary>
-    /// Time from keybind first becoming held to first trigger
+    /// Time from <c>Keybind</c> first becoming held to first trigger
     /// </summary>
     private readonly TimeSpan _holdInitDelay = TimeSpan.FromSeconds(0.3);
 
     /// <summary>
-    /// Most recent ElapsedGameTime
+    /// Most recent <c>ElapsedGameTime</c>
     /// </summary>
     private TimeSpan _elapsedTime;
 
@@ -60,19 +60,19 @@ public class InputManager {
     }
 
     /// <summary>
-    /// Call to check for inputs from any number of Keybinds
+    /// Call to check for inputs from any number of <c>Keybind</c>s
     /// </summary>
     public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) =>
         keybinds.Any(keybind => this.IsKeybindPressed(allowHold, holdDelay, keybind));
 
     /// <summary>
-    /// Call to check for inputs from any number of Keybinds
+    /// Call to check for inputs from any number of <c>Keybind</c>s
     /// </summary>
     public bool CheckInput(bool allowHold, params Keybind[] keybinds) =>
         this.CheckInput(allowHold, this._defaultHoldDelay, keybinds);
 
     /// <summary>
-    /// Call to check for inputs from any number of Keybinds
+    /// Call to check for inputs from any number of <c>Keybind</c>s
     /// </summary>
     public bool CheckInput(params Keybind[] keybinds) =>
         this.CheckInput(false, this._defaultHoldDelay, keybinds);

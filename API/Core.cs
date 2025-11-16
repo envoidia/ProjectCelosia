@@ -21,7 +21,13 @@ public class Core : Game {
 
     public static Core Instance => sInstance;
 
-    // Rendering
+    /// <summary>
+    /// List of menus that have been traveled through to reach the current menu location
+    /// </summary>
+    public static readonly Stack<MenuType> NavPath = new();
+
+    #region Rendering
+
     public static GraphicsDeviceManager Graphics { get; private set; }
     public new static GraphicsDevice GraphicsDevice { get; private set; }
     public static SpriteBatch SpriteBatch { get; private set; }
@@ -41,35 +47,41 @@ public class Core : Game {
 
     public static bool ExitOnEscape { get; set; }
 
-    // Menu stuff
+    #region Stages
+
     /// <summary>
-    /// List of menus that have been traveled through to reach the current menu location
+    /// <c>Stage</c> that's always drawn first
     /// </summary>
-    public static readonly Stack<MenuType> NavPath = new();
+    public static readonly Stage StageBase = new();
 
-    // Lists of things to render, in order
+    /// <summary>
+    /// <c>Stage</c> that's only drawn during battle
+    /// </summary>
+    public static readonly Stage StageBattle = new();
 
-    // Low Prio
-    // todo sprites
-    // todo shapes
-    public static readonly List<Label> LabelsLow = [];
+    /// <summary>
+    /// <c>Stage</c> that's only drawn in the inspect menu
+    /// </summary>
+    public static readonly Stage StageInspect = new();
 
-    // Med Prio
-    // todo sprites
-    // todo shapes
-    public static readonly List<Label> LabelsMed = [];
+    /// <summary>
+    /// <c>Stage</c> that's always drawn last
+    /// </summary>
+    public static readonly Stage StageSuper = new();
 
-    // High Prio
-    // todo sprites
-    // todo shapes
-    public static readonly List<Label> LabelsHigh = [];
-    public static readonly List<GuiBox> GuiBoxesHigh = [];
-    public static readonly List<GuiBoxChain> GuiBoxChainsHigh = [];
-    public static readonly List<GuiBoxBar> GuiBoxBarsHigh = [];
+    /// <summary>
+    /// All <c>Stage</c>s to be drawn
+    /// </summary>
+    public static readonly List<Stage> Stages = [StageBase, StageBattle, StageInspect, StageSuper];
+
+    #endregion
+
+    #endregion
 
     private static Label inputPrompt;
 
-    // Lists of other stuff
+    #region IModItem Lists
+
     public static readonly List<Accessory> Accessories = [];
     public static readonly List<BoolStat> BoolStats = [];
     public static readonly List<Buff> Buffs = [];
@@ -85,6 +97,7 @@ public class Core : Game {
     public static readonly List<UnitType> UnitTypes = [];
     public static readonly List<Weapon> Weapons = [];
 
+    #endregion
 
     /// <summary>
     /// Creates a new Core instance.
@@ -157,10 +170,11 @@ public class Core : Game {
             return new TextureFragmentColored(region.Texture, region.Bounds);
         };
 
-        inputPrompt = new Label {
+        inputPrompt = new Label(StageBase) {
             Position = World.Vec - new Vector2(10, 10),
             Alignment = Alignment.BottomRight,
-            HasBackground = true
+            HasBackground = true,
+            RenderPriority = RenderPriority.Super
         };
 
 #if DEBUG
@@ -184,6 +198,10 @@ public class Core : Game {
 
         // Create a new input manager.
         Input = new InputManager();
+
+        // Sort stages
+        StageBase.Sort();
+        StageSuper.Sort();
     }
 
     protected override void Update(GameTime gameTime) {

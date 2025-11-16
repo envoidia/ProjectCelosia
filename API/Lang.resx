@@ -30,6 +30,9 @@
     <data name="MultipleInstance" xml:space="preserve">
         <value>Only a single API.Core instance can be created</value>
     </data>
+    <data name="ModMultipleInstance" xml:space="preserve">
+        <value>Only a single {0}.Main instance can be created</value>
+    </data>
     <data name="Blank" xml:space="preserve">
         <value/>
     </data>
@@ -283,6 +286,19 @@ etc todo</value>
     </data>
     <data name="Immune" xml:space="preserve">
         <value>Immune</value>
+    </data>
+    <!--Built-in skills and buffs-->
+    <data name="SkillNothing" xml:space="preserve">
+        <value>Do Nothing</value>
+    </data>
+    <data name="SkillDefend" xml:space="preserve">
+        <value>Defend</value>
+    </data>
+    <data name="BuffDefend" xml:space="preserve">
+        <value>Defend</value>
+    </data>
+    <data name="BuffShield" xml:space="preserve">
+        <value>Defend</value>
     </data>
     <!--Attack power-->
     <data name="Pow" xml:space="preserve">

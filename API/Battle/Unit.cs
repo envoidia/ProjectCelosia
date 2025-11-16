@@ -134,7 +134,7 @@ public class Unit {
     public void SetStageTurns(StageType stageType, uint set) => this._stageTurns[stageType] = set;
 
     public string GetTurnsStacksFormatted(StageType stageType) =>
-        this.GetStage(stageType).Format() + "(" + this.GetStageTurns(stageType) + ")";
+        $"{this.GetStage(stageType).Format()}({this.GetStageTurns(stageType)})";
 
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
@@ -329,12 +329,12 @@ public class Unit {
         }
     }
 
-    public Result Damage(uint dmg, bool pierce, bool useName) {
+    public Result Damage(uint dmg, bool pierce = false, bool useName = true) {
         uint dmgFull = dmg;
         uint defendOld = this.Defend;
         List<string> msg = [];
-        string name = useName ? this.FormatName(false) + " " : "";
-        string nameS = useName ? this.FormatName() + " " : "";
+        string name = useName ? $"{this.FormatName(false)} " : "";
+        string nameS = useName ? $"{this.FormatName()} " : "";
 
         // Pierce skips Defend and Shield
         if (!pierce) {
@@ -397,11 +397,8 @@ public class Unit {
             : new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
     }
 
-    public Result Damage(uint dmg, bool pierce) => this.Damage(dmg, pierce, true);
-    public Result Damage(uint dmg) => this.Damage(dmg, false, true);
-
     // todo support other langs + different names for multiples of the same UnitType (+ nicknames?)
-    public string FormatName(bool possessive) {
+    public string FormatName(bool possessive = true) {
         string name = this.UnitType.GetName();
 
         string suffix = possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "";
@@ -410,6 +407,4 @@ public class Unit {
 
         return color + name + suffix + Colors.White;
     }
-
-    public string FormatName() => this.FormatName(true);
 }

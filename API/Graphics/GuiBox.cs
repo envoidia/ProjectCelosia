@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10) {
+public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10) : IRenderable {
     public int L { get; set; } = l;
     public int R { get; set; } = r;
     public int T { get; set; } = t;
@@ -29,6 +29,8 @@ public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10) {
     public int SlantR { get; set; } = 6;
 
     // todo will this need a setter
+    public bool IsVisible { get; set; } = true;
+
     public RenderPriority RenderPriority { get; set; } = RenderPriority.Low;
 
     public virtual void Draw(GameTime gameTime) {

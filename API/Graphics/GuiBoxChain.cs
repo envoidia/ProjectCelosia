@@ -35,7 +35,7 @@ public class GuiBoxChain(int l, int r, int t, int b, params int[] divisions) : G
         if (this.Prog == 0) return;
 
         int divTotal = 0;
-        for (int i = 0; i < this.Divisions.Length; i++) {
+        for (uint i = 0; i < this.Divisions.Length; i++) {
             int offset = (int) (this._selectedOffset * this._selectedProg[i]);
 
             int l = this.L + divTotal;

@@ -27,17 +27,8 @@
     <data name="ModName" xml:space="preserve">
         <value>Celosia</value>
     </data>
-    <data name="MultipleInstance" xml:space="preserve">
-        <value>Only a single Celosia.Main instance can be created</value>
-    </data>
     <!--Buff names
     Basic-->
-    <data name="BuffDefend" xml:space="preserve">
-        <value>Defend</value>
-    </data>
-    <data name="BuffShield" xml:space="preserve">
-        <value>Shield</value>
-    </data>
     <data name="BuffProtect" xml:space="preserve">
         <value>Protect</value>
     </data>
@@ -221,12 +212,6 @@
     </data>
     <!--Skill names
     Basic skills-->
-    <data name="SkillNothing" xml:space="preserve">
-        <value>Do Nothing</value>
-    </data>
-    <data name="SkillDefend" xml:space="preserve">
-        <value>Defend</value>
-    </data>
     <data name="SkillProtect" xml:space="preserve">
         <value>Protect</value>
     </data>

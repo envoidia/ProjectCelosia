@@ -20,4 +20,8 @@ public record Move(SkillInstance SkillInstance, Unit Self, uint TargetPos) {
         // Check if the targeted side is allowed
         return (range.Side == Side.Both) || (range.Side == PosLib.GetRelativeSide(this.Self.Pos, this.TargetPos));
     }
+
+    public string GetTriesToUseString() =>
+        // todo
+        "";
 }

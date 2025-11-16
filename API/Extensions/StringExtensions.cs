@@ -12,8 +12,8 @@ public static class StringExtensions {
     // todo these can share a name after SDK update probably
     extension(string @this) {
         /// <summary>
-        /// Gets a string from a lang key. Checks the specified mod's ResourceManager (if provided), then API.Lang.ResourceManager,
-        /// then all mod ResourceManagers. Throws on invalid key
+        /// Gets a string from a lang key. Checks the specified mod's <c>ResourceManager</c> (if provided), then <c>API.Lang.ResourceManager</c>,
+        /// then all mod <c>ResourceManagers</c>. Throws on invalid key
         /// </summary>
         public string GetLang(IGameMod? mod = null) {
             // Check provided mod
@@ -39,21 +39,21 @@ public static class StringExtensions {
         }
 
         /// <summary>
-        /// Gets a formatted string from a lang key. Checks the specified ResourceManager, then API.Lang.ResourceManager,
-        /// then all mod ResourceManagers. Throws on invalid key or 0 args
+        /// Gets a formatted string from a lang key. Checks the specified <c>ResourceManager</c>, then <c>API.Lang.ResourceManager</c>,
+        /// then all mod <c>ResourceManager</c>s. Throws on invalid key or 0 args
         /// </summary>
         public string FormatLangRm(IGameMod? mod, params object?[] args) => args.Length == 0
             ? throw new ArgumentException("Must pass at least 1 arg")
             : string.Format(@this.GetLang(mod), args);
 
         /// <summary>
-        /// Gets a formatted string from a lang key from API.Lang.ResourceManager. Throws on invalid key or 0 args
+        /// Gets a formatted string from a lang key from <c>API.Lang.ResourceManager</c>. Throws on invalid key or 0 args
         /// </summary>
         public string FormatLang(params object?[] args) => @this.FormatLangRm(null, args);
 
         /// <summary>
-        /// Gets an ICU MessageFormat-formatted string from a lang key. Checks the specified ResourceManager,
-        /// then API.Lang.ResourceManager, then all mod ResourceManagers. Throws on invalid key or 0 args
+        /// Gets an ICU MessageFormat-formatted string from a lang key. Checks the specified <c>ResourceManager</c>,
+        /// then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s. Throws on invalid key or 0 args
         /// </summary>
         public string FormatIcuRm(IGameMod? mod, params object?[] args) {
             if (args.Length == 0) throw new ArgumentException("Must pass at least 1 arg");
@@ -66,7 +66,7 @@ public static class StringExtensions {
         }
 
         /// <summary>
-        /// Gets an ICU MessageFormat-formatted string from a lang key from API.Lang.ResourceManager. Throws on invalid key or 0 args
+        /// Gets an ICU MessageFormat-formatted string from a lang key from <c>API.Lang.ResourceManager</c>. Throws on invalid key or 0 args
         /// </summary>
         public string FormatIcu(params object?[] args) => @this.FormatIcuRm(null, args);
     }

@@ -28,3 +28,7 @@ public class Buff : ComplexDescriptionEntity, IModItem {
             this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
             this.GetFormattedDescriptionInclusions(mod));
 }
+
+public static class Buffs {
+    // todo Defend, Shield
+}

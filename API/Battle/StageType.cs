@@ -16,7 +16,7 @@ public class StageType : IconEntity, IModItem {
         Core.StageTypes.Add(this);
     }
 
-    public string GetNameWithSign(int stage) => this.GetName() + " " + (stage > 0 ? "Up" : "Down");
+    public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 
     public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Buff);
 }

@@ -10,9 +10,9 @@ namespace API.Battle;
 
 public class Skill : ComplexDescriptionEntity, IModItem {
     public Range Range { get; }
-    public int Cost { get; }
+    public uint Cost { get; }
 
-    public int Cooldown { get; init; } = 0;
+    public uint Cooldown { get; init; } = 0;
     public Prio Prio { get; init; } = Prio.Normal;
     public bool IsBloom { get; init; } = false;
 
@@ -21,7 +21,7 @@ public class Skill : ComplexDescriptionEntity, IModItem {
 
     public IGameMod? Source { get; }
 
-    public Skill(IGameMod? source, string keyName, string keyDescription, Range range, int cost)
+    public Skill(IGameMod? source, string keyName, string keyDescription, Range range, uint cost)
         : base(keyName, keyDescription, "") {
         // todo null icon
         this.Source = source;
@@ -49,6 +49,10 @@ public class Skill : ComplexDescriptionEntity, IModItem {
 
         return Elements.Vis;
     }
+
+    // Returns the index a skill should start at based off of its role
+    // todo more complex logic
+    public uint GetStartingIndex() => this.ShouldTargetOpponent() ? 4u : 0;
 
     public static explicit operator SkillInstance(Skill skill) => new(skill);
 
@@ -89,10 +93,15 @@ public class Skill : ComplexDescriptionEntity, IModItem {
             : SkillTypes.Stat.GetName(mod) + Colors.White;
 
         return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(mod),
-            this.Range.GetName(mod), pow == 0 ? "" : ", " + Colors.Num + pow + " " + Colors.White + Lang.Pow,
+            this.Range.GetName(mod), pow == 0 ? "" : $", {Colors.Num}{pow} {Colors.White}{Lang.Pow}",
             this.Prio == 0
                 ? ""
-                : ", " + ((int) this.Prio).Format() + " " + Colors.White + Lang.Prio,
+                : $", {((int) this.Prio).Format()} {Colors.White}{Lang.Prio}",
             this.GetFormattedDescriptionInclusions(mod));
     }
+}
+
+public static class Skills {
+    public static readonly Skill Nothing = new(null, "SkillNothing", "Blank", Ranges.Other3ROrSelf, 0);
+    // todo Defend
 }

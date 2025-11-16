@@ -5,5 +5,5 @@ public class BuffInstance(Buff buff, uint turns, uint stacks) {
     public uint Turns { get; set; } = turns;
     public uint Stacks { get; set; } = stacks;
 
-    public string GetTurnsStacksFormatted() => "x" + this.Stacks + "(" + this.Turns + ")";
+    public string GetTurnsStacksFormatted() => $"x{this.Stacks}({this.Turns})";
 }

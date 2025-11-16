@@ -29,7 +29,17 @@ public class InputPrompts {
     public static readonly InputPrompt Inspect = new("InputInspect", Keybinds.Map);
 
     public static readonly InputPrompt Top = new("InputTop", Keybinds.PageL2);
-
     public static readonly InputPrompt Bottom = new("InputBottom", Keybinds.PageR2);
-    // todo
+
+    // Inspect menu
+    public static readonly InputPrompt InspectStat = new("InputInspectStat", Keybinds.Menu);
+    public static readonly InputPrompt InspectAffinity = new("InputInspectAffinity", Keybinds.Map);
+    public static readonly InputPrompt InspectEquip = new("InputInspectEquip", Keybinds.Confirm);
+    public static readonly InputPrompt InspectMult = new("InputInspectMult", Keybinds.PageL1);
+    public static readonly InputPrompt InspectMod = new("InputInspectMod", Keybinds.PageR1);
+    public static readonly InputPrompt InspectOther = new("InputInspectOther", Keybinds.Up, Keybinds.Down);
+    public static readonly InputPrompt InspectUnitL = new("Blank", Keybinds.PageL2);
+    public static readonly InputPrompt InspectUnitR = new("Blank", Keybinds.PageR2);
+    public static readonly InputPrompt InspectPageL = new("Blank", Keybinds.Left);
+    public static readonly InputPrompt InspectPageR = new("Blank", Keybinds.Right);
 }

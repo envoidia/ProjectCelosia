@@ -5,5 +5,7 @@ public static class BoolExtensions {
         public int ToInt() => @this ? 1 : 0;
 
         public int ToSign() => @this ? 1 : -1;
+
+        //public explicit operator int(bool @this) => @this ? 1 : 0; todo
     }
 }

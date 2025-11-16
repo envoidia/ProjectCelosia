@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using API;
@@ -9,7 +8,6 @@ using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
-using API.Debug;
 
 #if NATIVE_AOT
 using Microsoft.Xna.Framework.Content;
@@ -34,18 +32,12 @@ public class Game1 : Core {
     private static bool isDebugInfoEnabled;
 
     // temp
-    private static float[][] barProgs = [[1, 0.5f, 0.25f], [0.5f, 0.35f, 1], [0.75f, 1, 0.15f]];
-    private static int barIndex = -1;
+    //private static float[][] barProgs = [[1, 0.5f, 0.25f], [0.5f, 0.35f, 1], [0.75f, 1, 0.15f]];
+    //private static int barIndex = -1;
 
 #if NATIVE_AOT
     private static Celosia.Main celosiaMain = null!;
 #endif
-
-    private static readonly Label TestLabel = new() {
-        Position = new Vector2(1000, 800),
-        Text = "",
-        Width = 2000
-    };
 
     public Game1() : base("Project Celosia", 0, 0, false) {
 #if NATIVE_AOT
@@ -58,14 +50,14 @@ public class Game1 : Core {
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(2560, 1440), false, false, false));
+            new Point(1920, 1080), false, false, false));
     }
 
     protected override void Initialize() {
         // temp
-        GuiBoxesHigh.Add(new GuiBox(World.W2 - 880, World.W2 + 880, World.H2 - 400, World.H2 + 400));
-        GuiBoxChainsHigh.Add(new GuiBoxChain(400, 1600, 500, 600, 120, 140, 180, 200, 80, 60, 130));
-        GuiBoxBarsHigh.Add(new GuiBoxBar(400, 1600, 800, 900, Color.Red, Color.Green, Color.Blue));
+        //GuiBoxesHigh.Add(new GuiBox(World.W2 - 880, World.W2 + 880, World.H2 - 400, World.H2 + 400));
+        //GuiBoxChainsHigh.Add(new GuiBoxChain(400, 1600, 500, 600, 120, 140, 180, 200, 80, 60, 130));
+        //GuiBoxBarsHigh.Add(new GuiBoxBar(400, 1600, 800, 900, Color.Red, Color.Green, Color.Blue));
 
         base.Initialize();
 
@@ -81,8 +73,6 @@ public class Game1 : Core {
 #else
         ModLoader.InitializeAllMods();
 #endif
-
-        TestLabel.Text = "";
     }
 
     protected override void LoadContent() {
@@ -106,7 +96,9 @@ public class Game1 : Core {
     private void CheckInput(GameTime gameTime) {
         isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
 
-        if (Input.CheckInput(Keybinds.Confirm)) {
+        if (Input.InputDeviceChanged) UpdateInputPrompt();
+
+        /*if (Input.CheckInput(Keybinds.Confirm)) {
             GuiBoxesHigh[0].Dir *= -1;
             GuiBoxChainsHigh[0].Dir *= -1;
             GuiBoxBarsHigh[0].Dir *= -1;
@@ -116,7 +108,7 @@ public class Game1 : Core {
         if (Input.CheckInput(Keybinds.Map)) {
             barIndex++;
             GuiBoxBarsHigh[0].BarProgs = barProgs[barIndex];
-        }
+        }*/
 
         DebugMenu.HandleDebugInfo(isDebugInfoEnabled, gameTime);
 
@@ -131,7 +123,7 @@ public class Game1 : Core {
                         case MainMenu.Start:
                             // Overworld/battle
                             AddMenu(MenuType.Battle);
-                            BattleHandler.Init();
+                            BattleHandlerLib.Initialize();
                             break;
                         case MainMenu.Encyclopedia:
                             // todo
@@ -172,8 +164,6 @@ public class Game1 : Core {
             default: // todo might want to not throw here, for modders?
                 throw new ArgumentOutOfRangeException(NavPath.Peek().ToString());
         }
-
-        if (Input.InputDeviceChanged) UpdateInputPrompt();
     }
 
     protected override void Draw(GameTime gameTime) {
@@ -189,22 +179,19 @@ public class Game1 : Core {
 
         ShapeBatch.FillRectangle(new Vector2(300, 300), new Vector2(100, 100), new Color(255, 0, 0));
 
-        DrawRenderPriority(LabelsLow);
-        DrawRenderPriority(LabelsMed);
-        DrawRenderPriority(LabelsHigh);
+        // Draw all visible stages
+        foreach (Stage stage in Stages) {
+            if (stage.IsVisible) stage.Draw(gameTime);
+        }
 
         // temp
-        foreach (GuiBox label in GuiBoxesHigh) label.Draw(gameTime);
-        foreach (GuiBoxChain label in GuiBoxChainsHigh) label.Draw(gameTime);
-        foreach (GuiBoxBar label in GuiBoxBarsHigh) label.Draw(gameTime);
+        //foreach (GuiBox label in GuiBoxesHigh) label.Draw(gameTime);
+        //foreach (GuiBoxChain label in GuiBoxChainsHigh) label.Draw(gameTime);
+        //foreach (GuiBoxBar label in GuiBoxBarsHigh) label.Draw(gameTime);
 
         SpriteBatch.End();
         ShapeBatch.End();
 
         base.Draw(gameTime);
-    }
-
-    private static void DrawRenderPriority(List<Label> labels) {
-        foreach (Label label in labels) label.Draw(SpriteBatch);
     }
 }

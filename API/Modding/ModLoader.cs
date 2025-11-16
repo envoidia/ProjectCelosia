@@ -37,7 +37,7 @@ public static class ModLoader {
 
     private static void LoadSingleMod(string dllPath) {
         AssemblyLoadContext alc = new(Path.GetFileNameWithoutExtension(dllPath), true);
-        
+
         Assembly asm;
         using (FileStream fs = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
             asm = alc.LoadFromStream(fs);
@@ -54,7 +54,7 @@ public static class ModLoader {
 
         // Instantiate Main
         LoadedMods.Add((IGameMod) Activator.CreateInstance(modType)!);
-            
+
         Console.WriteLine(Lang.ModLoaded, Path.GetFileName(dllPath));
     }
 

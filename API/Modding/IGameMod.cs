@@ -1,5 +1,4 @@
 using System.Resources;
-using API.Extensions;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
@@ -16,7 +15,7 @@ public interface IGameMod {
     string Id { get; }
 
     /// <summary>
-    /// Ids for all mods that this mod depends on
+    /// IDs of all mods that this mod depends on
     /// </summary>
     string[] DependencyIds => [];
 
@@ -26,12 +25,12 @@ public interface IGameMod {
     string Version { get; }
 
     /// <summary>
-    /// Mod's Lang.ResourceManager
+    /// Mod's <c>Lang.ResourceManager</c>
     /// </summary>
     ResourceManager ResourceManager { get; }
 
     /// <summary>
-    /// Called once, on mod load
+    /// Called once, on mod load.
     /// </summary>
     void Initialize();
 
@@ -39,9 +38,4 @@ public interface IGameMod {
     /// Called every frame
     /// </summary>
     void Update(GameTime gameTime);
-
-    /// <summary>
-    /// Returns this mod's name
-    /// </summary>
-    string GetName() => ModNameKey.GetLang(this);
 }

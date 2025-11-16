@@ -31,6 +31,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Set `else`/`catch` statements against the closing bracket of the `if`/`try` statement
 - Bracketless statements must be contained to a single line. They should generally be avoided
 - Any `else` statement combination is allowed (`else if`, `else for`, etc)
+- In switch statements, inline the case, the action, and `break`/`return` if able. If not, don't inline any of them
 
 ## General
 - For clarity, always use `this` when able
@@ -44,6 +45,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Use the most restrictive possible access modifier
 - Large functions should be split apart when possible
 - Use `is`/`is not` over `==`/`!=` when checking for types or `null`
+- In switch statements, prefer `return` over `break` when able
 
 # Numbers
 - Default to `uint`

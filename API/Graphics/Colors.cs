@@ -29,5 +29,5 @@ public static class Colors {
     public const string Lux = "/c[#fffbb7]";
 
     // Icons
-    public const string ShieldIcon = Shield + "[+vibrating-shield]";
+    public const string ShieldIcon = $"{Shield}[+vibrating-shield]";
 }

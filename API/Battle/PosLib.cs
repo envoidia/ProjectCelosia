@@ -3,13 +3,15 @@ using System.Collections.Generic;
 namespace API.Battle;
 
 public static class PosLib {
+    public const uint InvalidPos = uint.MaxValue;
+
     // Returns the pos off spaces below this one, or uint.MaxValue if it's invalid
     public static uint GetUpDown(uint pos, int off) {
         uint posNew = (uint) (pos + off);
         switch (pos) {
             case < 4 when posNew > 3:
             case >= 4 when posNew is < 4 or > 7:
-                return uint.MaxValue;
+                return InvalidPos;
             default:
                 return posNew;
         }
@@ -40,8 +42,4 @@ public static class PosLib {
     // Returns the Side of pos2 relative to the Side of pos1
     public static Side GetRelativeSide(uint pos1, uint pos2) => pos2 < 4 ? pos1 < 4 ? Side.Ally : Side.Opponent
         : pos1 >= 4 ? Side.Ally : Side.Opponent;
-
-    // Returns the index a skill should start at based off of its role
-    // todo more complex logic
-    public static uint GetStartingIndex(Skill skill) => skill.ShouldTargetOpponent() ? 4u : 0;
 }

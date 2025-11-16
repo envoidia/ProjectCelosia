@@ -1,7 +1,9 @@
 namespace API.Graphics;
 
 public enum RenderPriority {
+    Base,
     Low,
     Med,
-    High
+    High,
+    Super
 }
