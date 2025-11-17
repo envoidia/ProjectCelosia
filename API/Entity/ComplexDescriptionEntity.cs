@@ -17,7 +17,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
     private string[] GetDescriptionArgs(IGameMod? mod = null) {
         string[] args = new string[this.DescriptionArgs.Length];
 
-        for (uint i = 0; i < this.DescriptionArgs.Length; i++) {
+        for (int i = 0; i < this.DescriptionArgs.Length; i++) {
             args[i] = this.DescriptionArgs[i].GetString(mod);
         }
 

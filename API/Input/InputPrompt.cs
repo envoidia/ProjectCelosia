@@ -3,7 +3,7 @@ using API.Extensions;
 
 namespace API.Input;
 
-public class InputPrompt(string keyName, params Keybind[] keybinds) {
+public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
     public Keybind[] Keybinds => keybinds;
 
     public string GetText() {
@@ -15,7 +15,7 @@ public class InputPrompt(string keyName, params Keybind[] keybinds) {
     }
 }
 
-public class InputPrompts {
+public static class InputPrompts {
     public static readonly InputPrompt Confirm = new("InputConfirm", Keybinds.Confirm);
     public static readonly InputPrompt Back = new("InputBack", Keybinds.Back);
     public static readonly InputPrompt BackLog = new("InputBack", Keybinds.Back, Keybinds.Menu);

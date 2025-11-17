@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace API.Graphics;
 
-public class TextureFragmentColored : FontStashSharp.RichText.IRenderable {
+public sealed class TextureFragmentColored : FontStashSharp.RichText.IRenderable {
     public Texture2D Texture { get; }
     public Rectangle Region { get; }
 

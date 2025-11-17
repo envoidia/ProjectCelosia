@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public class GuiBoxChain(int l, int r, int t, int b, params int[] divisions) : GuiBox(l, r, t, b, 2) {
+public sealed class GuiBoxChain(int l, int r, int t, int b, params int[] divisions) : GuiBox(l, r, t, b, 2) {
     // Width of each division (not counting the first)
     public int[] Divisions {
         get;
@@ -35,7 +35,7 @@ public class GuiBoxChain(int l, int r, int t, int b, params int[] divisions) : G
         if (this.Prog == 0) return;
 
         int divTotal = 0;
-        for (uint i = 0; i < this.Divisions.Length; i++) {
+        for (int i = 0; i < this.Divisions.Length; i++) {
             int offset = (int) (this._selectedOffset * this._selectedProg[i]);
 
             int l = this.L + divTotal;

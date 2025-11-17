@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class Label : RenderObject {
+public sealed class Label : RenderObject {
     private RichTextLayout RichTextLayout { get; set; } = new();
 
     public string Text {

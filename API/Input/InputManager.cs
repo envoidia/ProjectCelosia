@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Input;
 
-public class InputManager {
+public sealed class InputManager {
     // todo private?
     internal KeyboardState KeyboardState { get; private set; }
 
@@ -40,7 +40,7 @@ public class InputManager {
     /// </summary>
     private const float MinAxisDist = 0.4f;
 
-    /*for (uint i = 0; i < 4; i++)
+    /*for (int i = 0; i < 4; i++)
         {
             GamePads[i] = new GamePadState((PlayerIndex)i);
         }*/
@@ -62,6 +62,7 @@ public class InputManager {
     /// <summary>
     /// Call to check for inputs from any number of <c>Keybind</c>s
     /// </summary>
+    // todo compare to foreach with .NET 10
     public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) =>
         keybinds.Any(keybind => this.IsKeybindPressed(allowHold, holdDelay, keybind));
 

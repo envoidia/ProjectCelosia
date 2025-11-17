@@ -5,14 +5,14 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class Buff : ComplexDescriptionEntity, IModItem {
+public sealed class Buff : ComplexDescriptionEntity, IModItem {
     public BuffType BuffType { get; }
-    public uint MaxStacks { get; }
+    public int MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }
 
     public IGameMod? Source { get; }
 
-    public Buff(IGameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, uint maxStacks,
+    public Buff(IGameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, int maxStacks,
         params IBuffEffect[] buffEffects) : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.BuffType = buffType;

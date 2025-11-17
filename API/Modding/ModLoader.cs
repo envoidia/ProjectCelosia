@@ -26,13 +26,7 @@ public static class ModLoader {
     private static void LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.TopDirectoryOnly);
 
-        foreach (string dllPath in dllFiles) {
-            try {
-                LoadSingleMod(dllPath);
-            } catch (Exception ex) {
-                Console.WriteLine(Lang.ErrModLoadFail, Path.GetFileName(dllPath), ex.Message);
-            }
-        }
+        foreach (string dllPath in dllFiles) LoadSingleMod(dllPath);
     }
 
     private static void LoadSingleMod(string dllPath) {
@@ -45,12 +39,8 @@ public static class ModLoader {
 
         // Find Main class
         Type? modType = asm.GetTypes()
-            .FirstOrDefault(type => (type.Name == "Main") && typeof(IGameMod).IsAssignableFrom(type));
-
-        // Couldn't find Main
-        if (modType is null) {
-            throw new ModLoadException(string.Format(Lang.ErrModCantFindMain, Path.GetFileName(dllPath)));
-        }
+            .FirstOrDefault(type => (type.Name == "Main") && typeof(IGameMod).IsAssignableFrom(type)) 
+            ?? throw new ModLoadException(string.Format(Lang.ErrModCantFindMain, Path.GetFileName(dllPath)));
 
         // Instantiate Main
         LoadedMods.Add((IGameMod) Activator.CreateInstance(modType)!);

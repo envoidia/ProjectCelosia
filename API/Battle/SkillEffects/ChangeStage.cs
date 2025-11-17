@@ -5,7 +5,7 @@ using API.Graphics;
 
 namespace API.Battle.SkillEffects;
 
-public class ChangeStage(StageType stageType, uint turns, int stacks) : SkillEffect(descInclusion: stageType) {
+public sealed class ChangeStage(StageType stageType, int turns, int stacks) : SkillEffect(descInclusion: stageType) {
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
         if (this.MainTargetOnly && !isMainTarget) return ResultType.PseudoSuccess;
 
@@ -16,8 +16,8 @@ public class ChangeStage(StageType stageType, uint turns, int stacks) : SkillEff
         Unit unit = this.GiveToSelf ? self : target;
 
         // Apply self's mods
-        uint turnsMod = (uint) (turns + self.GetDurationModBuffTypeDealt(BattleLib.GetStageBuffType(stacks)) +
-                                unit.GetDurationModBuffTypeTaken(BattleLib.GetStageBuffType(stacks)));
+        int turnsMod = turns + self.GetDurationModBuffTypeDealt(BattleLib.GetStageBuffType(stacks)) +
+                       unit.GetDurationModBuffTypeTaken(BattleLib.GetStageBuffType(stacks));
 
         int stacksMod = stacks + self.GetStacksModBuffTypeDealt(BattleLib.GetStageBuffType(stacks)) +
                         unit.GetStacksModBuffTypeTaken(BattleLib.GetStageBuffType(stacks));
@@ -38,7 +38,7 @@ public class ChangeStage(StageType stageType, uint turns, int stacks) : SkillEff
         }
 
         // Refresh turns
-        uint turnsOld = unit.GetStageTurns(stageType);
+        int turnsOld = unit.GetStageTurns(stageType);
         if (((stageOld >= 0) && (stacksMod >= 0)) || ((stageOld <= 0) && (stacksMod <= 0) && (turnsMod > turnsOld))) {
             unit.SetStageTurns(stageType, turnsMod);
             if (stageNew != stageOld) {

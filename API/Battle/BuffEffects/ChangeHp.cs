@@ -4,25 +4,25 @@ using API.Graphics;
 
 namespace API.Battle.BuffEffects;
 
-public class ChangeHp(int change, bool isImmediate = false, bool isPercentage = true, bool isPierce = false)
+public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercentage = true, bool isPierce = false)
     : IBuffEffect {
     // todo this might need to display the name if immediate
-    public void OnGive(Unit self, uint stacks) {
+    public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;
         BattleHandlerLib.AppendToLog(this.Calc(self, stacks));
     }
 
-    public string[] OnTurnEnd(Unit self, uint stacks) => !isImmediate ? this.Calc(self, stacks) : [];
+    public string[] OnTurnEnd(Unit self, int stacks) => !isImmediate ? this.Calc(self, stacks) : [];
 
-    private string[] Calc(Unit self, uint stacks) {
+    private string[] Calc(Unit self, int stacks) {
         // Damage
         if (change < 0) {
             float multDoTDmgTaken = isImmediate ? 1 : self.GetMult(Mults.DoTDmgTaken);
 
-            uint dmg = isPercentage
-                ? (uint) Math.Abs(self.GetBaseStat(Stats.Hp) * (change / 1000d) * stacks * self.GetMult(Mults.DmgTaken)
+            int dmg = isPercentage
+                ? (int) Math.Abs(self.GetBaseStat(Stats.Hp) * (change / 1000d) * stacks * self.GetMult(Mults.DmgTaken)
                                   * multDoTDmgTaken * self.GetMult(Mults.PercentageDmgTaken))
-                : (uint) (change * self.GetMult(Mults.DmgTaken) * multDoTDmgTaken);
+                : (int) (change * self.GetMult(Mults.DmgTaken) * multDoTDmgTaken);
 
             self.OnTakeDamage(self, dmg);
 
@@ -30,17 +30,17 @@ public class ChangeHp(int change, bool isImmediate = false, bool isPercentage = 
         }
 
         // Healing
-        uint hpOld = self.Hp;
-        uint hpMax = self.GetBaseStat(Stats.Hp);
-        uint heal = (uint) (change * (isPercentage ? hpMax : 1) * stacks * self.GetMult(Mults.HealingTaken));
-        uint hpNew = Math.Max(hpOld, Math.Min(hpOld + heal, hpMax));
+        int hpOld = self.Hp;
+        int hpMax = self.GetBaseStat(Stats.Hp);
+        int heal = (int) (change * (isPercentage ? hpMax : 1) * stacks * self.GetMult(Mults.HealingTaken));
+        int hpNew = Math.Max(hpOld, Math.Min(hpOld + heal, hpMax));
 
         if (hpNew <= hpOld) return [];
 
         self.OnTakeHeal(self, heal, 0);
 
         self.Hp = hpNew;
-        uint changeFull = Math.Max(hpNew - hpOld, 0);
+        int changeFull = Math.Max(hpNew - hpOld, 0);
 
         return [
             string.Format(Lang.LogChangeHp, "", hpOld.Format(Colors.Hp), hpNew.Format(Colors.Hp),

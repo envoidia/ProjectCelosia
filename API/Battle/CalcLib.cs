@@ -4,10 +4,10 @@ using API.Graphics;
 
 namespace API.Battle;
 
-public static class Calcs {
+public static class CalcLib {
     public static string ChangeSp(Unit unit, int change) {
-        uint spOld = unit.Sp;
-        uint spNew = (uint) Math.Clamp(spOld + (change * unit.GetMult(Mults.SpGain)), 0, 1000);
+        int spOld = unit.Sp;
+        int spNew = (int) Math.Clamp(spOld + (change * unit.GetMult(Mults.SpGain)), 0, 1000);
 
         if (spNew != spOld) {
             unit.Sp = spNew;
@@ -19,8 +19,8 @@ public static class Calcs {
     }
 
     public static string ChangeBloom(Team team, Side side, int change) {
-        uint bloomOld = team.Bloom;
-        uint bloomNew = (uint) Math.Clamp(bloomOld + change, 0, 1000);
+        int bloomOld = team.Bloom;
+        int bloomNew = Math.Clamp(bloomOld + change, 0, 1000);
 
         if (bloomNew != bloomOld) {
             team.Bloom = bloomNew;

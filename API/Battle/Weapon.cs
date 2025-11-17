@@ -5,7 +5,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class Weapon : ComplexDescriptionEntity, IEquippable {
+public sealed class Weapon : ComplexDescriptionEntity, IEquippable {
     public required FrozenDictionary<Element, int> Affinities { get; init; }
 
     public Skill[] Skills { get; init; } = [];

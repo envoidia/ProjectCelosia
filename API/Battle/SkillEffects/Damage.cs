@@ -1,11 +1,11 @@
 namespace API.Battle.SkillEffects;
 
-public class Damage : SkillEffect {
+public sealed class Damage : SkillEffect {
     public ResultType MinResultType { get; init; } = ResultType.HitEffectBlock;
     public bool IsPierce { get; init; } = false;
     public bool IsFollowUp { get; init; } = false;
 
-    public Damage(uint pow, SkillType skillType, Element element) : base(pow, skillType) => this.Element = element;
+    public Damage(int pow, SkillType skillType, Element element) : base(pow, skillType) => this.Element = element;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
         // If the previous hit failed entirely, this one wouldn't have been reached. If this return statement is ever
@@ -15,8 +15,8 @@ public class Damage : SkillEffect {
             return ResultType.PseudoSuccess;
         }
 
-        uint atk;
-        uint def;
+        int atk;
+        int def;
 
         if (this.SkillType == SkillTypes.Str) {
             atk = self.GetStat(Stats.Str);
@@ -45,14 +45,14 @@ public class Damage : SkillEffect {
             multFollowUpDmgTaken = target.GetMult(Mults.FollowUpDmgTaken);
         }
 
-        uint dmg;
+        int dmg;
 
         // No damage on affinity immunity
         if (affMultDmgTaken == 0) {
             dmg = 0;
         } else {
             // todo null safety
-            dmg = BattleLib.StatMult * (uint) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
+            dmg = BattleLib.StatMult * (int) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
                                                self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) *
                                                self.GetMult(this.Element.MultDmgDealt) *
                                                target.GetMult(this.Element.MultDmgTaken) * multWeakDmgDealt *

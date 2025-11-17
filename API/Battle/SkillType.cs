@@ -4,7 +4,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class SkillType : NamedEntity, IModItem {
+public sealed class SkillType : NamedEntity, IModItem {
     public IGameMod? Source { get; }
 
     public SkillType(IGameMod? source, string keyName) : base(keyName) {

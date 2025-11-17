@@ -11,4 +11,4 @@ public enum ResultType {
     PseudoSuccess
 }
 
-public record Result(ResultType ResultType, params List<string> Messages);
+public sealed record Result(ResultType ResultType, params List<string> Messages);

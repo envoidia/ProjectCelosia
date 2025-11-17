@@ -6,18 +6,18 @@ using static API.Battle.Target;
 
 namespace API.Battle;
 
-public class Range : NamedEntity, IModItem {
-    public uint RangeVertical { get; }
+public sealed class Range : NamedEntity, IModItem {
+    public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] Targets { get; }
 
     public bool CanTargetSelf { get; init; } = false;
-    public uint TargetCount { get; init; } = 1;
+    public int TargetCount { get; init; } = 1;
 
     public IGameMod? Source { get; }
 
 
-    public Range(IGameMod? source, string keyName, uint rangeVertical, Side side, params Target[] targets) :
+    public Range(IGameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) :
         base(keyName) {
         this.Source = source;
         this.RangeVertical = rangeVertical;
@@ -26,8 +26,8 @@ public class Range : NamedEntity, IModItem {
         Core.Ranges.Add(this);
     }
 
-    public uint[] GetTargetPositions(uint posSelf, uint posTarget) {
-        List<uint> pos = [];
+    public int[] GetTargetPositions(int posSelf, int posTarget) {
+        List<int> pos = [];
 
         foreach (Target target in this.Targets) {
             switch (target) {

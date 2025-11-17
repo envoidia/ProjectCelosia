@@ -7,9 +7,9 @@ using API.Util;
 
 namespace API.Battle;
 
-public class Mult : NamedEntity, IModItem {
+public sealed class Mult : NamedEntity, IModItem {
     public bool IsPositive { get; }
-    public uint MinValue { get; init; } = 100;
+    public int MinValue { get; init; } = 100;
 
     public IGameMod? Source { get; }
 
@@ -19,7 +19,7 @@ public class Mult : NamedEntity, IModItem {
         Core.Mults.Add(this);
     }
 
-    public string Format(uint val) {
+    public string Format(int val) {
         (string pos, string neg) = TextLib.GetColors(this.IsPositive);
 
         return Math.Max(val, this.MinValue)

@@ -3,8 +3,8 @@ using API.Entity;
 namespace API.Battle.SkillEffects;
 
 // todo arbitrary predicates (here and IBuffEffect)
-public abstract class SkillEffect(uint pow = 0, SkillType? skillType = null, IconEntity? descInclusion = null) {
-    public uint Pow => pow;
+public abstract class SkillEffect(int pow = 0, SkillType? skillType = null, IconEntity? descInclusion = null) {
+    public int Pow => pow;
     public SkillType? SkillType => skillType;
     public DescriptionEntity? DescInclusion { get; init; } = descInclusion;
 

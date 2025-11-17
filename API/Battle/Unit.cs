@@ -9,23 +9,23 @@ using MonoGame.Extended.Collections;
 
 namespace API.Battle;
 
-public class Unit {
+public sealed class Unit {
     public UnitType UnitType { get; }
-    public uint Lvl { get; }
-    public uint Hp { get; set; }
-    public uint Sp { get; set; } = 200;
+    public int Lvl { get; }
+    public int Hp { get; set; }
+    public int Sp { get; set; } = 200;
 
     // Position on the battlefield
     // 0 4
     // 1 5
     // 2 6
     // 3 7
-    public uint Pos { get; set; }
+    public int Pos { get; set; }
 
     // Shield is hit before HP, and Defend before Shield
     // Together they cannot exceed max HP
-    public uint Shield { get; set; } = 0;
-    public uint Defend { get; set; } = 0;
+    public int Shield { get; set; } = 0;
+    public int Defend { get; set; } = 0;
 
     public List<SkillInstance> SkillInstances { get; }
     public List<BuffInstance> BuffInstances => [];
@@ -33,13 +33,13 @@ public class Unit {
 
     // Stats
     // _statsMult is treated as multipliers applied to _stats, in 10ths of a % (1000 = 100%), min 10%
-    private readonly Dictionary<Stat, uint> _stats;
-    private readonly Dictionary<Stat, uint> _statsMult = new();
+    private readonly Dictionary<Stat, int> _stats;
+    private readonly Dictionary<Stat, int> _statsMult = new();
     private readonly Dictionary<Element, int> _affinities;
     private readonly Dictionary<StageType, int> _stages = new();
-    private readonly Dictionary<StageType, uint> _stageTurns = new();
-    private readonly Dictionary<Mult, uint> _mults = new();
-    private readonly Dictionary<BoolStat, uint> _boolStats = new();
+    private readonly Dictionary<StageType, int> _stageTurns = new();
+    private readonly Dictionary<Mult, int> _mults = new();
+    private readonly Dictionary<BoolStat, int> _boolStats = new();
     private readonly Dictionary<StatMod, int> _statMods = new();
 
     // Equipped item (Accessory or Weapon)
@@ -52,9 +52,9 @@ public class Unit {
         }
     }
 
-    public uint ExtraActions { get; set; } = 0;
+    public int ExtraActions { get; set; } = 0;
 
-    public Unit(UnitType unitType, uint lvl, IEquippable equipped, uint pos, params Skill[] skills) {
+    public Unit(UnitType unitType, int lvl, IEquippable equipped, int pos, params Skill[] skills) {
         this.UnitType = unitType;
         this.Lvl = lvl;
         this.Pos = pos;
@@ -94,19 +94,19 @@ public class Unit {
     }
 
     // Stats
-    public uint GetStatWithStage(Stat stat, int stage) {
+    public int GetStatWithStage(Stat stat, int stage) {
         if (stat == Stats.Hp) return this.Hp;
 
-        return this._stats.GetValueOrDefault(stat, 0u) *
-               (Math.Max(this._statsMult.GetValueOrDefault(stat, 1000u), 100) / 1000) *
-               (uint) (stage / 10 / (stage < 0 ? 2 : 1));
+        return this._stats.GetValueOrDefault(stat, 0) *
+               (Math.Max(this._statsMult.GetValueOrDefault(stat, 1000), 100) / 1000) *
+               (stage / 10 / (stage < 0 ? 2 : 1));
     }
 
-    public uint GetStat(Stat stat) => this.GetStatWithStage(stat, this.GetStage(stat.StageType));
-    public uint GetBaseStat(Stat stat) => this._stats.GetValueOrDefault(stat, 0u);
+    public int GetStat(Stat stat) => this.GetStatWithStage(stat, this.GetStage(stat.StageType));
+    public int GetBaseStat(Stat stat) => this._stats.GetValueOrDefault(stat, 0);
 
-    public uint GetStatMult(Stat stat) => this._statsMult.GetValueOrDefault(stat, 1000u);
-    public void SetStatMult(Stat stat, uint set) => this._statsMult[stat] = set;
+    public int GetStatMult(Stat stat) => this._statsMult.GetValueOrDefault(stat, 1000);
+    public void SetStatMult(Stat stat, int set) => this._statsMult[stat] = set;
 
     // Affinities
     public int GetAffinity(Element element) => this._affinities.GetValueOrDefault(element, 0);
@@ -130,8 +130,8 @@ public class Unit {
     public int GetStage(StageType stageType) => this._stages.GetValueOrDefault(stageType, 0);
     public void SetStage(StageType stageType, int set) => this._stages[stageType] = set;
 
-    public uint GetStageTurns(StageType stageType) => this._stageTurns.GetValueOrDefault(stageType, 0u);
-    public void SetStageTurns(StageType stageType, uint set) => this._stageTurns[stageType] = set;
+    public int GetStageTurns(StageType stageType) => this._stageTurns.GetValueOrDefault(stageType, 0);
+    public void SetStageTurns(StageType stageType, int set) => this._stageTurns[stageType] = set;
 
     public string GetTurnsStacksFormatted(StageType stageType) =>
         $"{this.GetStage(stageType).Format()}({this.GetStageTurns(stageType)})";
@@ -139,16 +139,16 @@ public class Unit {
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
         builder.Append(Colors.White).Append(" (");
-        uint statCount = (uint) stageType.Stats.Length;
-        for (uint i = 0; i < statCount; i++) {
+        int statCount = stageType.Stats.Length;
+        for (int i = 0; i < statCount; i++) {
             Stat stat = stageType.Stats[i];
-            uint statDefault = this._stats[stat];
-            uint statOld = this.GetStat(stat);
-            uint statNew = this.GetStatWithStage(stat, stageNew);
-            int change = (int) (statNew - statOld);
+            int statDefault = this._stats[stat];
+            int statOld = this.GetStat(stat);
+            int statNew = this.GetStatWithStage(stat, stageNew);
+            int change = statNew - statOld;
             builder.Append(string.Format(Lang.LogStageStat, Colors.Stat + stat.KeyName,
-                statOld.Format(statDefault),
-                statNew.Format(statDefault),
+                statOld.Format(statDefault.ToString()),
+                statNew.Format(statDefault.ToString()),
                 statDefault.Format(Colors.Num), change.Format()));
             builder.Append(i == (statCount - 1) ? ")" : ", ");
         }
@@ -157,14 +157,14 @@ public class Unit {
     }
 
     // Mults
-    public float GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u) / 1000f;
-    public uint GetRawMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000u);
-    public void SetMult(Mult mult, uint set) => this._mults[mult] = set; // todo ensure these dont crash
+    public float GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000) / 1000f;
+    public int GetRawMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000);
+    public void SetMult(Mult mult, int set) => this._mults[mult] = set; // todo ensure these dont crash
 
     public string GetMultsString() {
         StringBuilder str = new();
         foreach (Mult mult in Core.Mults) {
-            uint curMult = this._mults[mult];
+            int curMult = this._mults[mult];
             str.Append(mult.Format(curMult)).Append('\n');
         }
 
@@ -172,28 +172,28 @@ public class Unit {
     }
 
     // BoolStats
-    public uint GetBoolStat(BoolStat boolStat) => this._boolStats.GetValueOrDefault(boolStat, 1000u);
-    public void SetBoolStat(BoolStat boolStat, uint set) => this._boolStats[boolStat] = set;
+    public int GetBoolStat(BoolStat boolStat) => this._boolStats.GetValueOrDefault(boolStat, 1000);
+    public void SetBoolStat(BoolStat boolStat, int set) => this._boolStats[boolStat] = set;
 
     public bool IsBoolStat(BoolStat boolStat) {
         if (boolStat == BoolStats.EquipDisabled) {
-            return (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabled, 0u) > 0) &&
-                   (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0u) <= 0);
+            return (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabled, 0) > 0) &&
+                   (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0) <= 0);
         }
 
         if (boolStat == BoolStats.UnableToAct) {
-            return (this._boolStats.GetValueOrDefault(BoolStats.UnableToAct, 0u) > 0) &&
-                   (this._boolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0u) <= 0);
+            return (this._boolStats.GetValueOrDefault(BoolStats.UnableToAct, 0) > 0) &&
+                   (this._boolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0) <= 0);
         }
 
-        return this._boolStats.GetValueOrDefault(boolStat, 0u) > 0;
+        return this._boolStats.GetValueOrDefault(boolStat, 0) > 0;
     }
 
     public bool IsImmuneToBoolStat(BoolStat boolStat) =>
         ((boolStat == BoolStats.UnableToAct) &&
-         (this._boolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0u) > 0))
+         (this._boolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0) > 0))
         || ((boolStat == BoolStats.EquipDisabled) &&
-            (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0u) > 0));
+            (this._boolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0) > 0));
 
     public string GetOtherStatsString() {
         StringBuilder str = new();
@@ -239,7 +239,7 @@ public class Unit {
     }
 
     // BuffEffects
-    private delegate void BuffEffectNotifier(IBuffEffect effect, Unit self, Unit target, uint stacks);
+    private delegate void BuffEffectNotifier(IBuffEffect effect, Unit self, Unit target, int stacks);
 
     private void NotifyBuffEffects(Unit target, BuffEffectNotifier notifier) {
         // Handle Passives
@@ -263,28 +263,28 @@ public class Unit {
     public void OnTargetedBySkill(Unit target, Skill skill) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnTargetedBySkill(s, t, stacks, skill));
 
-    public void OnDealDamage(Unit target, uint damage, Element element) => this.NotifyBuffEffects(target,
+    public void OnDealDamage(Unit target, int damage, Element element) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnDealDamage(s, t, stacks, damage, element));
 
-    public void OnTakeDamage(Unit target, uint damage, Element? element = null) => this.NotifyBuffEffects(target,
+    public void OnTakeDamage(Unit target, int damage, Element? element = null) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnTakeDamage(s, t, stacks, damage, element));
 
-    public void OnDealHeal(Unit target, uint heal, uint overheal) => this.NotifyBuffEffects(target,
+    public void OnDealHeal(Unit target, int heal, int overheal) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnDealHeal(s, t, stacks, heal, overheal));
 
-    public void OnTakeHeal(Unit target, uint heal, uint overheal) => this.NotifyBuffEffects(target,
+    public void OnTakeHeal(Unit target, int heal, int overheal) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnTakeHeal(s, t, stacks, heal, overheal));
 
-    public void OnDealShield(Unit target, uint turns, uint heal) => this.NotifyBuffEffects(target,
+    public void OnDealShield(Unit target, int turns, int heal) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnDealShield(s, t, stacks, turns, heal));
 
-    public void OnTakeShield(Unit target, uint turns, uint heal) => this.NotifyBuffEffects(target,
+    public void OnTakeShield(Unit target, int turns, int heal) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnTakeShield(s, t, stacks, turns, heal));
 
-    public void OnGiveBuff(Unit target, Buff buff, uint turns, uint stacksChange) => this.NotifyBuffEffects(target,
+    public void OnGiveBuff(Unit target, Buff buff, int turns, int stacksChange) => this.NotifyBuffEffects(target,
         (effect, s, t, stacks) => effect.OnGiveBuff(s, t, stacks, buff, turns, stacksChange));
 
-    public void OnChangeStage(Unit target, StageType stageType, uint turns, int stacksChange) =>
+    public void OnChangeStage(Unit target, StageType stageType, int turns, int stacksChange) =>
         this.NotifyBuffEffects(target,
             (effect, s, t, stacks) => effect.OnChangeStage(s, t, stacks, stageType, turns, stacksChange));
 
@@ -305,7 +305,7 @@ public class Unit {
         // Buffs; iterate backwards so they can be removed
         for (int i = this.BuffInstances.Count - 1; i >= 0; i--) {
             BuffInstance buffInstance = this.BuffInstances[i];
-            uint turns = buffInstance.Turns;
+            int turns = buffInstance.Turns;
 
             // 1000+ turns == infinite
             if (turns is >= 2 and < 1000) {
@@ -329,9 +329,9 @@ public class Unit {
         }
     }
 
-    public Result Damage(uint dmg, bool pierce = false, bool useName = true) {
-        uint dmgFull = dmg;
-        uint defendOld = this.Defend;
+    public Result Damage(int dmg, bool pierce = false, bool useName = true) {
+        int dmgFull = dmg;
+        int defendOld = this.Defend;
         List<string> msg = [];
         string name = useName ? $"{this.FormatName(false)} " : "";
         string nameS = useName ? $"{this.FormatName()} " : "";
@@ -361,17 +361,17 @@ public class Unit {
             if ((this.Shield > 0) && (dmg > 0)) {
                 // Only hit Shield
                 if (this.Shield > dmg) {
-                    uint shieldOld = this.Shield;
+                    int shieldOld = this.Shield;
                     this.Shield -= dmg;
                     return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield,
                         nameS, (defendOld + shieldOld).Format(Colors.Shield), this.Shield.Format(Colors.Shield),
-                        this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-(int) dmgFull).Format()));
+                        this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-dmgFull).Format()));
                 }
 
                 // Destroy Shield and proceed to HP
                 msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(Colors.Shield),
                     Colors.Shield + 0, this.GetBaseStat(Stats.Hp).Format(Colors.Hp),
-                    (-(int) (defendOld + this.Shield)).Format()));
+                    (-(defendOld + this.Shield)).Format()));
                 dmg -= this.Shield;
                 this.Shield = 0;
                 if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
@@ -381,11 +381,11 @@ public class Unit {
             }
         }
 
-        uint hpOld = this.Hp;
+        int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._stats[Stats.Hp]);
-        uint hpNew = this.Hp;
+        int hpNew = this.Hp;
         msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp), hpNew.Format(Colors.Hp),
-            this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-(int) dmg).Format()));
+            this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-dmg).Format()));
 
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {

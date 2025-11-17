@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 namespace API.Menu;
 
 public static class DebugMenu {
-    private const uint Mb = 1024 * 1024;
+    private const int Mb = 1024 * 1024;
 
     private static readonly Process Process = Process.GetCurrentProcess();
 
@@ -64,10 +64,10 @@ public static class DebugMenu {
         // Update timed text
         if (timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
+        // todo is it at all reasonable to stackalloc this (probably not)
         DebugInfoR.Text = string.Format(Lang.DebugInfoR,
             $"{(int) (1 / avgFrameTime.TotalSeconds)}({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})", // todo temp
             GC.GetTotalMemory(false) / Mb,
-            "todo",
             "todo",
             string.Join(", ", Core.NavPath.Reverse()),
             "todo",

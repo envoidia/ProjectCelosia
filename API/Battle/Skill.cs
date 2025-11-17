@@ -8,11 +8,11 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class Skill : ComplexDescriptionEntity, IModItem {
+public sealed class Skill : ComplexDescriptionEntity, IModItem {
     public Range Range { get; }
-    public uint Cost { get; }
+    public int Cost { get; }
 
-    public uint Cooldown { get; init; } = 0;
+    public int Cooldown { get; init; } = 0;
     public Prio Prio { get; init; } = Prio.Normal;
     public bool IsBloom { get; init; } = false;
 
@@ -21,7 +21,7 @@ public class Skill : ComplexDescriptionEntity, IModItem {
 
     public IGameMod? Source { get; }
 
-    public Skill(IGameMod? source, string keyName, string keyDescription, Range range, uint cost)
+    public Skill(IGameMod? source, string keyName, string keyDescription, Range range, int cost)
         : base(keyName, keyDescription, "") {
         // todo null icon
         this.Source = source;
@@ -52,7 +52,7 @@ public class Skill : ComplexDescriptionEntity, IModItem {
 
     // Returns the index a skill should start at based off of its role
     // todo more complex logic
-    public uint GetStartingIndex() => this.ShouldTargetOpponent() ? 4u : 0;
+    public int GetStartingIndex() => this.ShouldTargetOpponent() ? 4 : 0;
 
     public static explicit operator SkillInstance(Skill skill) => new(skill);
 
@@ -71,12 +71,12 @@ public class Skill : ComplexDescriptionEntity, IModItem {
 
     // todo stat skills
     public override string GetDescriptionWithInclusions(IGameMod? mod = null) {
-        uint pow = 0;
+        int pow = 0;
         HashSet<string> skillTypes = [];
         foreach (SkillEffect skillEffect in this.SkillEffects) {
             // todo better pow logic
             // multihit should output eg 60+20*2
-            uint effectPow = skillEffect.Pow;
+            int effectPow = skillEffect.Pow;
             if (effectPow > pow) {
                 pow = effectPow;
             }

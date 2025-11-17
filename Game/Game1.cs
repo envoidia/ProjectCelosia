@@ -20,13 +20,13 @@ using static API.Menu.MenuType;
 
 namespace Game;
 
-public class Game1 : Core {
+public sealed class Game1 : Core {
     // Rendering
     private static Texture2D bg = null!;
 
     // Menu stuff
-    private static uint index;
-    private const uint OptCountMain = (uint) MainMenu.LastValue - 1;
+    private static int index;
+    private const int OptCountMain = (int) MainMenu.LastValue - 1;
 
     // Debug
     private static bool isDebugInfoEnabled;
@@ -43,6 +43,7 @@ public class Game1 : Core {
 #if NATIVE_AOT
         // Prevent crash caused by reflection in the atlas reader
         // Make sure to change this after updating MGE
+        // todo whats the difference between () => ... and _ => ...
         ContentTypeReaderManager.AddTypeCreator(
             "MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader, MonoGame.Extended, Version=5.2.0.0, Culture=neutral, PublicKeyToken=null",
             () => new Texture2DAtlasReader()
@@ -50,7 +51,7 @@ public class Game1 : Core {
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(1920, 1080), false, false, false));
+            new Point(2560, 1440), false, false, false));
     }
 
     protected override void Initialize() {
@@ -145,7 +146,7 @@ public class Game1 : Core {
                     if ((MainMenu) index == MainMenu.Quit) {
                         this.Exit();
                     } else {
-                        index = (uint) MainMenu.Quit;
+                        index = (int) MainMenu.Quit;
                     }
                 }
 
@@ -176,8 +177,6 @@ public class Game1 : Core {
         SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
-
-        ShapeBatch.FillRectangle(new Vector2(300, 300), new Vector2(100, 100), new Color(255, 0, 0));
 
         // Draw all visible stages
         foreach (Stage stage in Stages) {

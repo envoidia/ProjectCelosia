@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class Stage {
+public sealed class Stage {
     private readonly List<IRenderable> _actors = [];
 
     /// <summary>
@@ -34,5 +34,6 @@ public class Stage {
     /// Sorts the <c>Stage</c>'s actors by their <c>RenderPriority</c>. Call after a batch of additions
     /// </summary>
     public void Sort() =>
-        this._actors.Sort((a, b) => a.RenderPriority.CompareTo((int) b.RenderPriority));
+        this._actors.Sort((a, b) => 
+           ((int) a.RenderPriority).CompareTo((int) b.RenderPriority));
 }

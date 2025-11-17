@@ -46,6 +46,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Large functions should be split apart when possible
 - Use `is`/`is not` over `==`/`!=` when checking for types or `null`
 - In switch statements, prefer `return` over `break` when able
+- All classes should be `sealed` if they are not `static` or explicitly intended to be inherited from
 
 # Numbers
 - Default to `uint`

@@ -50,8 +50,8 @@ public static class BattleHandlerLib {
     #region Inspect Fields
 
     // todo
-    private static uint indexPage = 0;
-    private static uint indexPageList = 0;
+    private static int indexPage = 0;
+    private static int indexPageList = 0;
 
     private enum InspectPage {
         Skills,
@@ -62,7 +62,7 @@ public static class BattleHandlerLib {
 
     private static readonly Label[] PageList = new Label[TeamSize];
 
-    private const uint Y = World.H - 600;
+    private const int Y = World.H - 600;
     private static readonly Vector2[] PointsPageDivL = [new(30, Y), new(370, Y)];
     private static readonly Vector2[] PointsPageDivR = [new(900, Y), new(1450, Y)];
 
@@ -76,9 +76,10 @@ public static class BattleHandlerLib {
     private static readonly Label Desc = new(Core.StageInspect);
 
     // Stat, Equip, Affinity, Mult, Mod, Other, LT, RT, L, R
-    private static readonly uint[] PromptX = [960 + 330, 700, 300, 300, 750, 1125, 310, 0, 385, 857];
+    // todo does this get discarded immediately? does the jit stackalloc this?
+    private static readonly int[] PromptX = [960 + 330, 700, 300, 300, 750, 1125, 310, 0, 385, 857];
 
-    private static readonly uint[] PromptY = [
+    private static readonly int[] PromptY = [
         World.H - (110 + 60), World.H - 245, World.H - 245, World.H - 385, World.H - 385, World.H - 385, World.H - 52,
         World.H - 52, World.H - 320, World.H - 320
     ];
@@ -147,7 +148,7 @@ public static class BattleHandlerLib {
     private static readonly List<string> LogText = [];
 
     // Amount of lines scrolled upwards
-    private static uint logScroll = 0;
+    private static int logScroll = 0;
 
     #endregion
 
@@ -158,29 +159,29 @@ public static class BattleHandlerLib {
     internal static TimeSpan delay;
 
     // How many extra actions have been used for the currently acting Unit
-    private static uint extraActions = 0;
+    private static int extraActions = 0;
 
     // Pos of the Unit that's currently selecting their move. 100 = moves are executing
-    private static uint selectingMove = 0;
-    private const uint ExecutionPhase = 100;
+    private static int selectingMove = 0;
+    private const int ExecutionPhase = 100;
 
     // Pos of the Unit that's currently using their Move
-    private static uint usingMove = 0;
+    private static int usingMove = 0;
 
     // Index of the currently-applying SkillEffect of the current Move
-    private static uint applyingEffect = 0;
+    private static int applyingEffect = 0;
 
     // Previous SkillEffect resultTypes for each pos
     private static ResultType[] prevResults = new ResultType[8];
 
     // Amount of non-fail results for the current Move so far
-    private static uint nonFails = 0;
+    private static int nonFails = 0;
 
     private static SkillInstance selectedSkillInstance;
 
     // Menu navigation
-    private static uint indexSkill = 0;
-    private static uint indexTarget = 0;
+    private static int indexSkill = 0;
+    private static int indexTarget = 0;
     private static float secondsOnSameTarget = 0;
 
     #endregion
@@ -192,7 +193,7 @@ public static class BattleHandlerLib {
         // todo
 
         // Setup Labels
-        for (uint i = 0; i < TeamCount; i++) {
+        for (int i = 0; i < TeamCount; i++) {
             // todo midgame translation
             BloomLabels[i] = new Label(Core.StageBattle,
                 $"{Colors.Stat}{Lang.Bloom}{Colors.White}: {Colors.Bloom}0{Colors.White}/{Colors.Bloom}1,000") {
@@ -202,8 +203,8 @@ public static class BattleHandlerLib {
         }
 
         // Per-unit Labels
-        for (uint i = 0; i < UnitCount; i++) {
-            uint y = i >= 4 ? World.H - (900 * (i - 4)) : World.H - (900 * i);
+        for (int i = 0; i < UnitCount; i++) {
+            int y = i >= 4 ? World.H - (900 * (i - 4)) : World.H - (900 * i);
 
             Stats[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 350 : 75, y) };
             Buffs[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 525 : 75, y - 95) };
@@ -401,7 +402,7 @@ public static class BattleHandlerLib {
             indexSkill = 0;
             Moves[selectingMove].Text = "";
 
-            for (uint i = 0; i <= Battle.PlayerTeam.Units[selectingMove].ExtraActions; i++) CurMoves.RemoveLast();
+            for (int i = 0; i <= Battle.PlayerTeam.Units[selectingMove].ExtraActions; i++) CurMoves.RemoveLast();
 
             return;
         }
@@ -412,7 +413,7 @@ public static class BattleHandlerLib {
 
         if (!Core.Input.CheckInput(Keybinds.Confirm)) return;
 
-        selectedSkillInstance = Battle.PlayerTeam.Units[selectingMove].SkillInstances[(int) indexSkill];
+        selectedSkillInstance = Battle.PlayerTeam.Units[selectingMove].SkillInstances[indexSkill];
         Moves[selectingMove].Text = selectedSkillInstance.Skill.GetName();
 
         // todo
@@ -438,8 +439,8 @@ public static class BattleHandlerLib {
             if (prioComparison != 0) return prioComparison;
 
             // Sort by Agi
-            uint agiA = a.Self.GetStat(API.Battle.Stats.Agi);
-            uint agiB = b.Self.GetStat(API.Battle.Stats.Agi);
+            int agiA = a.Self.GetStat(API.Battle.Stats.Agi);
+            int agiB = b.Self.GetStat(API.Battle.Stats.Agi);
             int agiComparison = agiB.CompareTo(agiA);
             if (agiComparison != 0) return agiComparison;
 
@@ -457,7 +458,7 @@ public static class BattleHandlerLib {
             return;
         }
 
-        uint cd = move.SkillInstance.Cooldown;
+        int cd = move.SkillInstance.Cooldown;
         if ((cd > 0) && (applyingEffect == 0)) {
             AppendToLog(Lang.LogSkillFailCooldown.FormatLang(move.GetTriesToUseString(),
                 Lang.LogButItsOnCooldown.FormatIcu(cd)));
@@ -482,14 +483,14 @@ public static class BattleHandlerLib {
             Element element = skill.GetElement();
             bool isPlayerTeam = self.Pos < 4;
             Team team = isPlayerTeam ? Battle.PlayerTeam : Battle.OpponentTeam;
-            uint cost = self.IsBoolStat(BoolStats.InfiniteSp) && !skill.IsBloom ? 0 : skill.Cost;
+            int cost = self.IsBoolStat(BoolStats.InfiniteSp) && !skill.IsBloom ? 0 : skill.Cost;
 
             // Make sure cost doesn't go below 1 unless the skill has a base 0 SP cost
-            uint costMod =
-                cost > 0 ? (uint) Math.Max(cost * (AffLib.SpCost[self.GetAffinity(element)] / 1000d), 1) : 0u;
+            int costMod =
+                cost > 0 ? (int) Math.Max(cost * (AffLib.SpCost[self.GetAffinity(element)] / 1000d), 1) : 0;
 
             int change = (int) (skill.IsBloom ? costMod : costMod * self.GetMult(Mults.SpUse));
-            spNew = (int) (skill.IsBloom ? team.Bloom - change : self.Sp - change);
+            spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
 
             if (spNew < 0) {
                 string msg = Lang.LogSkillFailSp.FormatLang(move.GetTriesToUseString(),
@@ -499,7 +500,7 @@ public static class BattleHandlerLib {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
 
                 bool isBloom = skill.IsBloom;
-                uint spOld = isBloom ? team.Bloom : self.Sp;
+                int spOld = isBloom ? team.Bloom : self.Sp;
                 change *= -1;
                 string changeSp = "";
 
@@ -508,9 +509,9 @@ public static class BattleHandlerLib {
                 }
 
                 if (isBloom) {
-                    team.Bloom = (uint) spNew;
+                    team.Bloom = spNew;
                 } else {
-                    self.Sp = (uint) spNew;
+                    self.Sp = spNew;
                 }
 
                 AppendToLog(Lang.LogSkillUse, self.FormatName(false),
@@ -521,7 +522,7 @@ public static class BattleHandlerLib {
                 self.OnUseSkill(target, skill);
 
                 // Color move for currently acting combatant (temp)
-                for (uint i = 0; i < 8; i++) {
+                for (int i = 0; i < 8; i++) {
                     //moves[i].Color = (self.Pos == i) ? Color.Pink : Color.White;
                 }
 
@@ -540,7 +541,7 @@ public static class BattleHandlerLib {
             return;
         }
 
-        foreach (uint targetPos in skill.Range.GetTargetPositions(move.Self.Pos, move.TargetPos)) {
+        foreach (int targetPos in skill.Range.GetTargetPositions(move.Self.Pos, move.TargetPos)) {
             if (targetPos != PosLib.InvalidPos) continue;
 
             Unit targetCur = Battle.GetUnitAtPos(targetPos);
@@ -586,13 +587,13 @@ public static class BattleHandlerLib {
 
         Turn.Text = Colors.Turn + Lang.Turn + (Battle.Turn + 1);
 
-        for (uint i = 0; i < UnitCount; i++) {
+        for (int i = 0; i < UnitCount; i++) {
             Moves[i].Text = "";
             //moves[i].Color = Colors.White;
         }
 
         foreach (Unit unit in Battle.GetAllUnits()) {
-            unit.Sp = (uint) Math.Min(unit.Sp + (100 * unit.GetMult(Mults.SpGain)), 1000);
+            unit.Sp = (int) Math.Min(unit.Sp + (100 * unit.GetMult(Mults.SpGain)), 1000);
 
             foreach (Passive passive in unit.Passives) {
                 StringBuilder turnEnd1 =

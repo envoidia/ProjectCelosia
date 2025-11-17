@@ -5,7 +5,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class Passive : ComplexDescriptionEntity, IModItem {
+public sealed class Passive : ComplexDescriptionEntity, IModItem {
     public IBuffEffect[] BuffEffects { get; init; }
 
     public IGameMod? Source { get; }

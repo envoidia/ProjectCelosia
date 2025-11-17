@@ -66,20 +66,16 @@
     0 = Close button glpyh, 1 = version-->
     <data name="DebugInfoL" xml:space="preserve">
         <value>{0}: Close, /i[KF2]: Help 
-Version: {1}
-OS: todo
-CPU: todo
-GPU: todo</value>
+Version: {1}</value>
     </data>
-    <!-- 0 = FPS, 1 = RAM usage, 2 = Last input source, 3 = Resolution, 4 = Path taken through menus, 5 = OW location (Area, X, Y), 6 = Amount of mods loaded-->
+    <!-- 0 = FPS, 1 = RAM usage, 2 = Resolution, 3 = Path taken through menus, 4 = OW location (Area, X, Y), 5 = Amount of mods loaded-->
     <data name="DebugInfoR" xml:space="preserve">
         <value>FPS: {0}
 RAM: {1}MB
-Last Input Source: {2}
-Resolution: {3}
-NavPath: {4}
-Overworld Location: {5}
-Loaded Mods: {6}</value>
+Resolution: {2}
+NavPath: {3}
+Overworld Location: {4}
+Loaded Mods: {5}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
         <value>/i[KF3]: Write loaded mod list to log
@@ -675,7 +671,7 @@ etc todo</value>
     Max stacks > 1: Name gains buff with a stacks and b turns
     Max stacks = 1: Name gains buff for b turns-->
     <data name="LogGiveBuffGain" xml:space="preserve">
-        <value>{0} gains {1} /c[white]{2,plural,=1{for}other{with}} {3} /c[white]/c[white]{4,plural,=1{stack}other{stacks}} and} {5} /c[white]{6,plural,=1{turn}other{turns}}</value>
+        <value>{0} gains {1} /c[white]{2,plural,=1{for}other{with} {3} /c[white]/c[white]{4,plural,=1{stack}other{stacks}} and} {5} /c[white]{6,plural,=1{turn}other{turns}}</value>
     </data>
     <!--0 = name, 1 = max stacks, 2 = display-formatted stacks, 3 = buff name, 4 = raw stacks
     Max stacks > 1: Name loses 3 buff stacks

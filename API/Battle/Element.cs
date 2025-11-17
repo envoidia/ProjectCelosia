@@ -4,7 +4,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class Element : IconEntity, IModItem {
+public sealed class Element : IconEntity, IModItem {
     public Mult? MultDmgDealt { get; }
     public Mult? MultDmgTaken { get; }
 

@@ -24,7 +24,7 @@ public class Core : Game {
     /// <summary>
     /// List of menus that have been traveled through to reach the current menu location
     /// </summary>
-    public static readonly Stack<MenuType> NavPath = new();
+    public static readonly Stack<MenuType> NavPath = [];
 
     #region Rendering
 

@@ -1,12 +1,12 @@
 namespace API.Battle.SkillEffects;
 
-public class ChangeBloom(int change) : SkillEffect {
+public sealed class ChangeBloom(int change) : SkillEffect {
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
         if (!this.MainTargetOnly || isMainTarget) {
             Unit unit = this.GiveToSelf ? self : target;
             Team team = BattleHandlerLib.Battle.GetTeamAtPos(unit.Pos);
 
-            BattleHandlerLib.AppendToLog(Calcs.ChangeBloom(team, unit.GetSide(), change));
+            BattleHandlerLib.AppendToLog(CalcLib.ChangeBloom(team, unit.GetSide(), change));
         }
 
         return ResultType.PseudoSuccess;

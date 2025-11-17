@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace Celosia;
 
 [UsedImplicitly]
-public class Main : IGameMod {
+public sealed class Main : IGameMod {
     /// <summary>
     /// Publicly accessible instance of <c>Main</c>
     /// </summary>

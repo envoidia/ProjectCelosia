@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public class GuiBoxBar(int l, int r, int t, int b, params Color[] colors) : GuiBox(l, r, t, b, 0) {
+public sealed class GuiBoxBar(int l, int r, int t, int b, params Color[] colors) : GuiBox(l, r, t, b, 0) {
     public float[] BarProgs { get; set; } = new float[colors.Length];
     public Color[] BarColors { get; } = colors;
 

@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class World {
+public static class World {
     public const int W = 3840;
     public const int H = 2160;
     public const int W2 = 1920;

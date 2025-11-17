@@ -7,8 +7,8 @@ namespace API.Menu;
 public static class MenuLib {
     private static readonly TimeSpan LogScrollDelay = TimeSpan.FromSeconds(0.005f);
 
-    // todo fix uint fuckery
-    public static uint CheckMovement1D(uint index, uint optCount) {
+    // todo fix int fuckery
+    public static int CheckMovement1D(int index, int optCount) {
         if (Core.Input.CheckInput(true, Keybinds.Up, Keybinds.Left)) {
             return index == 0 ? optCount - 1 : index - 1;
         }
@@ -20,7 +20,7 @@ public static class MenuLib {
         return Math.Min(index, optCount - 1);
     }
 
-    public static uint CheckMovement1D(uint index, uint optCount, Keybind dec, Keybind inc) {
+    public static int CheckMovement1D(int index, int optCount, Keybind dec, Keybind inc) {
         if (Core.Input.CheckInput(true, dec)) {
             return index == 0 ? optCount - 1 : index - 1;
         }
@@ -32,14 +32,14 @@ public static class MenuLib {
         return Math.Min(index, optCount - 1);
     }
 
-    public static uint CheckMovementTargeting(uint index, uint selectingMove, Battle.Range range) {
+    public static int CheckMovementTargeting(int index, int selectingMove, Battle.Range range) {
         // Lock cursor to self for self Ranges
         if ((range == Ranges.Self) || (range == Ranges.SelfUpDown)) {
             return selectingMove;
         }
 
-        int indexI = (int) index;
-        uint newIndex = index;
+        int indexI = index;
+        int newIndex = index;
 
         // Move selection
         if (Core.Input.CheckInput(true, Keybinds.Up)) {
@@ -68,7 +68,7 @@ public static class MenuLib {
         return index;
     }
 
-    public static uint CheckLogScroll(uint logScroll, uint lines, uint off) {
+    public static int CheckLogScroll(int logScroll, int lines, int off) {
         // Up
         if (Core.Input.CheckInput(true, LogScrollDelay, Keybinds.Up)) {
             return Math.Min(++logScroll, Math.Max(lines - off, 0));

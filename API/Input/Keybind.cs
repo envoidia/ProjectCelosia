@@ -31,7 +31,7 @@ public enum KeybindId {
     LeftRightUpDown
 }
 
-public class Keybind(string keyName, KeybindId id, Keys key, Buttons button) {
+public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) {
     public string KeyName => keyName;
     public KeybindId Id => id;
     public Keys Key { get; set; } = key;
@@ -49,7 +49,7 @@ public class Keybind(string keyName, KeybindId id, Keys key, Buttons button) {
 }
 
 public static class Keybinds {
-    public static uint KeybindCount => (uint) KeybindId.LastBeforeMerged;
+    public static int KeybindCount => (int) KeybindId.LastBeforeMerged;
 
     public static readonly Keybind Confirm = new("KeyConfirm", KeybindId.Confirm, Keys.Z, Buttons.A); // (Bottom)
     public static readonly Keybind Back = new("KeyBack", KeybindId.Back, Keys.X, Buttons.B); // (Right)

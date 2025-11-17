@@ -3,13 +3,13 @@ using API.Extensions;
 
 namespace API.Battle.BuffEffects;
 
-public class ChangeExtraActions(int change) : IBuffEffect {
-    public void OnGive(Unit self, uint stacks) => Calc(self, (int) (change * stacks));
-    public void OnRemove(Unit self, uint stacks) => Calc(self, (int) (change * -stacks));
+public sealed class ChangeExtraActions(int change) : IBuffEffect {
+    public void OnGive(Unit self, int stacks) => Calc(self, change * stacks);
+    public void OnRemove(Unit self, int stacks) => Calc(self, change * -stacks);
 
     private static void Calc(Unit self, int changeFull) {
-        uint exAOld = self.ExtraActions;
-        uint exANew = (uint) (exAOld + changeFull);
+        int exAOld = self.ExtraActions;
+        int exANew = exAOld + changeFull;
         self.ExtraActions = exANew;
 
         BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeExtraActions, self.FormatName(),

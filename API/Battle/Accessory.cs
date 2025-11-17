@@ -4,7 +4,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class Accessory : ComplexDescriptionEntity, IEquippable, IModItem {
+public sealed class Accessory : ComplexDescriptionEntity, IEquippable, IModItem {
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 

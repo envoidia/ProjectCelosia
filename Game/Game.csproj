@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>Preview</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
         <RollForward>Major</RollForward>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
@@ -76,7 +75,7 @@
     <Target Name="EnsureContentOutputPath" BeforeTargets="CopyFilesToOutputDirectory">
         <MakeDir Directories="$(OutDir)Content/img"/>
     </Target>
-    <Target Name="MoveFiles" AfterTargets="Build" Condition="'$(PublishAot)' != 'true'">
+    <Target Name="MoveFiles" AfterTargets="Build" Condition="'$(PublishAot)' == 'false'">
         <Move SourceFiles="$(TargetDir)Celosia.dll" DestinationFolder="$(TargetDir)mods"/>
     </Target>
 </Project>

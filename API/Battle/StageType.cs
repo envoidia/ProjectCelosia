@@ -4,7 +4,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public class StageType : IconEntity, IModItem {
+public sealed class StageType : IconEntity, IModItem {
     public Stat[] Stats { get; }
 
     public IGameMod? Source { get; }
@@ -21,7 +21,7 @@ public class StageType : IconEntity, IModItem {
     public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Buff);
 }
 
-public class StageTypes {
+public static class StageTypes {
     public static readonly StageType None = new(null, "", "", "");
 
     public static readonly StageType Atk =

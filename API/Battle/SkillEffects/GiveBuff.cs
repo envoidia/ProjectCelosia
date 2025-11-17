@@ -7,7 +7,7 @@ using API.Graphics;
 namespace API.Battle.SkillEffects;
 
 // todo special case for shield
-public class GiveBuff(Buff buff, uint turns, uint stacks = 1) : SkillEffect(descInclusion: buff) {
+public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect(descInclusion: buff) {
     public ResultType MinResultType { get; init; } = ResultType.Success;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
@@ -18,11 +18,11 @@ public class GiveBuff(Buff buff, uint turns, uint stacks = 1) : SkillEffect(desc
         Unit unit = this.GiveToSelf ? self : target;
 
         // todo fix overflow
-        uint turnsMod = (uint) (turns + self.GetDurationModBuffTypeDealt(buff.BuffType)
-                                      + unit.GetDurationModBuffTypeTaken(buff.BuffType));
+        int turnsMod = turns + self.GetDurationModBuffTypeDealt(buff.BuffType)
+                             + unit.GetDurationModBuffTypeTaken(buff.BuffType);
 
-        uint stacksMod = (uint) Math.Min(stacks + self.GetStacksModBuffTypeDealt(buff.BuffType) +
-                                         unit.GetStacksModBuffTypeTaken(buff.BuffType), buff.MaxStacks);
+        int stacksMod = Math.Min(stacks + self.GetStacksModBuffTypeDealt(buff.BuffType) +
+                                 unit.GetStacksModBuffTypeTaken(buff.BuffType), buff.MaxStacks);
 
         self.OnGiveBuff(target, buff, turnsMod, stacksMod);
 
@@ -38,8 +38,8 @@ public class GiveBuff(Buff buff, uint turns, uint stacks = 1) : SkillEffect(desc
         if (buffInstance is not null) {
             StringBuilder str = new();
 
-            uint stacksOld = buffInstance.Stacks;
-            uint stacksNew = Math.Min(buff.MaxStacks, stacksOld + stacksMod);
+            int stacksOld = buffInstance.Stacks;
+            int stacksNew = Math.Min(buff.MaxStacks, stacksOld + stacksMod);
 
             if (stacksNew != stacksOld) {
                 buffInstance.Stacks = stacksNew;
@@ -48,7 +48,7 @@ public class GiveBuff(Buff buff, uint turns, uint stacks = 1) : SkillEffect(desc
                     Colors.Num + stacksOld, Colors.Num + stacksNew));
             }
 
-            uint turnsOld = buffInstance.Turns;
+            int turnsOld = buffInstance.Turns;
             if (turnsMod > turnsOld) {
                 buffInstance.Turns = turnsMod;
 
@@ -62,7 +62,7 @@ public class GiveBuff(Buff buff, uint turns, uint stacks = 1) : SkillEffect(desc
 
             BattleHandlerLib.AppendToLog(str.ToString());
 
-            uint stacksAdded = stacksNew - stacksOld;
+            int stacksAdded = stacksNew - stacksOld;
 
             if (stacksAdded <= 0) return ResultType.PseudoSuccess;
 

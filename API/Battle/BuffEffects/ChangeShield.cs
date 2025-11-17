@@ -3,18 +3,18 @@ using API.Graphics;
 
 namespace API.Battle.BuffEffects;
 
-public class ChangeShield : IBuffEffect {
+public sealed class ChangeShield : IBuffEffect {
     // Actual value is set in SkillEffects/GiveBuff.Apply() (todo)
 
-    public void OnRemove(Unit self, uint stacks) {
-        uint shieldOld = self.Shield;
+    public void OnRemove(Unit self, int stacks) {
+        int shieldOld = self.Shield;
         self.Shield = 0;
-        uint defend = self.Defend;
+        int defend = self.Defend;
 
         if (self.Defend > 0) {
             BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeShield, self.FormatName()),
                 (defend + shieldOld).Format(Colors.Shield), defend.Format(Colors.Shield),
-                self.GetBaseStat(Stats.Hp).Format(Colors.Hp), ((int) -shieldOld).Format(Colors.Shield));
+                self.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-shieldOld).Format(Colors.Shield));
         } else {
             BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseShield, self.FormatName(false),
                 shieldOld.Format(Colors.Shield)));
