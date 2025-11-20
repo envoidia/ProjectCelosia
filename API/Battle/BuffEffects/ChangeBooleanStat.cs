@@ -13,7 +13,7 @@ public sealed class ChangeBooleanStat(BoolStat stat, int change) : IBuffEffect {
 
         // todo how does the effect block message appear
         if (!((statOld >= 1) && (statNew >= 1)) && (stat != BoolStats.EffectBlock)) {
-            BattleHandlerLib.AppendToLog(stat.LogMsgKey.FormatLang(self.FormatName(stat.PossessiveNameInLogMsg),
+            BattleHandler.AppendToLog(stat.LogMsgKey.FormatLang(self.FormatName(stat.PossessiveNameInLogMsg),
                 statNew, self.Sp.Format()));
         }
     }

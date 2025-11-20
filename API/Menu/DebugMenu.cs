@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using API.Graphics;
 using API.Input;
@@ -10,8 +9,6 @@ namespace API.Menu;
 
 public static class DebugMenu {
     private const int Mb = 1024 * 1024;
-
-    private static readonly Process Process = Process.GetCurrentProcess();
 
     private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
 

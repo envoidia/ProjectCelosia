@@ -79,7 +79,7 @@ Loaded Mods: {5}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
         <value>/i[KF3]: Write loaded mod list to log
-/i[KF4]: todo
+/i[KF4]: Write battle log to log
 etc todo</value>
     </data>
     <!--Basic options-->
@@ -250,9 +250,6 @@ etc todo</value>
     <data name="Turn" xml:space="preserve">
         <value>Turn</value>
     </data>
-    <data name="Queue" xml:space="preserve">
-        <value>Queue</value>
-    </data>
     <data name="Bloom" xml:space="preserve">
         <value>Bloom</value>
     </data>
@@ -311,15 +308,9 @@ etc todo</value>
     <data name="Stats" xml:space="preserve">
         <value>Stats</value>
     </data>
-    <data name="Hp" xml:space="preserve">
-        <value>HP</value>
-    </data>
     <!--todo all .full and .desc keys are currently unused. Make sure to remove everything that's not used by the end-->
     <data name="HpFull" xml:space="preserve">
         <value>Health Points</value>
-    </data>
-    <data name="Sp" xml:space="preserve">
-        <value>SP</value>
     </data>
     <data name="SpFull" xml:space="preserve">
         <value>Skill Points</value>

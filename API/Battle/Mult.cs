@@ -23,7 +23,7 @@ public sealed class Mult : NamedEntity, IModItem {
         (string pos, string neg) = TextLib.GetColors(this.IsPositive);
 
         return Math.Max(val, this.MinValue)
-            .Format(val > 1000 ? pos : val < 1000 ? neg : Colors.Num, "%", 10f);
+            .Format(val > 1000 ? pos : val < 1000 ? neg : Colors.Num, true, "%", 10f);
     }
 
     public string FormatChange(float val) {

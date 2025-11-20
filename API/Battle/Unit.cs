@@ -15,15 +15,24 @@ public sealed class Unit {
     public int Hp { get; set; }
     public int Sp { get; set; } = 200;
 
-    // Position on the battlefield
-    // 0 4
-    // 1 5
-    // 2 6
-    // 3 7
+    /// <summary>
+    /// Position on the battlefield
+    /// 0 4 /
+    /// 1 5 /
+    /// 2 6 /
+    /// 3 7
+    /// </summary>
     public int Pos { get; set; }
 
-    // Shield is hit before HP, and Defend before Shield
-    // Together they cannot exceed max HP
+    /// <summary>
+    /// If there's more than 1 Unit with this UnitType in the current battle, disambiguates which one this is
+    /// 0 = There are no duplicates
+    /// </summary>
+    public int DupeIndex { get; set; } = 0;
+
+    /// <summary>
+    /// Shield is hit before HP, and Defend before Shield. Together they cannot exceed max HP
+    /// </summary>
     public int Shield { get; set; } = 0;
     public int Defend { get; set; } = 0;
 
@@ -32,29 +41,35 @@ public sealed class Unit {
     public List<Passive> Passives { get; }
 
     // Stats
-    // _statsMult is treated as multipliers applied to _stats, in 10ths of a % (1000 = 100%), min 10%
     private readonly Dictionary<Stat, int> _stats;
-    private readonly Dictionary<Stat, int> _statsMult = new();
-    private readonly Dictionary<Element, int> _affinities;
-    private readonly Dictionary<StageType, int> _stages = new();
-    private readonly Dictionary<StageType, int> _stageTurns = new();
-    private readonly Dictionary<Mult, int> _mults = new();
-    private readonly Dictionary<BoolStat, int> _boolStats = new();
-    private readonly Dictionary<StatMod, int> _statMods = new();
 
-    // Equipped item (Accessory or Weapon)
-    public IEquippable Equipped {
+    /// <summary>
+    /// Treated as multipliers applied to _stats, in 10ths of a % (1000 = 100%), min 10%
+    /// </summary>
+    private readonly Dictionary<Stat, int> _statsMult = [];
+
+    private readonly Dictionary<Element, int> _affinities;
+    private readonly Dictionary<StageType, int> _stages = [];
+    private readonly Dictionary<StageType, int> _stageTurns = [];
+    private readonly Dictionary<Mult, int> _mults = [];
+    private readonly Dictionary<BoolStat, int> _boolStats = [];
+    private readonly Dictionary<StatMod, int> _statMods = [];
+
+    /// <summary>
+    /// Equipped item (Accessory or Weapon)
+    /// </summary>
+    public IEquippable? Equipped {
         get;
         set {
-            field.Unequip(this);
+            field?.Unequip(this);
             field = value;
-            field.Equip(this);
+            field?.Equip(this);
         }
     }
 
     public int ExtraActions { get; set; } = 0;
 
-    public Unit(UnitType unitType, int lvl, IEquippable equipped, int pos, params Skill[] skills) {
+    public Unit(UnitType unitType, int lvl, IEquippable? equipped, int pos, params Skill[] skills) {
         this.UnitType = unitType;
         this.Lvl = lvl;
         this.Pos = pos;
@@ -64,11 +79,11 @@ public sealed class Unit {
         this.Hp = this._stats[Stats.Hp];
 
         this.SkillInstances = skills.Select(skill => (SkillInstance) skill).ToList();
-        this.Passives = new List<Passive>(unitType.Passives);
+        this.Passives = [.. unitType.Passives];
         this._affinities = unitType._affinities;
 
         this.Equipped = equipped;
-        this.Equipped.Equip(this);
+        this.Equipped?.Equip(this);
     }
 
     public void AddSkills(params Skill[] skills) {
@@ -234,7 +249,7 @@ public sealed class Unit {
 
     public string GetStatModsString() {
         StringBuilder str = new();
-        foreach (StatMod mod in Core.StatMods) str.Append(mod.Format(this.GetStatMod(mod))).Append("\n");
+        foreach (StatMod mod in Core.StatMods) str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
         return str.ToString();
     }
 
@@ -295,7 +310,7 @@ public sealed class Unit {
         foreach (StageType stageType in Core.StageTypes) {
             int stage = this.GetStage(stageType);
             if ((stage != 0) && (--this._stageTurns[stageType] == 0)) {
-                BattleHandlerLib.AppendToLog(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
+                BattleHandler.AppendToLog(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
@@ -311,7 +326,7 @@ public sealed class Unit {
             if (turns is >= 2 and < 1000) {
                 buffInstance.Turns = turns - 1;
             } else {
-                BattleHandlerLib.AppendToLog(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
+                BattleHandler.AppendToLog(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
                     buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks));
 
@@ -399,12 +414,11 @@ public sealed class Unit {
 
     // todo support other langs + different names for multiples of the same UnitType (+ nicknames?)
     public string FormatName(bool possessive = true) {
-        string name = this.UnitType.GetName();
-
-        string suffix = possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "";
-
         string color = this.GetSide() == Side.Ally ? Colors.Ally : Colors.Opp;
+        string name = this.UnitType.GetName(color);
+        string suffix = possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "";
+        string dupeStr = this.DupeIndex == 0 ? "" : $" {this.DupeIndex}";
 
-        return color + name + suffix + Colors.White;
+        return name + suffix + dupeStr + Colors.White;
     }
 }

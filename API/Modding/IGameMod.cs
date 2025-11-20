@@ -1,14 +1,10 @@
+using System;
 using System.Resources;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
 
 public interface IGameMod {
-    /// <summary>
-    /// Lang key that should be used for the mod's display name
-    /// </summary>
-    const string ModNameKey = "ModName";
-
     /// <summary>
     /// Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters
     /// </summary>
@@ -22,7 +18,7 @@ public interface IGameMod {
     /// <summary>
     /// Mod version
     /// </summary>
-    string Version { get; }
+    Version Version { get; }
 
     /// <summary>
     /// Mod's <c>Lang.ResourceManager</c>

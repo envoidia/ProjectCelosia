@@ -3,9 +3,11 @@ using System.Collections.Generic;
 namespace API.Battle;
 
 public static class PosLib {
-    public const int InvalidPos = int.MaxValue;
+    public const int InvalidPos = -1;
 
-    // Returns the pos off spaces below this one, or int.MaxValue if it's invalid
+    /// <summary>
+    /// Returns the pos off spaces below this one, or InvalidPos if it's invalid
+    /// </summary>
     public static int GetUpDown(int pos, int off) {
         int posNew = pos + off;
         switch (pos) {
@@ -17,10 +19,14 @@ public static class PosLib {
         }
     }
 
-    // Returns the pos directly across from this one
+    /// <summary>
+    /// Returns the pos directly across from this one
+    /// </summary>
     public static int GetAcross(int pos) => pos + (4 * (pos < 4 ? 1 : -1));
 
-    // Returns the poses of the Units on the team except the provided one
+    /// <summary>
+    /// Returns the poses of the Units on the team except the provided one
+    /// </summary>
     public static int[] GetTeamWithout(int pos) {
         int lower = pos < 4 ? 0 : 4;
         int upper = pos < 4 ? 3 : 7;
@@ -33,13 +39,19 @@ public static class PosLib {
         return result.ToArray();
     }
 
-    // Returns the height 0-3 of pos
+    /// <summary>
+    /// Returns the height 0-3 of pos
+    /// </summary>
     public static int GetHeight(int pos) => pos < 4 ? pos : pos - 4;
 
-    // Returns the Side of pos
+    /// <summary>
+    /// Returns the Side of pos
+    /// </summary>
     public static Side GetSide(int pos) => pos < 4 ? Side.Ally : Side.Opponent;
 
-    // Returns the Side of pos2 relative to the Side of pos1
+    /// <summary>
+    /// Returns the Side of pos2 relative to the Side of pos1
+    /// </summary>
     public static Side GetRelativeSide(int pos1, int pos2) => pos2 < 4 ? pos1 < 4 ? Side.Ally : Side.Opponent
         : pos1 >= 4 ? Side.Ally : Side.Opponent;
 }

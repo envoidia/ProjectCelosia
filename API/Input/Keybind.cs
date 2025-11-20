@@ -21,6 +21,7 @@ public enum KeybindId {
     DebugInfo,
     DebugHelp,
     DebugDumpMods,
+    DebugDumpLog,
 
     // Marker. Always add non-merged keybinds above this
     LastBeforeMerged,
@@ -69,6 +70,7 @@ public static class Keybinds {
     public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Start);
     public static readonly Keybind DebugHelp = new("", KeybindId.DebugHelp, Keys.F2, Buttons.None);
     public static readonly Keybind DebugDumpMods = new("", KeybindId.DebugDumpMods, Keys.F3, Buttons.None);
+    public static readonly Keybind DebugDumpLog = new("", KeybindId.DebugDumpLog, Keys.F4, Buttons.None);
 
     // Merged
     public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);

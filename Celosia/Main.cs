@@ -1,5 +1,4 @@
 using System.Resources;
-using API;
 using Microsoft.Xna.Framework;
 using API.Modding;
 using JetBrains.Annotations;
@@ -14,7 +13,7 @@ public sealed class Main : IGameMod {
     public static IGameMod ModInstance { get; set; } = null!;
 
     public string Id => "Celosia";
-    public string Version => BuildInfo.BuildDate;
+    public Version Version => new(0, 1);
     public ResourceManager ResourceManager => Lang.ResourceManager;
 
     public void Initialize() {

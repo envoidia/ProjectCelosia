@@ -12,11 +12,11 @@ public sealed class ChangeShield : IBuffEffect {
         int defend = self.Defend;
 
         if (self.Defend > 0) {
-            BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeShield, self.FormatName()),
+            BattleHandler.AppendToLog(string.Format(Lang.LogChangeShield, self.FormatName()),
                 (defend + shieldOld).Format(Colors.Shield), defend.Format(Colors.Shield),
                 self.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-shieldOld).Format(Colors.Shield));
         } else {
-            BattleHandlerLib.AppendToLog(string.Format(Lang.LogLoseShield, self.FormatName(false),
+            BattleHandler.AppendToLog(string.Format(Lang.LogLoseShield, self.FormatName(false),
                 shieldOld.Format(Colors.Shield)));
         }
     }

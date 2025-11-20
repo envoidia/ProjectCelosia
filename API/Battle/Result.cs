@@ -7,7 +7,9 @@ public enum ResultType {
     HitEffectBlock,
     Success,
 
-    // For when it's not necessarily a success, but you want it to count as one for the purpose of continuing the skill
+    /// <summary>
+    /// Isn't necessarily a success, but counts as one for the purpose of continuing the skill
+    /// </summary>
     PseudoSuccess
 }
 

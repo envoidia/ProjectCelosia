@@ -51,7 +51,7 @@ public sealed class Game1 : Core {
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(2560, 1440), false, false, false));
+            new Point(1920, 1080), false, false, false));
     }
 
     protected override void Initialize() {
@@ -124,7 +124,8 @@ public sealed class Game1 : Core {
                         case MainMenu.Start:
                             // Overworld/battle
                             AddMenu(MenuType.Battle);
-                            BattleHandlerLib.Initialize();
+                            BattleHandler.Initialize();
+                            BattleHandler.StartBattle();
                             break;
                         case MainMenu.Encyclopedia:
                             // todo

@@ -60,7 +60,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 }
             }
 
-            BattleHandlerLib.AppendToLog(str.ToString());
+            BattleHandler.AppendToLog(str.ToString());
 
             int stacksAdded = stacksNew - stacksOld;
 
@@ -71,7 +71,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
             }
         } else {
             // Add buff
-            BattleHandlerLib.AppendToLog(Lang.LogGiveBuffGain.FormatIcu(unit.FormatName(false),
+            BattleHandler.AppendToLog(Lang.LogGiveBuffGain.FormatIcu(unit.FormatName(false),
                 buffName, buff.MaxStacks, Colors.Num + stacksMod, stacksMod,
                 Colors.Num + turnsMod, turnsMod));
 

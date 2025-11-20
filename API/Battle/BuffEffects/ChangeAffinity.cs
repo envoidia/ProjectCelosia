@@ -16,7 +16,7 @@ public sealed class ChangeAffinity(Element element, int change) : IBuffEffect {
         int affNew = affOld + changeFull;
         self.SetAffinity(element, affNew);
 
-        BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeAff, self.FormatName(),
+        BattleHandler.AppendToLog(string.Format(Lang.LogChangeAff, self.FormatName(),
             element.GetName(), affOld.Format(), affNew.Format()));
     }
 }

@@ -52,7 +52,7 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             msg.Add(str + str2);
         }
 
-        if (msg.Count > 0) BattleHandlerLib.AppendToLog(msg);
+        if (msg.Count > 0) BattleHandler.AppendToLog(msg);
 
         return ResultType.PseudoSuccess;
     }

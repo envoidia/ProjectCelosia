@@ -50,7 +50,9 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
         return Elements.Vis;
     }
 
-    // Returns the index a skill should start at based off of its role
+    /// <summary>
+    /// Returns the index a skill should start at based off of its role
+    /// </summary>
     // todo more complex logic
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? 4 : 0;
 
@@ -59,7 +61,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Skill);
 
     protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
-        HashSet<DescriptionEntity> inclusions = new(this.DescriptionInclusions);
+        HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
 
         foreach (SkillEffect skillEffect in this.SkillEffects) {
             DescriptionEntity? inclusion = skillEffect.DescInclusion;
@@ -103,5 +105,5 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
 
 public static class Skills {
     public static readonly Skill Nothing = new(null, "SkillNothing", "Blank", Ranges.Other3ROrSelf, 0);
-    // todo Defend
+    public static readonly Skill Defend = new(null, "SkillDefend", "Todo", Ranges.Self, 0);
 }

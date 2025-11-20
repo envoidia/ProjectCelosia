@@ -9,7 +9,7 @@ public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercen
     // todo this might need to display the name if immediate
     public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;
-        BattleHandlerLib.AppendToLog(this.Calc(self, stacks));
+        BattleHandler.AppendToLog(this.Calc(self, stacks));
     }
 
     public string[] OnTurnEnd(Unit self, int stacks) => !isImmediate ? this.Calc(self, stacks) : [];

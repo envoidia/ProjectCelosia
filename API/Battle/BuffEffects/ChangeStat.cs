@@ -15,7 +15,7 @@ public sealed class ChangeStat(Stat stat, int change) : IBuffEffect {
 
         int statNewDispWithStage = self.GetStat(stat);
 
-        BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeStat, self.FormatName()), Colors.Stat + stat.GetName(),
+        BattleHandler.AppendToLog(string.Format(Lang.LogChangeStat, self.FormatName()), Colors.Stat + stat.GetName(),
             statOldDispWithStage.Format(statDefaultDisp.ToString()), statNewDispWithStage.Format(statDefaultDisp.ToString()),
             self.GetBaseStat(stat).Format(), (statNewDispWithStage - statOldDispWithStage).Format());
     }

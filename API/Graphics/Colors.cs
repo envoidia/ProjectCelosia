@@ -25,7 +25,7 @@ public static class Colors {
     public const string Element = "/c[#95c9ff]";
     public const string Passive = "/c[#c6a1ff]";
     public const string Stat = "/c[#deff81]";
-    public const string Cd = "/c[#1898ff]"; // Cooldown
+    public const string Cooldown = "/c[#1898ff]"; // Cooldown
     public const string Lux = "/c[#fffbb7]";
 
     // Icons

@@ -12,7 +12,7 @@ public sealed class ChangeExtraActions(int change) : IBuffEffect {
         int exANew = exAOld + changeFull;
         self.ExtraActions = exANew;
 
-        BattleHandlerLib.AppendToLog(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
+        BattleHandler.AppendToLog(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
             Math.Max(exAOld, 0).Format(), Math.Max(exANew, 0).Format()));
     }
 }

@@ -17,7 +17,7 @@ public sealed class Accessory : ComplexDescriptionEntity, IEquippable, IModItem 
     }
 
     protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
-        HashSet<DescriptionEntity> inclusions = new(this.DescriptionInclusions);
+        HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
 
         inclusions.UnionWith(this.Skills);
         inclusions.UnionWith(this.Passives);

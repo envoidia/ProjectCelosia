@@ -335,5 +335,9 @@
     <data name="SkillIceAge" xml:space="preserve">
         <value>Ice Age</value>
     </data>
+    <!--Unit types-->
+    <data name="TestUnitType" xml:space="preserve">
+        <value>Test UnitType</value>
+    </data>
     <!--Weapon names todo-->
 </root>

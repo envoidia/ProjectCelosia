@@ -30,5 +30,7 @@ public sealed class Buff : ComplexDescriptionEntity, IModItem {
 }
 
 public static class Buffs {
-    // todo Defend, Shield
+    // todo
+    public static readonly Buff Defend;
+    public static readonly Buff Shield;
 }

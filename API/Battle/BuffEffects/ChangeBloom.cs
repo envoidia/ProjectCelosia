@@ -4,13 +4,13 @@ public sealed class ChangeBloom(int change, bool isImmediate = false) : IBuffEff
     public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;
 
-        BattleHandlerLib.AppendToLog(CalcLib.ChangeBloom(BattleHandlerLib.Battle.GetTeamAtPos(self.Pos), self.GetSide(),
+        BattleHandler.AppendToLog(CalcLib.ChangeBloom(BattleHandler.Battle.GetTeamAtPos(self.Pos), self.GetSide(),
             change));
     }
 
     public string[] OnTurnEnd(Unit self, int stacks) {
         if (isImmediate) return [];
 
-        return [CalcLib.ChangeBloom(BattleHandlerLib.Battle.GetTeamAtPos(self.Pos), self.GetSide(), change)];
+        return [CalcLib.ChangeBloom(BattleHandler.Battle.GetTeamAtPos(self.Pos), self.GetSide(), change)];
     }
 }

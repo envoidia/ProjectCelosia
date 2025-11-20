@@ -8,7 +8,7 @@ namespace API.Extensions;
 
 public static class StringExtensions {
     private static readonly MessageFormatter Formatter = new();
-    
+
     extension(string @this) {
         /// <summary>
         /// Gets a string from a lang key. Checks the specified mod's <c>ResourceManager</c> (if provided), then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s. Throws on invalid key
