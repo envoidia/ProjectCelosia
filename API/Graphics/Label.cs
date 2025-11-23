@@ -16,7 +16,7 @@ public sealed class Label : RenderObject {
     }
 
     public int Width {
-        get => (int) this.RichTextLayout.Width!;
+        get => (int) this.RichTextLayout.Width; // todo null safety
         set => this.RichTextLayout.Width = value; // todo remeasure
     }
 

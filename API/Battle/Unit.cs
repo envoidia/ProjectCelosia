@@ -78,7 +78,7 @@ public sealed class Unit {
             kvp => kvp.Value + ((kvp.Value / 2) * this.Lvl * BattleLib.StatMult));
         this.Hp = this._stats[Stats.Hp];
 
-        this.SkillInstances = skills.Select(skill => (SkillInstance) skill).ToList();
+        this.SkillInstances = [.. skills.Select(skill => new SkillInstance(skill))];
         this.Passives = [.. unitType.Passives];
         this._affinities = unitType._affinities;
 
@@ -87,11 +87,11 @@ public sealed class Unit {
     }
 
     public void AddSkills(params Skill[] skills) {
-        foreach (Skill skill in skills) this.SkillInstances.Add((SkillInstance) skill);
+        foreach (Skill skill in skills) this.SkillInstances.Add(new SkillInstance(skill));
     }
 
     public void RemoveSkills(params Skill[] skills) {
-        foreach (Skill skill in skills) this.SkillInstances.Remove((SkillInstance) skill);
+        foreach (Skill skill in skills) this.SkillInstances.Remove(new SkillInstance(skill));
     }
 
     public void AddPassives(params Passive[] passives) {

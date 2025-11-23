@@ -56,8 +56,6 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     // todo more complex logic
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? 4 : 0;
 
-    public static explicit operator SkillInstance(Skill skill) => new(skill);
-
     public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Skill);
 
     protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {

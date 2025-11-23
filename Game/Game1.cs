@@ -8,6 +8,9 @@ using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Battle;
+using System.Linq;
+
+
 
 #if NATIVE_AOT
 using Microsoft.Xna.Framework.Content;
@@ -30,6 +33,7 @@ public sealed class Game1 : Core {
 
     // Debug
     private static bool isDebugInfoEnabled;
+    private static bool isDebugConsoleEnabled;
 
     // temp
     //private static float[][] barProgs = [[1, 0.5f, 0.25f], [0.5f, 0.35f, 1], [0.75f, 1, 0.15f]];
@@ -61,10 +65,6 @@ public sealed class Game1 : Core {
         //GuiBoxBarsHigh.Add(new GuiBoxBar(400, 1600, 800, 900, Color.Red, Color.Green, Color.Blue));
 
         base.Initialize();
-
-        RasterizerState rasterizerState = new();
-        rasterizerState.CullMode = CullMode.None;
-        GraphicsDevice.RasterizerState = rasterizerState;
 
         AddMenu(Main);
 
@@ -116,13 +116,11 @@ public sealed class Game1 : Core {
         switch (NavPath.Peek()) {
             case Main:
                 index = MenuLib.CheckMovement1D(index, OptCountMain);
-                //Console.WriteLine(_index);
-                // update cursor
+                // todo update cursor
 
                 if (Input.CheckInput(Keybinds.Confirm)) {
                     switch ((MainMenu) index) {
                         case MainMenu.Start:
-                            // Overworld/battle
                             AddMenu(MenuType.Battle);
                             BattleHandler.Initialize();
                             BattleHandler.StartBattle();
@@ -160,8 +158,6 @@ public sealed class Game1 : Core {
                 break;
             case MenuType.Battle or Targeting or Log or InspectTargeting or Inspect:
                 BattleHandler.Input(gameTime);
-                break;
-            case Debug or None:
                 break;
             default: // todo might want to not throw here, for modders?
                 throw new ArgumentOutOfRangeException(NavPath.Peek().ToString());

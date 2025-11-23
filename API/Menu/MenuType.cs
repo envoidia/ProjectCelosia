@@ -14,8 +14,7 @@ public enum MenuType {
     Targeting,
     Log,
     InspectTargeting,
-    Inspect,
-    Debug
+    Inspect
 }
 
 public static class MenuTypeExtensions {

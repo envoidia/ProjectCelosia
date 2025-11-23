@@ -1,11 +1,11 @@
 using System.Resources;
 using Microsoft.Xna.Framework;
 using API.Modding;
-using JetBrains.Annotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Celosia;
 
-[UsedImplicitly]
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public sealed class Main : IGameMod {
     /// <summary>
     /// Publicly accessible instance of <c>Main</c>

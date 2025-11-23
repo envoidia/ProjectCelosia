@@ -7,7 +7,8 @@ namespace API.Input;
 
 public sealed class InputManager {
     // todo private?
-    internal KeyboardState KeyboardState { get; private set; }
+    public KeyboardState PreviousKeyboardState { get; private set; }
+    public KeyboardState KeyboardState { get; private set; }
 
     private GamePadState GamePadState { get; set; } // todo
 
@@ -46,6 +47,7 @@ public sealed class InputManager {
         }*/
 
     public void Update(GameTime gameTime) {
+        this.PreviousKeyboardState = this.KeyboardState;
         this.KeyboardState = Keyboard.GetState();
         this.GamePadState = GamePad.GetState(PlayerIndex.One);
 
@@ -58,6 +60,18 @@ public sealed class InputManager {
             this.InputDeviceChanged = false;
         }
     }
+
+    /// <summary>
+    /// Returns whether a Keys was pressed this frame and not the previosu frame
+    /// </summary>
+    public bool IsKeyPressed(Keys key) => this.KeyboardState.IsKeyDown(key);
+
+    /// <summary>
+    /// Returns whether a Keys was pressed this frame and not the previosu frame
+    /// </summary>
+    public bool IsKeyJustPressed(Keys key) =>
+        this.KeyboardState.IsKeyDown(key) && this.PreviousKeyboardState.IsKeyUp(key);
+
 
     /// <summary>
     /// Call to check for inputs from any number of <c>Keybind</c>s

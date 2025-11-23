@@ -16,7 +16,6 @@ namespace API.Battle;
 public static class BattleHandler {
     public static Battle Battle { get; private set; } // todo
 
-    // todo enum? they added extension operators, so can i give an enum an implicit cast to int? should i?
     private const int TeamCount = 2;
     private const int StatTypeCount = 3;
     private const int TeamSize = 4;
@@ -256,7 +255,7 @@ public static class BattleHandler {
     }
 
     public static void HandleDebug() {
-        if(Core.Input.CheckInput(Keybinds.DebugDumpLog)) {
+        if (Core.Input.CheckInput(Keybinds.DebugDumpLog)) {
             Console.WriteLine(string.Join('\n', LogText));
         }
     }
@@ -526,7 +525,7 @@ public static class BattleHandler {
         Unit target = Battle.PlayerTeam.Units[0];
         // todo support ExA
         Moves[selectingMove].Text = $"{selectedSkill.GetName()} → {target.FormatName(false)}";
-        CurMoves.Add(new Move((SkillInstance) selectedSkill, Battle.OpponentTeam.Units[selectingMove - 4], target.Pos));
+        CurMoves.Add(new Move(new SkillInstance(selectedSkill), Battle.OpponentTeam.Units[selectingMove - 4], target.Pos));
         selectingMove++;
     }
 

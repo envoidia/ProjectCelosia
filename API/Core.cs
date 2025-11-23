@@ -157,15 +157,15 @@ public class Core : Game {
         Content.RootDirectory = "Content";
 
         // Setup stuff
-        RichTextDefaults.ImageResolver = p => {
-            if (TextureCache.TryGetValue(p, out Texture2DRegion? region)) {
+        RichTextDefaults.ImageResolver = str => {
+            if (TextureCache.TryGetValue(str, out Texture2DRegion? region)) {
                 return new TextureFragmentColored(region.Texture, region.Bounds);
             }
 
-            region = IconsAtlas.GetRegion(p);
+            region = IconsAtlas.GetRegion(str);
 
             // Cache the region for future use
-            TextureCache[p] = region;
+            TextureCache[str] = region;
 
             return new TextureFragmentColored(region.Texture, region.Bounds);
         };
