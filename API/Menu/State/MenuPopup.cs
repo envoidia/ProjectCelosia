@@ -10,6 +10,10 @@ public sealed class MenuPopup : IState {
     }
 
     public void Draw(GameTime gameTime) {
+        // Draw the previous IState underneath
+        Core.NavPath.path[^2].Draw(gameTime);
+
+        // Draw popup
         // todo
     }
 

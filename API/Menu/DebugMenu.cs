@@ -66,7 +66,7 @@ public static class DebugMenu {
             $"{(int) (1 / avgFrameTime.TotalSeconds)}({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})", // todo temp
             GC.GetTotalMemory(false) / Mb,
             "todo",
-            string.Join(", ", Core.NavPath.stack.Reverse()),
+            string.Join(", ", Core.NavPath.path),
             "todo",
             ModLoader.LoadedMods.Count);
 
