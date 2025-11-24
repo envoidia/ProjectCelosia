@@ -1,4 +1,5 @@
 using System;
+using API.Battle.State;
 using API.Extensions;
 
 namespace API.Battle.BuffEffects;
@@ -12,7 +13,7 @@ public sealed class ChangeExtraActions(int change) : IBuffEffect {
         int exANew = exAOld + changeFull;
         self.ExtraActions = exANew;
 
-        BattleHandler.AppendToLog(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
+        MenuLog.Add(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
             Math.Max(exAOld, 0).Format(), Math.Max(exANew, 0).Format()));
     }
 }

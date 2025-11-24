@@ -21,7 +21,5 @@ public sealed class TextureFragmentColored : FontStashSharp.RichText.IRenderable
         this.Region = region;
     }
 
-    public void Draw(FSRenderContext context, Vector2 position, Color color) {
-        context.DrawImage(this.Texture, this.Region, position, this._scale, color);
-    }
+    public void Draw(FSRenderContext context, Vector2 position, Color color) => context.DrawImage(this.Texture, this.Region, position, this._scale, color);
 }

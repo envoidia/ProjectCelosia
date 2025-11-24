@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using API.Battle;
+using API.Battle.State;
 using API.Graphics;
 using API.Input;
-using API.Menu;
+using API.Menu.State;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
@@ -20,11 +21,6 @@ public class Core : Game {
     internal static Core sInstance;
 
     public static Core Instance => sInstance;
-
-    /// <summary>
-    /// List of menus that have been traveled through to reach the current menu location
-    /// </summary>
-    public static readonly Stack<MenuType> NavPath = [];
 
     #region Rendering
 
@@ -69,16 +65,29 @@ public class Core : Game {
     /// </summary>
     public static readonly Stage StageSuper = new();
 
-    /// <summary>
-    /// All <c>Stage</c>s to be drawn
-    /// </summary>
-    public static readonly List<Stage> Stages = [StageBase, StageBattle, StageInspect, StageSuper];
+    #endregion
 
     #endregion
+
+    #region IStates
+
+    /// <summary>
+    /// List of IStates that have been traveled through to reach the current location
+    /// </summary>
+    public static readonly NavPath NavPath = new();
+
+    public static readonly MenuMain MenuMain = new();
+    public static readonly MenuPopup MenuPopup = new();
+    public static readonly MenuBattle MenuBattle = new();
+    public static readonly MenuTargeting MenuTargeting = new();
+    public static readonly MenuLog MenuLog = new();
+    public static readonly MenuInspectTargeting MenuInspectTargeting = new();
+    public static readonly MenuInspect MenuInspect = new();
 
     #endregion
 
     private static Label inputPrompt;
+
 
     #region IModItem Lists
 
@@ -215,17 +224,8 @@ public class Core : Game {
         base.Update(gameTime);
     }
 
-    public static void AddMenu(MenuType menuType) {
-        NavPath.Push(menuType);
-        UpdateInputPrompt();
-    }
-
-    public static void RemoveMenu() {
-        NavPath.Pop();
-        UpdateInputPrompt();
-    }
-
-    public static void UpdateInputPrompt() {
-        inputPrompt.Text = NavPath.Peek().GetInputPrompt();
-    }
+    /// <summary>
+    /// Update the input prompt <c>Label</c> in the bottom-right corner
+    /// </summary>
+    public static void UpdateInputPrompt() => inputPrompt.Text = NavPath.GetState().GetInputPrompt();
 }

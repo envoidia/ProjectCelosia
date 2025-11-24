@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using API.Battle.BuffEffects;
+using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 
@@ -60,7 +61,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 }
             }
 
-            BattleHandler.AppendToLog(str.ToString());
+            MenuLog.Add(str.ToString());
 
             int stacksAdded = stacksNew - stacksOld;
 
@@ -71,7 +72,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
             }
         } else {
             // Add buff
-            BattleHandler.AppendToLog(Lang.LogGiveBuffGain.FormatIcu(unit.FormatName(false),
+            MenuLog.Add(Lang.LogGiveBuffGain.FormatIcu(unit.FormatName(false),
                 buffName, buff.MaxStacks, Colors.Num + stacksMod, stacksMod,
                 Colors.Num + turnsMod, turnsMod));
 

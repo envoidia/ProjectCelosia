@@ -1,3 +1,4 @@
+using API.Battle.State;
 using API.Graphics;
 
 namespace API.Battle.BuffEffects;
@@ -12,7 +13,7 @@ public sealed class ChangeStatMod(StatMod mod, int change) : IBuffEffect {
 
         self.SetStatMod(mod, modNew);
 
-        BattleHandler.AppendToLog(string.Format(Lang.LogChangeMod, self.FormatName()),
+        MenuLog.Add(string.Format(Lang.LogChangeMod, self.FormatName()),
             Colors.Stat + mod.GetName(), mod.Format(modOld), mod.Format(modNew));
     }
 }

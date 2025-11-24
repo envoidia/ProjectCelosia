@@ -1,3 +1,5 @@
+using API.Battle.State;
+
 namespace API.Battle.SkillEffects;
 
 public sealed class ChangeBloom(int change) : SkillEffect {
@@ -6,7 +8,7 @@ public sealed class ChangeBloom(int change) : SkillEffect {
             Unit unit = this.GiveToSelf ? self : target;
             Team team = BattleHandler.Battle.GetTeamAtPos(unit.Pos);
 
-            BattleHandler.AppendToLog(CalcLib.ChangeBloom(team, unit.GetSide(), change));
+            MenuLog.Add(CalcLib.ChangeBloom(team, unit.GetSide(), change));
         }
 
         return ResultType.PseudoSuccess;

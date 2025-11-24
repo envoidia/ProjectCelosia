@@ -1,3 +1,5 @@
+using API.Battle.State;
+
 namespace API.Battle.SkillEffects;
 
 public sealed class Damage : SkillEffect {
@@ -64,7 +66,7 @@ public sealed class Damage : SkillEffect {
 
         // Deal damage
         Result result = target.Damage(dmg, this.IsPierce);
-        BattleHandler.AppendToLog(result.Messages);
+        MenuLog.Add(result.Messages);
 
         return result.ResultType;
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using API;
 using API.Graphics;
@@ -7,8 +6,6 @@ using API.Input;
 using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
-using API.Battle;
-using System.Linq;
 
 
 
@@ -19,17 +16,12 @@ using MonoGame.Extended.Content.ContentReaders;
 using API.Modding;
 #endif
 
-using static API.Menu.MenuType;
 
 namespace Game;
 
 public sealed class Game1 : Core {
     // Rendering
     private static Texture2D bg = null!;
-
-    // Menu stuff
-    private static int index;
-    private const int OptCountMain = (int) MainMenu.LastValue - 1;
 
     // Debug
     private static bool isDebugInfoEnabled;
@@ -66,7 +58,7 @@ public sealed class Game1 : Core {
 
         base.Initialize();
 
-        AddMenu(Main);
+        NavPath.Add(MenuMain);
 
 #if NATIVE_AOT
         celosiaMain = new Celosia.Main();
@@ -84,7 +76,17 @@ public sealed class Game1 : Core {
     }
 
     protected override void Update(GameTime gameTime) {
-        this.CheckInput(gameTime);
+        // Toggle debug info overlay
+        isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
+
+        DebugMenu.HandleDebugInfo(isDebugInfoEnabled, gameTime);
+
+        // Switch input prompt between kb/controller
+        if (Input.InputDeviceChanged) UpdateInputPrompt();
+
+        // Update the current IState
+        NavPath.GetState().Update(gameTime);
+
         base.Update(gameTime);
 
 #if NATIVE_AOT
@@ -92,76 +94,6 @@ public sealed class Game1 : Core {
 #else
         ModLoader.UpdateAllMods(gameTime);
 #endif
-    }
-
-    private void CheckInput(GameTime gameTime) {
-        isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
-
-        if (Input.InputDeviceChanged) UpdateInputPrompt();
-
-        /*if (Input.CheckInput(Keybinds.Confirm)) {
-            GuiBoxesHigh[0].Dir *= -1;
-            GuiBoxChainsHigh[0].Dir *= -1;
-            GuiBoxBarsHigh[0].Dir *= -1;
-        }
-
-        if (Input.CheckInput(Keybinds.Menu)) GuiBoxChainsHigh[0].SelectedDiv++;
-        if (Input.CheckInput(Keybinds.Map)) {
-            barIndex++;
-            GuiBoxBarsHigh[0].BarProgs = barProgs[barIndex];
-        }*/
-
-        DebugMenu.HandleDebugInfo(isDebugInfoEnabled, gameTime);
-
-        switch (NavPath.Peek()) {
-            case Main:
-                index = MenuLib.CheckMovement1D(index, OptCountMain);
-                // todo update cursor
-
-                if (Input.CheckInput(Keybinds.Confirm)) {
-                    switch ((MainMenu) index) {
-                        case MainMenu.Start:
-                            AddMenu(MenuType.Battle);
-                            BattleHandler.Initialize();
-                            BattleHandler.StartBattle();
-                            break;
-                        case MainMenu.Encyclopedia:
-                            // todo
-                            break;
-                        case MainMenu.Options:
-                            // todo
-                            break;
-                        case MainMenu.Mods:
-                            // todo
-                            break;
-                        case MainMenu.Credits:
-                            // todo
-                            break;
-                        case MainMenu.Quit:
-                            // todo
-                            break;
-                    }
-                } else if (Input.CheckInput(Keybinds.Back)) {
-                    if ((MainMenu) index == MainMenu.Quit) {
-                        this.Exit();
-                    } else {
-                        index = (int) MainMenu.Quit;
-                    }
-                }
-
-                break;
-            case Popup:
-                if (Input.CheckInput(Keybinds.Confirm, Keybinds.Back)) {
-                    // close
-                }
-
-                break;
-            case MenuType.Battle or Targeting or Log or InspectTargeting or Inspect:
-                BattleHandler.Input(gameTime);
-                break;
-            default: // todo might want to not throw here, for modders?
-                throw new ArgumentOutOfRangeException(NavPath.Peek().ToString());
-        }
     }
 
     protected override void Draw(GameTime gameTime) {
@@ -175,10 +107,12 @@ public sealed class Game1 : Core {
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
-        // Draw all visible stages
-        foreach (Stage stage in Stages) {
-            if (stage.IsVisible) stage.Draw(gameTime);
-        }
+        // Draw permanent stages
+        StageBase.Draw(gameTime);
+        StageSuper.Draw(gameTime);
+
+        // Draw the current IState
+        NavPath.GetState().Draw(gameTime);
 
         // temp
         //foreach (GuiBox label in GuiBoxesHigh) label.Draw(gameTime);

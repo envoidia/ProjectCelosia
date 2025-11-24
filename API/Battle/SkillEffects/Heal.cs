@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 
@@ -37,7 +38,7 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth) {
                 (hpNew - hpOld).Format(Colors.Hp)));
         }
 
-        BattleHandler.AppendToLog(msg);
+        MenuLog.Add(msg);
         return ResultType.PseudoSuccess;
     }
 }

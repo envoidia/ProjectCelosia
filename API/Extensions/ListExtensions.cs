@@ -4,13 +4,9 @@ namespace API.Extensions;
 
 public static class ListExtensions {
     extension<T>(List<T> @this) {
-        public void RemoveFirst() {
-            @this.RemoveAt(0);
-        }
+        public void RemoveFirst() => @this.RemoveAt(0);
 
-        public void RemoveLast() {
-            @this.RemoveAt(@this.Count - 1);
-        }
+        public void RemoveLast() => @this.RemoveAt(@this.Count - 1);
 
         public void SwapRemove(int index) {
             @this[index] = @this[^1];

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using API.Battle.BuffEffects;
+using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 using MonoGame.Extended.Collections;
@@ -309,8 +310,8 @@ public sealed class Unit {
         // Stages
         foreach (StageType stageType in Core.StageTypes) {
             int stage = this.GetStage(stageType);
-            if ((stage != 0) && (--this._stageTurns[stageType] == 0)) {
-                BattleHandler.AppendToLog(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
+            if (stage != 0 && --this._stageTurns[stageType] == 0) {
+                MenuLog.Add(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
@@ -326,7 +327,7 @@ public sealed class Unit {
             if (turns is >= 2 and < 1000) {
                 buffInstance.Turns = turns - 1;
             } else {
-                BattleHandler.AppendToLog(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
+                MenuLog.Add(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
                     buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks));
 

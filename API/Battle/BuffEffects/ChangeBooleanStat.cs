@@ -1,3 +1,4 @@
+using API.Battle.State;
 using API.Extensions;
 
 namespace API.Battle.BuffEffects;
@@ -13,7 +14,7 @@ public sealed class ChangeBooleanStat(BoolStat stat, int change) : IBuffEffect {
 
         // todo how does the effect block message appear
         if (!((statOld >= 1) && (statNew >= 1)) && (stat != BoolStats.EffectBlock)) {
-            BattleHandler.AppendToLog(stat.LogMsgKey.FormatLang(self.FormatName(stat.PossessiveNameInLogMsg),
+            MenuLog.Add(stat.LogMsgKey.FormatLang(self.FormatName(stat.PossessiveNameInLogMsg),
                 statNew, self.Sp.Format()));
         }
     }

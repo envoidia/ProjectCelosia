@@ -1,4 +1,5 @@
 using System;
+using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 
@@ -9,7 +10,7 @@ public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercen
     // todo this might need to display the name if immediate
     public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;
-        BattleHandler.AppendToLog(this.Calc(self, stacks));
+        MenuLog.Add(this.Calc(self, stacks));
     }
 
     public string[] OnTurnEnd(Unit self, int stacks) => !isImmediate ? this.Calc(self, stacks) : [];

@@ -1,10 +1,12 @@
+using API.Battle.State;
+
 namespace API.Battle.BuffEffects;
 
 public sealed class ChangeBloom(int change, bool isImmediate = false) : IBuffEffect {
     public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;
 
-        BattleHandler.AppendToLog(CalcLib.ChangeBloom(BattleHandler.Battle.GetTeamAtPos(self.Pos), self.GetSide(),
+        MenuLog.Add(CalcLib.ChangeBloom(BattleHandler.Battle.GetTeamAtPos(self.Pos), self.GetSide(),
             change));
     }
 

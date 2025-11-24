@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 
@@ -52,7 +53,7 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             msg.Add(str + str2);
         }
 
-        if (msg.Count > 0) BattleHandler.AppendToLog(msg);
+        if (msg.Count > 0) MenuLog.Add(msg);
 
         return ResultType.PseudoSuccess;
     }

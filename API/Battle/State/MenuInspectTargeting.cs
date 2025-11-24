@@ -1,0 +1,33 @@
+using API.Input;
+using API.Menu.State;
+using Microsoft.Xna.Framework;
+using static API.Battle.State.BattleHandler;
+
+namespace API.Battle.State;
+
+// Significant using order
+using static API.Input.InputPrompts;
+
+public sealed class MenuInspectTargeting : IState {
+    public void Update(GameTime gameTime) {
+        HandleDebug();
+
+        if (Core.Input.CheckInput(Keybinds.Back)) {
+            Core.NavPath.Remove();
+            return;
+        }
+
+        if (Core.Input.CheckInput(Keybinds.Confirm, Keybinds.Map)) {
+            Core.NavPath.Remove();
+            Core.NavPath.Add(Core.MenuInspect);
+        }
+    }
+
+    public void Draw(GameTime gameTime) {
+        Core.StageBattle.Draw(gameTime);
+    }
+
+    public string GetInputPrompt() => IState.GetInputPromptString(Move, Confirm, Back, Log);
+
+    private static void CreateInspectTargeting() => Core.NavPath.Add(Core.MenuInspectTargeting);
+}

@@ -7,7 +7,6 @@ namespace API.Menu;
 public static class MenuLib {
     private static readonly TimeSpan LogScrollDelay = TimeSpan.FromSeconds(0.005f);
 
-    // todo fix int fuckery
     public static int CheckMovement1D(int index, int optCount) {
         if (Core.Input.CheckInput(true, Keybinds.Up, Keybinds.Left)) {
             return index == 0 ? optCount - 1 : index - 1;

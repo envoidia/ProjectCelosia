@@ -7,11 +7,6 @@ public sealed class Stage {
     private readonly List<IRenderable> _actors = [];
 
     /// <summary>
-    /// Whether the <c>Stage</c> should be drawn
-    /// </summary>
-    public bool IsVisible { get; set; } = true;
-
-    /// <summary>
     /// Draws all the <c>Stage</c>'s visible actors
     /// </summary>
     public void Draw(GameTime gameTime) {
