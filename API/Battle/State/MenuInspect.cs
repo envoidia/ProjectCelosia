@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleHandler;
 using System;
+using API.Extensions;
 
 namespace API.Battle.State;
 
@@ -102,6 +103,12 @@ public sealed class MenuInspect : IState {
     }
 
     #endregion
+
+    public MenuInspect() {
+        if (Core.MenuInspect is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuInspect)));
+        }
+    }
 
     public void Update(GameTime gameTime) {
         HandleDebug();

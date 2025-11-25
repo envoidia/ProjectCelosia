@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Menu;
 
-public static class DebugMenu {
+public static class MenuDebug {
     private const int Mb = 1024 * 1024;
 
     private static TimeSpan timeSinceUpdate = TimeSpan.FromSeconds(1);
@@ -66,7 +66,7 @@ public static class DebugMenu {
             $"{(int) (1 / avgFrameTime.TotalSeconds)}({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})", // todo temp
             GC.GetTotalMemory(false) / Mb,
             "todo",
-            string.Join(", ", Core.NavPath.path),
+            string.Join(", ", Core.NavPath.path), // todo sanitize string
             "todo",
             ModLoader.LoadedMods.Count);
 

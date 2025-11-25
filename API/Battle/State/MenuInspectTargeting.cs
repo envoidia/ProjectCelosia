@@ -1,3 +1,5 @@
+using System;
+using API.Extensions;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
@@ -9,6 +11,13 @@ namespace API.Battle.State;
 using static API.Input.InputPrompts;
 
 public sealed class MenuInspectTargeting : IState {
+
+    public MenuInspectTargeting() {
+        if (Core.MenuInspectTargeting is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuInspectTargeting)));
+        }
+    }
+    
     public void Update(GameTime gameTime) {
         HandleDebug();
 

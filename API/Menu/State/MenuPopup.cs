@@ -1,3 +1,5 @@
+using System;
+using API.Extensions;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
@@ -5,6 +7,13 @@ namespace API.Menu.State;
 using static API.Input.InputPrompts;
 
 public sealed class MenuPopup : IState {
+
+    public MenuPopup() {
+        if (Core.MenuPopup is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuPopup)));
+        }
+    }
+
     public void Update(GameTime gameTime) {
 
     }

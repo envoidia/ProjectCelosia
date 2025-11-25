@@ -2,6 +2,7 @@ using System.Resources;
 using Microsoft.Xna.Framework;
 using API.Modding;
 using System.Diagnostics.CodeAnalysis;
+using API.Extensions;
 
 namespace Celosia;
 
@@ -19,7 +20,7 @@ public sealed class Main : IGameMod {
     public void Initialize() {
         // Ensure that only 1 instance of Main is created
         if (ModInstance is not null) {
-            throw new InvalidOperationException(string.Format(API.Lang.ModMultipleInstance, Lang.ModName));
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(Main)));
         }
 
         ModInstance = this;

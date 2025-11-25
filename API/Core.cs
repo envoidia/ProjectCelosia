@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using API.Battle;
 using API.Battle.State;
+using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;
@@ -118,7 +119,7 @@ public class Core : Game {
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created
         if (sInstance is not null) {
-            throw new InvalidOperationException(Lang.MultipleInstance);
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(Core)));
         }
 
         // Store reference to engine for global member access

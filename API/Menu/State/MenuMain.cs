@@ -1,4 +1,6 @@
+using System;
 using API.Battle.State;
+using API.Extensions;
 using API.Input;
 using Microsoft.Xna.Framework;
 
@@ -22,6 +24,12 @@ public sealed class MenuMain : IState {
     }
 
     private const int OptCountMain = (int) Options.LastValue - 1;
+
+    public MenuMain() {
+        if (Core.MenuMain is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuMain)));
+        }
+    }
 
     public void Update(GameTime gameTime) {
         index = MenuLib.CheckMovement1D(index, OptCountMain);

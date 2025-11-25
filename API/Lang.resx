@@ -28,10 +28,7 @@
         <value>API</value>
     </data>
     <data name="MultipleInstance" xml:space="preserve">
-        <value>Only a single API.Core instance can be created</value>
-    </data>
-    <data name="ModMultipleInstance" xml:space="preserve">
-        <value>Only a single {0}.Main instance can be created</value>
+        <value>Only a single {0} instance can be created</value>
     </data>
     <data name="Blank" xml:space="preserve">
         <value/>

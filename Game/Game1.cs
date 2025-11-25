@@ -79,7 +79,7 @@ public sealed class Game1 : Core {
         // Toggle debug info overlay
         isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
 
-        DebugMenu.HandleDebugInfo(isDebugInfoEnabled, gameTime);
+        MenuDebug.HandleDebugInfo(isDebugInfoEnabled, gameTime);
 
         // Switch input prompt between kb/controller
         if (Input.InputDeviceChanged) UpdateInputPrompt();

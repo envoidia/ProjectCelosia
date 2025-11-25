@@ -1,3 +1,5 @@
+using System;
+using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu;
@@ -17,6 +19,12 @@ public sealed class MenuTargeting : IState {
     /// How many extra actions have been used for the currently acting Unit
     /// </summary>
     private static int extraActions = 0;
+
+    public MenuTargeting() {
+        if (Core.MenuTargeting is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuTargeting)));
+        }
+    }
 
     public void Update(GameTime gameTime) {
         HandleDebug();

@@ -193,8 +193,6 @@ public static class BattleHandler {
         }
 
         Queue.Text = sb.ToString();
-
-
     }
     #endregion
 }

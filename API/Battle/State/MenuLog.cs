@@ -5,6 +5,8 @@ using API.Menu.State;
 using Microsoft.Xna.Framework;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleHandler;
+using System;
+using API.Extensions;
 
 namespace API.Battle.State;
 
@@ -18,6 +20,12 @@ public sealed class MenuLog : IState {
     /// Amount of lines scrolled upwards
     /// </summary>
     private static int logScroll = 0;
+
+    public MenuLog() {
+        if (Core.MenuLog is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuLog)));
+        }
+    }
 
     public void Update(GameTime gameTime) {
         HandleDebug();

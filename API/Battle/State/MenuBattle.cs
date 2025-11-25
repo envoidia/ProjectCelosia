@@ -50,6 +50,12 @@ public sealed class MenuBattle : IState {
     /// </summary>
     private static TimeSpan delay;
 
+    public MenuBattle() {
+        if (Core.MenuBattle is not null) {
+            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuBattle)));
+        }
+    }
+
     public void Update(GameTime gameTime) {
         HandleDebug();
 
