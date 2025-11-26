@@ -10,7 +10,7 @@ namespace API.Battle.State;
 
 // todo finish + cleanup + reduce visibility when possible
 public static class BattleHandler {
-    public static Battle Battle { get; private set; } // todo
+    public static Battle Battle { get; private set; } = null!; // todo
 
     private const int TeamCount = 2;
     internal const int StatTypeCount = 3;
@@ -68,9 +68,9 @@ public static class BattleHandler {
         for (int i = 0; i < UnitCount; i++) {
             int y = i >= 4 ? 450 + (450 * (i - 4)) : 450 + (450 * i);
 
-            StatsL[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 350 : 75, y) };
-            BuffsL[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 525 : 75, y - 95) };
-            Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 825 : 600, y) };
+            StatsL[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 500 : 75, y) };
+            BuffsL[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 500 : 75, y + 150) };
+            Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 825 : 600, y + 50) };
             UnitNames[i] = new Label(Core.StageBattle) { Y = 52 };
         }
 
@@ -83,15 +83,9 @@ public static class BattleHandler {
 
     public static void StartBattle() {
         // temp setup teams
-        // todo remove pos from unit constructor, assign in battle constructor?
-        Battle = new Battle(new Team(new Unit(UnitTypes.TestUnitType, 19, null, 0, Skills.Nothing, Skills.Defend),
-            new Unit(UnitTypes.TestUnitType, 19, null, 1, Skills.Nothing, Skills.Defend),
-            new Unit(UnitTypes.TestUnitType, 19, null, 2, Skills.Nothing, Skills.Defend),
-            new Unit(UnitTypes.TestUnitType, 19, null, 3, Skills.Nothing, Skills.Defend)),
-            new Team(new Unit(UnitTypes.TestUnitType, 19, null, 4, Skills.Nothing, Skills.Defend),
-                new Unit(UnitTypes.TestUnitType, 19, null, 5, Skills.Nothing, Skills.Defend),
-                new Unit(UnitTypes.TestUnitType, 19, null, 6, Skills.Nothing, Skills.Defend),
-                new Unit(UnitTypes.TestUnitType, 19, null, 7, Skills.Nothing, Skills.Defend)));
+        Battle = Core.battle;
+
+        MenuLog.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
 
         UpdateStatDisplay(0);
     }
@@ -150,22 +144,21 @@ public static class BattleHandler {
                 buffCount++;
 
                 if (buffInstance.Buff == Buffs.Defend) {
-                    sb.Append(buffInstance.Buff.Icon).Append("[WHITE]").Append('x')
+                    sb.Append(buffInstance.Buff.Icon).Append(Colors.White).Append('x')
                             .Append(units[i].Defend.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 } else if (buffInstance.Buff == Buffs.Shield) {
-                    sb.Append(buffInstance.Buff.Icon).Append("[WHITE]").Append('x')
+                    sb.Append(buffInstance.Buff.Icon).Append(Colors.White).Append('x')
                             .Append(units[i].Shield.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 } else {
-                    sb.Append(buffInstance.Buff.Icon).Append("[WHITE]");
+                    sb.Append(buffInstance.Buff.Icon).Append(Colors.White);
                     if (buffInstance.Buff.MaxStacks > 1) {
                         sb.Append('x').Append(buffInstance.Stacks);
                     }
 
-                    // 1000+ turns = infinite
                     sb.Append('(');
-                    if (buffInstance.Turns < 1000) sb.Append(buffInstance.Turns);
+                    if (buffInstance.Turns < BuffInstance.InfiniteTurns) sb.Append(buffInstance.Turns);
                     else sb.Append('∞');
                     sb.Append(") ");
                 }

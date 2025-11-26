@@ -26,5 +26,5 @@ public sealed class UnitType : DescriptionEntity, IModItem {
 public static class UnitTypes {
     public static readonly UnitType TestUnitType = new(null, "TestUnitType", "Todo", new Dictionary<Stat, int>() {
         [Stats.Hp] = 100, [Stats.Str] = 100, [Stats.Mag] = 100, [Stats.Fth] = 100, [Stats.Amr] = 100, [Stats.Res] = 100, [Stats.Agi] = 100
-    }, new Dictionary<Element, int>());
+    }, []);
 }

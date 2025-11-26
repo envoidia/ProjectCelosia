@@ -48,6 +48,9 @@
     <data name="ErrGetMergedGlyphKeybindId" xml:space="preserve">
         <value>KeybindId must be LeftRight, UpDown, or LeftRightUpDown</value>
     </data>
+    <data name="Err0Args" xml:space="preserve">
+        <value>Must pass at least 1 arg</value>
+    </data>
     <!--Modloader info-->
     <!-- 0 = mod name, 1 = exception message -->
     <data name="ErrModLoadFail" xml:space="preserve">
@@ -560,6 +563,10 @@ etc todo</value>
     <data name="RangeColumnOf32R" xml:space="preserve">
         <value>Column of 3 2R</value>
     </data>
+    <!--Unit types-->
+    <data name="TestUnitType" xml:space="preserve">
+        <value>Test UnitType</value>
+    </data>
     <!--Battle log messages-->
     <data name="LogGainSpBloom" xml:space="preserve">
         <value>All units gain /c[#bb00ff]100 /c[#deff81]SP/c[white]; both teams gain /c[#ff00ff]100 /c[#deff81]Bloom</value>
@@ -608,7 +615,7 @@ etc todo</value>
     <!--0 = name, 1 = old HP, 2 = new HP, 3 = max HP, 4 = change
     Name's HP a → b/c (+d)-->
     <data name="LogChangeHp" xml:space="preserve">
-        <value>{0} /c[#deff81]HP {1} /c[white]→ {2}/c[white]/{3} /c[white]({4}/c[white])</value>
+        <value>{0} /c[#deff81]HP {1} /c[white]→ {2}/c[white]//{3} /c[white]({4}/c[white])</value>
     </data>
     <!--0 = name, 1 = old SP, 2 = new SP, 3 = change
     Name's SP a → b (+c)-->
@@ -643,7 +650,7 @@ etc todo</value>
     <!--0 = name, 1 = stat name, 2 = old stat, 3 = new stat, 4 = default stat, 5 = change
     Name's stat a → b/c (+d)-->
     <data name="LogChangeStat" xml:space="preserve">
-        <value>{0} {1} {2} /c[white]→ {3}/c[white]//c[#ffff00]{4} /c[white]({5}/c[white])</value>
+        <value>{0} {1} {2} /c[white]→ {3}/c[white]//{4} /c[white]({5}/c[white])</value>
     </data>
     <!--0 = name, 1 = buff name, 2 = old stacks, 3 = new stacks
     Name's buff stacks a → b-->
@@ -659,13 +666,13 @@ etc todo</value>
     Max stacks > 1: Name gains buff with a stacks and b turns
     Max stacks = 1: Name gains buff for b turns-->
     <data name="LogGiveBuffGain" xml:space="preserve">
-        <value>{0} gains {1} /c[white]{2,plural,=1{for}other{with} {3} /c[white]/c[white]{4,plural,=1{stack}other{stacks}} and} {5} /c[white]{6,plural,=1{turn}other{turns}}</value>
+        <value>{0} gains {1} /c[white]{2,plural,=1{for}other{with {3} /c[white]/c[white]{4,plural,=1{stack}other{stacks}} and}} {5} /c[white]{6,plural,=1{turn}other{turns}}</value>
     </data>
     <!--0 = name, 1 = max stacks, 2 = display-formatted stacks, 3 = buff name, 4 = raw stacks
     Max stacks > 1: Name loses 3 buff stacks
     Max stacks = 1: Name loses buff-->
     <data name="LogLoseBuff" xml:space="preserve">
-        <value>{0} /c[white]loses {1,plural,1#|2#{{2} }}{3} {1,plural,=2{{4,plural,=1{stack}other{stacks}}}other{}}</value>
+        <value>{0} /c[white]loses {1,plural,=2{{2} }other{}}{3} {1,plural,=2{{4,plural,=1{stack}other{stacks}}}other{}}</value>
     </data>
     <!--0 = name, 1 = stages, 2 = display-formatted stages, 3 = stage name, 4 = stageStatString
     Name loses a Atk/Def/Fth/Agi stage(s) (stageStatString)-->
@@ -717,12 +724,12 @@ etc todo</value>
     <!--0 = name, 1 = skill name
     Name tries to use skill-->
     <data name="LogTriesToUse1" xml:space="preserve">
-        <value>{0} /c[white]tries to use {1}</value>
+        <value>{0} tries to use {1}</value>
     </data>
     <!--0 = name
     on Name-->
     <data name="LogTriesToUse2" xml:space="preserve">
-        <value> /c[white] on {0}</value>
+        <value>/c[white] on {0}</value>
     </data>
     <data name="LogButIsUnableToAct" xml:space="preserve">
         <value>, but is unable to act</value>

@@ -23,7 +23,7 @@ public sealed class MenuLog : IState {
 
     public MenuLog() {
         if (Core.MenuLog is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuLog)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance,nameof(MenuLog)));
         }
     }
 

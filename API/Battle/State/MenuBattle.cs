@@ -52,7 +52,7 @@ public sealed class MenuBattle : IState {
 
     public MenuBattle() {
         if (Core.MenuBattle is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuBattle)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuBattle)));
         }
     }
 
@@ -80,7 +80,7 @@ public sealed class MenuBattle : IState {
     private static void SelectPlayerMove() {
         if (selectingMove >= Battle.PlayerTeam.Units.Length) return;
 
-        SkillsL.Position = new Vector2(600, World.H - 400 - (250 * selectingMove));
+        SkillsL.Position = new Vector2(600, 500 + (450 * selectingMove));
         // todo support ExA
         // todo do not assign every frame
         SkillsL.Text =
@@ -155,11 +155,11 @@ public sealed class MenuBattle : IState {
         // todo test
         CurMoves.Sort((a, b) => {
             // Sort by Prio
-            int prioComparison = b.SkillInstance.Skill.Prio.CompareTo(a.SkillInstance.Skill.Prio);
+            int prioComparison = a.SkillInstance.Skill.Prio.CompareTo(b.SkillInstance.Skill.Prio);
             if (prioComparison != 0) return prioComparison;
 
             // Sort by Agi
-            int agiComparison = b.Self.GetStat(Stats.Agi).CompareTo(a.Self.GetStat(Stats.Agi));
+            int agiComparison = a.Self.GetStat(Stats.Agi).CompareTo(b.Self.GetStat(Stats.Agi));
             if (agiComparison != 0) return agiComparison;
 
             // Sort by Pos
@@ -170,22 +170,22 @@ public sealed class MenuBattle : IState {
         Unit self = move.Self;
 
         if (self.IsBoolStat(BoolStats.UnableToAct)) {
-            MenuLog.Add(Lang.LogSkillFailUnableToAct, move.GetTriesToUseString(),
-            Lang.LogButIsUnableToAct, self.GetBoolStat(BoolStats.UnableToAct).ToString()); // todo test
+            MenuLog.Add(string.Format(Lang.LogSkillFailUnableToAct, move.GetTriesToUseString(),
+            string.Format(Lang.LogButIsUnableToAct, self.GetBoolStat(BoolStats.UnableToAct).ToString()))); // todo test
             EndMove();
             return;
         }
 
         int cd = move.SkillInstance.Cooldown;
         if (cd > 0 && applyingEffect == 0) {
-            MenuLog.Add(Lang.LogSkillFailCooldown.FormatLang(move.GetTriesToUseString(),
+            MenuLog.Add(string.Format(Lang.LogSkillFailCooldown, move.GetTriesToUseString(),
                 Lang.LogButItsOnCooldown.FormatIcu(cd)));
             EndMove();
             return;
         }
 
         if (!move.IsInRange()) {
-            MenuLog.Add(Lang.LogSkillFailRange.FormatLang(move.GetTriesToUseString(), Lang.LogButCantReach));
+            MenuLog.Add(string.Format(Lang.LogSkillFailRange, move.GetTriesToUseString(), Lang.LogButCantReach));
             EndMove();
             return;
         }
@@ -204,15 +204,14 @@ public sealed class MenuBattle : IState {
             int cost = self.IsBoolStat(BoolStats.InfiniteSp) && !skill.IsBloom ? 0 : skill.Cost;
 
             // Make sure cost doesn't go below 1 unless the skill has a base 0 SP cost
-            int costMod =
-                cost > 0 ? (int) Math.Max(cost * (AffLib.SpCost[self.GetAffinity(element)] / 1000d), 1) : 0;
+            int costMod = cost > 0 ? (int) Math.Max(cost * (AffLib.SpCost[self.GetAffinity(element)] / 1000d), 1) : 0;
 
             int change = (int) (skill.IsBloom ? costMod : costMod * self.GetMult(Mults.SpUse));
             spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
 
             if (spNew < 0) {
-                string msg = "LogSkillFailSp".FormatLang(move.GetTriesToUseString(),
-                    "LogButDoesntHaveEnough".FormatIcu(skill.IsBloom.ToInt()));
+                string msg = string.Format(Lang.LogSkillFailSp, move.GetTriesToUseString(),
+                    Lang.LogButDoesntHaveEnough.FormatIcu(skill.IsBloom.ToInt()));
                 MenuLog.Add(msg);
             } else {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
@@ -223,16 +222,14 @@ public sealed class MenuBattle : IState {
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = "LogSkillUseChangeSpBloom".FormatIcu(isBloom.ToInt(), spOld, spNew, change);
+                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(isBloom.ToInt(), spOld.Format(Colors.Sp, false),
+                        spNew.Format(Colors.Sp, false), change.Format());
                 }
 
-                if (isBloom) {
-                    team.Bloom = spNew;
-                } else {
-                    self.Sp = spNew;
-                }
+                if (isBloom) team.Bloom = spNew;
+                else self.Sp = spNew;
 
-                MenuLog.Add("LogSkillUse".FormatIcu(self.FormatName(false),
+                MenuLog.Add(Lang.LogSkillUse.FormatIcu(self.FormatName(false),
                     skill.GetName(Colors.Skill),
                     target.FormatName(false),
                     skill.IsRangeSelf().ToInt().ToString(), changeSp));
@@ -316,7 +313,7 @@ public sealed class MenuBattle : IState {
 
             foreach (Passive passive in unit.Passives) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder(Lang.LogTurnEndEffect.FormatLang(unit.FormatName(),
+                    new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(),
                         Colors.Passive + passive.GetName())).Append(' ');
 
                 foreach (IBuffEffect buffEffect in passive.BuffEffects) {
@@ -324,9 +321,7 @@ public sealed class MenuBattle : IState {
                     string[] effectMsgs = buffEffect.OnTurnEnd(unit, 1);
 
                     foreach (string effectMsg in effectMsgs) {
-                        if (!string.IsNullOrEmpty(effectMsg)) {
-                            turnEnd2.Append(effectMsg);
-                        }
+                        if (!string.IsNullOrEmpty(effectMsg)) turnEnd2.Append(effectMsg);
                     }
 
                     if (turnEnd2.Length > 0) MenuLog.Add(turnEnd1 + turnEnd2.ToString());
@@ -335,7 +330,7 @@ public sealed class MenuBattle : IState {
 
             foreach (BuffInstance buffInstance in unit.BuffInstances) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder(Lang.LogTurnEndEffect.FormatLang(unit.FormatName(), buffInstance.Buff.GetName()))
+                    new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(), buffInstance.Buff.GetName()))
                         .Append(' ');
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {

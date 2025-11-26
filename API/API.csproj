@@ -18,10 +18,7 @@
         <EmbeddedResource Update="Lang.resx">
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>Lang.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-        <EmbeddedResource Update="Lang.de-DE.resx">
-            <Generator>PublicResXFileCodeGenerator</Generator>
-            <LastGenOutput>Lang.de-DE.Designer.cs</LastGenOutput>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
@@ -29,11 +26,6 @@
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
             <DependentUpon>Lang.resx</DependentUpon>
-        </Compile>
-        <Compile Update="Lang.de-DE.Designer.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Lang.de-DE.resx</DependentUpon>
         </Compile>
     </ItemGroup>
     <Target Name="GenerateBuildDate" BeforeTargets="BeforeCompile">

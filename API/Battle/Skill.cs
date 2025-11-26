@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using API.Battle.SkillEffects;
@@ -17,12 +18,18 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     public bool IsBloom { get; init; } = false;
 
     public SkillRole[] SkillRoles { get; init; } = [];
-    public SkillEffect[] SkillEffects { get; init; } = [];
+    public SkillEffect[] SkillEffects {
+        get;
+        init {
+            field = value;
+            this.Icon = this.GetElement().Icon;
+        }
+    } = [];
 
     public IGameMod? Source { get; }
 
     public Skill(IGameMod? source, string keyName, string keyDescription, Range range, int cost)
-        : base(keyName, keyDescription, "") {
+        : base(keyName, keyDescription, Elements.Vis.Icon) {
         // todo null icon
         this.Source = source;
         this.Range = range;
@@ -44,7 +51,9 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     // todo multiple elements
     public Element GetElement() {
         foreach (SkillEffect skillEffect in this.SkillEffects) {
-            if (skillEffect.Element != Elements.Vis) return skillEffect.Element;
+            if (skillEffect.Element != Elements.Vis) {
+                return skillEffect.Element;
+            }
         }
 
         return Elements.Vis;

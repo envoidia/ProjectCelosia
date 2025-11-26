@@ -106,7 +106,7 @@ public sealed class MenuInspect : IState {
 
     public MenuInspect() {
         if (Core.MenuInspect is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuInspect)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuInspect)));
         }
     }
 

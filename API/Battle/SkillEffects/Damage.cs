@@ -1,3 +1,4 @@
+using System;
 using API.Battle.State;
 
 namespace API.Battle.SkillEffects;
@@ -7,7 +8,8 @@ public sealed class Damage : SkillEffect {
     public bool IsPierce { get; init; } = false;
     public bool IsFollowUp { get; init; } = false;
 
-    public Damage(int pow, SkillType skillType, Element element) : base(pow, skillType) => this.Element = element;
+    public Damage(int pow, SkillType skillType, Element element) : base(pow, skillType, null) =>
+        this.Element = element;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
         // If the previous hit failed entirely, this one wouldn't have been reached. If this return statement is ever

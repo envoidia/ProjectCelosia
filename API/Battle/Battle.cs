@@ -18,14 +18,16 @@ public sealed class Battle {
         Dictionary<UnitType, int> countDict = units.GroupBy(u => u.UnitType).ToDictionary(g => g.Key, g => g.Count());
         Dictionary<UnitType, int> counterDict = [];
 
-        foreach (Unit unit in units) {
-            if (!countDict.ContainsKey(unit.UnitType)) {
-                unit.DupeIndex = 0;
+        for (int i = 0; i < units.Length; i++) {
+            units[i].Pos = i;
+
+            if (!countDict.ContainsKey(units[i].UnitType)) {
+                units[i].DupeIndex = 0;
                 continue;
             }
 
-            counterDict.TryAdd(unit.UnitType, 0);
-            unit.DupeIndex = ++counterDict[unit.UnitType];
+            counterDict.TryAdd(units[i].UnitType, 0);
+            units[i].DupeIndex = ++counterDict[units[i].UnitType];
         }
     }
 

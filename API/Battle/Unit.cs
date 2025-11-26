@@ -17,7 +17,7 @@ public sealed class Unit {
     public int Sp { get; set; } = 200;
 
     /// <summary>
-    /// Position on the battlefield
+    /// Position on the battlefield.
     /// 0 4 /
     /// 1 5 /
     /// 2 6 /
@@ -26,7 +26,7 @@ public sealed class Unit {
     public int Pos { get; set; }
 
     /// <summary>
-    /// If there's more than 1 Unit with this UnitType in the current battle, disambiguates which one this is
+    /// If there's more than 1 Unit with this UnitType in the current battle, disambiguates which one this is.
     /// 0 = There are no duplicates
     /// </summary>
     public int DupeIndex { get; set; } = 0;
@@ -35,17 +35,21 @@ public sealed class Unit {
     /// Shield is hit before HP, and Defend before Shield. Together they cannot exceed max HP
     /// </summary>
     public int Shield { get; set; } = 0;
+
+    /// <summary>
+    /// Shield is hit before HP, and Defend before Shield. Together they cannot exceed max HP
+    /// </summary>
     public int Defend { get; set; } = 0;
 
     public List<SkillInstance> SkillInstances { get; }
-    public List<BuffInstance> BuffInstances => [];
+    public List<BuffInstance> BuffInstances { get; } = [];
     public List<Passive> Passives { get; }
 
     // Stats
     private readonly Dictionary<Stat, int> _stats;
 
     /// <summary>
-    /// Treated as multipliers applied to _stats, in 10ths of a % (1000 = 100%), min 10%
+    /// Treated as multipliers applied to _stats, in 10ths of a % (1,000 = 100%), min 10%
     /// </summary>
     private readonly Dictionary<Stat, int> _statsMult = [];
 
@@ -70,10 +74,9 @@ public sealed class Unit {
 
     public int ExtraActions { get; set; } = 0;
 
-    public Unit(UnitType unitType, int lvl, IEquippable? equipped, int pos, params Skill[] skills) {
+    public Unit(UnitType unitType, int lvl, IEquippable? equipped, params Skill[] skills) {
         this.UnitType = unitType;
         this.Lvl = lvl;
-        this.Pos = pos;
 
         this._stats = unitType.Stats.ToDictionary(kvp => kvp.Key,
             kvp => kvp.Value + ((kvp.Value / 2) * this.Lvl * BattleLib.StatMult));
@@ -113,9 +116,9 @@ public sealed class Unit {
     public int GetStatWithStage(Stat stat, int stage) {
         if (stat == Stats.Hp) return this.Hp;
 
-        return this._stats.GetValueOrDefault(stat, 0) *
-               (Math.Max(this._statsMult.GetValueOrDefault(stat, 1000), 100) / 1000) *
-               (stage / 10 / (stage < 0 ? 2 : 1));
+        return (int) (this._stats.GetValueOrDefault(stat, 0) *
+               (Math.Max(this._statsMult.GetValueOrDefault(stat, 1000), 100) / 1000f) *
+               (1 + (stage / 10 / (stage < 0 ? 2 : 1))));
     }
 
     public int GetStat(Stat stat) => this.GetStatWithStage(stat, this.GetStage(stat.StageType));
@@ -400,8 +403,8 @@ public sealed class Unit {
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._stats[Stats.Hp]);
         int hpNew = this.Hp;
-        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp), hpNew.Format(Colors.Hp),
-            this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-dmg).Format()));
+        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp, false), hpNew.Format(Colors.Hp, false),
+            this.GetBaseStat(Stats.Hp).Format(Colors.Hp, false), (-dmg).Format()));
 
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {
@@ -413,13 +416,16 @@ public sealed class Unit {
             : new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
     }
 
-    // todo support other langs + different names for multiples of the same UnitType (+ nicknames?)
+    // todo support other langs (+ nicknames?)
     public string FormatName(bool possessive = true) {
-        string color = this.GetSide() == Side.Ally ? Colors.Ally : Colors.Opp;
-        string name = this.UnitType.GetName(color);
-        string suffix = possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "";
-        string dupeStr = this.DupeIndex == 0 ? "" : $" {this.DupeIndex}";
+        string name = this.UnitType.GetName(
+            // Color
+            this.GetSide() == Side.Ally ? Colors.Ally : Colors.Opp) +
+            // Dupe disambiguation
+            (this.DupeIndex == 0 ? "" : $" {this.DupeIndex}");
 
-        return name + suffix + dupeStr + Colors.White;
+        string suffix = (possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "") + Colors.White;
+
+        return name + suffix;
     }
 }

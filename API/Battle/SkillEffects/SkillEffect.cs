@@ -1,3 +1,4 @@
+using System.Globalization;
 using API.Entity;
 
 namespace API.Battle.SkillEffects;

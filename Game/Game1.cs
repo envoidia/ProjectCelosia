@@ -7,15 +7,12 @@ using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 
-
-
 #if NATIVE_AOT
 using Microsoft.Xna.Framework.Content;
 using MonoGame.Extended.Content.ContentReaders;
 #else
 using API.Modding;
 #endif
-
 
 namespace Game;
 
@@ -25,7 +22,6 @@ public sealed class Game1 : Core {
 
     // Debug
     private static bool isDebugInfoEnabled;
-    private static bool isDebugConsoleEnabled;
 
     // temp
     //private static float[][] barProgs = [[1, 0.5f, 0.25f], [0.5f, 0.35f, 1], [0.75f, 1, 0.15f]];
@@ -47,7 +43,7 @@ public sealed class Game1 : Core {
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(1920, 1080), false, false, false));
+            new Point(2560, 1440), false, false, false));
     }
 
     protected override void Initialize() {
@@ -103,16 +99,16 @@ public sealed class Game1 : Core {
             null, null, Resolution.TransformationMatrix());
         ShapeBatch.Begin(Resolution.TransformationMatrix());
 
-        SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
+        //SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
-        // Draw permanent stages
         StageBase.Draw(gameTime);
-        StageSuper.Draw(gameTime);
 
         // Draw the current IState
         NavPath.GetState().Draw(gameTime);
+
+        StageSuper.Draw(gameTime);
 
         // temp
         //foreach (GuiBox label in GuiBoxesHigh) label.Draw(gameTime);

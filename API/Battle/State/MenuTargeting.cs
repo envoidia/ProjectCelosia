@@ -22,7 +22,7 @@ public sealed class MenuTargeting : IState {
 
     public MenuTargeting() {
         if (Core.MenuTargeting is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuTargeting)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuTargeting)));
         }
     }
 

@@ -19,28 +19,28 @@ using MonoGame.Extended.Graphics;
 namespace API;
 
 public class Core : Game {
-    internal static Core sInstance;
+    internal static Core sInstance = null!;
 
     public static Core Instance => sInstance;
 
     #region Rendering
 
-    public static GraphicsDeviceManager Graphics { get; private set; }
-    public new static GraphicsDevice GraphicsDevice { get; private set; }
-    public static SpriteBatch SpriteBatch { get; private set; }
-    public static ShapeBatch ShapeBatch { get; private set; }
-    public static Texture2D WhitePixel { get; private set; }
-    public static readonly Dictionary<string, Texture2DRegion> TextureCache = new();
+    public static GraphicsDeviceManager Graphics { get; private set; } = null!;
+    public new static GraphicsDevice GraphicsDevice { get; private set; } = null!;
+    public static SpriteBatch SpriteBatch { get; private set; } = null!;
+    public static ShapeBatch ShapeBatch { get; private set; } = null!;
+    public static Texture2D WhitePixel { get; private set; } = null!;
+    public static readonly Dictionary<string, Texture2DRegion> TextureCache = [];
 
-    public static Texture2DAtlas IconsAtlas { get; set; }
+    public static Texture2DAtlas IconsAtlas { get; set; } = null!;
 
     // Fonts
-    public static FontSystem KoruriSystem { get; set; }
-    public static DynamicSpriteFont Koruri50 { get; private set; }
+    public static FontSystem KoruriSystem { get; set; } = null!;
+    public static DynamicSpriteFont Koruri50 { get; private set; } = null!;
 
-    public new static ContentManager Content { get; private set; }
+    public new static ContentManager Content { get; private set; } = null!;
 
-    public static InputManager Input { get; private set; }
+    public static InputManager Input { get; private set; } = null!;
 
     public static bool ExitOnEscape { get; set; }
 
@@ -87,7 +87,7 @@ public class Core : Game {
 
     #endregion
 
-    private static Label inputPrompt;
+    private static Label inputPrompt = null!;
 
 
     #region IModItem Lists
@@ -109,6 +109,9 @@ public class Core : Game {
 
     #endregion
 
+    // temp debug
+    public static Battle.Battle battle = null!;
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -119,7 +122,7 @@ public class Core : Game {
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created
         if (sInstance is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(Core)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(Core)));
         }
 
         // Store reference to engine for global member access

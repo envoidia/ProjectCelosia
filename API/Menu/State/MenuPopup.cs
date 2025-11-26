@@ -10,7 +10,7 @@ public sealed class MenuPopup : IState {
 
     public MenuPopup() {
         if (Core.MenuPopup is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuPopup)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuPopup)));
         }
     }
 

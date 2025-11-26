@@ -5,7 +5,7 @@ namespace API.Entity;
 
 public abstract class IconEntity(string keyName, string keyDescription, string icon)
     : DescriptionEntity(keyName, keyDescription) {
-    public string Icon => icon;
+    public string Icon { get; init; } = icon;
 
     public override string GetName(string color, IGameMod? mod = null) =>
         $"{this.Icon} {base.GetName(color, mod)}";

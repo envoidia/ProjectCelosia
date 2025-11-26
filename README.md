@@ -18,9 +18,9 @@ Actively supports [modding](MODDING.md)
   - [MonoGame](https://monogame.net/)
   - [MonoGame Extended](https://www.monogameextended.net/)
   - [MessageFormat.NET](https://github.com/jeffijoe/messageformat.net)
-  - [OneOf](https://github.com/mcintyre321/OneOf)
+  - [OneOf](https://github.com/mcintyre321/OneOf) (will be removed eventually)
   - [ResolutionBuddy](https://github.com/dmanning23/ResolutionBuddy)
-  - todo add more
+  - todo more info
 - Assets:
   - [Koruri](https://github.com/Koruri/Koruri) 
   - [icons-texture.png](Game/Content/img/icons-texture.png)

@@ -14,10 +14,10 @@ public sealed class MenuInspectTargeting : IState {
 
     public MenuInspectTargeting() {
         if (Core.MenuInspectTargeting is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuInspectTargeting)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuInspectTargeting)));
         }
     }
-    
+
     public void Update(GameTime gameTime) {
         HandleDebug();
 

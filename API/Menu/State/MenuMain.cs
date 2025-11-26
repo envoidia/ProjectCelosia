@@ -27,7 +27,7 @@ public sealed class MenuMain : IState {
 
     public MenuMain() {
         if (Core.MenuMain is not null) {
-            throw new InvalidOperationException("MultipleInstance".FormatLang(nameof(MenuMain)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuMain)));
         }
     }
 
