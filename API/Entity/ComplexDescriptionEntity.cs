@@ -31,8 +31,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
         if (this.DescriptionInclusions.Count > 0) formattedInclusions.Append('\n');
 
         foreach (DescriptionEntity entity in this.GetDescriptionInclusions()) {
-            string color = entity is Skill ? Colors.Skill : Colors.Buff; // todo more thorough
-            formattedInclusions.Append('\n').Append(Colors.White).Append('(').Append(entity.GetName(color, mod))
+            formattedInclusions.Append('\n').Append(Colors.White).Append('(').Append(entity.GetName(mod))
                 .Append(Colors.White).Append(": ").Append(entity.GetDescription().Replace("\n", ". "))
                 .Append(Colors.White).Append(')');
         }

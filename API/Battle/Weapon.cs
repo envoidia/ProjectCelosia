@@ -1,6 +1,7 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using API.Entity;
+using API.Extensions;
 using API.Modding;
 
 namespace API.Battle;
@@ -28,7 +29,7 @@ public sealed class Weapon : ComplexDescriptionEntity, IEquippable {
         string.Format(Lang.WeaponDesc, this.GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {
-        int multiplier = give ? 1 : -1;
+        int multiplier = give.ToSign();
 
         // Merge affinity maps
         foreach ((Element element, int value) in this.Affinities) {

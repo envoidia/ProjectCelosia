@@ -223,11 +223,11 @@ public sealed class Unit {
         return str.Append(this.ExtraActions.Format()).ToString();
     }
 
-    public string GetBoolStatString(BoolStat stat) => this.IsImmuneToBoolStat(stat)
-        ? Colors.Pos + Lang.Immune
-        : this.IsBoolStat(stat)
-            ? (stat.IsPositive ? Colors.Pos : Colors.Neg) + Lang.Yes
-            : (stat.IsPositive ? Colors.Neg : Colors.Pos) + Lang.No;
+    public string GetBoolStatString(BoolStat stat) {
+        if (this.IsImmuneToBoolStat(stat)) return Colors.Pos + Lang.Immune;
+
+        return (stat.IsPositive ? Colors.Pos : Colors.Neg) + (this.IsBoolStat(stat) ? Lang.Yes : Lang.No);
+    }
 
     // StatMods
     public int GetStatMod(StatMod statMod) => this._statMods.GetValueOrDefault(statMod, 0);
@@ -352,8 +352,14 @@ public sealed class Unit {
         int dmgFull = dmg;
         int defendOld = this.Defend;
         List<string> msg = [];
-        string name = useName ? $"{this.FormatName(false)} " : "";
-        string nameS = useName ? $"{this.FormatName()} " : "";
+
+        string name = "";
+        string nameS = "";
+
+        if (useName) {
+            name = $"{this.FormatName(false)} ";
+            nameS = $"{this.FormatName()} ";
+        }
 
         // Pierce skips Defend and Shield
         if (!pierce) {
@@ -424,8 +430,13 @@ public sealed class Unit {
             // Dupe disambiguation
             (this.DupeIndex == 0 ? "" : $" {this.DupeIndex}");
 
-        string suffix = (possessive ? name.ToLower().EndsWith('s') ? "'" : "'s" : "") + Colors.White;
+        string suffix = "";
 
-        return name + suffix;
+        if (possessive) {
+            if (name.ToUpperInvariant().EndsWith('S')) suffix = "'";
+            else suffix = "'s";
+        }
+
+        return name + suffix + Colors.White;
     }
 }

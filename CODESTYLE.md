@@ -20,6 +20,11 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Use file-scoped `namespace` and `using` directives rather than block-scoped
 - Do not have >1 nested classes
 
+## Documentation
+- Comment as needed, but don't over-comment self-explanatory code
+- Write summaries when applicable, especially for code intended to be used by modders
+- Do not use \<exception\> or \<param\> tags, as they don't display in VSCode
+
 ## Whitespace
 - Indent with 4 spaces
 - Wrap at 120 columns
@@ -35,14 +40,13 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 
 ## General
 - For clarity, always use `this` when able
-- Comment as needed, but don't over-comment self-explanatory code
 - Always use `const` or `readonly` if possible
 - Avoid magic numbers
 - Prefer expression-bodied members
 - Prefer auto-properties
 - Prefer Array over List
 - Early returns are usually **but not always** better
-- Use the most restrictive possible access modifier
+- Use the most restrictive possible access modifier, keeping moddability in mind
 - Large functions should be split apart when possible
 - Use `is`/`is not` over `==`/`!=` when checking for types or `null`
 - In switch statements, prefer `return` over `break` when able
@@ -73,7 +77,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 
 # Modding
 - Keep mod support in mind when architecting code
-- After full version 1 releases, avoid breaking existing mods when possible
+- After full version 1 releases, avoid breaking existing mods when possible. When you do break them, document exactly what needs to change
 - Only have unused methods if they're important for mod support
 
 # Abusable features

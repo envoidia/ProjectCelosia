@@ -28,8 +28,13 @@ public static class PosLib {
     /// Returns the poses of the Units on the team except the provided one
     /// </summary>
     public static int[] GetTeamWithout(int pos) {
-        int lower = pos < 4 ? 0 : 4;
-        int upper = pos < 4 ? 3 : 7;
+        int lower = 0;
+        int upper = 3;
+
+        if(pos >= 4) {
+            lower = 4;
+            upper = 7;
+        }
 
         List<int> result = [];
         for (int i = lower; i <= upper; i++) {

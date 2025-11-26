@@ -15,7 +15,7 @@ public static class StringExtensions {
         /// Gets a string from a lang key. Checks the specified mod's <c>ResourceManager</c> (if provided),
         /// then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s. Throws on invalid key.
         /// <para>
-        /// Prefer calling <c>string.Format()</c> on the properties of <c>Lang.Designer</c> when possible,
+        /// Prefer calling <c>string.Format()</c> on the properties of <c>Lang</c> when possible,
         /// to avoid writing strings in code
         /// </para>  
         /// <para>
@@ -49,7 +49,7 @@ public static class StringExtensions {
         /// Gets a formatted string from a lang key. Checks the specified <c>ResourceManager</c> (if provided), 
         /// then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// <para>
-        /// Prefer calling <c>string.Format()</c> on the properties of <c>Lang.Designer</c> when possible,
+        /// Prefer calling <c>string.Format()</c> on the properties of <c>Lang</c> when possible,
         /// to avoid writing strings in code
         /// </para>   
         /// <para>
@@ -69,7 +69,7 @@ public static class StringExtensions {
         /// Gets a formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>,
         /// then all mod <c>ResourceManager</c>s
         /// <para>
-        /// Prefer calling <c>string.Format()</c> on the properties of <c>Lang.Designer</c> when possible,
+        /// Prefer calling <c>string.Format()</c> on the properties of <c>Lang</c> when possible,
         /// to avoid writing strings in code
         /// </para>
         /// <para>
@@ -83,7 +83,7 @@ public static class StringExtensions {
         /// Gets an ICU MessageFormat-formatted string from a lang key. Checks the specified <c>ResourceManager</c>,
         /// then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// <para>
-        /// Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang.Designer</c> when possible,
+        /// Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible,
         /// to avoid writing strings in code
         /// </para>
         /// <para>
@@ -107,7 +107,7 @@ public static class StringExtensions {
         /// Gets an ICU MessageFormat-formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>,
         /// then all mod <c>ResourceManager</c>s
         /// <para>
-        /// Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang.Designer</c> when possible,
+        /// Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible,
         /// to avoid writing strings in code
         /// </para>
         /// <para>
