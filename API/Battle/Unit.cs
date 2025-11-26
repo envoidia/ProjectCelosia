@@ -307,7 +307,7 @@ public sealed class Unit {
         this.NotifyBuffEffects(target,
             (effect, s, t, stacks) => effect.OnChangeStage(s, t, stacks, stageType, turns, stacksChange));
 
-    public Side GetSide() => this.Pos < 4 ? Side.Ally : Side.Opponent;
+    public Side GetSide() => this.Pos < PosLib.LowestOpp ? Side.Ally : Side.Opponent;
 
     public void DecrementTurns() {
         // Stages

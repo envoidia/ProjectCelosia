@@ -8,15 +8,24 @@ using Microsoft.Xna.Framework;
 
 namespace API.Battle.State;
 
-// todo finish + cleanup + reduce visibility when possible
-public static class BattleHandler {
+// todo finish + cleanup + reduce visibility when possible + rename to BattleLib
+public static class BattleLib {
     public static Battle Battle { get; private set; } = null!; // todo
+
+    #region Constants
+
+    /// <summary>
+    /// Multiplier for all stats
+    /// </summary>
+    public const int StatMult = 10;
 
     private const int TeamCount = 2;
     internal const int StatTypeCount = 3;
     internal const int TeamSize = 4;
     internal const int StatCount = 6;
-    internal const int UnitCount = 8;
+    internal const int UnitCount = TeamSize * TeamCount;
+
+    #endregion
 
     #region Display Fields
 
@@ -66,11 +75,19 @@ public static class BattleHandler {
 
         // Per-unit Labels
         for (int i = 0; i < UnitCount; i++) {
-            int y = i >= 4 ? 450 + (450 * (i - 4)) : 450 + (450 * i);
+            int x1 = 75;
+            int x2 = 600;
+            int y = 450 + (450 * i);
 
-            StatsL[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 500 : 75, y) };
-            BuffsL[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 500 : 75, y + 150) };
-            Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(i >= 4 ? World.W - 825 : 600, y + 50) };
+            if (i >= PosLib.LowestOpp) {
+                x1 = World.W - 500;
+                x2 = World.W - 825;
+                y = 450 + (450 * (i - PosLib.LowestOpp));
+            }
+
+            StatsL[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y) };
+            BuffsL[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y + 150) };
+            Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(x2, y + 50) };
             UnitNames[i] = new Label(Core.StageBattle) { Y = 52 };
         }
 
@@ -187,5 +204,9 @@ public static class BattleHandler {
 
         Queue.Text = sb.ToString();
     }
+    #endregion
+
+    #region Utility Methods
+    public static BuffType GetStageBuffType(int stacks) => stacks >= 0 ? BuffType.Buff : BuffType.Debuff;
     #endregion
 }

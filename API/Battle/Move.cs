@@ -25,5 +25,5 @@ public sealed record Move(SkillInstance SkillInstance, Unit Self, int TargetPos)
     public string GetTriesToUseString() =>
         string.Format(Lang.LogTriesToUse1, this.Self.FormatName(false), this.SkillInstance.Skill.GetName())
             + (this.SkillInstance.Skill.IsRangeSelf() ? "" : string.Format(Lang.LogTriesToUse2,
-            BattleHandler.Battle.GetUnitAtPos(this.TargetPos).FormatName(false), this.TargetPos, false));
+            BattleLib.Battle.GetUnitAtPos(this.TargetPos).FormatName(false), this.TargetPos, false));
 }

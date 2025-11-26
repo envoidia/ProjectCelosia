@@ -4,7 +4,7 @@ using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
 using static API.Input.InputPrompts;
-using static API.Battle.State.BattleHandler;
+using static API.Battle.State.BattleLib;
 using System;
 using API.Extensions;
 
@@ -23,7 +23,7 @@ public sealed class MenuLog : IState {
 
     public MenuLog() {
         if (Core.MenuLog is not null) {
-            throw new InvalidOperationException(string.Format(Lang.MultipleInstance,nameof(MenuLog)));
+            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuLog)));
         }
     }
 

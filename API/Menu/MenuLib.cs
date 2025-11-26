@@ -42,21 +42,21 @@ public static class MenuLib {
 
         // Move selection
         if (Core.Input.CheckInput(true, Keybinds.Up)) {
-            if (index < 4) {
+            if (index < PosLib.LowestOpp) {
                 // On player side
-                newIndex = (indexI - 1) < 0 ? 3 : index - 1;
+                newIndex = (indexI - 1) < 0 ? PosLib.HighestAlly : index - 1;
             } else {
-                newIndex = (indexI - 1) < 4 ? 7 : index - 1;
+                newIndex = (indexI - 1) < PosLib.LowestOpp ? PosLib.HighestOpp : index - 1;
             }
         } else if (Core.Input.CheckInput(true, Keybinds.Down)) {
-            if (index < 4) {
+            if (index < PosLib.LowestOpp) {
                 // On player side
-                newIndex = (indexI + 1) >= 4 ? 0 : index + 1;
+                newIndex = (indexI + 1) >= PosLib.LowestOpp ? 0 : index + 1;
             } else {
-                newIndex = (indexI + 1) >= 8 ? 4 : index + 1;
+                newIndex = (indexI + 1) > PosLib.HighestOpp ? PosLib.LowestOpp : index + 1;
             }
         } else if (Core.Input.CheckInput(true, Keybinds.Left, Keybinds.Right)) {
-            newIndex = indexI < 4 ? index + 4 : index - 4;
+            newIndex = indexI < PosLib.LowestOpp ? index + PosLib.LowestOpp : index - PosLib.LowestOpp;
         }
 
         // Lock cursor to valid side

@@ -63,7 +63,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     /// Returns the index a skill should start at based off of its role
     /// </summary>
     // todo more complex logic
-    public int GetStartingIndex() => this.ShouldTargetOpponent() ? 4 : 0;
+    public int GetStartingIndex() => this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
 
     public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Skill);
 

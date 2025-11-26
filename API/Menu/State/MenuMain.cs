@@ -39,8 +39,8 @@ public sealed class MenuMain : IState {
             switch ((Options) index) {
                 case Options.Start:
                     Core.NavPath.Add(Core.MenuBattle);
-                    BattleHandler.Initialize();
-                    BattleHandler.StartBattle();
+                    BattleLib.Initialize();
+                    BattleLib.StartBattle();
                     return;
                 case Options.Encyclopedia:
                     // todo

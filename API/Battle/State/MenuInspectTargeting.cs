@@ -3,7 +3,7 @@ using API.Extensions;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
-using static API.Battle.State.BattleHandler;
+using static API.Battle.State.BattleLib;
 
 namespace API.Battle.State;
 

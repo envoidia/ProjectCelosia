@@ -10,7 +10,7 @@ namespace API.Battle.State;
 
 // Significant using order
 using static API.Input.InputPrompts;
-using static API.Battle.State.BattleHandler;
+using static API.Battle.State.BattleLib;
 
 
 public sealed class MenuTargeting : IState {
@@ -44,9 +44,9 @@ public sealed class MenuTargeting : IState {
         if (!Core.Input.CheckInput(Keybinds.Confirm)) return;
 
         Unit self = Battle.PlayerTeam.Units[selectingMove];
-        Unit target = indexTarget < 4
+        Unit target = indexTarget < PosLib.LowestOpp
             ? Battle.PlayerTeam.Units[indexTarget]
-            : Battle.OpponentTeam.Units[indexTarget - 4];
+            : Battle.OpponentTeam.Units[indexTarget - PosLib.LowestOpp];
         CurMoves.Add(new Move(selectedSkillInstance, self, target.Pos));
         // todo support ExA
         Moves[selectingMove].Text = $"{Moves[selectingMove].Text} → {target.FormatName(false)}";

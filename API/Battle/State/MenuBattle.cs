@@ -14,7 +14,7 @@ using static API.Input.InputPrompts;
 namespace API.Battle.State;
 
 // Significant using order
-using static API.Battle.State.BattleHandler;
+using static API.Battle.State.BattleLib;
 
 public sealed class MenuBattle : IState {
 
@@ -33,7 +33,7 @@ public sealed class MenuBattle : IState {
     /// <summary>
     /// Previous SkillEffect resultTypes for each pos
     /// </summary>
-    private static ResultType[] prevResults = new ResultType[8];
+    private static ResultType[] prevResults = new ResultType[UnitCount];
 
     /// <summary>
     /// Amount of non-fail results for the current Move so far
@@ -65,8 +65,8 @@ public sealed class MenuBattle : IState {
         }
 
         switch (selectingMove) {
-            case < 4: SelectPlayerMove(); return;
-            case < 8: SelectOpponentMove(); return;
+            case < PosLib.LowestOpp: SelectPlayerMove(); return;
+            case <= PosLib.HighestOpp: SelectOpponentMove(); return;
             default: ExecuteMove(); return;
         }
     }
@@ -99,7 +99,7 @@ public sealed class MenuBattle : IState {
             return;
         }
 
-        if ((selectingMove - 4) > Battle.OpponentTeam.Units.Length) {
+        if ((selectingMove - PosLib.LowestOpp) > Battle.OpponentTeam.Units.Length) {
             selectingMove = ExecutionPhase;
             return;
         }
@@ -110,7 +110,8 @@ public sealed class MenuBattle : IState {
         Unit target = Battle.PlayerTeam.Units[0];
         // todo support ExA
         Moves[selectingMove].Text = $"{selectedSkill.GetName()} → {target.FormatName(false)}";
-        CurMoves.Add(new Move(new SkillInstance(selectedSkill), Battle.OpponentTeam.Units[selectingMove - 4], target.Pos));
+        CurMoves.Add(new Move(new SkillInstance(selectedSkill),
+            Battle.OpponentTeam.Units[selectingMove - PosLib.LowestOpp], target.Pos));
         selectingMove++;
     }
 
@@ -199,8 +200,8 @@ public sealed class MenuBattle : IState {
             move.SkillInstance.Cooldown = cd;
 
             Element element = skill.GetElement();
-            bool isPlayerTeam = self.Pos < 4;
-            Team team = isPlayerTeam ? Battle.PlayerTeam : Battle.OpponentTeam;
+
+            Team team = self.Pos < PosLib.LowestOpp ? Battle.PlayerTeam : Battle.OpponentTeam;
             int cost = self.IsBoolStat(BoolStats.InfiniteSp) && !skill.IsBloom ? 0 : skill.Cost;
 
             // Make sure cost doesn't go below 1 unless the skill has a base 0 SP cost
@@ -216,17 +217,16 @@ public sealed class MenuBattle : IState {
             } else {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
 
-                bool isBloom = skill.IsBloom;
-                int spOld = isBloom ? team.Bloom : self.Sp;
+                int spOld = skill.IsBloom ? team.Bloom : self.Sp;
                 change *= -1;
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(isBloom.ToInt(), spOld.Format(Colors.Sp, false),
+                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(skill.IsBloom.ToInt(), spOld.Format(Colors.Sp, false),
                         spNew.Format(Colors.Sp, false), change.Format());
                 }
 
-                if (isBloom) team.Bloom = spNew;
+                if (skill.IsBloom) team.Bloom = spNew;
                 else self.Sp = spNew;
 
                 MenuLog.Add(Lang.LogSkillUse.FormatIcu(self.FormatName(false),
@@ -237,11 +237,11 @@ public sealed class MenuBattle : IState {
                 self.OnUseSkill(target, skill);
 
                 // Color move for currently acting combatant (temp)
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < UnitCount; i++) {
                     //moves[i].Color = (self.Pos == i) ? Color.Pink : Color.White;
                 }
 
-                prevResults = new ResultType[8];
+                prevResults = new ResultType[UnitCount];
             }
         }
 
@@ -258,7 +258,7 @@ public sealed class MenuBattle : IState {
         }
 
         foreach (int targetPos in skill.Range.GetTargetPositions(self.Pos, move.TargetPos)) {
-            if (targetPos == PosLib.InvalidPos) continue;
+            if (targetPos == PosLib.Invalid) continue;
 
             Unit targetCur = Battle.GetUnitAtPos(targetPos);
             if (applyingEffect == 0) {

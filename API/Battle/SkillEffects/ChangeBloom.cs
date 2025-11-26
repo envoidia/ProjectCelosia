@@ -6,7 +6,7 @@ public sealed class ChangeBloom(int change) : SkillEffect {
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
         if (!this.MainTargetOnly || isMainTarget) {
             Unit unit = this.GiveToSelf ? self : target;
-            Team team = BattleHandler.Battle.GetTeamAtPos(unit.Pos);
+            Team team = BattleLib.Battle.GetTeamAtPos(unit.Pos);
 
             MenuLog.Add(CalcLib.ChangeBloom(team, unit.GetSide(), change));
         }

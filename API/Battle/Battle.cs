@@ -31,12 +31,13 @@ public sealed class Battle {
         }
     }
 
-    public Unit GetUnitAtPos(int pos) => pos < 4 ? this.PlayerTeam.Units[pos] : this.OpponentTeam.Units[pos - 4];
+    public Unit GetUnitAtPos(int pos) =>
+        pos < PosLib.LowestOpp ? this.PlayerTeam.Units[pos] : this.OpponentTeam.Units[pos - PosLib.LowestOpp];
 
     /// <summary>
     /// Returns the Team that the Unit at pos belongs to
     /// </summary>
-    public Team GetTeamAtPos(int pos) => pos < 4 ? this.PlayerTeam : this.OpponentTeam;
+    public Team GetTeamAtPos(int pos) => pos < PosLib.LowestOpp ? this.PlayerTeam : this.OpponentTeam;
 
     public Team GetTeamBySide(Side side) => side == Side.Ally ? this.PlayerTeam : this.OpponentTeam;
 
