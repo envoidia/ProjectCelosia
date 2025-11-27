@@ -16,12 +16,12 @@ public sealed class StatMod : NamedEntity, IModItem {
         this.IsPositive = isPositive;
         Core.StatMods.Add(this);
     }
-
-    public string Format(int val) {
-        (string pos, string neg) = TextLib.GetColors(this.IsPositive);
-
-        return val.Format(val > 1000 ? pos : val < 1000 ? neg : Colors.Num);
-    }
+    
+    public string Format(int val) => val switch {
+        > 1000 => val.Format(TextLib.GetIncColor(this.IsPositive)),
+        < 1000 => val.Format(TextLib.GetDecColor(this.IsPositive)),
+        _ => val.Format(Colors.Num)
+    };
 }
 
 public static class StatMods {

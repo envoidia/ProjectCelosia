@@ -46,18 +46,22 @@ public static class BattleLib {
 
     #region Logic Fields
 
-    internal static readonly List<Move> CurMoves = new(128); // todo decide capacity
+    internal static readonly List<Move> CurMoves = new(16);
 
     /// <summary>
     /// Pos of the Unit that's currently selecting their move. <c>ExecutionPhase</c> = moves are executing
     /// </summary>
     internal static int selectingMove = 0;
 
-    internal static SkillInstance selectedSkillInstance;
+    internal static SkillInstance selectedSkillInstance; // todo
 
     // Menu navigation
     internal static int indexSkill = 0;
     internal static int indexTarget = 0;
+
+    // todo replays
+    // serialize each unit and then just store each move as (starting Pos of Self, index in Self's Skill list, target Pos)?
+    // instead of serializing the units, just store short lookups for each component?
 
     #endregion
 

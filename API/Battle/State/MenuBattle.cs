@@ -17,6 +17,7 @@ namespace API.Battle.State;
 using static API.Battle.State.BattleLib;
 
 public sealed class MenuBattle : IState {
+    #region Fields
 
     private static readonly Label SkillsL = new(Core.StageBattle);
 
@@ -41,7 +42,7 @@ public sealed class MenuBattle : IState {
     private static int nonFails = 0;
 
     /// <summary>
-    /// Currently executing moves
+    /// If <c>selectingMove</c> is this, then moves are currently executing
     /// </summary>
     private const int ExecutionPhase = 100;
 
@@ -49,6 +50,10 @@ public sealed class MenuBattle : IState {
     /// Time until the next battle action can occur
     /// </summary>
     private static TimeSpan delay;
+
+    #endregion
+
+    #region Impl
 
     public MenuBattle() {
         if (Core.MenuBattle is not null) {
@@ -71,11 +76,13 @@ public sealed class MenuBattle : IState {
         }
     }
 
-    public void Draw(GameTime gameTime) {
-        Core.StageBattle.Draw(gameTime);
-    }
+    public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
 
     public string GetInputPrompt() => IState.GetInputPromptString(MoveUpDown, Confirm, Back, Log, Inspect);
+
+    #endregion
+
+    #region Static
 
     private static void SelectPlayerMove() {
         if (selectingMove >= Battle.PlayerTeam.Units.Length) return;
@@ -146,6 +153,7 @@ public sealed class MenuBattle : IState {
         Core.NavPath.Add(Core.MenuTargeting);
     }
 
+    // todo split out into multiple fns
     private static void ExecuteMove() {
         if (CurMoves.Count == 0) {
             EndTurn();
@@ -276,15 +284,14 @@ public sealed class MenuBattle : IState {
             prevResults[targetPos] = resultType;
         }
 
-        if (!skillEffects[applyingEffect].IsInstant) {
-            delay += TimeSpan.FromSeconds(0.25f * Settings.BattleSpeed);
-        }
+        if (!skillEffects[applyingEffect].IsInstant) delay += TimeSpan.FromSeconds(0.25f * Settings.BattleSpeed);
 
         applyingEffect++;
 
         UpdateStatDisplay(self.Pos);
 
         if (skillEffects.Length != applyingEffect) return;
+
         EndMove();
         move.SkillInstance.Cooldown = move.SkillInstance.Skill.Cooldown;
         // todo delete killed units
@@ -358,4 +365,6 @@ public sealed class MenuBattle : IState {
 
         UpdateStatDisplay(0);
     }
+
+    #endregion
 }

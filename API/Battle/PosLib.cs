@@ -10,9 +10,9 @@ public static class PosLib {
     public const int HighestOpp = BattleLib.UnitCount - 1;
     public const int Invalid = -1;
 
-    /// <summary>
-    /// Returns the pos off spaces below this one, or InvalidPos if it's invalid
-    /// </summary>
+    /// <returns>
+    /// The <c>pos</c> <c>off</c> spaces below this one, or <c>InvalidPos</c> if it's invalid
+    /// </returns>
     public static int GetUpDown(int pos, int off) {
         int posNew = pos + off;
 
@@ -24,14 +24,14 @@ public static class PosLib {
         return posNew;
     }
 
-    /// <summary>
-    /// Returns the pos directly across from this one
-    /// </summary>
+    /// <returns>
+    /// The <c>pos</c> directly across from this one
+    /// </returns>
     public static int GetAcross(int pos) => pos + (LowestOpp * (pos < LowestOpp ? 1 : -1));
 
-    /// <summary>
-    /// Returns the poses of the Units on the team except the provided one
-    /// </summary>
+    /// <returns>
+    /// The <c>pos</c>es of the <c>Units</c> on the <c>Team</c> except the provided one
+    /// </returns>
     public static int[] GetTeamWithout(int pos) {
         int lower = 0;
         int upper = HighestAlly;
@@ -49,19 +49,19 @@ public static class PosLib {
         return [.. result];
     }
 
-    /// <summary>
-    /// Returns the height 0-3 of pos
-    /// </summary>
+    /// <returns>
+    /// The height 0-3 of <c>pos</c>
+    /// </returns>
     public static int GetHeight(int pos) => pos < LowestOpp ? pos : pos - LowestOpp;
 
-    /// <summary>
-    /// Returns the Side of pos
-    /// </summary>
+    /// <returns>
+    /// The <c>Side</c> of <c>pos</c>
+    /// </returns>
     public static Side GetSide(int pos) => pos < LowestOpp ? Side.Ally : Side.Opponent;
 
-    /// <summary>
-    /// Returns the Side of pos2 relative to the Side of pos1
-    /// </summary>
+    /// <returns>
+    /// The <c>Side</c> of <c>pos2</c> relative to the <c>Side</c> of <c>pos1</c>
+    /// </returns>
     public static Side GetRelativeSide(int pos1, int pos2) {
         if (pos2 < LowestOpp) return pos1 < LowestOpp ? Side.Ally : Side.Opponent;
         return pos1 >= LowestOpp ? Side.Ally : Side.Opponent;

@@ -12,6 +12,8 @@ using static API.Input.InputPrompts;
 
 public sealed class MenuInspectTargeting : IState {
 
+    #region Impl
+
     public MenuInspectTargeting() {
         if (Core.MenuInspectTargeting is not null) {
             throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuInspectTargeting)));
@@ -32,11 +34,11 @@ public sealed class MenuInspectTargeting : IState {
         }
     }
 
-    public void Draw(GameTime gameTime) {
-        Core.StageBattle.Draw(gameTime);
-    }
+    public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
 
     public string GetInputPrompt() => IState.GetInputPromptString(Move, Confirm, Back, Log);
 
     private static void CreateInspectTargeting() => Core.NavPath.Add(Core.MenuInspectTargeting);
+
+    #endregion
 }

@@ -59,9 +59,9 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
         return Elements.Vis;
     }
 
-    /// <summary>
-    /// Returns the index a skill should start at based off of its role
-    /// </summary>
+    /// <returns>
+    /// The index a skill should start at based off of its role
+    /// </returns>
     // todo more complex logic
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
 

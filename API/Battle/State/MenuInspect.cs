@@ -12,6 +12,7 @@ namespace API.Battle.State;
 public sealed class MenuInspect : IState {
 
     #region Display Fields
+
     private static readonly Label[] PageList = new Label[TeamSize];
 
     private const int Y = 600;
@@ -90,6 +91,7 @@ public sealed class MenuInspect : IState {
     #endregion
 
     #region Logic Fields
+
     // todo
     private static int indexPage = 0;
     private static int indexPageList = 0;
@@ -103,6 +105,8 @@ public sealed class MenuInspect : IState {
     }
 
     #endregion
+
+    #region Impl
 
     public MenuInspect() {
         if (Core.MenuInspect is not null) {
@@ -128,6 +132,10 @@ public sealed class MenuInspect : IState {
 
     public string GetInputPrompt() => IState.GetInputPromptString(Back);
 
+    #endregion
+
+    #region Static
+
     private static void HandleInspectPage() { }
 
     private static void SetStatVisibility(bool isStatsPage) { }
@@ -135,4 +143,6 @@ public sealed class MenuInspect : IState {
     private static void SetPageItemVisibility(bool visible) { }
 
     private static void DeleteInspect() { }
+
+    #endregion
 }

@@ -19,18 +19,17 @@ public sealed class Mult : NamedEntity, IModItem {
         Core.Mults.Add(this);
     }
 
-    public string Format(int val) {
-        (string pos, string neg) = TextLib.GetColors(this.IsPositive);
+    public string Format(int val) => Math.Max(val, this.MinValue).Format(val switch {
+        > 1000 => TextLib.GetIncColor(this.IsPositive),
+        < 1000 => TextLib.GetDecColor(this.IsPositive),
+        _ => Colors.Num
+    }, true, '%', 10f);
 
-        return Math.Max(val, this.MinValue)
-            .Format(val > 1000 ? pos : val < 1000 ? neg : Colors.Num, true, "%", 10f);
-    }
-
-    public string FormatChange(float val) {
-        (string pos, string neg) = TextLib.GetColors(this.IsPositive);
-
-        return Math.Max(val, this.MinValue).Format(val > 0 ? pos : val < 0 ? neg : Colors.Num, "%");
-    }
+    public string FormatChange(float val) => Math.Max(val, this.MinValue).Format(val switch {
+        > 0 => TextLib.GetIncColor(this.IsPositive),
+        < 0 => TextLib.GetDecColor(this.IsPositive),
+        _ => Colors.Num
+    }, true, '%');
 }
 
 public static class Mults {
@@ -45,8 +44,5 @@ public static class Mults {
     public static readonly Mult HealingTaken = new(null, "MultHealingTaken", true);
     public static readonly Mult SpGain = new(null, "MultSpGain", true);
     public static readonly Mult SpUse = new(null, "MultSpUse", false);
-
-    public static readonly Mult PercentageDmgTaken = new(null, "MultPercentageDmgTaken", false) {
-        MinValue = 1
-    };
+    public static readonly Mult PercentageDmgTaken = new(null, "MultPercentageDmgTaken", false) { MinValue = 1 };
 }

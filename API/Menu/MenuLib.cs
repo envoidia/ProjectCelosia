@@ -5,14 +5,14 @@ using API.Input;
 namespace API.Menu;
 
 public static class MenuLib {
-    private static readonly TimeSpan LogScrollDelay = TimeSpan.FromSeconds(0.005f);
+    private const float LogScrollDelayS = 0.005f;
 
     public static int CheckMovement1D(int index, int optCount) {
-        if (Core.Input.CheckInput(true, Keybinds.Up, Keybinds.Left)) {
+        if (Core.Input.CheckInput(Keybinds.Up, Keybinds.Left, true)) {
             return index == 0 ? optCount - 1 : index - 1;
         }
 
-        if (Core.Input.CheckInput(true, Keybinds.Down, Keybinds.Right)) {
+        if (Core.Input.CheckInput(Keybinds.Down, Keybinds.Right, true)) {
             return index == (optCount - 1) ? 0 : index + 1;
         }
 
@@ -20,11 +20,11 @@ public static class MenuLib {
     }
 
     public static int CheckMovement1D(int index, int optCount, Keybind dec, Keybind inc) {
-        if (Core.Input.CheckInput(true, dec)) {
+        if (Core.Input.CheckInput(dec, true)) {
             return index == 0 ? optCount - 1 : index - 1;
         }
 
-        if (Core.Input.CheckInput(true, inc)) {
+        if (Core.Input.CheckInput(inc, true)) {
             return index == (optCount - 1) ? 0 : index + 1;
         }
 
@@ -41,21 +41,21 @@ public static class MenuLib {
         int newIndex = index;
 
         // Move selection
-        if (Core.Input.CheckInput(true, Keybinds.Up)) {
+        if (Core.Input.CheckInput(Keybinds.Up, true)) {
             if (index < PosLib.LowestOpp) {
                 // On player side
                 newIndex = (indexI - 1) < 0 ? PosLib.HighestAlly : index - 1;
             } else {
                 newIndex = (indexI - 1) < PosLib.LowestOpp ? PosLib.HighestOpp : index - 1;
             }
-        } else if (Core.Input.CheckInput(true, Keybinds.Down)) {
+        } else if (Core.Input.CheckInput(Keybinds.Down, true)) {
             if (index < PosLib.LowestOpp) {
                 // On player side
                 newIndex = (indexI + 1) >= PosLib.LowestOpp ? 0 : index + 1;
             } else {
                 newIndex = (indexI + 1) > PosLib.HighestOpp ? PosLib.LowestOpp : index + 1;
             }
-        } else if (Core.Input.CheckInput(true, Keybinds.Left, Keybinds.Right)) {
+        } else if (Core.Input.CheckInput(Keybinds.Left, Keybinds.Right, true)) {
             newIndex = indexI < PosLib.LowestOpp ? index + PosLib.LowestOpp : index - PosLib.LowestOpp;
         }
 
@@ -69,22 +69,22 @@ public static class MenuLib {
 
     public static int CheckLogScroll(int logScroll, int lines, int off) {
         // Up
-        if (Core.Input.CheckInput(true, LogScrollDelay, Keybinds.Up)) {
+        if (Core.Input.CheckInput(Keybinds.Up, true, LogScrollDelayS)) {
             return Math.Min(++logScroll, Math.Max(lines - off, 0));
         }
 
         // Down
-        if (Core.Input.CheckInput(true, LogScrollDelay, Keybinds.Down)) {
+        if (Core.Input.CheckInput(Keybinds.Down, true, LogScrollDelayS)) {
             return Math.Max(--logScroll, 0);
         }
 
         // To top
-        if (Core.Input.CheckInput(false, Keybinds.PageL2)) {
+        if (Core.Input.CheckInput(Keybinds.PageL2, false)) {
             return Math.Max(lines - off, 0);
         }
 
         // To bottom
-        if (Core.Input.CheckInput(false, Keybinds.PageR2)) {
+        if (Core.Input.CheckInput(Keybinds.PageR2, false)) {
             return 0;
         }
 

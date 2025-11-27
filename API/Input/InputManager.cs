@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Input;
 namespace API.Input;
 
 public sealed class InputManager {
+
+    #region Fields
+
     // todo private?
     public KeyboardState PreviousKeyboardState { get; private set; }
     public KeyboardState KeyboardState { get; private set; }
@@ -22,9 +25,9 @@ public sealed class InputManager {
     private readonly TimeSpan[] _held = new TimeSpan[Keybinds.KeybindCount];
 
     /// <summary>
-    /// Default time between triggers when holding <c>Keybind</c> down
+    /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
-    private readonly TimeSpan _defaultHoldDelay = TimeSpan.FromSeconds(0.1);
+    private const float DefaultHoldDelay = 0.1f;
 
     /// <summary>
     /// Time from <c>Keybind</c> first becoming held to first trigger
@@ -41,6 +44,8 @@ public sealed class InputManager {
     /// </summary>
     private const float MinAxisDist = 0.4f;
 
+    #endregion
+
     /*for (int i = 0; i < 4; i++)
         {
             GamePads[i] = new GamePadState((PlayerIndex)i);
@@ -56,43 +61,45 @@ public sealed class InputManager {
         if (this.PreviousInputSource != this.LastInputSource) {
             this.PreviousInputSource = this.LastInputSource;
             this.InputDeviceChanged = true;
-        } else {
-            this.InputDeviceChanged = false;
+            return;
         }
+
+        this.InputDeviceChanged = false;
+
     }
 
-    /// <summary>
-    /// Returns whether a Keys was pressed this frame and not the previosu frame
-    /// </summary>
+    /// <returns>
+    /// Whether a <c>Keys</c> was pressed this frame and not the previous frame
+    /// </returns>
     public bool IsKeyPressed(Keys key) => this.KeyboardState.IsKeyDown(key);
 
-    /// <summary>
-    /// Returns whether a Keys was pressed this frame and not the previosu frame
-    /// </summary>
+    /// <returns>
+    /// Whether a <c>Keys</c> was pressed this frame and not the previous frame
+    /// </returns>
     public bool IsKeyJustPressed(Keys key) =>
         this.KeyboardState.IsKeyDown(key) && this.PreviousKeyboardState.IsKeyUp(key);
 
 
-    /// <summary>
-    /// Call to check for inputs from any number of <c>Keybind</c>s
-    /// </summary>
-    // todo compare to foreach with .NET 10
-    public bool CheckInput(bool allowHold, TimeSpan holdDelay, params Keybind[] keybinds) =>
-        keybinds.Any(keybind => this.IsKeybindPressed(allowHold, holdDelay, keybind));
+    // Called multiple times per frame, so avoid params. Add more overloads if needed. Could add a params one at the end too
+    #region CheckInput
 
     /// <summary>
-    /// Call to check for inputs from any number of <c>Keybind</c>s
+    /// Check for inputs from 1 <c>Keybind</c>
     /// </summary>
-    public bool CheckInput(bool allowHold, params Keybind[] keybinds) =>
-        this.CheckInput(allowHold, this._defaultHoldDelay, keybinds);
+    public bool CheckInput(Keybind keybind, bool allowHold = false, float holdDelayS = DefaultHoldDelay) =>
+        this.IsKeybindPressed(allowHold, holdDelayS, keybind);
 
     /// <summary>
-    /// Call to check for inputs from any number of <c>Keybind</c>s
+    /// Check for inputs from 2 <c>Keybind</c>s
     /// </summary>
-    public bool CheckInput(params Keybind[] keybinds) =>
-        this.CheckInput(false, this._defaultHoldDelay, keybinds);
+    public bool CheckInput(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = DefaultHoldDelay) =>
+        this.IsKeybindPressed(allowHold, holdDelayS, keybind1) || this.IsKeybindPressed(allowHold, holdDelayS, keybind2);
 
-    private bool IsKeybindPressed(bool allowHold, TimeSpan holdDelay, Keybind keybind) {
+    #endregion
+
+    #region Internals
+
+    private bool IsKeybindPressed(bool allowHold, float holdDelayS, Keybind keybind) {
         if (!this.CheckKeybind(keybind)) {
             this._held[(int) keybind.Id] = TimeSpan.Zero;
             return false;
@@ -104,7 +111,7 @@ public sealed class InputManager {
         }
 
         if (allowHold && (this._held[(int) keybind.Id] >= this._holdInitDelay) && this.CheckKeybind(keybind)) {
-            this._held[(int) keybind.Id] = this._holdInitDelay - holdDelay;
+            this._held[(int) keybind.Id] = this._holdInitDelay - TimeSpan.FromSeconds(holdDelayS);
             return true;
         }
 
@@ -156,4 +163,6 @@ public sealed class InputManager {
         Buttons.RightTrigger => this.GamePadState.Triggers.Right > MinAxisDist,
         _ => this.GamePadState.IsButtonDown(button)
     };
+
+    #endregion
 }

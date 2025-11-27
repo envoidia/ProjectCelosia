@@ -39,11 +39,13 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - In switch statements, inline the case, the action, and `break`/`return` if able. If not, don't inline any of them
 
 ## General
-- For clarity, always use `this` when able
+- Always use `this` when able
 - Always use `const` or `readonly` if possible
-- Avoid magic numbers
+- Avoid magic numbers -- create constants instead
+- Avoid using `try`/`catch` for control flow
+  - When using `throw`, the intention should be that the program crashes, not that the exception is caught
 - Prefer expression-bodied members
-- Prefer auto-properties
+- Prefer computed properties, then auto-properties
 - Prefer Array over List
 - Early returns are usually **but not always** better
 - Use the most restrictive possible access modifier, keeping moddability in mind
@@ -68,7 +70,6 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 # Performance
 - Avoid heap allocation during the game loop
 - Cache and reuse data that is expensive to fetch
-- Avoid using `try`/`catch` for control flow
 - Be careful when using LINQ
 
 # Compatibility

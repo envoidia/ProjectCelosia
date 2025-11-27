@@ -8,6 +8,8 @@
         <Nullable>enable</Nullable>
         <PublishAot>false</PublishAot>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
     </PropertyGroup>
     <PropertyGroup Condition="'$(PublishAot)' == 'true'">
         <DefineConstants>$(DefineConstants);NATIVE_AOT</DefineConstants>

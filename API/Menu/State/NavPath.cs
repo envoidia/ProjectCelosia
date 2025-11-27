@@ -12,9 +12,9 @@ public sealed class NavPath {
     /// </summary>
     internal readonly List<IState> path = [];
 
-    /// <summary>
-    /// Get the last <c>IState</c> in the <c>NavPath</c>
-    /// </summary>
+    /// <returns>
+    /// The last <c>IState</c> in the <c>NavPath</c>
+    /// </returns>
     public IState GetState() => this.path[^1];
 
     /// <summary>

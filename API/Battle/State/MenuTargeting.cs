@@ -15,10 +15,16 @@ using static API.Battle.State.BattleLib;
 
 public sealed class MenuTargeting : IState {
 
+    #region Fields
+
     /// <summary>
     /// How many extra actions have been used for the currently acting Unit
     /// </summary>
     private static int extraActions = 0;
+
+    #endregion
+
+    #region Impl
 
     public MenuTargeting() {
         if (Core.MenuTargeting is not null) {
@@ -70,9 +76,9 @@ public sealed class MenuTargeting : IState {
         Core.NavPath.Remove();
     }
 
-    public void Draw(GameTime gameTime) {
-        Core.StageBattle.Draw(gameTime);
-    }
+    public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
 
     public string GetInputPrompt() => IState.GetInputPromptString(Move, Confirm, Back, Log);
+
+    #endregion
 }

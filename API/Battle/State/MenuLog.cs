@@ -12,6 +12,8 @@ namespace API.Battle.State;
 
 public sealed class MenuLog : IState {
 
+    #region Fields
+
     private static readonly Label BattleLog = new(Core.StageBattle) { Position = new Vector2(World.W2 - 300, 405) };
 
     internal static readonly List<string> LogText = new(1024); // todo decide capacity
@@ -20,6 +22,10 @@ public sealed class MenuLog : IState {
     /// Amount of lines scrolled upwards
     /// </summary>
     private static int logScroll = 0;
+
+    #endregion
+
+    #region Impl
 
     public MenuLog() {
         if (Core.MenuLog is not null) {
@@ -37,13 +43,15 @@ public sealed class MenuLog : IState {
         // todo
     }
 
-    public void Draw(GameTime gameTime) {
-        Core.StageBattle.Draw(gameTime);
-    }
+    public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
 
     public string GetInputPrompt() => IState.GetInputPromptString(MoveUpDown, Top, Bottom, BackLog);
 
-    // todo limit size
+    #endregion
+
+    #region Static
+
+    // todo limit size, try to consolidate to 1 fn?
     public static void Add(params List<string> str) {
         LogText.AddRange(str);
         logScroll = 0;
@@ -73,5 +81,7 @@ scroll = logScroll;
 int start = Math.Max(0, LogText.Count - lines - scroll);
 int end = Math.Min(start + lines, LogText.Count);*/
         string.Join("\n", LogText);
+
+    #endregion
 
 }

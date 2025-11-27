@@ -34,9 +34,9 @@ public sealed class Battle {
     public Unit GetUnitAtPos(int pos) =>
         pos < PosLib.LowestOpp ? this.PlayerTeam.Units[pos] : this.OpponentTeam.Units[pos - PosLib.LowestOpp];
 
-    /// <summary>
-    /// Returns the Team that the Unit at pos belongs to
-    /// </summary>
+    /// <returns>
+    /// The <c>Team</c> that the <c>Unit</c> at <c>pos</c> belongs to
+    /// </returns>
     public Team GetTeamAtPos(int pos) => pos < PosLib.LowestOpp ? this.PlayerTeam : this.OpponentTeam;
 
     public Team GetTeamBySide(Side side) => side == Side.Ally ? this.PlayerTeam : this.OpponentTeam;

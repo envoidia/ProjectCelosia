@@ -9,6 +9,8 @@ namespace API.Menu.State;
 using static API.Input.InputPrompts;
 
 public sealed class MenuMain : IState {
+    #region Fields
+
     private static int index;
 
     private enum Options {
@@ -24,6 +26,10 @@ public sealed class MenuMain : IState {
     }
 
     private const int OptCountMain = (int) Options.LastValue - 1;
+
+    #endregion
+
+    #region Impl
 
     public MenuMain() {
         if (Core.MenuMain is not null) {
@@ -74,4 +80,6 @@ public sealed class MenuMain : IState {
     }
 
     public string GetInputPrompt() => IState.GetInputPromptString(MoveUpDown, Confirm);
+
+    #endregion
 }

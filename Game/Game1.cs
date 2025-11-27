@@ -95,8 +95,10 @@ public sealed class Game1 : Core {
     protected override void Draw(GameTime gameTime) {
         GraphicsDevice.Clear(Color.Black);
 
+
         SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
             null, null, null, Resolution.TransformationMatrix());
+            
         ShapeBatch.Begin(Resolution.TransformationMatrix());
 
         //SpriteBatch.Draw(bg, Vector2.Zero, Color.White);

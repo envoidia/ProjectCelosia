@@ -3,6 +3,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="MonoGame.Extended" Version="5.2.0" />
@@ -14,14 +16,6 @@
         <EmbeddedResource Update="Lang.resx">
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>Lang.Designer.cs</LastGenOutput>
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Update="Lang.Designer.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Lang.resx</DependentUpon>
-        </Compile>
     </ItemGroup>
 </Project>
