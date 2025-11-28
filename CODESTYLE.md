@@ -1,8 +1,6 @@
 # Codestyle
 This is mostly just written as a reminder for myself, since I doubt anyone but me will ever contribute to this
 
-It is strongly recommended to use [JetBrains Rider](https://www.jetbrains.com/rider/). It's only free for non-commercial use, but I can't imagine that anyone except me has any chance of making money off of this. Alternatively, you can use [VSCodium](https://vscodium.com/) or any other version of VSCode, optionally with the [ReSharper](https://www.jetbrains.com/resharper/) extension
-
 Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your IDE's formatter and suggestions will automatically apply most of its rules
 
 ## Naming Convention

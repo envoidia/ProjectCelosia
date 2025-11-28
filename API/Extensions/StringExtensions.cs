@@ -94,7 +94,6 @@ public static class StringExtensions {
         /// <para>Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible, to avoid writing strings in code</para>  
         /// <para>Throws <c>ArgumentException</c> if key is invalid or in debug and 0 args are passed</para>
         /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
-        /// <param name="mod">The mod to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcuLang(params object?[] args) => @this.FormatIcuLang(null, args);
 
