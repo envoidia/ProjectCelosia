@@ -45,7 +45,7 @@ public sealed class MenuLog : IState {
 
     public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
 
-    public string GetInputPrompt() => IState.GetInputPromptString(MoveUpDown, Top, Bottom, BackLog);
+    public string GetInputPrompt() => IState.GetInputPromptString(ScrollUpDown, Top, Bottom, BackLog);
 
     #endregion
 

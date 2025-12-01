@@ -79,7 +79,7 @@ public sealed class MenuMain : IState {
 
     }
 
-    public string GetInputPrompt() => IState.GetInputPromptString(MoveUpDown, Confirm);
+    public string GetInputPrompt() => IState.GetInputPromptString(ScrollUpDown, Confirm);
 
     #endregion
 }

@@ -5,7 +5,7 @@ using API.Input;
 namespace API.Menu;
 
 public static class MenuLib {
-    private const float LogScrollDelayS = 0.005f;
+    private const float LogScrollDelayS = 0.01f;
 
     public static int CheckMovement1D(int index, int optCount) {
         if (Core.Input.CheckInput(Keybinds.Up, Keybinds.Left, true)) {

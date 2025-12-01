@@ -16,6 +16,7 @@ public enum KeybindId {
     Right,
     Up,
     Down,
+    ScrollFaster,
 
     // Debug
     DebugInfo,
@@ -23,7 +24,9 @@ public enum KeybindId {
     DebugDumpMods,
     DebugDumpLog,
 
-    // Marker. Always add non-merged keybinds above this
+    /// <summary>
+    /// Marker. Always add non-merged keybinds above this
+    /// </summary>
     LastBeforeMerged,
 
     // Merged (must be last)
@@ -52,22 +55,45 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
 public static class Keybinds {
     public static int KeybindCount => (int) KeybindId.LastBeforeMerged;
 
-    public static readonly Keybind Confirm = new("KeyConfirm", KeybindId.Confirm, Keys.Z, Buttons.A); // (Bottom)
-    public static readonly Keybind Back = new("KeyBack", KeybindId.Back, Keys.X, Buttons.B); // (Right)
-    public static readonly Keybind Menu = new("KeyMenu", KeybindId.Menu, Keys.C, Buttons.Y); // (Top) Also Open Full Log
-    public static readonly Keybind Map = new("KeyMap", KeybindId.Map, Keys.V, Buttons.X); // (Left) Also Inspect
+    /// <summary>
+    /// Confirm/Yes. Bottom face button
+    /// </summary>
+    public static readonly Keybind Confirm = new("KeyConfirm", KeybindId.Confirm, Keys.Z, Buttons.A);
+
+    /// <summary>
+    /// Back/Cancel/No. Right face button
+    /// </summary>
+    public static readonly Keybind Back = new("KeyBack", KeybindId.Back, Keys.X, Buttons.B);
+
+    /// <summary>
+    /// Open menu/full log. Top face button
+    /// </summary>
+    public static readonly Keybind Menu = new("KeyMenu", KeybindId.Menu, Keys.C, Buttons.Y);
+
+    /// <summary>
+    /// Open map/inspect. Left face button
+    /// </summary>
+    public static readonly Keybind Map = new("KeyMap", KeybindId.Map, Keys.V, Buttons.X);
+
     public static readonly Keybind PageL1 = new("KeyPageL1", KeybindId.PageL1, Keys.F, Buttons.LeftShoulder);
     public static readonly Keybind PageR1 = new("KeyPageR1", KeybindId.PageR1, Keys.G, Buttons.RightShoulder);
     public static readonly Keybind PageL2 = new("KeyPageL2", KeybindId.PageL2, Keys.S, Buttons.LeftTrigger);
     public static readonly Keybind PageR2 = new("KeyPageR2", KeybindId.PageR2, Keys.D, Buttons.RightTrigger);
+
     public static readonly Keybind Left = new("KeyLeft", KeybindId.Left, Keys.Left, Buttons.DPadLeft);
     public static readonly Keybind Right = new("KeyRight", KeybindId.Right, Keys.Right, Buttons.DPadRight);
     public static readonly Keybind Up = new("KeyUp", KeybindId.Up, Keys.Up, Buttons.DPadUp);
     public static readonly Keybind Down = new("KeyDown", KeybindId.Down, Keys.Down, Buttons.DPadDown);
 
+    /// <summary>
+    /// Hold to double input repeat speed when holding (todo should it be more than double)
+    /// </summary>
+    public static readonly Keybind ScrollFaster = new("KeyScroll", KeybindId.ScrollFaster, Keys.LeftShift, Buttons.Start);
+
     // Debug
+    // Ensure names are never displayed
     // todo remake icons with more buttons (like stick clicks)
-    public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Start);
+    public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
     public static readonly Keybind DebugHelp = new("", KeybindId.DebugHelp, Keys.F2, Buttons.None);
     public static readonly Keybind DebugDumpMods = new("", KeybindId.DebugDumpMods, Keys.F3, Buttons.None);
     public static readonly Keybind DebugDumpLog = new("", KeybindId.DebugDumpLog, Keys.F4, Buttons.None);

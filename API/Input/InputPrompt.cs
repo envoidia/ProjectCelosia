@@ -8,9 +8,7 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
 
     public string GetText() {
         StringBuilder builder = new();
-
         foreach (Keybind keybind in this.Keybinds) builder.Append(keybind.GetCurrentGlyph());
-
         return builder.Append(' ').Append(keyName.GetLang()).ToString();
     }
 }
@@ -22,7 +20,9 @@ public static class InputPrompts {
     public static readonly InputPrompt Close = new("InputClose", Keybinds.Confirm, Keybinds.Back);
 
     public static readonly InputPrompt MoveLeftRight = new("InputMove", Keybinds.LeftRight);
-    public static readonly InputPrompt MoveUpDown = new("InputMove", Keybinds.UpDown);
+    public static readonly InputPrompt ScrollUpDown = new("InputScroll", Keybinds.UpDown);
+    public static readonly InputPrompt ScrollFaster = new("InputScrollFaster", Keybinds.ScrollFaster);
+
     public static readonly InputPrompt Move = new("InputMove", Keybinds.LeftRightUpDown);
 
     public static readonly InputPrompt Log = new("InputLog", Keybinds.Menu);

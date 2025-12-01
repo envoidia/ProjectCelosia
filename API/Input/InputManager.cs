@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using API.Extensions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -27,7 +28,7 @@ public sealed class InputManager {
     /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
-    private const float DefaultHoldDelay = 0.1f;
+    private const float DefaultHoldDelay = 0.15f;
 
     /// <summary>
     /// Time from <c>Keybind</c> first becoming held to first trigger
@@ -105,13 +106,14 @@ public sealed class InputManager {
             return false;
         }
 
-        if ((this._held[(int) keybind.Id] == TimeSpan.Zero) && this.CheckKeybind(keybind)) {
+        if (this._held[(int) keybind.Id] == TimeSpan.Zero && this.CheckKeybind(keybind)) {
             this._held[(int) keybind.Id] += this._elapsedTime;
             return true;
         }
 
-        if (allowHold && (this._held[(int) keybind.Id] >= this._holdInitDelay) && this.CheckKeybind(keybind)) {
-            this._held[(int) keybind.Id] = this._holdInitDelay - TimeSpan.FromSeconds(holdDelayS);
+        if (allowHold && this._held[(int) keybind.Id] >= this._holdInitDelay && this.CheckKeybind(keybind)) {
+            this._held[(int) keybind.Id] = this._holdInitDelay -
+                TimeSpan.FromSeconds(holdDelayS * (this.CheckKeybind(Keybinds.ScrollFaster).ToInt() + 1));
             return true;
         }
 

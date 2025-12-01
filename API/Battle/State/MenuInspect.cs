@@ -93,16 +93,16 @@ public sealed class MenuInspect : IState {
     #region Logic Fields
 
     // todo
-    private static int indexPage = 0;
-    private static int indexPageList = 0;
-    private static TimeSpan timeOnSameTarget = TimeSpan.Zero;
-
     private enum InspectPage {
         Skills,
         Passives,
         Buffs,
         Stats
     }
+
+    private static InspectPage curPage = InspectPage.Skills;
+    private static int indexPageList = 0;
+    private static TimeSpan timeOnSameTarget = TimeSpan.Zero;
 
     #endregion
 
@@ -123,6 +123,8 @@ public sealed class MenuInspect : IState {
         }
 
         // todo
+
+        // UpdateInputPrompt on page change
     }
 
     public void Draw(GameTime gameTime) {
@@ -130,7 +132,9 @@ public sealed class MenuInspect : IState {
         Core.StageInspect.Draw(gameTime);
     }
 
-    public string GetInputPrompt() => IState.GetInputPromptString(Back);
+    public string GetInputPrompt() => curPage == InspectPage.Stats
+        ? IState.GetInputPromptString(ScrollFaster, Back)
+        : IState.GetInputPromptString(ScrollUpDown, ScrollFaster, Back);
 
     #endregion
 

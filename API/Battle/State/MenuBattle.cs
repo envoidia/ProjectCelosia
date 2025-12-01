@@ -78,7 +78,7 @@ public sealed class MenuBattle : IState {
 
     public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
 
-    public string GetInputPrompt() => IState.GetInputPromptString(MoveUpDown, Confirm, Back, Log, Inspect);
+    public string GetInputPrompt() => IState.GetInputPromptString(ScrollUpDown, ScrollFaster, Confirm, Back, Log, Inspect);
 
     #endregion
 
