@@ -38,7 +38,7 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth) {
                 (hpNew - hpOld).Format(Colors.Hp)));
         }
 
-        MenuLog.Add(msg);
+        LogLib.Add(msg);
         return ResultType.PseudoSuccess;
     }
 }

@@ -8,9 +8,7 @@ namespace API.Menu.State;
 
 using static API.Input.InputPrompts;
 
-public sealed class MenuMain : IState {
-    #region Fields
-
+public static class MainMenuLib {
     private static int index;
 
     private enum Options {
@@ -27,26 +25,15 @@ public sealed class MenuMain : IState {
 
     private const int OptCountMain = (int) Options.LastValue - 1;
 
-    #endregion
-
-    #region Impl
-
-    public MenuMain() {
-        if (Core.MenuMain is not null) {
-            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuMain)));
-        }
-    }
-
-    public void Update(GameTime gameTime) {
+    public static void Update(GameTime gameTime) {
         index = MenuLib.CheckMovement1D(index, OptCountMain);
         // todo update cursor
 
         if (Core.Input.CheckInput(Keybinds.Confirm)) {
             switch ((Options) index) {
                 case Options.Start:
-                    Core.NavPath.Add(Core.MenuBattle);
                     BattleLib.Initialize();
-                    BattleLib.StartBattle();
+                    NavPath.Add(States.Battle);
                     return;
                 case Options.Encyclopedia:
                     // todo
@@ -75,11 +62,6 @@ public sealed class MenuMain : IState {
         }
     }
 
-    public void Draw(GameTime gameTime) {
-
-    }
-
-    public string GetInputPrompt() => IState.GetInputPromptString(ScrollUpDown, Confirm);
-
-    #endregion
+    // todo
+    public static void Draw(GameTime gameTime) { return; }
 }

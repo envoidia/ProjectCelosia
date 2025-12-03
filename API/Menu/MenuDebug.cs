@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using API.Graphics;
 using API.Input;
+using API.Menu.State;
 using API.Modding;
 using Microsoft.Xna.Framework;
 
@@ -66,7 +67,7 @@ public static class MenuDebug {
             $"{(int) (1 / avgFrameTime.TotalSeconds)}({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})", // todo temp
             GC.GetTotalMemory(false) / Mb,
             "todo",
-            string.Join(", ", Core.NavPath.path), // todo sanitize string
+            string.Join(", ", [.. NavPath.Path.Select(s => s.Name)]), // todo sanitize string
             "todo",
             ModLoader.LoadedMods.Count);
 

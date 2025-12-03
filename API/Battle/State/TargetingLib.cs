@@ -13,33 +13,20 @@ using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 
 
-public sealed class MenuTargeting : IState {
-
-    #region Fields
-
+public static class TargetingLib {
     /// <summary>
     /// How many extra actions have been used for the currently acting Unit
     /// </summary>
     private static int extraActions = 0;
 
-    #endregion
-
-    #region Impl
-
-    public MenuTargeting() {
-        if (Core.MenuTargeting is not null) {
-            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuTargeting)));
-        }
-    }
-
-    public void Update(GameTime gameTime) {
+    public static void Update(GameTime gameTime) {
         HandleDebug();
 
         if (Core.Input.CheckInput(Keybinds.Back)) {
             //foreach (Label stat in stats) stat.Color = Colors.White;
             Moves[selectingMove].Text = "";
 
-            Core.NavPath.Remove();
+            NavPath.Remove();
             return;
         }
 
@@ -73,12 +60,21 @@ public sealed class MenuTargeting : IState {
 
         UpdateStatDisplay(selectingMove);
 
-        Core.NavPath.Remove();
+        NavPath.Remove();
     }
 
-    public void Draw(GameTime gameTime) => Core.StageBattle.Draw(gameTime);
+    // todo merge
+    public static void UpdateInspectTargeting(GameTime gameTime) {
+        HandleDebug();
 
-    public string GetInputPrompt() => IState.GetInputPromptString(Move, Confirm, Back, Log);
+        if (Core.Input.CheckInput(Keybinds.Back)) {
+            NavPath.Remove();
+            return;
+        }
 
-    #endregion
+        if (Core.Input.CheckInput(Keybinds.Confirm, Keybinds.Map)) {
+            NavPath.Remove();
+            NavPath.Add(States.Inspect);
+        }
+    }
 }

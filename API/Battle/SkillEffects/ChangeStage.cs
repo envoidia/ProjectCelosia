@@ -53,7 +53,7 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             msg.Add(str + str2);
         }
 
-        if (msg.Count > 0) MenuLog.Add(msg);
+        if (msg.Count > 0) LogLib.Add(msg);
 
         return ResultType.PseudoSuccess;
     }

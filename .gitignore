@@ -2,7 +2,7 @@
 .vs/
 .vscode/
 .idea/
-ProjectCelosia.sln.DotSettings.user
+.zed/
 
 # Build files
 /API/bin/

@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
+/// <summary>
+/// Renderable text object
+/// </summary>
 public sealed class Label : RenderObject {
     private RichTextLayout RichTextLayout { get; set; } = new();
 
@@ -22,24 +25,16 @@ public sealed class Label : RenderObject {
 
     public override Point Size => this.RichTextLayout.Size;
 
-    public override Alignment Alignment {
-        get;
-        set {
-            field = value;
-            this.Origin = this.CalcOrigin();
-        }
-    } = Alignment.TopLeft;
-
     // Background
     public bool HasBackground { get; set; } = false;
     public Color BackgroundColor { get; set; } = Colors.TransBlack;
     public Vector2 BackgroundPadding { get; set; } = new(10, 10);
 
-    public Label(Stage stage, string text, bool isVisible, DynamicSpriteFont font) {
+    public Label(Stage? stage, string text, bool isVisible, DynamicSpriteFont font) {
         this.Text = text;
         this.IsVisible = isVisible;
         this.RichTextLayout.Font = font;
-        stage.Add(this);
+        stage?.Add(this);
     }
 
     public Label(Stage stage, string text, bool isVisible = true) : this(stage, text, isVisible, Core.Koruri50) { }

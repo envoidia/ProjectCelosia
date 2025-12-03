@@ -7,7 +7,7 @@ public sealed class ChangeSp(int change, bool isImmediate = false) : IBuffEffect
         if (!isImmediate) return;
 
         string str = CalcLib.ChangeSp(self, change);
-        if (!self.IsBoolStat(BoolStats.InfiniteSp)) MenuLog.Add(str);
+        if (!self.IsBoolStat(BoolStats.InfiniteSp)) LogLib.Add(str);
     }
 
     public string[] OnTurnEnd(Unit self, int stacks) {

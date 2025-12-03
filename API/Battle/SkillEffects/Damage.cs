@@ -68,7 +68,7 @@ public sealed class Damage : SkillEffect {
 
         // Deal damage
         Result result = target.Damage(dmg, this.IsPierce);
-        MenuLog.Add(result.Messages);
+        LogLib.Add(result.Messages);
 
         return result.ResultType;
     }

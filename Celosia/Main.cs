@@ -12,7 +12,7 @@ namespace Celosia;
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public sealed class Main : IGameMod {
     /// <summary>
-    /// Publicly accessible instance of <c>Celosia.Main</c>
+    /// Publically accessible instance of <c>Celosia.Main</c>
     /// </summary>
     public static IGameMod ModInstance { get; set; } = null!;
 

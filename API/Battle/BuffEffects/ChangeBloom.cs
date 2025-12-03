@@ -6,7 +6,7 @@ public sealed class ChangeBloom(int change, bool isImmediate = false) : IBuffEff
     public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;
 
-        MenuLog.Add(CalcLib.ChangeBloom(BattleLib.Battle.GetTeamAtPos(self.Pos), self.GetSide(),
+        LogLib.Add(CalcLib.ChangeBloom(BattleLib.Battle.GetTeamAtPos(self.Pos), self.GetSide(),
             change));
     }
 

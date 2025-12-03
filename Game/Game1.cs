@@ -6,6 +6,8 @@ using API.Input;
 using API.Menu;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
+using API.Menu.State;
+
 
 #if NATIVE_AOT
 using Microsoft.Xna.Framework.Content;
@@ -54,7 +56,7 @@ public sealed class Game1 : Core {
 
         base.Initialize();
 
-        NavPath.Add(MenuMain);
+        NavPath.Add(States.MainMenu);
 
 #if NATIVE_AOT
         celosiaMain = new Celosia.Main();
@@ -78,9 +80,9 @@ public sealed class Game1 : Core {
         MenuDebug.HandleDebugInfo(isDebugInfoEnabled, gameTime);
 
         // Switch input prompt between kb/controller
-        if (Input.InputDeviceChanged) UpdateInputPrompt();
+        if (Input.InputDeviceChanged) NavPath.UpdateInputPrompt();
 
-        // Update the current IState
+        // Update the current State
         NavPath.GetState().Update(gameTime);
 
         base.Update(gameTime);
@@ -98,7 +100,7 @@ public sealed class Game1 : Core {
 
         SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
             null, null, null, Resolution.TransformationMatrix());
-            
+
         ShapeBatch.Begin(Resolution.TransformationMatrix());
 
         //SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
@@ -107,7 +109,7 @@ public sealed class Game1 : Core {
 
         StageBase.Draw(gameTime);
 
-        // Draw the current IState
+        // Draw the current State
         NavPath.GetState().Draw(gameTime);
 
         StageSuper.Draw(gameTime);

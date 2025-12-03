@@ -25,7 +25,13 @@ public abstract class RenderObject : IRenderable {
 
     public abstract Point Size { get; }
 
-    public abstract Alignment Alignment { get; set; }
+    public Alignment Alignment {
+        get;
+        set {
+            field = value;
+            this.Origin = this.CalcOrigin();
+        }
+    } = Alignment.TopLeft;
 
     // Raw position of the origin. Not meant to be viewed or used directly
     internal Point Origin { get; set; } = Point.Zero;

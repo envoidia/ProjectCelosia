@@ -62,6 +62,11 @@ public class Core : Game {
     public static readonly Stage StageInspect = new();
 
     /// <summary>
+    /// <c>Stage</c> that's only drawn with a popup
+    /// </summary>
+    public static readonly Stage StagePopup = new();
+
+    /// <summary>
     /// <c>Stage</c> that's always drawn last
     /// </summary>
     public static readonly Stage StageSuper = new();
@@ -69,26 +74,6 @@ public class Core : Game {
     #endregion
 
     #endregion
-
-    #region IStates
-
-    /// <summary>
-    /// List of IStates that have been traveled through to reach the current location
-    /// </summary>
-    public static readonly NavPath NavPath = new();
-
-    public static readonly MenuMain MenuMain = new();
-    public static readonly MenuPopup MenuPopup = new();
-    public static readonly MenuBattle MenuBattle = new();
-    public static readonly MenuTargeting MenuTargeting = new();
-    public static readonly MenuLog MenuLog = new();
-    public static readonly MenuInspectTargeting MenuInspectTargeting = new();
-    public static readonly MenuInspect MenuInspect = new();
-
-    #endregion
-
-    private static Label inputPrompt = null!;
-
 
     #region IModItem Lists
 
@@ -170,6 +155,7 @@ public class Core : Game {
         Content.RootDirectory = "Content";
 
         // Setup stuff
+
         RichTextDefaults.ImageResolver = str => {
             if (TextureCache.TryGetValue(str, out Texture2DRegion? region)) {
                 return new TextureFragmentColored(region.Texture, region.Bounds);
@@ -181,13 +167,6 @@ public class Core : Game {
             TextureCache[str] = region;
 
             return new TextureFragmentColored(region.Texture, region.Bounds);
-        };
-
-        inputPrompt = new Label(StageBase) {
-            Position = World.Vec - new Vector2(10, 10),
-            Alignment = Alignment.BottomRight,
-            HasBackground = true,
-            RenderPriority = RenderPriority.Super
         };
 
 #if DEBUG
@@ -227,9 +206,4 @@ public class Core : Game {
 
         base.Update(gameTime);
     }
-
-    /// <summary>
-    /// Update the input prompt <c>Label</c> in the bottom-right corner
-    /// </summary>
-    public static void UpdateInputPrompt() => inputPrompt.Text = NavPath.GetState().GetInputPrompt();
 }

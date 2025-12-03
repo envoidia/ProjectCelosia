@@ -9,7 +9,7 @@ using API.Extensions;
 
 namespace API.Battle.State;
 
-public sealed class MenuInspect : IState {
+public sealed class InspectLib {
 
     #region Display Fields
 
@@ -93,32 +93,26 @@ public sealed class MenuInspect : IState {
     #region Logic Fields
 
     // todo
-    private enum InspectPage {
+    internal enum InspectPage {
         Skills,
         Passives,
         Buffs,
         Stats
     }
 
-    private static InspectPage curPage = InspectPage.Skills;
+    internal static InspectPage curPage = InspectPage.Skills;
     private static int indexPageList = 0;
     private static TimeSpan timeOnSameTarget = TimeSpan.Zero;
 
     #endregion
 
-    #region Impl
+    #region Methods
 
-    public MenuInspect() {
-        if (Core.MenuInspect is not null) {
-            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(MenuInspect)));
-        }
-    }
-
-    public void Update(GameTime gameTime) {
+    public static void Update(GameTime gameTime) {
         HandleDebug();
 
         if (Core.Input.CheckInput(Keybinds.Back)) {
-            Core.NavPath.Remove();
+            NavPath.Remove();
             return;
         }
 
@@ -126,19 +120,6 @@ public sealed class MenuInspect : IState {
 
         // UpdateInputPrompt on page change
     }
-
-    public void Draw(GameTime gameTime) {
-        Core.StageBattle.Draw(gameTime);
-        Core.StageInspect.Draw(gameTime);
-    }
-
-    public string GetInputPrompt() => curPage == InspectPage.Stats
-        ? IState.GetInputPromptString(ScrollFaster, Back)
-        : IState.GetInputPromptString(ScrollUpDown, ScrollFaster, Back);
-
-    #endregion
-
-    #region Static
 
     private static void HandleInspectPage() { }
 

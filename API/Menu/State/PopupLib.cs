@@ -1,0 +1,37 @@
+using System;
+using API.Extensions;
+using API.Graphics;
+using API.Input;
+using Microsoft.Xna.Framework;
+
+namespace API.Menu.State;
+
+using static API.Input.InputPrompts;
+
+public static class PopupLib {
+    private static readonly Label PopupTitle = new(Core.StagePopup) {
+        Position = new Vector2(World.W2, World.H2 - 225),
+        Alignment = Alignment.Center
+    };
+
+    private static readonly Label PopupText = new(Core.StagePopup) {
+        Position = new Vector2(World.W2 - 630, World.H2 - 120),
+    };
+
+    private static readonly GuiBox PopupBg = new(World.W2 - 660, World.H2 + 300, World.W2 + 660, World.H2 - 300);
+
+    public static void Update(GameTime gameTime) {
+        if (Core.Input.CheckInput(Keybinds.Back)) {
+            NavPath.Remove();
+            return;
+        }
+    }
+
+    public static void Draw(GameTime gameTime) {
+        // Draw the previous IState underneath
+        NavPath.Path[^2].Draw(gameTime);
+
+        // Draw popup
+        Core.StagePopup.Draw(gameTime);
+    }
+}

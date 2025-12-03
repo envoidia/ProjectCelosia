@@ -7,7 +7,7 @@
         <TieredCompilation>false</TieredCompilation>
         <Nullable>enable</Nullable>
         <PublishAot>false</PublishAot>
-        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <IsAotCompatible>true</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
     </PropertyGroup>

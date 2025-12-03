@@ -13,7 +13,7 @@ public sealed class ChangeExtraActions(int change) : IBuffEffect {
         int exANew = exAOld + changeFull;
         self.ExtraActions = exANew;
 
-        MenuLog.Add(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
+        LogLib.Add(string.Format(Lang.LogChangeExtraActions, self.FormatName(),
             Math.Max(exAOld, 0).Format(), Math.Max(exANew, 0).Format()));
     }
 }

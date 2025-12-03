@@ -13,7 +13,7 @@ public sealed class ChangeStatMod(StatMod mod, int change) : IBuffEffect {
 
         self.SetStatMod(mod, modNew);
 
-        MenuLog.Add(string.Format(Lang.LogChangeMod, self.FormatName()),
+        LogLib.Add(string.Format(Lang.LogChangeMod, self.FormatName()),
             Colors.Stat + mod.GetName(), mod.Format(modOld), mod.Format(modNew));
     }
 }

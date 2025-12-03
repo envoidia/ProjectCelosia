@@ -18,7 +18,7 @@ public sealed class ChangeDefend(int change) : IBuffEffect {
 
         int shield = self.Shield;
 
-        MenuLog.Add(string.Format(Lang.LogChangeShield, self.FormatName(),
+        LogLib.Add(string.Format(Lang.LogChangeShield, self.FormatName(),
             (shield + defendOld).Format(Colors.Shield), (shield + defendNew).Format(Colors.Shield),
             hpMax.Format(Colors.Hp), ((shield + defendNew) - (shield + defendOld)).Format(Colors.Shield)));
     }
@@ -29,11 +29,11 @@ public sealed class ChangeDefend(int change) : IBuffEffect {
         int shield = self.Shield;
 
         if (self.Shield > 0) {
-            MenuLog.Add(string.Format(Lang.LogChangeShield, self.FormatName(),
+            LogLib.Add(string.Format(Lang.LogChangeShield, self.FormatName(),
                 (shield + defendOld).Format(Colors.Shield), shield.Format(Colors.Shield),
                 self.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-defendOld).Format(Colors.Shield)));
         } else {
-            MenuLog.Add(string.Format(Lang.LogChangeShield, self.FormatName(), false),
+            LogLib.Add(string.Format(Lang.LogChangeShield, self.FormatName(), false),
                 defendOld.Format(Colors.Shield));
         }
     }

@@ -314,7 +314,7 @@ public sealed class Unit {
         foreach (StageType stageType in Core.StageTypes) {
             int stage = this.GetStage(stageType);
             if (stage != 0 && --this._stageTurns[stageType] == 0) {
-                MenuLog.Add(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
+                LogLib.Add(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
@@ -330,7 +330,7 @@ public sealed class Unit {
             if (turns is >= 2 and < 1000) {
                 buffInstance.Turns = turns - 1;
             } else {
-                MenuLog.Add(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
+                LogLib.Add(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
                     buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks));
 

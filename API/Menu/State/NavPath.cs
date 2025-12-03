@@ -1,35 +1,51 @@
 using System.Collections.Generic;
 using API.Extensions;
+using API.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
 
 /// <summary>
 /// List of <c>IStates</c> that have been traveled through to reach the current location
 /// </summary>
-public sealed class NavPath {
+public static class NavPath {
     /// <summary>
-    /// Underlying <c>List</c> of <c>IState</c>s. Avoid accessing directly — use <c>GetState()</c>, <c>Add()</c>, and <c>Remove()</c> instead
+    /// Underlying <c>List</c> of <c>State</c>s. Avoid accessing directly — use <c>GetState()</c>, <c>Add()</c>, and <c>Remove()</c> instead
     /// </summary>
-    internal readonly List<IState> path = [];
+    public static readonly List<State> Path = [];
+
+    private static readonly Label inputPrompt = new(Core.StageBase) {
+        Position = World.Vec - new Vector2(10, 10),
+        Alignment = Alignment.BottomRight,
+        HasBackground = true,
+        RenderPriority = RenderPriority.Super
+    };
 
     /// <returns>
-    /// The last <c>IState</c> in the <c>NavPath</c>
+    /// The last <c>State</c> in the <c>NavPath</c>
     /// </returns>
-    public IState GetState() => this.path[^1];
+    public static State GetState() => Path[^1];
 
     /// <summary>
-    /// Add an <c>IState</c> to the <c>NavPath</c>
+    /// Add an <c>State</c> to the <c>NavPath</c>
     /// </summary>
-    public void Add(IState state) {
-        this.path.Add(state);
-        Core.UpdateInputPrompt();
+    public static void Add(State state) {
+        state.Create();
+        Path.Add(state);
+        UpdateInputPrompt();
     }
 
     /// <summary>
-    /// Remove the last <c>IState</c> from the <c>NavPath</c>
+    /// Remove the last <c>State</c> from the <c>NavPath</c>
     /// </summary>
-    public void Remove() {
-        this.path.RemoveLast();
-        Core.UpdateInputPrompt();
+    public static void Remove() {
+        Path[^1].Destroy();
+        Path.RemoveLast();
+        UpdateInputPrompt();
     }
+
+    /// <summary>
+    /// Update the input prompt <c>Label</c> in the bottom-right corner
+    /// </summary>
+    public static void UpdateInputPrompt() => inputPrompt.Text = GetState().GetInputPrompt();
 }

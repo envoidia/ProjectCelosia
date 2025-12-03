@@ -8,7 +8,7 @@ public sealed class ChangeBloom(int change) : SkillEffect {
             Unit unit = this.GiveToSelf ? self : target;
             Team team = BattleLib.Battle.GetTeamAtPos(unit.Pos);
 
-            MenuLog.Add(CalcLib.ChangeBloom(team, unit.GetSide(), change));
+            LogLib.Add(CalcLib.ChangeBloom(team, unit.GetSide(), change));
         }
 
         return ResultType.PseudoSuccess;
