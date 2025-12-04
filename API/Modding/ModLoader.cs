@@ -8,16 +8,17 @@ using Microsoft.Xna.Framework;
 
 namespace API.Modding;
 
+// Ignore trim/NativeAOT warnings
+#pragma warning disable IL2026
+#pragma warning disable IL2075
+
 // todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
 public static class ModLoader {
 #if !NATIVE_AOT
-
-    #region Fields
-
     /// <summary>
-    /// List of all loaded mods (todo private/internal?)
+    /// List of all loaded mods. Do not externally modify
     /// </summary>
-    public static readonly List<IGameMod> LoadedMods = [];
+    internal static readonly List<GameMod> LoadedMods = [];
 
     /// <summary>
     /// Lang key that should be used for a mod's display name
@@ -26,24 +27,20 @@ public static class ModLoader {
 
     private static readonly string ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
 
-    #endregion
-
-    #region Mod Loading/Update Methods
-
     /// <summary>
     /// Do not call outside of the <c>Game1</c> instance
     /// </summary>
     public static void InitializeAllMods() {
         LoadAllMods();
-        foreach (IGameMod mod in LoadedMods) mod.Initialize();
+        foreach (GameMod mod in LoadedMods) mod.Initialize();
     }
 
     private static void LoadAllMods() {
-        IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.TopDirectoryOnly);
-        foreach (string dllPath in dllFiles) LoadSingleMod(dllPath);
+        IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.AllDirectories);
+        foreach (string dllPath in dllFiles) LoadSingleModAssembly(dllPath);
     }
 
-    private static void LoadSingleMod(string dllPath) {
+    private static void LoadSingleModAssembly(string dllPath) {
         AssemblyLoadContext alc = new(Path.GetFileNameWithoutExtension(dllPath));//, true); todo should be collectible/unloadable?
 
         Assembly asm;
@@ -51,32 +48,34 @@ public static class ModLoader {
             asm = alc.LoadFromStream(fs);
         }
 
-        // Find Main class
-        Type? modType = asm.GetTypes()
-            .FirstOrDefault(type => type.Name == "Main" && typeof(IGameMod).IsAssignableFrom(type))
-            ?? throw new ModLoadException(string.Format(Lang.ErrModCantFindMain, Path.GetFileName(dllPath)));
+        // Find entry point
+        Type? entryPoint = asm.GetTypes()
+            .FirstOrDefault(type => type.GetCustomAttribute<ModEntryPointAttribute>() != null)
+            ?? throw new ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
 
-        // Instantiate Main
-        LoadedMods.Add((IGameMod) Activator.CreateInstance(modType)!);
-
-        Console.WriteLine(Lang.ModLoaded, Path.GetFileName(dllPath));
+        // Find all GameMods in the entryPoint class and add them to LoadedMods
+        LoadedMods.AddRange(entryPoint.GetProperties()
+            .Where(prop => {
+                object? val = prop.GetValue(null);
+                if (val == null) return false;
+                return val.GetType() == typeof(GameMod);
+            })
+            .Select(prop => {
+                Console.WriteLine(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath));
+                return prop.GetValue(null);
+            })
+            .Cast<GameMod>());
     }
-
-    #endregion
-
-    #region Util Methods
 
     /// <inheritdoc cref="InitializeAllMods" />
     public static void UpdateAllMods(GameTime gameTime) {
-        foreach (IGameMod mod in LoadedMods) mod.Update(gameTime);
+        foreach (GameMod mod in LoadedMods) mod.Update(gameTime);
     }
 
     /// <param name="mod">The <c>IGameMod</c> to look for</param>
     /// <returns>
     /// Whether the given <c>IGameMod</c> is loaded
     /// </returns>
-    public static bool IsModLoaded(IGameMod mod) => LoadedMods.Any(m => m == mod);
-
-    #endregion
+    public static bool IsModLoaded(GameMod mod) => LoadedMods.Any(m => m == mod);
 #endif
 }

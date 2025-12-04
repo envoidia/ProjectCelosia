@@ -5,14 +5,14 @@ using API.Modding;
 namespace API.Battle;
 
 public sealed class SkillType : NamedEntity, IModItem {
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public SkillType(IGameMod? source, string keyName) : base(keyName) {
+    public SkillType(GameMod? source, string keyName) : base(keyName) {
         this.Source = source;
         Core.SkillTypes.Add(this);
     }
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Stat);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Stat);
 }
 
 public static class SkillTypes {

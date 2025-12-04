@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 using System;
-using API.Extensions;
 
 namespace API.Battle.State;
 

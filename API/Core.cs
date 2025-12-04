@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using API.Battle;
-using API.Battle.State;
-using API.Extensions;
 using API.Graphics;
 using API.Input;
-using API.Menu.State;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;

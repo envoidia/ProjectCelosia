@@ -1,12 +1,8 @@
-using System;
-using API.Extensions;
 using API.Graphics;
 using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
-
-using static API.Input.InputPrompts;
 
 public static class PopupLib {
     private static readonly Label PopupTitle = new(Core.StagePopup) {

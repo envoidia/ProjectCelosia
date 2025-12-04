@@ -21,7 +21,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 ## Documentation
 - Comment as needed, but don't over-comment self-explanatory code
 - Write summaries when applicable, especially for code intended to be used by modders
-- Do not use \<exception\> or \<param\> tags, as they don't display in VSCode
+- Since the internal text of `<exception\>` tags doesn't display in VSCode, duplicate it inside a regular `<summary\>`
 
 ## Whitespace
 - Indent with 4 spaces

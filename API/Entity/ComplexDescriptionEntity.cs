@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using API.Battle;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -14,7 +13,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
     public DescriptionArg[] DescriptionArgs { private get; init; } = [];
     public HashSet<DescriptionEntity> DescriptionInclusions { protected get; init; } = [];
 
-    private string[] GetDescriptionArgs(IGameMod? mod = null) {
+    private string[] GetDescriptionArgs(GameMod? mod = null) {
         string[] args = new string[this.DescriptionArgs.Length];
 
         for (int i = 0; i < this.DescriptionArgs.Length; i++) {
@@ -26,7 +25,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
 
     protected virtual HashSet<DescriptionEntity> GetDescriptionInclusions() => this.DescriptionInclusions;
 
-    protected string GetFormattedDescriptionInclusions(IGameMod? mod = null) {
+    protected string GetFormattedDescriptionInclusions(GameMod? mod = null) {
         StringBuilder formattedInclusions = new(this.GetDescription(mod));
         if (this.DescriptionInclusions.Count > 0) formattedInclusions.Append('\n');
 
@@ -39,9 +38,9 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
         return formattedInclusions.ToString();
     }
 
-    public abstract string GetDescriptionWithInclusions(IGameMod? mod = null);
+    public abstract string GetDescriptionWithInclusions(GameMod? mod = null);
 
-    public override string GetDescription(IGameMod? mod = null) =>
+    public override string GetDescription(GameMod? mod = null) =>
         string.Format(base.GetDescription(mod), this.GetDescriptionArgs(mod));
 }
 
@@ -52,7 +51,7 @@ public enum DescriptionArgType {
 
 // todo if base C# gets unions, use that
 public class DescriptionArg(OneOf<string, NamedEntity> value, DescriptionArgType descriptionArgType = PlainText) {
-    public string GetString(IGameMod? mod) => value.Match(
+    public string GetString(GameMod? mod) => value.Match(
         str => descriptionArgType == PlainText ? str : str.GetLang(),
         ne => ne.GetName(mod));
 

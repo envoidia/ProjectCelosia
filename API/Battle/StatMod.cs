@@ -9,14 +9,14 @@ namespace API.Battle;
 public sealed class StatMod : NamedEntity, IModItem {
     public bool IsPositive { get; }
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public StatMod(IGameMod? source, string keyName, bool isPositive) : base(keyName) {
+    public StatMod(GameMod? source, string keyName, bool isPositive) : base(keyName) {
         this.Source = source;
         this.IsPositive = isPositive;
         Core.StatMods.Add(this);
     }
-    
+
     public string Format(int val) => val switch {
         > 1000 => val.Format(TextLib.GetIncColor(this.IsPositive)),
         < 1000 => val.Format(TextLib.GetDecColor(this.IsPositive)),

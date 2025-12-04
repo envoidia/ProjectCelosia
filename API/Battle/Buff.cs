@@ -10,9 +10,9 @@ public sealed class Buff : ComplexDescriptionEntity, IModItem {
     public int MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Buff(IGameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, int maxStacks,
+    public Buff(GameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, int maxStacks,
         params IBuffEffect[] buffEffects) : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.BuffType = buffType;
@@ -21,9 +21,9 @@ public sealed class Buff : ComplexDescriptionEntity, IModItem {
         Core.Buffs.Add(this);
     }
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Buff);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Buff);
 
-    public override string GetDescriptionWithInclusions(IGameMod? mod = null) =>
+    public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
         string.Format(Lang.BuffDesc, this.BuffType.GetName(),
             this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
             this.GetFormattedDescriptionInclusions(mod));

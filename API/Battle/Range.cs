@@ -14,10 +14,10 @@ public sealed class Range : NamedEntity, IModItem {
     public bool CanTargetSelf { get; init; } = false;
     public int TargetCount { get; init; } = 1;
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
 
-    public Range(IGameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) :
+    public Range(GameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) :
         base(keyName) {
         this.Source = source;
         this.RangeVertical = rangeVertical;

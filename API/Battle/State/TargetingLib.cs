@@ -1,5 +1,3 @@
-using System;
-using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu;
@@ -9,7 +7,6 @@ using Microsoft.Xna.Framework;
 namespace API.Battle.State;
 
 // Significant using order
-using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 
 

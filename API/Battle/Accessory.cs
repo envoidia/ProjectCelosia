@@ -8,9 +8,9 @@ public sealed class Accessory : ComplexDescriptionEntity, IEquippable, IModItem 
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Accessory(IGameMod? source, string keyName, string keyDescription, string icon) : base(keyName,
+    public Accessory(GameMod? source, string keyName, string keyDescription, string icon) : base(keyName,
         keyDescription, icon) {
         this.Source = source;
         Core.Accessories.Add(this);
@@ -25,7 +25,7 @@ public sealed class Accessory : ComplexDescriptionEntity, IEquippable, IModItem 
         return inclusions;
     }
 
-    public override string GetDescriptionWithInclusions(IGameMod? mod = null) =>
+    public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
         string.Format(Lang.AccessoryDesc, this.GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {

@@ -8,9 +8,9 @@ public sealed class Element : IconEntity, IModItem {
     public Mult? MultDmgDealt { get; }
     public Mult? MultDmgTaken { get; }
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Element(IGameMod? source, string keyName, string keyDescription, string icon,
+    public Element(GameMod? source, string keyName, string keyDescription, string icon,
         Mult? multDmgDealt = null, Mult? multDmgTaken = null) : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.MultDmgDealt = multDmgDealt;
@@ -18,7 +18,7 @@ public sealed class Element : IconEntity, IModItem {
         Core.Elements.Add(this);
     }
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Element);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Element);
 }
 
 public static class Elements {

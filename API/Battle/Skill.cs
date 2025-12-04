@@ -26,9 +26,9 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
         }
     } = [];
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Skill(IGameMod? source, string keyName, string keyDescription, Range range, int cost)
+    public Skill(GameMod? source, string keyName, string keyDescription, Range range, int cost)
         : base(keyName, keyDescription, Elements.Vis.Icon) {
         // todo null icon
         this.Source = source;
@@ -65,7 +65,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     // todo more complex logic
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Skill);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Skill);
 
     protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
         HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
@@ -79,7 +79,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     }
 
     // todo stat skills
-    public override string GetDescriptionWithInclusions(IGameMod? mod = null) {
+    public override string GetDescriptionWithInclusions(GameMod? mod = null) {
         int pow = 0;
         HashSet<string> skillTypes = [];
         foreach (SkillEffect skillEffect in this.SkillEffects) {

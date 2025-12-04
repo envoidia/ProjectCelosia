@@ -7,9 +7,9 @@ namespace API.Battle;
 public sealed class StageType : IconEntity, IModItem {
     public Stat[] Stats { get; }
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public StageType(IGameMod? source, string keyName, string descKey, string icon, params Stat[] stats)
+    public StageType(GameMod? source, string keyName, string descKey, string icon, params Stat[] stats)
         : base(keyName, descKey, icon) {
         this.Source = source;
         this.Stats = stats;
@@ -18,7 +18,7 @@ public sealed class StageType : IconEntity, IModItem {
 
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Buff);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Buff);
 }
 
 public static class StageTypes {

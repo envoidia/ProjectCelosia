@@ -25,7 +25,7 @@ public sealed class Weapon : ComplexDescriptionEntity, IEquippable {
         return inclusions;
     }
 
-    public override string GetDescriptionWithInclusions(IGameMod? mod = null) =>
+    public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
         string.Format(Lang.WeaponDesc, this.GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {

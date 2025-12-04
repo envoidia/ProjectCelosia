@@ -7,15 +7,15 @@ namespace API.Battle;
 public sealed class Stat : NamedEntity, IModItem {
     public StageType StageType { get; }
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Stat(IGameMod? source, string keyName, StageType stageType) : base(keyName) {
+    public Stat(GameMod? source, string keyName, StageType stageType) : base(keyName) {
         this.Source = source;
         this.StageType = stageType;
         Core.Stats.Add(this);
     }
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Stat);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Stat);
 }
 
 public static class Stats {

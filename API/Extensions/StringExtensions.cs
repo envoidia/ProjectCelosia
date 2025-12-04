@@ -19,7 +19,7 @@ public static class StringExtensions {
         /// <para>Throws <c>ArgumentException</c> if key is invalid</para>
         /// <param name="mod">The mod to check first</param>
         /// <exception cref="ArgumentException">If key is invalid</exception>
-        public string GetLang(IGameMod? mod = null) {
+        public string GetLang(GameMod? mod = null) {
             // Check provided mod
             string? lang = mod?.ResourceManager.GetString(@this, Lang.Culture);
             if (lang is not null) return lang;
@@ -29,7 +29,7 @@ public static class StringExtensions {
             if (lang is not null) return lang;
 
             // Check all mods
-            foreach (IGameMod gameMod in ModLoader.LoadedMods) {
+            foreach (GameMod gameMod in ModLoader.LoadedMods) {
                 lang = gameMod.ResourceManager.GetString(@this, Lang.Culture);
                 if (lang is not null) return lang;
             }
@@ -51,7 +51,7 @@ public static class StringExtensions {
         /// <param name="mod">The mod to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
         /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
-        public string FormatLang(IGameMod? mod = null, params object?[] args) {
+        public string FormatLang(GameMod? mod = null, params object?[] args) {
 #if DEBUG
             if (args.Length == 0) throw new ArgumentException(Lang.Err0Args);
 #endif
@@ -76,7 +76,7 @@ public static class StringExtensions {
         /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
         /// <param name="mod">The <c>IGameMod</c> to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
-        public string FormatIcuLang(IGameMod? mod, params object?[] args) {
+        public string FormatIcuLang(GameMod? mod, params object?[] args) {
 #if DEBUG
             if (args.Length == 0) throw new ArgumentException(Lang.Err0Args);
 #endif

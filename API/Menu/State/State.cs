@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
 
-public class State(string name) {
+public class State(string name, Action<GameTime> update, Action<GameTime> draw, Func<string> getInputPrompt) {
 
     /// <summary>
     /// Display name for this <c>State</c> (todo i18n)
@@ -25,17 +25,17 @@ public class State(string name) {
     /// <summary>
     /// Called every frame when this <c>State</c> is active, during the logic phase
     /// </summary>
-    public required Action<GameTime> Update { get; init; }
+    public Action<GameTime> Update { get; init; } = update;
 
     /// <summary>
     /// Called every frame when this <c>State</c> is active, during the drawing phase
     /// </summary>
-    public required Action<GameTime> Draw { get; init; }
+    public Action<GameTime> Draw { get; init; } = draw;
 
     /// <summary>
     /// Called when this <c>State</c> is first reached, to update the input prompt <c>Label</c> in the bottom-right corner
     /// </summary>
-    public required Func<string> GetInputPrompt { get; init; }
+    public Func<string> GetInputPrompt { get; init; } = getInputPrompt;
 
     public static string GetInputPromptString(params InputPrompt[] inputPrompts) {
         StringBuilder inputs = new();

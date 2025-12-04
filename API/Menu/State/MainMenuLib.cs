@@ -1,12 +1,8 @@
-using System;
 using API.Battle.State;
-using API.Extensions;
 using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
-
-using static API.Input.InputPrompts;
 
 public static class MainMenuLib {
     private static int index;

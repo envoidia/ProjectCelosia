@@ -11,6 +11,8 @@ using MonoGame.Extended.Collections;
 namespace API.Battle;
 
 public sealed class Unit {
+    #region Fields
+
     public UnitType UnitType { get; }
     public int Lvl { get; }
     public int Hp { get; set; }
@@ -74,6 +76,8 @@ public sealed class Unit {
 
     public int ExtraActions { get; set; } = 0;
 
+    #endregion
+
     public Unit(UnitType unitType, int lvl, IEquippable? equipped, params Skill[] skills) {
         this.UnitType = unitType;
         this.Lvl = lvl;
@@ -112,7 +116,8 @@ public sealed class Unit {
         }
     }
 
-    // Stats
+    #region Stats
+
     public int GetStatWithStage(Stat stat, int stage) {
         if (stat == Stats.Hp) return this.Hp;
 
@@ -127,7 +132,10 @@ public sealed class Unit {
     public int GetStatMult(Stat stat) => this._statsMult.GetValueOrDefault(stat, 1000);
     public void SetStatMult(Stat stat, int set) => this._statsMult[stat] = set;
 
-    // Affinities
+    #endregion
+
+    #region Affinities
+
     public int GetAffinity(Element element) => this._affinities.GetValueOrDefault(element, 0);
     public void SetAffinity(Element element, int set) => this._affinities[element] = set;
     public bool IsWeakTo(Element element) => this._affinities.GetValueOrDefault(element, 0) < 0;
@@ -145,7 +153,10 @@ public sealed class Unit {
         return str.ToString();
     }
 
-    // Stages
+    #endregion
+
+    #region Stages
+
     public int GetStage(StageType stageType) => this._stages.GetValueOrDefault(stageType, 0);
     public void SetStage(StageType stageType, int set) => this._stages[stageType] = set;
 
@@ -175,7 +186,10 @@ public sealed class Unit {
         return builder.ToString();
     }
 
-    // Mults
+    #endregion
+
+    #region Mults
+
     public float GetMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000) / 1000f;
     public int GetRawMult(Mult mult) => this._mults.GetValueOrDefault(mult, 1000);
     public void SetMult(Mult mult, int set) => this._mults[mult] = set; // todo ensure these dont crash
@@ -190,7 +204,10 @@ public sealed class Unit {
         return str.ToString();
     }
 
-    // BoolStats
+    #endregion
+
+    #region BoolStats
+
     public int GetBoolStat(BoolStat boolStat) => this._boolStats.GetValueOrDefault(boolStat, 1000);
     public void SetBoolStat(BoolStat boolStat, int set) => this._boolStats[boolStat] = set;
 
@@ -229,7 +246,10 @@ public sealed class Unit {
         return (stat.IsPositive ? Colors.Pos : Colors.Neg) + (this.IsBoolStat(stat) ? Lang.Yes : Lang.No);
     }
 
-    // StatMods
+    #endregion
+
+    #region StatMods
+
     public int GetStatMod(StatMod statMod) => this._statMods.GetValueOrDefault(statMod, 0);
     public void SetStatMod(StatMod statMod, int set) => this._statMods[statMod] = set;
 
@@ -257,7 +277,10 @@ public sealed class Unit {
         return str.ToString();
     }
 
-    // BuffEffects
+    #endregion
+
+    #region BuffEffects
+
     private delegate void BuffEffectNotifier(IBuffEffect effect, Unit self, Unit target, int stacks);
 
     private void NotifyBuffEffects(Unit target, BuffEffectNotifier notifier) {
@@ -308,6 +331,8 @@ public sealed class Unit {
             (effect, s, t, stacks) => effect.OnChangeStage(s, t, stacks, stageType, turns, stacksChange));
 
     public Side GetSide() => this.Pos < PosLib.LowestOpp ? Side.Ally : Side.Opponent;
+
+    #endregion
 
     public void DecrementTurns() {
         // Stages

@@ -11,9 +11,9 @@ public sealed class Mult : NamedEntity, IModItem {
     public bool IsPositive { get; }
     public int MinValue { get; init; } = 100;
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Mult(IGameMod? source, string keyName, bool isPositive) : base(keyName) {
+    public Mult(GameMod? source, string keyName, bool isPositive) : base(keyName) {
         this.Source = source;
         this.IsPositive = isPositive;
         Core.Mults.Add(this);

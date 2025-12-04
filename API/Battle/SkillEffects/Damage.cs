@@ -1,4 +1,3 @@
-using System;
 using API.Battle.State;
 
 namespace API.Battle.SkillEffects;

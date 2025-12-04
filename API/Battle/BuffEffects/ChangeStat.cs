@@ -1,4 +1,3 @@
-using System;
 using API.Battle.State;
 using API.Extensions;
 using API.Graphics;

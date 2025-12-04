@@ -51,13 +51,14 @@
     <data name="Err0Args" xml:space="preserve">
         <value>Must pass at least 1 arg</value>
     </data>
-    <!--Modloader info-->
-    <!-- 0 = mod name, 1 = exception message -->
-    <data name="ErrModCantFindMain" xml:space="preserve">
-        <value>Failed to load {0}: Main class must be named Main and extend API.Modding.GameMod</value>
+    <!--Modloader info
+    0 = mod name -->
+    <data name="ErrModCantFindEntryPoint" xml:space="preserve">
+        <value>Failed to load {0}: Could not find a class marked with ModEntryPointAttribute</value>
     </data>
+    <!-- 0 = mod property name, 1 = containing file name -->
     <data name="ModLoaded" xml:space="preserve">
-        <value>Successfully loaded {0}</value>
+        <value>Successfully loaded {0} from {1}</value>
     </data>
     <!--Debug info menu
     0 = Close button glpyh, 1 = version-->

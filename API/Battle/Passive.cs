@@ -8,9 +8,9 @@ namespace API.Battle;
 public sealed class Passive : ComplexDescriptionEntity, IModItem {
     public IBuffEffect[] BuffEffects { get; init; }
 
-    public IGameMod? Source { get; }
+    public GameMod? Source { get; }
 
-    public Passive(IGameMod? source, string keyName, string keyDescription, string icon,
+    public Passive(GameMod? source, string keyName, string keyDescription, string icon,
         params IBuffEffect[] buffEffects)
         : base(keyName, keyDescription, icon) {
         this.Source = source;
@@ -18,7 +18,7 @@ public sealed class Passive : ComplexDescriptionEntity, IModItem {
         Core.Passives.Add(this);
     }
 
-    public override string GetName(IGameMod? mod = null) => this.GetName(Colors.Passive);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Passive);
 
-    public override string GetDescriptionWithInclusions(IGameMod? mod = null) => "todo";
+    public override string GetDescriptionWithInclusions(GameMod? mod = null) => "todo";
 }
