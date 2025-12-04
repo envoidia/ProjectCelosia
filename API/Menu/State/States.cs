@@ -11,7 +11,7 @@ public static class States {
 
     public static readonly State Popup = new("Popup",
     static _ => {
-        if (Core.Input.CheckInput(Keybinds.Back)) {
+        if (Core.Input.CheckInput(Keybinds.Confirm, Keybinds.Back)) {
             NavPath.Remove();
             return;
         }
