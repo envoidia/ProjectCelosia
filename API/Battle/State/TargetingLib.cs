@@ -19,7 +19,7 @@ public static class TargetingLib {
     public static void Update(GameTime gameTime) {
         HandleDebug();
 
-        if (Core.Input.CheckInput(Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Back)) {
             //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";
 
@@ -31,7 +31,7 @@ public static class TargetingLib {
 
         //MenuLib.handleOptColor(stats, indexTarget);
 
-        if (!Core.Input.CheckInput(Keybinds.Confirm)) return;
+        if (!InputLib.Check(Keybinds.Confirm)) return;
 
         Unit self = Battle.PlayerTeam.Units[_selectingMove];
         Unit target = _indexTarget < PosLib.LowestOpp
@@ -39,7 +39,7 @@ public static class TargetingLib {
             : Battle.OpponentTeam.Units[_indexTarget - PosLib.LowestOpp];
         _CurMoves.Add(new Move(_selectedSkillInstance, self, target.Pos));
         // todo support ExA
-        _Moves[_selectingMove].Text = $"{_Moves[_selectingMove].Text} → {target.FormatName(false)}";
+        _Moves[_selectingMove].Text = $"{_Moves[_selectingMove].Text} /c[white]→ {target.FormatName(false)}";
 
         foreach (Label stat in _Stats) {
             //stat.Color = Colors.White;
@@ -64,12 +64,12 @@ public static class TargetingLib {
     public static void UpdateInspectTargeting(GameTime gameTime) {
         HandleDebug();
 
-        if (Core.Input.CheckInput(Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Back)) {
             NavPath.Remove();
             return;
         }
 
-        if (Core.Input.CheckInput(Keybinds.Confirm, Keybinds.Map)) {
+        if (InputLib.Check(Keybinds.Confirm, Keybinds.Map)) {
             NavPath.Remove();
             NavPath.Add(States.Inspect);
         }

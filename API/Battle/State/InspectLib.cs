@@ -110,7 +110,7 @@ public sealed class InspectLib {
     public static void Update(GameTime gameTime) {
         HandleDebug();
 
-        if (Core.Input.CheckInput(Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Back)) {
             NavPath.Remove();
             return;
         }

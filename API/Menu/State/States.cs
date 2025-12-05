@@ -11,7 +11,7 @@ public static class States {
 
     public static readonly State Popup = new("Popup",
     static _ => {
-        if (Core.Input.CheckInput(Keybinds.Confirm, Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Confirm, Keybinds.Back)) {
             NavPath.Remove();
             return;
         }
@@ -39,7 +39,7 @@ static () => State.GetInputPromptString(Close));
     public static readonly State Log = new("Log",
         static _ => {
             BattleLib.HandleDebug();
-            if (Core.Input.CheckInput(Keybinds.Back, Keybinds.Menu)) NavPath.Remove();
+            if (InputLib.Check(Keybinds.Back, Keybinds.Menu)) NavPath.Remove();
         },
 
         Core.StageBattle.Draw,

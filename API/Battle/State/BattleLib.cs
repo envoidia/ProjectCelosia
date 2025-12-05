@@ -175,11 +175,11 @@ public static class BattleLib {
     }
 
     public static void HandleDebug() {
-        if (Core.Input.CheckInput(Keybinds.DebugDumpLog)) {
+        if (InputLib.Check(Keybinds.DebugDumpLog)) {
             Console.WriteLine(string.Join('\n', LogLib._LogText));
         }
 
-        if (Core.Input.IsKeyJustPressed(Keys.W)) {
+        if (InputLib.IsKeyJustPressed(Keys.W)) {
             NavPath.Add(States.Popup);
         }
     }
@@ -313,7 +313,7 @@ public static class BattleLib {
 
     private static void _SelectMove() {
         // Cancel
-        if (Core.Input.CheckInput(Keybinds.Back) && (_selectingMove != 0)) {
+        if (InputLib.Check(Keybinds.Back) && (_selectingMove != 0)) {
             // todo
             _SkillsL.Text = "";
 
@@ -330,7 +330,7 @@ public static class BattleLib {
 
         //MenuLib.handleOptColor(skills, indexSkill); todo
 
-        if (!Core.Input.CheckInput(Keybinds.Confirm)) return;
+        if (!InputLib.Check(Keybinds.Confirm)) return;
 
         _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_indexSkill];
         _Moves[_selectingMove].Text = _selectedSkillInstance.Skill.GetName();

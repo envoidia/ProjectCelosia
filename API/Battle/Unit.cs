@@ -227,9 +227,9 @@ public sealed class Unit {
 
     public bool IsImmuneToBoolStat(BoolStat boolStat) =>
         ((boolStat == BoolStats.UnableToAct) &&
-         (this._BoolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0) > 0))
-        || ((boolStat == BoolStats.EquipDisabled) &&
-            (this._BoolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0) > 0));
+        (this._BoolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0) > 0)) ||
+        ((boolStat == BoolStats.EquipDisabled) &&
+        (this._BoolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0) > 0));
 
     public string GetOtherStatsString() {
         StringBuilder str = new();

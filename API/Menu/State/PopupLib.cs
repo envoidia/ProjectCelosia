@@ -17,7 +17,7 @@ public static class PopupLib {
     private static readonly GuiBox _PopupBg = new(World.W2 - 660, World.H2 + 300, World.W2 + 660, World.H2 - 300);
 
     public static void Update(GameTime gameTime) {
-        if (Core.Input.CheckInput(Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Back)) {
             NavPath.Remove();
             return;
         }

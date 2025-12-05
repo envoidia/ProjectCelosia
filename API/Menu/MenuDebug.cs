@@ -43,7 +43,7 @@ public static class MenuDebug {
             return;
         }
 
-        if (Core.Input.InputDeviceChanged) _DebugInfoL.Text = _GetDebugInfoLText();
+        if (InputLib.InputDeviceChanged) _DebugInfoL.Text = _GetDebugInfoLText();
 
         // todo update text if lang changed
 
@@ -53,9 +53,9 @@ public static class MenuDebug {
         _timeSinceUpdate += gameTime.ElapsedGameTime;
 
         // Check for inputs
-        _DebugInfoHelp.IsVisible ^= Core.Input.CheckInput(Keybinds.DebugHelp);
+        _DebugInfoHelp.IsVisible ^= InputLib.Check(Keybinds.DebugHelp);
 
-        if (Core.Input.CheckInput(Keybinds.DebugDumpMods)) {
+        if (InputLib.Check(Keybinds.DebugDumpMods)) {
             Console.WriteLine(string.Join(", ", ModLoader._LoadedMods).Replace(".Main", ""));
         }
 

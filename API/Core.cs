@@ -36,8 +36,6 @@ public class Core : Game {
 
     public new static ContentManager Content { get; private set; } = null!;
 
-    public static InputManager Input { get; private set; } = null!;
-
     public static bool ExitOnEscape { get; set; }
 
     #region Stages
@@ -184,9 +182,6 @@ public class Core : Game {
         WhitePixel = new Texture2D(GraphicsDevice, 1, 1);
         WhitePixel.SetData([Color.White]);
 
-        // Create a new input manager.
-        Input = new InputManager();
-
         // Sort stages
         StageBase.Sort();
         StageSuper.Sort();
@@ -194,9 +189,9 @@ public class Core : Game {
 
     protected override void Update(GameTime gameTime) {
         // Update the input manager.
-        Input.Update(gameTime);
+        InputLib.Update(gameTime);
 
-        if (ExitOnEscape && Input.KeyboardState.IsKeyDown(Keys.Escape)) {
+        if (ExitOnEscape && InputLib._KeyboardState.IsKeyDown(Keys.Escape)) {
             this.Exit();
         }
 

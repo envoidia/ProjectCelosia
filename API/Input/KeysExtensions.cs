@@ -74,7 +74,7 @@ public static class KeysExtensions {
         });
 
         public char? Type() {
-            if (Core.Input.IsKeyPressed(Keys.LeftShift) || Core.Input.IsKeyPressed(Keys.RightShift)) {
+            if (InputLib.IsKeyPressed(Keys.LeftShift) || InputLib.IsKeyPressed(Keys.RightShift)) {
                 return @this switch {
                     Keys.A => 'A',
                     Keys.B => 'B',

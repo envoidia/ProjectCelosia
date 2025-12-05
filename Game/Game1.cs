@@ -75,12 +75,12 @@ public sealed class Game1 : Core {
 
     protected override void Update(GameTime gameTime) {
         // Toggle debug info overlay
-        _isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
+        _isDebugInfoEnabled ^= InputLib.Check(Keybinds.DebugInfo);
 
         MenuDebug.HandleDebugInfo(_isDebugInfoEnabled, gameTime);
 
         // Switch input prompt between kb/controller
-        if (Input.InputDeviceChanged) NavPath.UpdateInputPrompt();
+        if (InputLib.InputDeviceChanged) NavPath.UpdateInputPrompt();
 
         // Update the current State
         NavPath.GetState().Update(gameTime);

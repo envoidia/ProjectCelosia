@@ -25,7 +25,7 @@ public static class MainMenuLib {
         _index = MenuLib.CheckMovement1D(_index, _OptCountMain);
         // todo update cursor
 
-        if (Core.Input.CheckInput(Keybinds.Confirm)) {
+        if (InputLib.Check(Keybinds.Confirm)) {
             switch ((_Options) _index) {
                 case _Options.Start:
                     BattleLib.Initialize();
@@ -49,7 +49,7 @@ public static class MainMenuLib {
             }
         }
 
-        if (Core.Input.CheckInput(Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Back)) {
             if ((_Options) _index == _Options.Quit) {
                 Core.Instance.Exit();
             } else {
