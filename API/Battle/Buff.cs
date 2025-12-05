@@ -26,7 +26,7 @@ public sealed class Buff : ComplexDescriptionEntity, IModItem {
     public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
         string.Format(Lang.BuffDesc, this.BuffType.GetName(),
             this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
-            this.GetFormattedDescriptionInclusions(mod));
+            this._GetFormattedDescriptionInclusions(mod));
 }
 
 public static class Buffs {

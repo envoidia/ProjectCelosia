@@ -34,15 +34,15 @@ public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10) : I
     public RenderPriority RenderPriority { get; set; } = RenderPriority.Low;
 
     public virtual void Draw(GameTime gameTime) {
-        this.Update(gameTime);
-        if (this.Prog != 0) this.DrawWithoutUpdate();
+        this._Update(gameTime);
+        if (this.Prog != 0) this._DrawWithoutUpdate();
     }
 
-    protected void Update(GameTime gameTime) =>
+    protected void _Update(GameTime gameTime) =>
         this.Prog = Math.Clamp(this.Prog + (float) (gameTime.ElapsedGameTime.TotalSeconds *
             this.Dir * this.Speed * (this.Dir == -1 ? 2 : 1)), 0f, 1f);
 
-    public void DrawWithoutUpdate(int l, int r, int t, int b, Color color, float prog) {
+    protected void _DrawWithoutUpdate(int l, int r, int t, int b, Color color, float prog) {
         float height = b - t;
 
         float angLOff = this.SlantL > 0 ? height / this.SlantL : 0;
@@ -56,9 +56,9 @@ public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10) : I
         Core.ShapeBatch.DrawTriangleStrip(tl, tr, bl, br, color, this.OutlineColor, this.OutlineThickness);
     }
 
-    public void DrawWithoutUpdate(int l, int r, int t, int b, Color color) =>
-        this.DrawWithoutUpdate(l, r, t, b, color, this.Prog);
+    protected void _DrawWithoutUpdate(int l, int r, int t, int b, Color color) =>
+        this._DrawWithoutUpdate(l, r, t, b, color, this.Prog);
 
-    public void DrawWithoutUpdate() =>
-        this.DrawWithoutUpdate(this.L, this.R, this.T, this.B, this.Color, this.Prog);
+    protected void _DrawWithoutUpdate() =>
+        this._DrawWithoutUpdate(this.L, this.R, this.T, this.B, this.Color, this.Prog);
 }

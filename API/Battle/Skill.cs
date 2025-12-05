@@ -67,7 +67,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
 
     public override string GetName(GameMod? mod = null) => this.GetName(Colors.Skill);
 
-    protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
+    protected override HashSet<DescriptionEntity> _GetDescriptionInclusions() {
         HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
 
         foreach (SkillEffect skillEffect in this.SkillEffects) {
@@ -106,7 +106,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
             this.Prio == 0
                 ? ""
                 : $", {((int) this.Prio).Format()} {Colors.White}{Lang.Prio}",
-            this.GetFormattedDescriptionInclusions(mod));
+            this._GetFormattedDescriptionInclusions(mod));
     }
 }
 

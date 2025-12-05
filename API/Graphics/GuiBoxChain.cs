@@ -30,7 +30,7 @@ public sealed class GuiBoxChain(int l, int r, int t, int b, params int[] divisio
     private int[] _selectedDir = new int[divisions.Length];
 
     public override void Draw(GameTime gameTime) {
-        this.Update(gameTime);
+        this._Update(gameTime);
 
         if (this.Prog == 0) return;
 
@@ -51,11 +51,11 @@ public sealed class GuiBoxChain(int l, int r, int t, int b, params int[] divisio
                     this._selectedProg[i] + (float) (gameTime.ElapsedGameTime.TotalSeconds * this._selectedDir[i] *
                                                      (this.Speed * 2)), 0f, 1f);
 
-            this.DrawWithoutUpdate(l, r, t, b, this.Color);
+            this._DrawWithoutUpdate(l, r, t, b, this.Color);
 
             // Cursor
             float cursorProg = Math.Min(this._selectedProg[i], this.Prog);
-            if (cursorProg != 0) this.DrawWithoutUpdate(l, r, t, b, this._selectedColor, cursorProg);
+            if (cursorProg != 0) this._DrawWithoutUpdate(l, r, t, b, this._selectedColor, cursorProg);
         }
     }
 }

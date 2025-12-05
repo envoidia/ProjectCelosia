@@ -16,7 +16,7 @@ public sealed class Weapon : ComplexDescriptionEntity, IEquippable {
         Core.Weapons.Add(this);
     }
 
-    protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
+    protected override HashSet<DescriptionEntity> _GetDescriptionInclusions() {
         HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
 
         inclusions.UnionWith(this.Skills);
@@ -26,7 +26,7 @@ public sealed class Weapon : ComplexDescriptionEntity, IEquippable {
     }
 
     public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
-        string.Format(Lang.WeaponDesc, this.GetFormattedDescriptionInclusions(mod));
+        string.Format(Lang.WeaponDesc, this._GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {
         int multiplier = give.ToSign();

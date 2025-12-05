@@ -16,7 +16,7 @@ public sealed class Accessory : ComplexDescriptionEntity, IEquippable, IModItem 
         Core.Accessories.Add(this);
     }
 
-    protected override HashSet<DescriptionEntity> GetDescriptionInclusions() {
+    protected override HashSet<DescriptionEntity> _GetDescriptionInclusions() {
         HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
 
         inclusions.UnionWith(this.Skills);
@@ -26,7 +26,7 @@ public sealed class Accessory : ComplexDescriptionEntity, IEquippable, IModItem 
     }
 
     public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
-        string.Format(Lang.AccessoryDesc, this.GetFormattedDescriptionInclusions(mod));
+        string.Format(Lang.AccessoryDesc, this._GetFormattedDescriptionInclusions(mod));
 
     public void Apply(Unit unit, bool give) {
         if (give) {

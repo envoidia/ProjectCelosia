@@ -23,13 +23,13 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
         return args;
     }
 
-    protected virtual HashSet<DescriptionEntity> GetDescriptionInclusions() => this.DescriptionInclusions;
+    protected virtual HashSet<DescriptionEntity> _GetDescriptionInclusions() => this.DescriptionInclusions;
 
-    protected string GetFormattedDescriptionInclusions(GameMod? mod = null) {
+    protected string _GetFormattedDescriptionInclusions(GameMod? mod = null) {
         StringBuilder formattedInclusions = new(this.GetDescription(mod));
         if (this.DescriptionInclusions.Count > 0) formattedInclusions.Append('\n');
 
-        foreach (DescriptionEntity entity in this.GetDescriptionInclusions()) {
+        foreach (DescriptionEntity entity in this._GetDescriptionInclusions()) {
             formattedInclusions.Append('\n').Append(Colors.White).Append('(').Append(entity.GetName(mod))
                 .Append(Colors.White).Append(": ").Append(entity.GetDescription().Replace("\n", ". "))
                 .Append(Colors.White).Append(')');

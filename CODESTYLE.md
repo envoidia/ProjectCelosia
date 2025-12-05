@@ -4,10 +4,10 @@ This is mostly just written as a reminder for myself, since I doubt anyone but m
 Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your IDE's formatter and suggestions will automatically apply most of its rules
 
 ## Naming Convention
-- PascalCase for non-private/internal readonly fields, constants, types, functions, filenames (should match class name)
-- camelCase for local functions, non-readonly non-private/internal fields
-- _camelCase for private/internal, non-readonly fields
-- _PascalCase for private/internal readonly fields, constants, functions, properties, and types
+- PascalCase for non-private/internal/protected readonly fields, constants, types, functions, filenames (should match class name)
+- camelCase for local functions, non-readonly non-private/internal/protected fields
+- _camelCase for private/internal/protected, non-readonly fields
+- _PascalCase for private/internal/protected readonly fields, constants, functions, properties, and types
 - IPascalCase for interfaces
 - `i`, then `j` for for loop variables unless another name would improve clarity (if you need more than 2, refactor your code)
 
