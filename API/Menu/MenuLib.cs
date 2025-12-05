@@ -5,7 +5,7 @@ using API.Input;
 namespace API.Menu;
 
 public static class MenuLib {
-    private const float LogScrollDelayS = 0.01f;
+    private const float _LogScrollDelayS = 0.01f;
 
     public static int CheckMovement1D(int index, int optCount) {
         if (Core.Input.CheckInput(Keybinds.Up, Keybinds.Left, true)) {
@@ -69,12 +69,12 @@ public static class MenuLib {
 
     public static int CheckLogScroll(int logScroll, int lines, int off) {
         // Up
-        if (Core.Input.CheckInput(Keybinds.Up, true, LogScrollDelayS)) {
+        if (Core.Input.CheckInput(Keybinds.Up, true, _LogScrollDelayS)) {
             return Math.Min(++logScroll, Math.Max(lines - off, 0));
         }
 
         // Down
-        if (Core.Input.CheckInput(Keybinds.Down, true, LogScrollDelayS)) {
+        if (Core.Input.CheckInput(Keybinds.Down, true, _LogScrollDelayS)) {
             return Math.Max(--logScroll, 0);
         }
 

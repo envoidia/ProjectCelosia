@@ -6,10 +6,10 @@ using API.Util;
 namespace API.Battle.BuffEffects;
 
 public sealed class ChangeStat(Stat stat, int change) : IBuffEffect {
-    public void OnGive(Unit self, int stacks) => this.Calc(self, change * stacks);
-    public void OnRemove(Unit self, int stacks) => this.Calc(self, change * -stacks);
+    public void OnGive(Unit self, int stacks) => this._Calc(self, change * stacks);
+    public void OnRemove(Unit self, int stacks) => this._Calc(self, change * -stacks);
 
-    private void Calc(Unit self, int changeFull) {
+    private void _Calc(Unit self, int changeFull) {
         int statDefault = self.GetBaseStat(stat);
         int statOldWithStage = self.GetStat(stat);
 

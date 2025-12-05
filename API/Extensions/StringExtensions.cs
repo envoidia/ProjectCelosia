@@ -8,7 +8,7 @@ namespace API.Extensions;
 
 // todo fix warning CS8620: Argument of type 'string' cannot be used for parameter 'args' of type 'object?[]' in 'string extension(string).FormatIcu(params object?[] args)' due to differences in the nullability of reference types
 public static class StringExtensions {
-    private static readonly MessageFormatter Formatter = new();
+    private static readonly MessageFormatter _Formatter = new();
 
     extension(string @this) {
         /// <returns>
@@ -29,7 +29,7 @@ public static class StringExtensions {
             if (lang is not null) return lang;
 
             // Check all mods
-            foreach (GameMod gameMod in ModLoader.LoadedMods) {
+            foreach (GameMod gameMod in ModLoader._LoadedMods) {
                 lang = gameMod.ResourceManager.GetString(@this, Lang.Culture);
                 if (lang is not null) return lang;
             }
@@ -85,7 +85,7 @@ public static class StringExtensions {
 
             for (int i = 0; i < args.Length; i++) dict[i.ToString()] = args[i];
 
-            return Formatter.FormatMessage(@this.GetLang(mod), dict);
+            return _Formatter.FormatMessage(@this.GetLang(mod), dict);
         }
 
         /// <returns>
@@ -112,7 +112,7 @@ public static class StringExtensions {
 
             for (int i = 0; i < args.Length; i++) dict[i.ToString()] = args[i];
 
-            return Formatter.FormatMessage(@this, dict);
+            return _Formatter.FormatMessage(@this, dict);
         }
     }
 }

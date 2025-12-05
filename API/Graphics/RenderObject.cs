@@ -29,18 +29,18 @@ public abstract class RenderObject : IRenderable {
         get;
         set {
             field = value;
-            this.Origin = this.CalcOrigin();
+            this._Origin = this._CalcOrigin();
         }
     } = Alignment.TopLeft;
 
     // Raw position of the origin. Not meant to be viewed or used directly
-    internal Point Origin { get; set; } = Point.Zero;
+    internal Point _Origin { get; set; } = Point.Zero;
 
     public bool IsVisible { get; set; } = true;
 
     public RenderPriority RenderPriority { get; set; } = RenderPriority.Base;
 
-    internal Point CalcOrigin() => this.Alignment switch {
+    internal Point _CalcOrigin() => this.Alignment switch {
         Alignment.TopLeft => Point.Zero,
         Alignment.TopRight => new Point(this.Size.X, 0),
         Alignment.BottomLeft => new Point(0, this.Size.Y),

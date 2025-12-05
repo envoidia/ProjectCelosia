@@ -17,10 +17,10 @@ public interface IBuffEffect {
     // target = attacker if there is one, otherwise target = self
     void OnTakeDamage(Unit self, Unit target, int stacks, int damage, Element? element) { }
 
-    void OnDealHeal(Unit self, Unit target, int stacks, int heal, int overHeal) { }
+    void OnDealHeal(Unit self, Unit target, int stacks, int heal, int overheal) { }
 
     // target = healer if there is one, otherwise target = self
-    void OnTakeHeal(Unit self, Unit target, int stacks, int heal, int overHeal) { }
+    void OnTakeHeal(Unit self, Unit target, int stacks, int heal, int overheal) { }
 
     void OnDealShield(Unit self, Unit target, int stacks, int turns, int heal) { }
 

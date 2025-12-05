@@ -17,9 +17,7 @@ using MonoGame.Extended.Graphics;
 namespace API;
 
 public class Core : Game {
-    internal static Core sInstance = null!;
-
-    public static Core Instance => sInstance;
+    public static Core Instance { get; private set; } = null!;
 
     #region Rendering
 
@@ -104,12 +102,12 @@ public class Core : Game {
     /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created
-        if (sInstance is not null) {
+        if (Instance is not null) {
             throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(Core)));
         }
 
         // Store reference to engine for global member access
-        sInstance = this;
+        Instance = this;
 
         // Create a new graphics device manager
         Graphics = new GraphicsDeviceManager(this) {

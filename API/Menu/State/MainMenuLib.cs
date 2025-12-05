@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework;
 namespace API.Menu.State;
 
 public static class MainMenuLib {
-    private static int index;
+    private static int _index;
 
-    private enum Options {
+    private enum _Options {
         Start,
         Encyclopedia,
         Options,
@@ -19,41 +19,41 @@ public static class MainMenuLib {
         LastValue
     }
 
-    private const int OptCountMain = (int) Options.LastValue - 1;
+    private const int _OptCountMain = (int) _Options.LastValue - 1;
 
     public static void Update(GameTime gameTime) {
-        index = MenuLib.CheckMovement1D(index, OptCountMain);
+        _index = MenuLib.CheckMovement1D(_index, _OptCountMain);
         // todo update cursor
 
         if (Core.Input.CheckInput(Keybinds.Confirm)) {
-            switch ((Options) index) {
-                case Options.Start:
+            switch ((_Options) _index) {
+                case _Options.Start:
                     BattleLib.Initialize();
                     NavPath.Add(States.Battle);
                     return;
-                case Options.Encyclopedia:
+                case _Options.Encyclopedia:
                     // todo
                     return;
-                case Options.Options:
+                case _Options.Options:
                     // todo
                     return;
-                case Options.Mods:
+                case _Options.Mods:
                     // todo
                     return;
-                case Options.Credits:
+                case _Options.Credits:
                     // todo
                     return;
-                case Options.Quit:
+                case _Options.Quit:
                     // todo
                     return;
             }
         }
 
         if (Core.Input.CheckInput(Keybinds.Back)) {
-            if ((Options) index == Options.Quit) {
-                Core.sInstance.Exit();
+            if ((_Options) _index == _Options.Quit) {
+                Core.Instance.Exit();
             } else {
-                index = (int) Options.Quit;
+                _index = (int) _Options.Quit;
             }
         }
     }

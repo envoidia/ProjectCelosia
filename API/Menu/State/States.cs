@@ -54,7 +54,7 @@ static () => State.GetInputPromptString(Close));
             Core.StageInspect.Draw(gameTime);
         },
 
-        static () => InspectLib.curPage == InspectLib.InspectPage.Stats
+        static () => InspectLib.curPage == InspectLib._InspectPage.Stats
         ? State.GetInputPromptString(ScrollFaster, Back)
         : State.GetInputPromptString(ScrollUpDown, ScrollFaster, Back));
 }

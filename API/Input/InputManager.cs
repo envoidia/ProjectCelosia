@@ -13,9 +13,9 @@ public sealed class InputManager {
     public KeyboardState PreviousKeyboardState { get; private set; }
     public KeyboardState KeyboardState { get; private set; }
 
-    private GamePadState GamePadState { get; set; } // todo
+    private GamePadState _GamePadState { get; set; } // todo
 
-    private InputDevice PreviousInputSource { get; set; } = InputDevice.Keyboard;
+    private InputDevice _PreviousInputSource { get; set; } = InputDevice.Keyboard;
     public InputDevice LastInputSource { get; private set; } = InputDevice.Keyboard;
     public bool InputDeviceChanged { get; private set; } = true;
 
@@ -27,7 +27,7 @@ public sealed class InputManager {
     /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
-    private const float DefaultHoldDelay = 0.15f;
+    private const float _DefaultHoldDelay = 0.15f;
 
     /// <summary>
     /// Time from <c>Keybind</c> first becoming held to first trigger
@@ -42,7 +42,7 @@ public sealed class InputManager {
     /// <summary>
     /// Distance an axis must be moved for input to register
     /// </summary>
-    private const float MinAxisDist = 0.4f;
+    private const float _MinAxisDist = 0.4f;
 
     #endregion
 
@@ -54,12 +54,12 @@ public sealed class InputManager {
     public void Update(GameTime gameTime) {
         this.PreviousKeyboardState = this.KeyboardState;
         this.KeyboardState = Keyboard.GetState();
-        this.GamePadState = GamePad.GetState(PlayerIndex.One);
+        this._GamePadState = GamePad.GetState(PlayerIndex.One);
 
         this._elapsedTime = gameTime.ElapsedGameTime;
 
-        if (this.PreviousInputSource != this.LastInputSource) {
-            this.PreviousInputSource = this.LastInputSource;
+        if (this._PreviousInputSource != this.LastInputSource) {
+            this._PreviousInputSource = this.LastInputSource;
             this.InputDeviceChanged = true;
             return;
         }
@@ -86,33 +86,33 @@ public sealed class InputManager {
     /// <summary>
     /// Check for inputs from 1 <c>Keybind</c>
     /// </summary>
-    public bool CheckInput(Keybind keybind, bool allowHold = false, float holdDelayS = DefaultHoldDelay) =>
-        this.IsKeybindPressed(allowHold, holdDelayS, keybind);
+    public bool CheckInput(Keybind keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelay) =>
+        this._IsKeybindPressed(allowHold, holdDelayS, keybind);
 
     /// <summary>
     /// Check for inputs from 2 <c>Keybind</c>s
     /// </summary>
-    public bool CheckInput(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = DefaultHoldDelay) =>
-        this.IsKeybindPressed(allowHold, holdDelayS, keybind1) || this.IsKeybindPressed(allowHold, holdDelayS, keybind2);
+    public bool CheckInput(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelay) =>
+        this._IsKeybindPressed(allowHold, holdDelayS, keybind1) || this._IsKeybindPressed(allowHold, holdDelayS, keybind2);
 
     #endregion
 
     #region Internals
 
-    private bool IsKeybindPressed(bool allowHold, float holdDelayS, Keybind keybind) {
-        if (!this.CheckKeybind(keybind)) {
+    private bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind keybind) {
+        if (!this._CheckKeybind(keybind)) {
             this._held[(int) keybind.Id] = TimeSpan.Zero;
             return false;
         }
 
-        if (this._held[(int) keybind.Id] == TimeSpan.Zero && this.CheckKeybind(keybind)) {
+        if (this._held[(int) keybind.Id] == TimeSpan.Zero && this._CheckKeybind(keybind)) {
             this._held[(int) keybind.Id] += this._elapsedTime;
             return true;
         }
 
-        if (allowHold && this._held[(int) keybind.Id] >= this._holdInitDelay && this.CheckKeybind(keybind)) {
+        if (allowHold && this._held[(int) keybind.Id] >= this._holdInitDelay && this._CheckKeybind(keybind)) {
             this._held[(int) keybind.Id] = this._holdInitDelay -
-                TimeSpan.FromSeconds(holdDelayS * (this.CheckKeybind(Keybinds.ScrollFaster).ToInt() + 1));
+                TimeSpan.FromSeconds(holdDelayS * Convert.ToInt32(this._CheckKeybind(Keybinds.ScrollFaster)) + 1);
             return true;
         }
 
@@ -120,13 +120,13 @@ public sealed class InputManager {
         return false;
     }
 
-    private bool CheckKeybind(Keybind keybind) {
-        if (this.IsKeyDown(keybind)) {
+    private bool _CheckKeybind(Keybind keybind) {
+        if (this._IsKeyDown(keybind)) {
             this.LastInputSource = InputDevice.Keyboard;
             return true;
         }
 
-        if (this.IsButtonDown(keybind)) {
+        if (this._IsButtonDown(keybind)) {
             this.LastInputSource = InputDevice.XboxController; // todo
             return true;
         }
@@ -134,7 +134,7 @@ public sealed class InputManager {
         return false;
     }
 
-    private bool IsKeyDown(Keybind keybind) => keybind.Id switch {
+    private bool _IsKeyDown(Keybind keybind) => keybind.Id switch {
         KeybindId.LeftRight => this.KeyboardState.IsKeyDown(Keybinds.Left.Key) ||
                                this.KeyboardState.IsKeyDown(Keybinds.Right.Key),
         KeybindId.UpDown => this.KeyboardState.IsKeyDown(Keybinds.Up.Key) ||
@@ -146,23 +146,23 @@ public sealed class InputManager {
         _ => this.KeyboardState.IsKeyDown(keybind.Key)
     };
 
-    private bool IsButtonDown(Keybind keybind) => keybind.Id switch {
-        KeybindId.LeftRight => this.IsButtonDown(Keybinds.Left.Button) || this.IsButtonDown(Keybinds.Right.Button),
-        KeybindId.UpDown => this.IsButtonDown(Keybinds.Up.Button) || this.IsButtonDown(Keybinds.Down.Button),
-        KeybindId.LeftRightUpDown => this.IsButtonDown(Keybinds.Left.Button) ||
-                                     this.IsButtonDown(Keybinds.Right.Button) ||
-                                     this.IsButtonDown(Keybinds.Up.Button) || this.IsButtonDown(Keybinds.Down.Button),
-        _ => this.IsButtonDown(keybind.Button)
+    private bool _IsButtonDown(Keybind keybind) => keybind.Id switch {
+        KeybindId.LeftRight => this._IsButtonDown(Keybinds.Left.Button) || this._IsButtonDown(Keybinds.Right.Button),
+        KeybindId.UpDown => this._IsButtonDown(Keybinds.Up.Button) || this._IsButtonDown(Keybinds.Down.Button),
+        KeybindId.LeftRightUpDown => this._IsButtonDown(Keybinds.Left.Button) ||
+                                     this._IsButtonDown(Keybinds.Right.Button) ||
+                                     this._IsButtonDown(Keybinds.Up.Button) || this._IsButtonDown(Keybinds.Down.Button),
+        _ => this._IsButtonDown(keybind.Button)
     };
 
-    private bool IsButtonDown(Buttons button) => button switch {
-        Buttons.DPadLeft => this.GamePadState.ThumbSticks.Left.X < -MinAxisDist,
-        Buttons.DPadRight => this.GamePadState.ThumbSticks.Left.X > MinAxisDist,
-        Buttons.DPadUp => this.GamePadState.ThumbSticks.Left.Y < -MinAxisDist,
-        Buttons.DPadDown => this.GamePadState.ThumbSticks.Left.Y > MinAxisDist,
-        Buttons.LeftTrigger => this.GamePadState.Triggers.Left > MinAxisDist,
-        Buttons.RightTrigger => this.GamePadState.Triggers.Right > MinAxisDist,
-        _ => this.GamePadState.IsButtonDown(button)
+    private bool _IsButtonDown(Buttons button) => button switch {
+        Buttons.DPadLeft => this._GamePadState.ThumbSticks.Left.X < -_MinAxisDist,
+        Buttons.DPadRight => this._GamePadState.ThumbSticks.Left.X > _MinAxisDist,
+        Buttons.DPadUp => this._GamePadState.ThumbSticks.Left.Y < -_MinAxisDist,
+        Buttons.DPadDown => this._GamePadState.ThumbSticks.Left.Y > _MinAxisDist,
+        Buttons.LeftTrigger => this._GamePadState.Triggers.Left > _MinAxisDist,
+        Buttons.RightTrigger => this._GamePadState.Triggers.Right > _MinAxisDist,
+        _ => this._GamePadState.IsButtonDown(button)
     };
 
     #endregion

@@ -4,16 +4,18 @@ This is mostly just written as a reminder for myself, since I doubt anyone but m
 Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your IDE's formatter and suggestions will automatically apply most of its rules
 
 ## Naming Convention
-- PascalCase for constants, non-private/internal readonly fields, classes, functions, filenames (should match class name)
+- PascalCase for non-private/internal readonly fields, constants, types, functions, filenames (should match class name)
 - camelCase for local functions, non-readonly non-private/internal fields
-- _camelCase for private/internal fields
+- _camelCase for private/internal, non-readonly fields
+- _PascalCase for private/internal readonly fields, constants, functions, properties, and types
 - IPascalCase for interfaces
 - `i`, then `j` for for loop variables unless another name would improve clarity (if you need more than 2, refactor your code)
 
 ## Organization
 - Modifier order: `public`, `private`, `protected`, `internal`, `file`, `new`, `static`, `abstract`, `virtual`, `sealed`, `readonly`, `override`, `extern`, `unsafe`, `volatile`, `async`, `required`
-- Member order: properties/fields, constructors, methods, operators, override methods, implementation methods
+- Member order: properties/fields, static properties/variables, constructors, methods, operators, override methods, implementation methods, statis functions
 - Property/field order: set by primary constructor, init required, init non-required, overrides, implementations
+- Use regions when appropriate to organize larger files
 - If a file contains multiple classes (usually recommended against), order them by dependency (eg `KeybindId`, then `Keybind`, then `Keybinds`)
 - Use file-scoped `namespace` and `using` directives rather than block-scoped
 - Do not have >1 nested classes
@@ -25,14 +27,14 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 
 ## Whitespace
 - Indent with 4 spaces
-- Wrap at 120 columns
-- Spaces between operators (including casts)
-- Wrap after operators
+- Spaces between operators (including after casts)
+- Wrap at 120 columns (in some cases, a little over might be fine)
+  - Wrap after operators
 - Opening brackets on the same line with 1 preceding space
 - 1 statement per line
 - 1 line between lines of code that aren't extremely closely related/simple
 - Set `else`/`catch` statements against the closing bracket of the `if`/`try` statement
-- Bracketless statements must be contained to a single line. They should generally be avoided
+- Bracketless statements must be contained to a single line and only used for very short lines
 - Any `else` statement combination is allowed (`else if`, `else for`, etc)
 - In switch statements, inline the case, the action, and `break`/`return` if able. If not, don't inline any of them
 

@@ -5,11 +5,11 @@ namespace API.Input;
 
 public static class ButtonsExtensions {
     extension(Buttons @this) {
-        public string GetGlyph(InputDevice inputDevice) => inputDevice.FormatSingleGlyph(@this.GetSingleGlyph());
+        public string GetGlyph(InputDevice inputDevice) => inputDevice.FormatSingleGlyph(@this._GetSingleGlyph());
 
-        public string[] GetGlyphs() => FormatGlyphArray(@this.GetSingleGlyph());
+        public string[] GetGlyphs() => _FormatGlyphArray(@this._GetSingleGlyph());
 
-        private string GetSingleGlyph() => @this switch {
+        private string _GetSingleGlyph() => @this switch {
             Buttons.DPadUp => "DU",
             Buttons.DPadDown => "DD",
             Buttons.DPadLeft => "DL",
@@ -27,5 +27,5 @@ public static class ButtonsExtensions {
         };
     }
 
-    private static string[] FormatGlyphArray(string name) => [$"/i[N{name}]", $"/i[P{name}]", $"/i[X{name}]"];
+    private static string[] _FormatGlyphArray(string name) => [$"/i[N{name}]", $"/i[P{name}]", $"/i[X{name}]"];
 }

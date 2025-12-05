@@ -8,7 +8,7 @@ namespace API.Battle;
 public sealed class UnitType : DescriptionEntity, IModItem {
 
     public Dictionary<Stat, int> Stats { get; }
-    internal readonly Dictionary<Element, int> _affinities;
+    internal readonly Dictionary<Element, int> _Affinities; // todo change naming rule
     public Passive[] Passives { get; }
 
     public GameMod? Source { get; }
@@ -17,7 +17,7 @@ public sealed class UnitType : DescriptionEntity, IModItem {
         Dictionary<Element, int> affinities, params Passive[] passives) : base(keyName, keyDescription) {
         this.Source = source;
         this.Stats = stats;
-        this._affinities = affinities;
+        this._Affinities = affinities;
         this.Passives = passives;
         Core.UnitTypes.Add(this);
     }

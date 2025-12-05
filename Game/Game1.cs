@@ -20,17 +20,17 @@ namespace Game;
 
 public sealed class Game1 : Core {
     // Rendering
-    private static Texture2D bg = null!;
+    private static Texture2D _bg = null!;
 
     // Debug
-    private static bool isDebugInfoEnabled;
+    private static bool _isDebugInfoEnabled;
 
     // temp
     //private static float[][] barProgs = [[1, 0.5f, 0.25f], [0.5f, 0.35f, 1], [0.75f, 1, 0.15f]];
     //private static int barIndex = -1;
 
 #if NATIVE_AOT
-    private static Celosia.Main celosiaMain = null!;
+    private static Celosia.Main _celosiaMain = null!;
 #endif
 
     public Game1() : base("Project Celosia", 0, 0, false) {
@@ -67,7 +67,7 @@ public sealed class Game1 : Core {
     }
 
     protected override void LoadContent() {
-        bg = Content.Load<Texture2D>("img/bg");
+        _bg = Content.Load<Texture2D>("img/bg");
         IconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
 
         base.LoadContent();
@@ -75,9 +75,9 @@ public sealed class Game1 : Core {
 
     protected override void Update(GameTime gameTime) {
         // Toggle debug info overlay
-        isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
+        _isDebugInfoEnabled ^= Input.CheckInput(Keybinds.DebugInfo);
 
-        MenuDebug.HandleDebugInfo(isDebugInfoEnabled, gameTime);
+        MenuDebug.HandleDebugInfo(_isDebugInfoEnabled, gameTime);
 
         // Switch input prompt between kb/controller
         if (Input.InputDeviceChanged) NavPath.UpdateInputPrompt();

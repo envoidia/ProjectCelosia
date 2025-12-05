@@ -44,10 +44,10 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
     public string GetCurrentGlyph() => this.Id switch {
         KeybindId.LeftRight or KeybindId.UpDown or KeybindId.LeftRightUpDown =>
             Core.Input.LastInputSource.GetMergedGlyph(this.Id),
-        _ => this.GetGlyph()
+        _ => this._GetGlyph()
     };
 
-    private string GetGlyph() => Core.Input.LastInputSource == InputDevice.Keyboard
+    private string _GetGlyph() => Core.Input.LastInputSource == InputDevice.Keyboard
         ? this.Key.GetGlyph()
         : this.Button.GetGlyph(Core.Input.LastInputSource);
 }

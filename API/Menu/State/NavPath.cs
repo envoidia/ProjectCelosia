@@ -6,15 +6,15 @@ using Microsoft.Xna.Framework;
 namespace API.Menu.State;
 
 /// <summary>
-/// List of <c>IStates</c> that have been traveled through to reach the current location
+/// List of <c>States</c> that have been traveled through to reach the current location
 /// </summary>
 public static class NavPath {
     /// <summary>
     /// Underlying <c>List</c> of <c>State</c>s. Avoid accessing directly — use <c>GetState()</c>, <c>Add()</c>, and <c>Remove()</c> instead
     /// </summary>
-    public static readonly List<State> Path = [];
+    public static readonly List<State> Path = []; // todo private
 
-    private static readonly Label inputPrompt = new(Core.StageBase) {
+    private static readonly Label _InputPrompt = new(Core.StageBase) {
         Position = World.Vec - new Vector2(10, 10),
         Alignment = Alignment.BottomRight,
         HasBackground = true,
@@ -47,5 +47,5 @@ public static class NavPath {
     /// <summary>
     /// Update the input prompt <c>Label</c> in the bottom-right corner
     /// </summary>
-    public static void UpdateInputPrompt() => inputPrompt.Text = GetState().GetInputPrompt();
+    public static void UpdateInputPrompt() => _InputPrompt.Text = GetState().GetInputPrompt();
 }

@@ -13,7 +13,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
     public DescriptionArg[] DescriptionArgs { private get; init; } = [];
     public HashSet<DescriptionEntity> DescriptionInclusions { protected get; init; } = [];
 
-    private string[] GetDescriptionArgs(GameMod? mod = null) {
+    private string[] _GetDescriptionArgs(GameMod? mod = null) {
         string[] args = new string[this.DescriptionArgs.Length];
 
         for (int i = 0; i < this.DescriptionArgs.Length; i++) {
@@ -41,7 +41,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
     public abstract string GetDescriptionWithInclusions(GameMod? mod = null);
 
     public override string GetDescription(GameMod? mod = null) =>
-        string.Format(base.GetDescription(mod), this.GetDescriptionArgs(mod));
+        string.Format(base.GetDescription(mod), this._GetDescriptionArgs(mod));
 }
 
 public enum DescriptionArgType {

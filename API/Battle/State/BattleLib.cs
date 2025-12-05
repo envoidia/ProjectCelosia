@@ -25,50 +25,50 @@ public static class BattleLib {
     /// </summary>
     public const int StatMult = 10;
 
-    private const int TeamCount = 2;
-    internal const int StatTypeCount = 3;
-    internal const int TeamSize = 4;
-    internal const int StatCount = 6;
-    internal const int UnitCount = TeamSize * TeamCount;
+    public const int TeamCount = 2;
+    public const int StatTypeCount = 3;
+    public const int TeamSize = 4;
+    public const int StatCount = 6;
+    public const int UnitCount = TeamSize * TeamCount;
 
     /// <summary>
     /// If <c>selectingMove</c> is this, then moves are currently executing
     /// </summary>
-    private const int ExecutionPhase = 100;
+    private const int _ExecutionPhase = 100;
 
     #endregion
 
     #region Display Fields
 
-    private static readonly Label Queue = new(Core.StageBattle) {
+    private static readonly Label _Queue = new(Core.StageBattle) {
         Alignment = Alignment.Center,
         Position = new Vector2(World.W2, 180)
     };
 
-    private static readonly Label[] BloomLabels = new Label[TeamCount];
+    private static readonly Label[] _BloomLabels = new Label[TeamCount];
 
     // Per-unit Labels
-    internal static readonly Label[] StatsL = new Label[UnitCount];
-    private static readonly Label[] BuffsL = new Label[UnitCount];
-    internal static readonly Label[] Moves = new Label[UnitCount];
-    private static readonly Label[] UnitNames = new Label[UnitCount];
+    internal static readonly Label[] _Stats = new Label[UnitCount];
+    private static readonly Label[] _Buffs = new Label[UnitCount];
+    internal static readonly Label[] _Moves = new Label[UnitCount];
+    private static readonly Label[] _UnitNames = new Label[UnitCount];
 
     #endregion
 
     #region Logic Fields
 
-    internal static readonly List<Move> CurMoves = new(16);
+    internal static readonly List<Move> _CurMoves = new(16);
 
     /// <summary>
     /// Pos of the Unit that's currently selecting their move. <c>ExecutionPhase</c> = moves are executing
     /// </summary>
-    internal static int selectingMove = 0;
+    internal static int _selectingMove = 0;
 
-    internal static SkillInstance selectedSkillInstance; // todo
+    internal static SkillInstance _selectedSkillInstance = null!; // todo
 
     // Menu navigation
-    internal static int indexSkill = 0;
-    internal static int indexTarget = 0;
+    internal static int _indexSkill = 0;
+    internal static int _indexTarget = 0;
 
     // todo replays
     // serialize each unit and then just store each move as (starting Pos of Self, index in Self's Skill list, target Pos)?
@@ -78,9 +78,9 @@ public static class BattleLib {
 
     #region Move Execution Fields
 
-    private static readonly Label SkillsL = new(Core.StageBattle);
+    private static readonly Label _SkillsL = new(Core.StageBattle);
 
-    private static readonly Label Turn = new(Core.StageBattle, $"{Colors.Turn}{Lang.Turn} 1") {
+    private static readonly Label _Turn = new(Core.StageBattle, $"{Colors.Turn}{Lang.Turn} 1") {
         Alignment = Alignment.Center,
         Position = new Vector2(World.W2, 90)
     };
@@ -88,22 +88,22 @@ public static class BattleLib {
     /// <summary>
     /// Index of the currently-applying SkillEffect of the current Move
     /// </summary>
-    private static int applyingEffect = 0;
+    private static int _applyingEffect = 0;
 
     /// <summary>
     /// Previous SkillEffect resultTypes for each pos
     /// </summary>
-    private static ResultType[] prevResults = new ResultType[UnitCount];
+    private static ResultType[] _prevResults = new ResultType[UnitCount];
 
     /// <summary>
     /// Amount of non-fail results for the current Move so far
     /// </summary>
-    private static int nonFails = 0;
+    private static int _nonFails = 0;
 
     /// <summary>
     /// Time until the next battle action can occur
     /// </summary>
-    private static TimeSpan delay;
+    private static TimeSpan _delay;
 
     #endregion
 
@@ -113,7 +113,7 @@ public static class BattleLib {
         // Setup Labels
         for (int i = 0; i < TeamCount; i++) {
             // todo midgame translation
-            BloomLabels[i] = new Label(Core.StageBattle) {
+            _BloomLabels[i] = new Label(Core.StageBattle) {
                 Position = new Vector2(i == 1 ? World.W - 105 : 105, 135),
                 Alignment = i == 1 ? Alignment.TopRight : Alignment.TopLeft
             };
@@ -131,10 +131,10 @@ public static class BattleLib {
                 y = 450 + (450 * (i - PosLib.LowestOpp));
             }
 
-            StatsL[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y) };
-            BuffsL[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y + 150) };
-            Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(x2, y + 50) };
-            UnitNames[i] = new Label(Core.StageBattle) { Y = 52 };
+            _Stats[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y) };
+            _Buffs[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y + 150) };
+            _Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(x2, y + 50) };
+            _UnitNames[i] = new Label(Core.StageBattle) { Y = 52 };
         }
 
         // Todo inspect init
@@ -150,7 +150,7 @@ public static class BattleLib {
 
         LogLib.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
 
-        UpdateStatDisplay(0);
+        _UpdateStatDisplay(0);
     }
 
     public static void EndBattle() { }
@@ -162,21 +162,21 @@ public static class BattleLib {
     public static void Update(GameTime gameTime) {
         HandleDebug();
 
-        if (delay > TimeSpan.Zero) {
-            delay -= gameTime.ElapsedGameTime;
+        if (_delay > TimeSpan.Zero) {
+            _delay -= gameTime.ElapsedGameTime;
             return;
         }
 
-        switch (selectingMove) {
-            case < PosLib.LowestOpp: SelectPlayerMove(); return;
-            case <= PosLib.HighestOpp: SelectOpponentMove(); return;
-            default: ExecuteMove(); return;
+        switch (_selectingMove) {
+            case < PosLib.LowestOpp: _SelectPlayerMove(); return;
+            case <= PosLib.HighestOpp: _SelectOpponentMove(); return;
+            default: _ExecuteMove(); return;
         }
     }
 
     public static void HandleDebug() {
         if (Core.Input.CheckInput(Keybinds.DebugDumpLog)) {
-            Console.WriteLine(string.Join('\n', LogLib.LogText));
+            Console.WriteLine(string.Join('\n', LogLib._LogText));
         }
 
         if (Core.Input.IsKeyJustPressed(Keys.W)) {
@@ -185,11 +185,11 @@ public static class BattleLib {
     }
 
     // Updates bloom labels, queue, and Unit nameplates
-    internal static void UpdateStatDisplay(int curPos) {
+    internal static void _UpdateStatDisplay(int curPos) {
         // Update bloom labels
         for (int i = 0; i < TeamCount; i++) {
             // todo fix it getting confused by the /
-            BloomLabels[i].Text =
+            _BloomLabels[i].Text =
                 $"{Colors.Stat}{Lang.Bloom}{Colors.White}: {Colors.Bloom}{Battle.GetTeamBySide((Side) i).Bloom}{Colors.White}//{Colors.Bloom}1,000";
         }
 
@@ -199,7 +199,7 @@ public static class BattleLib {
         // Update nameplates
         for (int i = 0; i < units.Length; i++) {
             // Stat display
-            StatsL[i].Text = $"{units[i].FormatName(false)}\nHP: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(Colors.Shield, false)}{Colors.White}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\nSP: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
+            _Stats[i].Text = $"{units[i].FormatName(false)}\nHP: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(Colors.Shield, false)}{Colors.White}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\nSP: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
 
             // Buff display
             int buffCount = 0;
@@ -245,7 +245,7 @@ public static class BattleLib {
                     sb.Append(") ");
                 }
 
-                BuffsL[i].Text = sb.ToString();
+                _Buffs[i].Text = sb.ToString();
             }
 
 
@@ -267,36 +267,36 @@ public static class BattleLib {
             if (i != units.Length - 1) sb.Append(", ");
         }
 
-        Queue.Text = sb.ToString();
+        _Queue.Text = sb.ToString();
     }
     #endregion
 
     #region Move Execution Methods
 
-    private static void SelectPlayerMove() {
-        if (selectingMove >= Battle.PlayerTeam.Units.Length) return;
+    private static void _SelectPlayerMove() {
+        if (_selectingMove >= Battle.PlayerTeam.Units.Length) return;
 
-        SkillsL.Position = new Vector2(600, 500 + (450 * selectingMove));
+        _SkillsL.Position = new Vector2(600, 500 + (450 * _selectingMove));
         // todo support ExA
         // todo do not assign every frame
-        SkillsL.Text =
+        _SkillsL.Text =
             // todo list all skills
-            $"{Battle.PlayerTeam.Units[selectingMove].SkillInstances[0].Skill
+            $"{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Skill
                 // temp
                 // todo real skill description display
-                .GetName()}({Colors.Cooldown}{Battle.PlayerTeam.Units[selectingMove].SkillInstances[0].Cooldown}{Colors.White})";
+                .GetName()}({Colors.Cooldown}{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Cooldown}{Colors.White})";
 
-        SelectMove();
+        _SelectMove();
     }
 
-    private static void SelectOpponentMove() {
+    private static void _SelectOpponentMove() {
         if (Debug.SelectOpponentMoves) {
-            SelectMove();
+            _SelectMove();
             return;
         }
 
-        if ((selectingMove - PosLib.LowestOpp) > Battle.OpponentTeam.Units.Length) {
-            selectingMove = ExecutionPhase;
+        if ((_selectingMove - PosLib.LowestOpp) > Battle.OpponentTeam.Units.Length) {
+            _selectingMove = _ExecutionPhase;
             return;
         }
 
@@ -305,53 +305,53 @@ public static class BattleLib {
         // todo AI
         Unit target = Battle.PlayerTeam.Units[0];
         // todo support ExA
-        Moves[selectingMove].Text = $"{selectedSkill.GetName()} → {target.FormatName(false)}";
-        CurMoves.Add(new Move(new SkillInstance(selectedSkill),
-            Battle.OpponentTeam.Units[selectingMove - PosLib.LowestOpp], target.Pos));
-        selectingMove++;
+        _Moves[_selectingMove].Text = $"{selectedSkill.GetName()} → {target.FormatName(false)}";
+        _CurMoves.Add(new Move(new SkillInstance(selectedSkill),
+            Battle.OpponentTeam.Units[_selectingMove - PosLib.LowestOpp], target.Pos));
+        _selectingMove++;
     }
 
-    private static void SelectMove() {
+    private static void _SelectMove() {
         // Cancel
-        if (Core.Input.CheckInput(Keybinds.Back) && (selectingMove != 0)) {
+        if (Core.Input.CheckInput(Keybinds.Back) && (_selectingMove != 0)) {
             // todo
-            SkillsL.Text = "";
+            _SkillsL.Text = "";
 
-            selectingMove--;
-            indexSkill = 0;
-            Moves[selectingMove].Text = "";
+            _selectingMove--;
+            _indexSkill = 0;
+            _Moves[_selectingMove].Text = "";
 
-            for (int i = 0; i <= Battle.PlayerTeam.Units[selectingMove].ExtraActions; i++) CurMoves.RemoveLast();
+            for (int i = 0; i <= Battle.PlayerTeam.Units[_selectingMove].ExtraActions; i++) _CurMoves.RemoveLast();
 
             return;
         }
 
-        indexSkill = MenuLib.CheckMovement1D(indexSkill, 6); // todo
+        _indexSkill = MenuLib.CheckMovement1D(_indexSkill, 6); // todo
 
         //MenuLib.handleOptColor(skills, indexSkill); todo
 
         if (!Core.Input.CheckInput(Keybinds.Confirm)) return;
 
-        selectedSkillInstance = Battle.PlayerTeam.Units[selectingMove].SkillInstances[indexSkill];
-        Moves[selectingMove].Text = selectedSkillInstance.Skill.GetName();
+        _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_indexSkill];
+        _Moves[_selectingMove].Text = _selectedSkillInstance.Skill.GetName();
 
         // todo
-        SkillsL.Text = "";
+        _SkillsL.Text = "";
 
-        indexTarget = selectedSkillInstance.Skill.GetStartingIndex();
+        _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex();
         NavPath.Add(States.Targeting);
     }
 
     // todo split out into multiple fns
-    private static void ExecuteMove() {
-        if (CurMoves.Count == 0) {
-            EndTurn();
+    private static void _ExecuteMove() {
+        if (_CurMoves.Count == 0) {
+            _EndTurn();
             return;
         }
 
         // Sort moves
         // todo test
-        CurMoves.Sort((a, b) => {
+        _CurMoves.Sort((a, b) => {
             // Sort by Prio
             int prioComparison = a.SkillInstance.Skill.Prio.CompareTo(b.SkillInstance.Skill.Prio);
             if (prioComparison != 0) return prioComparison;
@@ -364,27 +364,27 @@ public static class BattleLib {
             return a.Self.Pos.CompareTo(b.Self.Pos);
         });
 
-        Move move = CurMoves[0];
+        Move move = _CurMoves[0];
         Unit self = move.Self;
 
         if (self.IsBoolStat(BoolStats.UnableToAct)) {
             LogLib.Add(string.Format(Lang.LogSkillFailUnableToAct, move.GetTriesToUseString(),
             string.Format(Lang.LogButIsUnableToAct, self.GetBoolStat(BoolStats.UnableToAct).ToString()))); // todo test
-            EndMove();
+            _EndMove();
             return;
         }
 
         int cd = move.SkillInstance.Cooldown;
-        if (cd > 0 && applyingEffect == 0) {
+        if (cd > 0 && _applyingEffect == 0) {
             LogLib.Add(string.Format(Lang.LogSkillFailCooldown, move.GetTriesToUseString(),
                 Lang.LogButItsOnCooldown.FormatIcu(cd)));
-            EndMove();
+            _EndMove();
             return;
         }
 
         if (!move.IsInRange()) {
             LogLib.Add(string.Format(Lang.LogSkillFailRange, move.GetTriesToUseString(), Lang.LogButCantReach));
-            EndMove();
+            _EndMove();
             return;
         }
 
@@ -393,7 +393,7 @@ public static class BattleLib {
 
         Skill skill = move.SkillInstance.Skill;
 
-        if (applyingEffect == 0) {
+        if (_applyingEffect == 0) {
             move.SkillInstance.Cooldown = cd;
 
             Element element = skill.GetElement();
@@ -409,7 +409,7 @@ public static class BattleLib {
 
             if (spNew < 0) {
                 string msg = string.Format(Lang.LogSkillFailSp, move.GetTriesToUseString(),
-                    Lang.LogButDoesntHaveEnough.FormatIcu(skill.IsBloom.ToInt()));
+                    Lang.LogButDoesntHaveEnough.FormatIcu(Convert.ToInt32(skill.IsBloom)));
                 LogLib.Add(msg);
             } else {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
@@ -419,7 +419,7 @@ public static class BattleLib {
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(skill.IsBloom.ToInt(), spOld.Format(Colors.Sp, false),
+                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(Convert.ToInt32(skill.IsBloom), spOld.Format(Colors.Sp, false),
                         spNew.Format(Colors.Sp, false), change.Format());
                 }
 
@@ -429,7 +429,7 @@ public static class BattleLib {
                 LogLib.Add(Lang.LogSkillUse.FormatIcu(self.FormatName(false),
                     skill.GetName(Colors.Skill),
                     target.FormatName(false),
-                    skill.IsRangeSelf().ToInt().ToString(), changeSp));
+                    Convert.ToInt32(skill.IsRangeSelf()).ToString(), changeSp));
 
                 self.OnUseSkill(target, skill);
 
@@ -438,7 +438,7 @@ public static class BattleLib {
                     //moves[i].Color = (self.Pos == i) ? Color.Pink : Color.White;
                 }
 
-                prevResults = new ResultType[UnitCount];
+                _prevResults = new ResultType[UnitCount];
             }
         }
 
@@ -448,9 +448,9 @@ public static class BattleLib {
 
         // The check for reaching skillEffects.length will only apply here if the length is 0, because otherwise it'll
         // be applied at the end
-        if (spNew < 0 || applyingEffect == skillEffects.Length || (nonFails == 0 && applyingEffect > 0)) {
-            EndMove();
-            UpdateStatDisplay(self.Pos);
+        if (spNew < 0 || _applyingEffect == skillEffects.Length || (_nonFails == 0 && _applyingEffect > 0)) {
+            _EndMove();
+            _UpdateStatDisplay(self.Pos);
             return;
         }
 
@@ -458,49 +458,49 @@ public static class BattleLib {
             if (targetPos == PosLib.Invalid) continue;
 
             Unit targetCur = Battle.GetUnitAtPos(targetPos);
-            if (applyingEffect == 0) {
-                prevResults[targetPos] = ResultType.Success;
+            if (_applyingEffect == 0) {
+                _prevResults[targetPos] = ResultType.Success;
 
                 targetCur.OnTargetedBySkill(self, skill);
             }
 
-            if (prevResults[targetPos] == ResultType.Fail) continue;
+            if (_prevResults[targetPos] == ResultType.Fail) continue;
 
-            nonFails++;
+            _nonFails++;
 
-            ResultType resultType = skillEffects[applyingEffect]
-                .Apply(self, targetCur, targetCur == targetMain, prevResults[targetPos]);
-            prevResults[targetPos] = resultType;
+            ResultType resultType = skillEffects[_applyingEffect]
+                .Apply(self, targetCur, targetCur == targetMain, _prevResults[targetPos]);
+            _prevResults[targetPos] = resultType;
         }
 
-        if (!skillEffects[applyingEffect].IsInstant) delay += TimeSpan.FromSeconds(0.25f * Settings.BattleSpeed);
+        if (!skillEffects[_applyingEffect].IsInstant) _delay += TimeSpan.FromSeconds(0.25f * Settings.BattleSpeed);
 
-        applyingEffect++;
+        _applyingEffect++;
 
-        UpdateStatDisplay(self.Pos);
+        _UpdateStatDisplay(self.Pos);
 
-        if (skillEffects.Length != applyingEffect) return;
+        if (skillEffects.Length != _applyingEffect) return;
 
-        EndMove();
+        _EndMove();
         move.SkillInstance.Cooldown = move.SkillInstance.Skill.Cooldown;
         // todo delete killed units
     }
 
-    private static void EndMove() {
-        applyingEffect = 0;
-        nonFails = 0;
-        CurMoves.RemoveFirst();
-        delay += TimeSpan.FromSeconds(1) * Settings.BattleSpeed;
+    private static void _EndMove() {
+        _applyingEffect = 0;
+        _nonFails = 0;
+        _CurMoves.RemoveFirst();
+        _delay += TimeSpan.FromSeconds(1) * Settings.BattleSpeed;
     }
 
-    private static void EndTurn() {
-        selectingMove = 0;
+    private static void _EndTurn() {
+        _selectingMove = 0;
         Battle.Turn++;
 
-        Turn.Text = $"{Colors.Turn}{Lang.Turn} {Battle.Turn + 1}";
+        _Turn.Text = $"{Colors.Turn}{Lang.Turn} {Battle.Turn + 1}";
 
         for (int i = 0; i < UnitCount; i++) {
-            Moves[i].Text = "";
+            _Moves[i].Text = "";
             //moves[i].Color = Colors.White;
         }
 
@@ -552,7 +552,7 @@ public static class BattleLib {
         Battle.PlayerTeam.Bloom = Math.Min(Battle.PlayerTeam.Bloom + 100, 1000);
         Battle.OpponentTeam.Bloom = Math.Min(Battle.OpponentTeam.Bloom + 100, 1000);
 
-        UpdateStatDisplay(0);
+        _UpdateStatDisplay(0);
     }
 
     #endregion

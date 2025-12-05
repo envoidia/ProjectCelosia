@@ -9,7 +9,7 @@ namespace API.Battle;
 public sealed class Range : NamedEntity, IModItem {
     public int RangeVertical { get; }
     public Side Side { get; }
-    private Target[] Targets { get; }
+    private Target[] _Targets { get; }
 
     public bool CanTargetSelf { get; init; } = false;
     public int TargetCount { get; init; } = 1;
@@ -22,14 +22,14 @@ public sealed class Range : NamedEntity, IModItem {
         this.Source = source;
         this.RangeVertical = rangeVertical;
         this.Side = side;
-        this.Targets = targets;
+        this._Targets = targets;
         Core.Ranges.Add(this);
     }
 
     public int[] GetTargetPositions(int posSelf, int posTarget) {
         List<int> pos = [];
 
-        foreach (Target target in this.Targets) {
+        foreach (Target target in this._Targets) {
             switch (target) {
                 case Self: pos.Add(posSelf); break;
                 case SelfUp: pos.Add(GetUpDown(posSelf, -1)); break;

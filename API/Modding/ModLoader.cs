@@ -1,3 +1,4 @@
+#if !NATIVE_AOT
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,33 +15,32 @@ namespace API.Modding;
 
 // todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
 public static class ModLoader {
-#if !NATIVE_AOT
     /// <summary>
     /// List of all loaded mods. Do not externally modify
     /// </summary>
-    internal static readonly List<GameMod> LoadedMods = [];
+    internal static readonly List<GameMod> _LoadedMods = [];
 
     /// <summary>
     /// Lang key that should be used for a mod's display name
     /// </summary>
     public const string NameKey = "ModName";
 
-    private static readonly string ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
+    private static readonly string _ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
 
     /// <summary>
     /// Do not call outside of the <c>Game1</c> instance
     /// </summary>
     public static void InitializeAllMods() {
-        LoadAllMods();
-        foreach (GameMod mod in LoadedMods) mod.Initialize();
+        _LoadAllMods();
+        foreach (GameMod mod in _LoadedMods) mod.Initialize();
     }
 
-    private static void LoadAllMods() {
-        IEnumerable<string> dllFiles = Directory.EnumerateFiles(ModsFolder, "*.dll", SearchOption.AllDirectories);
-        foreach (string dllPath in dllFiles) LoadSingleModAssembly(dllPath);
+    private static void _LoadAllMods() {
+        IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder, "*.dll", SearchOption.AllDirectories);
+        foreach (string dllPath in dllFiles) _LoadSingleModAssembly(dllPath);
     }
 
-    private static void LoadSingleModAssembly(string dllPath) {
+    private static void _LoadSingleModAssembly(string dllPath) {
         AssemblyLoadContext alc = new(Path.GetFileNameWithoutExtension(dllPath));//, true); todo should be collectible/unloadable?
 
         Assembly asm;
@@ -50,15 +50,15 @@ public static class ModLoader {
 
         // Find entry point
         Type? entryPoint = asm.GetTypes()
-            .FirstOrDefault(type => type.GetCustomAttribute<ModEntryPointAttribute>() != null)
+            .FirstOrDefault(t => t.IsStatic && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
             ?? throw new ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
 
         // Find all GameMods in the entryPoint class and add them to LoadedMods
-        LoadedMods.AddRange(entryPoint.GetProperties()
+        _LoadedMods.AddRange(entryPoint
+            .GetProperties(BindingFlags.Static | BindingFlags.Public)
             .Where(prop => {
-                object? val = prop.GetValue(null);
-                if (val == null) return false;
-                return val.GetType() == typeof(GameMod);
+                if (prop.PropertyType != typeof(GameMod)) return false;
+                return prop.GetValue(null) is not null;
             })
             .Select(prop => {
                 Console.WriteLine(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath));
@@ -69,13 +69,23 @@ public static class ModLoader {
 
     /// <inheritdoc cref="InitializeAllMods" />
     public static void UpdateAllMods(GameTime gameTime) {
-        foreach (GameMod mod in LoadedMods) mod.Update(gameTime);
+        foreach (GameMod mod in _LoadedMods) mod.Update(gameTime);
     }
 
     /// <param name="mod">The <c>IGameMod</c> to look for</param>
     /// <returns>
     /// Whether the given <c>IGameMod</c> is loaded
     /// </returns>
-    public static bool IsModLoaded(GameMod mod) => LoadedMods.Any(m => m == mod);
-#endif
+    public static bool IsModLoaded(GameMod mod) => _LoadedMods.Any(m => m == mod);
 }
+
+public static class TypeExtensions {
+    extension(Type @this) {
+        /// <returns>
+        /// Whether the given <c>Type</c> is <c>static</c>.
+        /// Actually checks that it is both <c>abstract</c> and <c>sealed</c>. Produces false positives with F# and VB.NET <c>modules</c>
+        /// </returns>
+        public bool IsStatic => @this.IsAbstract && @this.IsSealed;
+    }
+}
+#endif

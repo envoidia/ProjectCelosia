@@ -5,31 +5,31 @@ using Microsoft.Xna.Framework;
 namespace API.Battle.State;
 
 public static class LogLib {
-    private static readonly Label BattleLog = new(Core.StageBattle) { Position = new Vector2(World.W2 - 300, 405) };
+    private static readonly Label _BattleLog = new(Core.StageBattle) { Position = new Vector2(World.W2 - 300, 405) };
 
-    internal static readonly List<string> LogText = new(1024); // todo decide capacity
+    internal static readonly List<string> _LogText = new(1024); // todo decide capacity
 
     /// <summary>
     /// Amount of lines scrolled upwards
     /// </summary>
-    private static int logScroll = 0;
+    private static int _logScroll = 0;
 
     // todo limit size, try to consolidate to 1 fn?
     public static void Add(params List<string> str) {
-        LogText.AddRange(str);
-        logScroll = 0;
-        UpdateLog();
+        _LogText.AddRange(str);
+        _logScroll = 0;
+        _UpdateLog();
     }
 
     public static void Add(string[] str) {
-        LogText.AddRange(str);
-        logScroll = 0;
-        UpdateLog();
+        _LogText.AddRange(str);
+        _logScroll = 0;
+        _UpdateLog();
     }
 
-    private static void UpdateLog() => BattleLog.Text = FormatLog();// todo full log
+    private static void _UpdateLog() => _BattleLog.Text = _FormatLog();// todo full log
 
-    private static string FormatLog() =>
+    private static string _FormatLog() =>
         /* todo
 int lines = 8;
 int scroll = 0;
@@ -41,5 +41,5 @@ scroll = logScroll;
 
 int start = Math.Max(0, LogText.Count - lines - scroll);
 int end = Math.Min(start + lines, LogText.Count);*/
-        string.Join("\n", LogText);
+        string.Join("\n", _LogText);
 }
