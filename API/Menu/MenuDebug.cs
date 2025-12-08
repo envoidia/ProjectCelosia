@@ -15,19 +15,19 @@ public static class MenuDebug {
 
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
-    private static readonly Label _DebugInfoL = new(Core.StageSuper) {
+    private static readonly Label _DebugInfoL = new(Stages.Super) {
         Text = _GetDebugInfoLText(),
         Position = new Vector2(10, 10),
         HasBackground = true
     };
 
-    private static readonly Label _DebugInfoR = new(Core.StageSuper) {
+    private static readonly Label _DebugInfoR = new(Stages.Super) {
         Position = new Vector2(World.W - 10, 10),
         Alignment = Alignment.TopRight,
         HasBackground = true
     };
 
-    private static readonly Label _DebugInfoHelp = new(Core.StageSuper) {
+    private static readonly Label _DebugInfoHelp = new(Stages.Super) {
         Text = _GetDebugInfoHelpText(),
         Position = new Vector2(10, World.H - 10),
         Alignment = Alignment.BottomLeft,

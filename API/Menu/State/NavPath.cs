@@ -14,7 +14,7 @@ public static class NavPath {
     /// </summary>
     public static readonly List<State> Path = []; // todo private
 
-    private static readonly Label _InputPrompt = new(Core.StageBase) {
+    private static readonly Label _InputPrompt = new(Stages.Base) {
         Position = World.Vec - new Vector2(10, 10),
         Alignment = Alignment.BottomRight,
         HasBackground = true,

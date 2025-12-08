@@ -19,6 +19,16 @@ public static class TargetingLib {
     public static void Update(GameTime gameTime) {
         HandleDebug();
 
+        if (InputLib.Check(Keybinds.Menu)) {
+            NavPath.Add(States.Log);
+            return;
+        }
+
+        if (InputLib.Check(Keybinds.Map)) {
+            NavPath.Add(States.Inspect);
+            return;
+        }
+
         if (InputLib.Check(Keybinds.Back)) {
             //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";

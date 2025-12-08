@@ -1,4 +1,6 @@
+using System;
 using API.Battle.State;
+using API.Graphics;
 using API.Input;
 using Microsoft.Xna.Framework;
 
@@ -7,23 +9,29 @@ namespace API.Menu.State;
 public static class MainMenuLib {
     private static int _index;
 
+    // temp
+    private static readonly GuiBox gbTest = new(Stages.Super, 500, 1000, 500, 1000);
+
     private enum _Options {
         Start,
         Encyclopedia,
         Options,
         Mods,
         Credits,
-        Quit,
-
-        // Marker
-        LastValue
+        Quit
     }
 
-    private const int _OptCountMain = (int) _Options.LastValue - 1;
+    private const int _OptCount = (int) _Options.Quit;
 
     public static void Update(GameTime gameTime) {
-        _index = MenuLib.CheckMovement1D(_index, _OptCountMain);
+        _index = MenuLib.CheckMovement1D(_index, _OptCount);
         // todo update cursor
+
+        //temp testing
+        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q)) {
+            gbTest.AddRoutine((gbTest.Prog == 1) ? IAnimatedPrimitive.Collapse : IAnimatedPrimitive.Unfold);
+        }
+
 
         if (InputLib.Check(Keybinds.Confirm)) {
             switch ((_Options) _index) {

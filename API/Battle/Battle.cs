@@ -4,9 +4,13 @@ using System.Linq;
 namespace API.Battle;
 
 public sealed class Battle {
-    public Team PlayerTeam;
-    public Team OpponentTeam;
-    public int Turn { get; set; } = 0;
+    public Team PlayerTeam { get; }
+    public Team OpponentTeam { get; }
+
+    /// <summary>
+    /// Current turn, starting at 1
+    /// </summary>
+    public int Turn { get; set; } = 1;
 
     public Battle(Team playerTeam, Team opponentTeam) {
         this.PlayerTeam = playerTeam;
@@ -15,7 +19,8 @@ public sealed class Battle {
         // Assign disambiguation identifiers to duplicate UnitTypes
         Unit[] units = this.GetAllUnits();
 
-        Dictionary<UnitType, int> countDict = units.GroupBy(u => u.UnitType).ToDictionary(g => g.Key, g => g.Count());
+        Dictionary<UnitType, int> countDict = units.GroupBy(u => u.UnitType)
+            .ToDictionary(g => g.Key, g => g.Count());
         Dictionary<UnitType, int> counterDict = [];
 
         for (int i = 0; i < units.Length; i++) {

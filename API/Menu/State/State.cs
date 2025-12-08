@@ -13,7 +13,7 @@ namespace API.Menu.State;
 /// <param name="Draw">Called every frame when this <c>State</c> is active, during the drawing phase</param>
 /// <param name="GetInputPrompt">Called when this <c>State</c> is first reached,
 /// to update the input prompt <c>Label</c> in the bottom-right corner</param>
-public record State(string Name, Action<GameTime> Update, Action<GameTime> Draw, Func<string> GetInputPrompt) {
+public sealed record State(string Name, Action<GameTime> Update, Action<GameTime> Draw, Func<string> GetInputPrompt) {
     /// <summary>
     /// Called on <c>NavPath.Add</c>. Do not call elsewhere
     /// </summary>

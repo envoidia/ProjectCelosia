@@ -16,7 +16,6 @@ public enum KeybindId {
     Right,
     Up,
     Down,
-    ScrollFaster,
 
     // Debug
     DebugInfo,
@@ -28,6 +27,11 @@ public enum KeybindId {
     /// Marker. Always add non-merged keybinds above this
     /// </summary>
     LastBeforeMerged,
+
+    /// <summary>
+    /// Hotkey, ignores hold time restrictions
+    /// </summary>
+    ScrollFaster,
 
     // Merged (must be last)
     LeftRight,
@@ -53,7 +57,7 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
 }
 
 public static class Keybinds {
-    public static int KeybindCount => (int) KeybindId.LastBeforeMerged;
+    public const int KeybindCount = (int) KeybindId.LastBeforeMerged;
 
     /// <summary>
     /// Confirm/Yes. Bottom face button
@@ -86,8 +90,10 @@ public static class Keybinds {
     public static readonly Keybind Down = new("KeyDown", KeybindId.Down, Keys.Down, Buttons.DPadDown);
 
     /// <summary>
-    /// Hold to double input repeat speed when holding (todo should it be more than double)
+    /// Hold to double input repeat speed when holding. Also used for some other hotkeys
     /// </summary>
+    // todo should it be more than double
+    // todo rename
     public static readonly Keybind ScrollFaster = new("KeyScroll", KeybindId.ScrollFaster, Keys.LeftShift, Buttons.Start);
 
     // Debug

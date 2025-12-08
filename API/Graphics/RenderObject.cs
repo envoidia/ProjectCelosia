@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 /// <summary>
-/// Base class for all renderable objects. Stores position, priority, and alignment
+/// Base class for more complex renderable objects. Stores position, priority, and alignment
 /// </summary>
-public abstract class RenderObject : IRenderable {
+// todo will this be used for anything other than Label? remove if not
+public abstract class RenderObject : Actor {
     private Vector2 _position = Vector2.Zero;
 
     public Vector2 Position {
@@ -29,24 +30,20 @@ public abstract class RenderObject : IRenderable {
         get;
         set {
             field = value;
-            this._Origin = this._CalcOrigin();
+            this._CalcOrigin();
         }
     } = Alignment.TopLeft;
 
-    // Raw position of the origin. Not meant to be viewed or used directly
+    /// <summary>
+    /// Raw position of the origin
+    /// </summary>
     internal Point _Origin { get; set; } = Point.Zero;
 
-    public bool IsVisible { get; set; } = true;
-
-    public RenderPriority RenderPriority { get; set; } = RenderPriority.Base;
-
-    internal Point _CalcOrigin() => this.Alignment switch {
+    internal void _CalcOrigin() => this._Origin = this.Alignment switch {
         Alignment.TopLeft => Point.Zero,
         Alignment.TopRight => new Point(this.Size.X, 0),
         Alignment.BottomLeft => new Point(0, this.Size.Y),
         Alignment.BottomRight => new Point(this.Size.X, this.Size.Y),
         Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f))
     };
-
-    public abstract void Draw(GameTime gameTime);
 }

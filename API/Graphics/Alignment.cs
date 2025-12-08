@@ -1,6 +1,6 @@
 namespace API.Graphics;
 
-// todo more alignments
+// todo more alignments (center left/right, top/bottom center)
 public enum Alignment {
     TopLeft,
     TopRight,

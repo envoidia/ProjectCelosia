@@ -865,6 +865,12 @@ Def = Target's Amr or Res, depending on the skill's type
 Damage = (Atk / Def) * (pow * 10) * damage modifier for user's affinity * damage modifier for target's affinity * user's Dmg Dealt * target's Dmg Taken * user's (Element) Dmg Dealt * target's (Element) Dmg Dealt * (if hitting a weakness) user's Weakness Dmg Dealt * target's Weakness Dmg Taken * (if the skill is a Follow-Up) user's Follow-Up Dmg Dealt * target's Follow-Up Dmg Taken</value>
     </data>
     <!--Info-->
+    <data name="Hp" xml:space="preserve">
+        <value>HP</value>
+    </data>
+    <data name="Sp" xml:space="preserve">
+        <value>SP</value>
+    </data>
     <data name="InfoStat" xml:space="preserve">
         <value>Stats</value>
     </data>

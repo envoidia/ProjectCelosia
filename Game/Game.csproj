@@ -9,7 +9,7 @@
         <PublishAot>false</PublishAot>
         <IsAotCompatible>true</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
+        <NoWarn>1591, 1573</NoWarn>
     </PropertyGroup>
     <PropertyGroup Condition="'$(PublishAot)' == 'true'">
         <DefineConstants>$(DefineConstants);NATIVE_AOT</DefineConstants>

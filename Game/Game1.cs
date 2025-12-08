@@ -107,12 +107,12 @@ public sealed class Game1 : Core {
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
-        StageBase.Draw(gameTime);
+        Stages.Base.Draw(gameTime);
 
         // Draw the current State
         NavPath.GetState().Draw(gameTime);
 
-        StageSuper.Draw(gameTime);
+        Stages.Super.Draw(gameTime);
 
         // temp
         //foreach (GuiBox label in GuiBoxesHigh) label.Draw(gameTime);

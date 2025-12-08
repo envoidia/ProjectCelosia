@@ -13,6 +13,9 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
     }
 }
 
+// todo also display:
+// - ctrl: move faster (all allowHold menus)
+// - inspect + ctrl: open inspect on current unit/target (battle and regular targeting)
 public static class InputPrompts {
     public static readonly InputPrompt Confirm = new("InputConfirm", Keybinds.Confirm);
     public static readonly InputPrompt Back = new("InputBack", Keybinds.Back);

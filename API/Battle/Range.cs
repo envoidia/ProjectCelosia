@@ -45,7 +45,7 @@ public sealed class Range : NamedEntity, IModItem {
             }
         }
 
-        return pos.ToArray();
+        return [.. pos];
     }
 }
 

@@ -5,12 +5,12 @@ public interface IBuffEffect {
 
     void OnRemove(Unit self, int stacks) { }
 
+    string[] OnTurnEnd(Unit self, int stacks) => [];
+
     void OnUseSkill(Unit self, Unit target, int stacks, Skill skill) { }
 
-    // target = skill user
+    /// <param name="target">Skill user</param>
     void OnTargetedBySkill(Unit self, Unit target, int stacks, Skill skill) { }
-
-    string[] OnTurnEnd(Unit self, int stacks) => [];
 
     void OnDealDamage(Unit self, Unit target, int stacks, int damage, Element element) { }
 

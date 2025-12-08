@@ -14,7 +14,7 @@ public sealed class Label : RenderObject {
         get => this._RichTextLayout.Text;
         set {
             this._RichTextLayout.Text = value;
-            this._Origin = this._CalcOrigin();
+            this._CalcOrigin();
         }
     }
 

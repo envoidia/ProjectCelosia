@@ -13,7 +13,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 
 ## Organization
 - Modifier order: `public`, `private`, `protected`, `internal`, `file`, `new`, `static`, `abstract`, `virtual`, `sealed`, `readonly`, `override`, `extern`, `unsafe`, `volatile`, `async`, `required`
-- Member order: properties/fields, static properties/variables, constructors, methods, operators, override methods, implementation methods, statis functions
+- Member order: properties/fields, static properties/variables, override properties, implementation properties, constructors, methods, operators, cast operators, override methods, implementation methods, static functions
 - Property/field order: set by primary constructor, init required, init non-required, overrides, implementations
 - Use regions when appropriate to organize larger files
 - If a file contains multiple classes (usually recommended against), order them by dependency (eg `KeybindId`, then `Keybind`, then `Keybinds`)

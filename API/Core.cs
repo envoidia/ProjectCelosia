@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using API.Battle;
 using API.Graphics;
 using API.Input;
@@ -34,38 +33,10 @@ public class Core : Game {
     public static FontSystem KoruriSystem { get; set; } = null!;
     public static DynamicSpriteFont Koruri50 { get; private set; } = null!;
 
+    // todo should this be hiding
     public new static ContentManager Content { get; private set; } = null!;
 
     public static bool ExitOnEscape { get; set; }
-
-    #region Stages
-
-    /// <summary>
-    /// <c>Stage</c> that's always drawn first
-    /// </summary>
-    public static readonly Stage StageBase = new();
-
-    /// <summary>
-    /// <c>Stage</c> that's only drawn during battle
-    /// </summary>
-    public static readonly Stage StageBattle = new();
-
-    /// <summary>
-    /// <c>Stage</c> that's only drawn in the inspect menu
-    /// </summary>
-    public static readonly Stage StageInspect = new();
-
-    /// <summary>
-    /// <c>Stage</c> that's only drawn with a popup
-    /// </summary>
-    public static readonly Stage StagePopup = new();
-
-    /// <summary>
-    /// <c>Stage</c> that's always drawn last
-    /// </summary>
-    public static readonly Stage StageSuper = new();
-
-    #endregion
 
     #endregion
 
@@ -183,8 +154,8 @@ public class Core : Game {
         WhitePixel.SetData([Color.White]);
 
         // Sort stages
-        StageBase.Sort();
-        StageSuper.Sort();
+        Stages.Base.Sort();
+        Stages.Super.Sort();
     }
 
     protected override void Update(GameTime gameTime) {

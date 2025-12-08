@@ -26,7 +26,6 @@ public static class BattleLib {
     public const int StatMult = 10;
 
     public const int TeamCount = 2;
-    public const int StatTypeCount = 3;
     public const int TeamSize = 4;
     public const int StatCount = 6;
     public const int UnitCount = TeamSize * TeamCount;
@@ -40,7 +39,7 @@ public static class BattleLib {
 
     #region Display Fields
 
-    private static readonly Label _Queue = new(Core.StageBattle) {
+    private static readonly Label _Queue = new(Stages.Battle) {
         Alignment = Alignment.Center,
         Position = new Vector2(World.W2, 180)
     };
@@ -51,7 +50,6 @@ public static class BattleLib {
     internal static readonly Label[] _Stats = new Label[UnitCount];
     private static readonly Label[] _Buffs = new Label[UnitCount];
     internal static readonly Label[] _Moves = new Label[UnitCount];
-    private static readonly Label[] _UnitNames = new Label[UnitCount];
 
     #endregion
 
@@ -78,9 +76,9 @@ public static class BattleLib {
 
     #region Move Execution Fields
 
-    private static readonly Label _SkillsL = new(Core.StageBattle);
+    private static readonly Label _SkillsL = new(Stages.Battle);
 
-    private static readonly Label _Turn = new(Core.StageBattle, $"{Colors.Turn}{Lang.Turn} 1") {
+    private static readonly Label _Turn = new(Stages.Battle, $"{Colors.Turn}{Lang.Turn} 1") {
         Alignment = Alignment.Center,
         Position = new Vector2(World.W2, 90)
     };
@@ -113,7 +111,7 @@ public static class BattleLib {
         // Setup Labels
         for (int i = 0; i < TeamCount; i++) {
             // todo midgame translation
-            _BloomLabels[i] = new Label(Core.StageBattle) {
+            _BloomLabels[i] = new Label(Stages.Battle) {
                 Position = new Vector2(i == 1 ? World.W - 105 : 105, 135),
                 Alignment = i == 1 ? Alignment.TopRight : Alignment.TopLeft
             };
@@ -131,22 +129,21 @@ public static class BattleLib {
                 y = 450 + (450 * (i - PosLib.LowestOpp));
             }
 
-            _Stats[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y) };
-            _Buffs[i] = new Label(Core.StageBattle) { Position = new Vector2(x1, y + 150) };
-            _Moves[i] = new Label(Core.StageBattle) { Position = new Vector2(x2, y + 50) };
-            _UnitNames[i] = new Label(Core.StageBattle) { Y = 52 };
+            _Stats[i] = new Label(Stages.Battle) { Position = new Vector2(x1, y) };
+            _Buffs[i] = new Label(Stages.Battle) { Position = new Vector2(x1, y + 150) };
+            _Moves[i] = new Label(Stages.Battle) { Position = new Vector2(x2, y + 50) };
         }
 
-        // Todo inspect init
+        Stages.Battle.Sort();
 
-        // Sort stages
-        Core.StageBattle.Sort();
-        Core.StageInspect.Sort();
+        InspectLib.Initialize();
     }
 
     public static void StartBattle() {
         // temp setup teams
         Battle = Core.battle;
+
+        InspectLib.TranslateUnitNames();
 
         LogLib.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
 
@@ -162,6 +159,20 @@ public static class BattleLib {
     public static void Update(GameTime gameTime) {
         HandleDebug();
 
+        if (InputLib.Check(Keybinds.Menu)) {
+            NavPath.Add(States.Log);
+            return;
+        }
+
+        if (InputLib.Check(Keybinds.Map)) {
+            if (InputLib.Check(Keybinds.ScrollFaster)) {
+                _indexTarget = _selectingMove;
+                NavPath.Add(States.Inspect);
+            } else NavPath.Add(States.InspectTargeting);
+
+            return;
+        }
+
         if (_delay > TimeSpan.Zero) {
             _delay -= gameTime.ElapsedGameTime;
             return;
@@ -175,13 +186,8 @@ public static class BattleLib {
     }
 
     public static void HandleDebug() {
-        if (InputLib.Check(Keybinds.DebugDumpLog)) {
-            Console.WriteLine(string.Join('\n', LogLib._LogText));
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.W)) {
-            NavPath.Add(States.Popup);
-        }
+        if (InputLib.Check(Keybinds.DebugDumpLog)) Console.WriteLine(string.Join('\n', LogLib._LogText));
+        if (InputLib.IsKeyJustPressed(Keys.W)) NavPath.Add(States.Popup);
     }
 
     // Updates bloom labels, queue, and Unit nameplates
@@ -313,7 +319,7 @@ public static class BattleLib {
 
     private static void _SelectMove() {
         // Cancel
-        if (InputLib.Check(Keybinds.Back) && (_selectingMove != 0)) {
+        if (InputLib.Check(Keybinds.Back) && _selectingMove != 0) {
             // todo
             _SkillsL.Text = "";
 
@@ -497,7 +503,7 @@ public static class BattleLib {
         _selectingMove = 0;
         Battle.Turn++;
 
-        _Turn.Text = $"{Colors.Turn}{Lang.Turn} {Battle.Turn + 1}";
+        _Turn.Text = $"{Colors.Turn}{Lang.Turn} {Battle.Turn}";
 
         for (int i = 0; i < UnitCount; i++) {
             _Moves[i].Text = "";
@@ -545,7 +551,7 @@ public static class BattleLib {
         }
 
         // todo is trailing white needed
-        LogLib.Add($"{Colors.Turn}{Lang.Turn} {Battle.Turn + 1}{Colors.White}");
+        LogLib.Add($"{Colors.Turn}{Lang.Turn} {Battle.Turn}{Colors.White}");
         LogLib.Add(Lang.LogGainSpBloom);
 
         // Increase bloom

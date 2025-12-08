@@ -4,7 +4,9 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible>true</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
+        <!-- CS1591: Missing XML comment for publicly visible type or member 
+        CS1573: Parameter has no matching param tag in the XML comment (but other parameters do) -->
+        <NoWarn>1591, 1573</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Apos.Shapes" Version="0.5.0" />
