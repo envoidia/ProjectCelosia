@@ -37,7 +37,7 @@ static () => State.GetInputPromptString(Close));
 
     public static readonly State InspectTargeting = new("InspectTargeting", () => { }, () => { },
     TargetingLib.UpdateInspectTargeting, static () =>
-        State.GetInputPromptString(Move, Faster, Confirm, Back, InputPrompts.Log));
+        State.GetInputPromptString(Move, Faster, ConfirmInspect, Back, InputPrompts.Log));
 
     public static readonly State Inspect = new("Inspect", InspectLib._Create, InspectLib._Destroy,
         InspectLib._Update, InspectLib._GetInputPrompt);

@@ -20,8 +20,12 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
     }
 }
 
+// Possible inputs not noted by any InputPrompt:
+// - Debug hotkeys (once you find F1, the rest are listed from there)
+// - If the keys are available, you can use L/R in U/D menus, and vice-versa
 public static class InputPrompts {
     public static readonly InputPrompt Confirm = new("InputConfirm", Keybinds.Confirm);
+    public static readonly InputPrompt ConfirmInspect = new("InputConfirm", Keybinds.Confirm, Keybinds.Map);
     public static readonly InputPrompt Back = new("InputBack", Keybinds.Back);
     public static readonly InputPrompt BackLog = new("InputBack", Keybinds.Back, Keybinds.Menu);
     public static readonly InputPrompt Close = new("InputClose", Keybinds.Confirm, Keybinds.Back);
