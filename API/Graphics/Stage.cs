@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using API.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ResolutionBuddy;
 
 namespace API.Graphics;
 
@@ -26,7 +28,30 @@ public static class Stage {
     /// Draws all visible <c>Actor</c>s and performs their <c>Routine</c>s
     /// </summary>
     public static void Act(GameTime gameTime) {
-        for (int i = _Actors.Count - 1; i >= 0; i--) _Actors[i].Act(gameTime);
+        // > 7k main, >4k battle, >2k inspect
+        int i = _Actors.Count - 1;
+
+        // The only reason this gross stuff has to happen is bc SpriteBatch and ShapeBatch are separate
+        begin();
+        for (; i >= 0 && _Actors[i].Priority < RenderPriority.B2Low; i--) _Actors[i].Act(gameTime);
+        end();
+        begin();
+        for (; i >= 0 && _Actors[i].Priority < RenderPriority.B3Low; i--) _Actors[i].Act(gameTime);
+        end();
+        begin();
+        for (; i >= 0; i--) _Actors[i].Act(gameTime);
+        end();
+
+        static void begin() {
+            Core.ShapeBatch.Begin(Resolution.TransformationMatrix());
+            Core.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
+            null, null, null, Resolution.TransformationMatrix());
+        }
+
+        static void end() {
+            Core.ShapeBatch.End();
+            Core.SpriteBatch.End();
+        }
     }
 
     /// <summary>

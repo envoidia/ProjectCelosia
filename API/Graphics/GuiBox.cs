@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10, Priority priority = Priority.Normal)
+public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10, RenderPriority priority = RenderPriority.B1Med)
     : Actor(priority), IAnimatedPrimitive {
     public int L { get; set; } = l;
     public int R { get; set; } = r;
@@ -62,6 +62,6 @@ public static class GuiBoxes {
     public static readonly GuiBox CoverLeft = new(8, 1750, 0, World.H) {
         Speed = 4f,
         SlantL = 0,
-        Priority = Priority.High
+        Priority = RenderPriority.B2Low
     };
 }

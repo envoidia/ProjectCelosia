@@ -14,7 +14,7 @@ public static class LogLib {
     /// </summary>
     private static int _logScroll = 0;
 
-    // todo limit size, try to consolidate to 1 fn?
+    // todo limit size, try to consolidate to 1 fn? ienumerabel?
     public static void Add(params List<string> str) {
         _LogText.AddRange(str);
         _logScroll = 0;

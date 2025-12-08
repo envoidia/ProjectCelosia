@@ -96,18 +96,10 @@ public sealed class Game1 : Core {
     protected override void Draw(GameTime gameTime) {
         GraphicsDevice.Clear(Color.Black);
 
-
-        SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
-            null, null, null, Resolution.TransformationMatrix());
-        ShapeBatch.Begin(Resolution.TransformationMatrix());
-
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
         // Act Actors
         Stage.Act(gameTime);
-
-        SpriteBatch.End();
-        ShapeBatch.End(); // todo fix draw order
 
         base.Draw(gameTime);
     }

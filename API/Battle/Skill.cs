@@ -15,7 +15,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     public int Cost { get; }
 
     public int Cooldown { get; init; } = 0;
-    public Priority Prio { get; init; } = Priority.Normal;
+    public RenderPriority Prio { get; init; } = RenderPriority.B1Med;
     public bool IsBloom { get; init; } = false;
 
     public SkillRole[] SkillRoles { get; init; } = [];

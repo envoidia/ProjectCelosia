@@ -8,7 +8,7 @@ namespace API.Graphics;
 /// A line
 /// </summary>
 // todo: support more than 2 points, cleanup
-public sealed class Path(Vector2 start, Vector2 end, Priority priority = Priority.Normal, float thickness = 5f)
+public sealed class Path(Vector2 start, Vector2 end, RenderPriority priority = RenderPriority.B1Med, float thickness = 5f)
     : Actor(priority), IAnimatedPrimitive {
     public Vector2 Start { get; set; } = start;
     public Vector2 End { get; set; } = end;

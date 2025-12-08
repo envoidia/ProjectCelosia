@@ -20,14 +20,14 @@ public static class MainMenuLib {
 
     private const int _OptCount = (int) _Options.Quit;
 
-    public static void Update(GameTime gameTime) {
+    internal static void _Update(GameTime gameTime) {
         _index = MenuLib.CheckMovement1D(_index, _OptCount);
         // todo update cursor
 
         if (InputLib.Check(Keybinds.Confirm)) {
             switch ((_Options) _index) {
                 case _Options.Start:
-                    BattleLib.Initialize();
+                    BattleLib._Initialize();
                     StateMachine.Add(States.Battle);
                     return;
                 case _Options.Encyclopedia:

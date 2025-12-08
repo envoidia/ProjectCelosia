@@ -39,7 +39,7 @@ public sealed class InspectLib {
 
     // Page list
     private static readonly Label[] _PageList = new Label[TeamSize];
-    private static readonly GuiBoxChain _PageListBox = new(638, 446, 501, Priority.VeryHigh);
+    private static readonly GuiBoxChain _PageListBox = new(638, 446, 501, RenderPriority.B2Med);
 
     // Basic stat list
     /// <summary>
@@ -52,7 +52,7 @@ public sealed class InspectLib {
 
     // Unit list
     private static readonly Label[] _UnitList = new Label[UnitCount];
-    private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106, Priority.VeryHigh);
+    private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106, RenderPriority.B2Med);
 
     // Input prompts
     private static readonly Label[] _Prompts = new Label[10];
@@ -64,36 +64,36 @@ public sealed class InspectLib {
 
     // Dividing paths
     private const int _Y = 600;
-    private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y), Priority.ExtremelyHigh);
-    private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y), Priority.ExtremelyHigh);
+    private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y), RenderPriority.B2High);
+    private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y), RenderPriority.B2High);
 
-    private static readonly Path _MultP = new(new(60, _Y), new(660, _Y), Priority.ExtremelyHigh);
-    private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y), Priority.ExtremelyHigh);
-    private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y), Priority.ExtremelyHigh);
+    private static readonly Path _MultP = new(new(60, _Y), new(660, _Y), RenderPriority.B2High);
+    private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y), RenderPriority.B2High);
+    private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y), RenderPriority.B2High);
 
     // Current unit items
-    private static readonly Label _Equip = new(Priority.ExtremelyHigh) { Position = new Vector2(450, 320) };
-    private static readonly Label _Affinities = new(Priority.ExtremelyHigh) { Position = new Vector2(1050, 320) };
+    private static readonly Label _Equip = new(RenderPriority.B2High) { Position = new Vector2(450, 320) };
+    private static readonly Label _Affinities = new(RenderPriority.B2High) { Position = new Vector2(1050, 320) };
 
-    private static readonly Label _Hp = new(Priority.ExtremelyHigh) { Position = new Vector2(450, 165) };
-    private static readonly Label _HpAmt = new(Priority.ExtremelyHigh) {
+    private static readonly Label _Hp = new(RenderPriority.B2High) { Position = new Vector2(450, 165) };
+    private static readonly Label _HpAmt = new(RenderPriority.B2High) {
         Position = new Vector2(900, 165),
         Alignment = Alignment.TopRight
     };
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
-    private static readonly Label _Sp = new(Priority.ExtremelyHigh) { Position = new Vector2(450, 210) };
-    private static readonly Label _SpAmt = new(Priority.ExtremelyHigh) {
+    private static readonly Label _Sp = new(RenderPriority.B2High) { Position = new Vector2(450, 210) };
+    private static readonly Label _SpAmt = new(RenderPriority.B2High) {
         Position = new Vector2(450, 210),
         Alignment = Alignment.TopRight
     };
     //private static GuiBoxBar spBar = coolRectBars[CoolRectBars.SP_INSPECT.ordinal()];
 
     // Current page items
-    private static readonly Label _PageItemList = new(Priority.ExtremelyHigh);
-    private static readonly Label _PageItemRightList = new(Priority.ExtremelyHigh);
-    private static readonly Label _DescHeader = new(Priority.ExtremelyHigh);
-    private static readonly Label _Desc = new(Priority.ExtremelyHigh);
+    private static readonly Label _PageItemList = new(RenderPriority.B2High);
+    private static readonly Label _PageItemRightList = new(RenderPriority.B2High);
+    private static readonly Label _DescHeader = new(RenderPriority.B2High);
+    private static readonly Label _Desc = new(RenderPriority.B2High);
 
     #endregion
 
@@ -119,7 +119,7 @@ public sealed class InspectLib {
 
     #region Setup Methods
 
-    public static void Initialize() {
+    internal static void _Initialize() {
         // Add preinitialized actors
         _Actors.AddRange(_Equip, _Affinities, _Hp, _HpAmt, _Sp, _SpAmt,
             _PageItemList, _PageItemRightList, _DescHeader, _Desc);
@@ -132,13 +132,13 @@ public sealed class InspectLib {
         for (int i = 0; i < _StatTypeCount; i++) {
             int x = 75 + (i * 675);
 
-            _Actors.Add(_StatCategoryHeaders[i] = new Label(Priority.ExtremelyHigh) { Position = new Vector2(x, 570) });
+            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2High) { Position = new Vector2(x, 570) });
 
             const int Y = 622;
 
-            _Actors.Add(_StatsPage[i] = new Label(Priority.ExtremelyHigh) { Position = new Vector2(x, Y) });
+            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2High) { Position = new Vector2(x, Y) });
 
-            _Actors.Add(_StatsPageNum[i] = new Label(Priority.ExtremelyHigh) {
+            _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2High) {
                 Position = new Vector2(x + 585, Y),
                 Alignment = Alignment.TopRight
             });
@@ -146,7 +146,7 @@ public sealed class InspectLib {
 
         // Page list
         for (int i = 0; i < _PageCount; i++) {
-            _Actors.Add(_PageList[i] = new Label(Priority.ExtremelyHigh) { Y = 480 });
+            _Actors.Add(_PageList[i] = new Label(RenderPriority.B2High) { Y = 480 });
         }
 
         // Basic stat list
@@ -154,12 +154,12 @@ public sealed class InspectLib {
             int x = i > 2 ? 1440 : 945;
             int y = 165 - (45 * (i % 3));
 
-            _Actors.Add(_StatsBasic[i] = new Label(Priority.ExtremelyHigh) {
+            _Actors.Add(_StatsBasic[i] = new Label(RenderPriority.B2High) {
                 Position = new Vector2(x, y),
                 Alignment = Alignment.TopLeft
             });
 
-            _Actors.Add(_StatsBasicNum[i] = new Label(Priority.ExtremelyHigh) {
+            _Actors.Add(_StatsBasicNum[i] = new Label(RenderPriority.B2High) {
                 Position = new Vector2(x + 450, y),
                 Alignment = Alignment.TopRight
             });
@@ -167,7 +167,7 @@ public sealed class InspectLib {
 
         // Unit list
         for (int i = 0; i < UnitCount; i++) {
-            _Actors.Add(_UnitList[i] = new Label(Priority.ExtremelyHigh) { Y = 52 });
+            _Actors.Add(_UnitList[i] = new Label(RenderPriority.B2High) { Y = 52 });
         }
 
         // Input prompts
@@ -177,10 +177,10 @@ public sealed class InspectLib {
             new(1125, 385), new(310, 52), new(0, 52), new(385, 320), new(857, 320)];
 
         for (int i = 0; i < _PromptCount; i++) {
-            _Actors.Add(_Prompts[i] = new Label(Priority.ExtremelyHigh) { Position = promptPos[i] });
+            _Actors.Add(_Prompts[i] = new Label(RenderPriority.B2High) { Position = promptPos[i] });
         }
 
-        Translate();
+        _Translate();
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public sealed class InspectLib {
     // todo how often should this be called? currently just once, should also be re-called
     // on lang change and if unit names can change that part must be re-called on open
     // ontranslate event sent out to listeners?
-    public static void Translate() {
+    internal static void _Translate() {
         // Stat types
         string[] names = [Lang.InfoMult, Lang.InfoMod, Lang.InfoOther];
         for (int i = 0; i < _StatTypeCount; i++) _StatCategoryHeaders[i].Text = names[i];
@@ -221,7 +221,7 @@ public sealed class InspectLib {
     }
 
     // todo unify for nameplates
-    public static void TranslateUnitNames() {
+    internal static void _TranslateUnitNames() {
         // todo lighter name color? account for non-8 units?
         Unit[] u = BattleLib.Battle.GetAllUnits();
         for (int i = 0; i < UnitCount; i++) _UnitList[i].Text = u[i].FormatName(false);
@@ -230,7 +230,7 @@ public sealed class InspectLib {
 
     }
 
-    public static void Create() {
+    internal static void _Create() {
         Stage.AddRange(_AnimPrimActors);
         foreach (Actor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.In);
 
@@ -239,7 +239,7 @@ public sealed class InspectLib {
         Stage.Cleanup();
     }
 
-    public static void Destroy() {
+    internal static void _Destroy() {
         foreach (Actor a in _Actors) a.MarkForRemoval();
         foreach (Actor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.Out);
 
@@ -250,7 +250,7 @@ public sealed class InspectLib {
 
     #region Update Methods
 
-    public static void Update(GameTime gameTime) {
+    internal static void _Update(GameTime gameTime) {
         if (InputLib.Check(Keybinds.Back)) {
             StateMachine.Remove();
             return;
@@ -261,7 +261,7 @@ public sealed class InspectLib {
         // UpdateInputPrompt on page change
     }
 
-    public static string GetInputPrompt() => _curPage == _InspectPage.Stats
+    internal static string _GetInputPrompt() => _curPage == _InspectPage.Stats
         ? Menu.State.State.GetInputPromptString(ScrollFaster, Back)
         : Menu.State.State.GetInputPromptString(ScrollUpDown, ScrollFaster, Back);
 

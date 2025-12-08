@@ -1,4 +1,3 @@
-using API.Util;
 using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
@@ -8,7 +7,7 @@ namespace API.Graphics;
 /// <summary>
 /// Renderable text object
 /// </summary>
-public sealed class Label(Priority priority = Priority.Normal) : RenderObject(priority) {
+public sealed class Label(RenderPriority priority = RenderPriority.B1Med) : RenderObject(priority) {
     private RichTextLayout _RichTextLayout { get; set; } = new() { Font = Core.Koruri50 };
 
     public string Text {

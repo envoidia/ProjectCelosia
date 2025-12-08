@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using API.Extensions;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -9,7 +8,7 @@ namespace API.Graphics;
 /// <summary>
 /// Type that can be rendered and can hold actions to be executed
 /// </summary>
-public abstract class Actor(Priority priority = Priority.Normal) {
+public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
     /// <summary>
     /// Whether to draw this
     /// </summary>
@@ -19,7 +18,7 @@ public abstract class Actor(Priority priority = Priority.Normal) {
     /// <summary>
     /// Priority to draw with. Changes only applied on <c>Stage.Cleanup()</c>
     /// </summary>
-    public Priority Priority {
+    public RenderPriority Priority {
         get;
         set {
             field = value;

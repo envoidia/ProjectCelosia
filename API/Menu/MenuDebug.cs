@@ -22,14 +22,14 @@ public static class MenuDebug {
         Text = _GetDebugInfoLText(),
         Position = new Vector2(10, 10),
         HasBackground = true,
-        Priority = Priority.Highest
+        Priority = RenderPriority.Highest
     };
 
     private static readonly Label _DebugInfoR = new() {
         Position = new Vector2(World.W - 10, 10),
         Alignment = Alignment.TopRight,
         HasBackground = true,
-        Priority = Priority.Highest
+        Priority = RenderPriority.Highest
     };
 
     private static readonly Label _DebugInfoHelp = new() {
@@ -38,7 +38,7 @@ public static class MenuDebug {
         Alignment = Alignment.BottomLeft,
         HasBackground = true,
         IsVisible = false,
-        Priority = Priority.Highest
+        Priority = RenderPriority.Highest
     };
 
     /// <summary>

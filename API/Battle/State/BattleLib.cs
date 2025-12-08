@@ -113,7 +113,7 @@ public static class BattleLib {
 
     #region Setup Methods
 
-    public static void Initialize() {
+    internal static void _Initialize() {
         // Add preinitialized actors
         _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL, _Turn);
 
@@ -145,14 +145,14 @@ public static class BattleLib {
 
         // todo Stages.Battle.Sort();
 
-        InspectLib.Initialize();
+        InspectLib._Initialize();
     }
 
-    public static void Create() {
+    internal static void _Create() {
         // temp setup teams
         Battle = Core.battle;
 
-        InspectLib.TranslateUnitNames();
+        InspectLib._TranslateUnitNames();
 
         LogLib.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
 
@@ -163,7 +163,7 @@ public static class BattleLib {
         Stage.Cleanup();
     }
 
-    public static void Destroy() {
+    internal static void _Destroy() {
         foreach (Actor a in _Actors) a.MarkForRemoval();
 
         Stage.Cleanup();
@@ -173,7 +173,7 @@ public static class BattleLib {
 
     #region Update Methods
 
-    public static void Update(GameTime gameTime) {
+    internal static void _Update(GameTime gameTime) {
         if (InputLib.Check(Keybinds.Menu)) {
             StateMachine.Add(States.Log);
             return;

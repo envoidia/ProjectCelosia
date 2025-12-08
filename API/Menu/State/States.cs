@@ -7,7 +7,7 @@ namespace API.Menu.State;
 using static API.Input.InputPrompts;
 
 public static class States {
-    public static readonly State MainMenu = new("Main", () => { }, () => { }, MainMenuLib.Update,
+    public static readonly State MainMenu = new("Main", () => { }, () => { }, MainMenuLib._Update,
     static () => State.GetInputPromptString(ScrollUpDown, Confirm));
 
     public static readonly State Popup = new("Popup", PopupLib._Create, PopupLib._Destroy,
@@ -20,7 +20,7 @@ public static class States {
 
 static () => State.GetInputPromptString(Close));
 
-    public static readonly State Battle = new("Battle", BattleLib.Create, BattleLib.Destroy, BattleLib.Update,
+    public static readonly State Battle = new("Battle", BattleLib._Create, BattleLib._Destroy, BattleLib._Update,
     static () =>
         State.GetInputPromptString(ScrollUpDown, ScrollFaster, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect));
 
@@ -37,6 +37,6 @@ static () => State.GetInputPromptString(Close));
     public static readonly State InspectTargeting = new("InspectTargeting", () => { }, () => { },
     TargetingLib.UpdateInspectTargeting, static () => State.GetInputPromptString(Move, Confirm, Back, InputPrompts.Log));
 
-    public static readonly State Inspect = new("Inspect", InspectLib.Create, InspectLib.Destroy,
-        InspectLib.Update, InspectLib.GetInputPrompt);
+    public static readonly State Inspect = new("Inspect", InspectLib._Create, InspectLib._Destroy,
+        InspectLib._Update, InspectLib._GetInputPrompt);
 }

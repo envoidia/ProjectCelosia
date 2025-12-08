@@ -17,7 +17,7 @@ public static class StateMachine {
         Position = World.Vec - new Vector2(10, 10),
         Alignment = Alignment.BottomRight,
         HasBackground = true,
-        Priority = Priority.Highest
+        Priority = RenderPriority.Highest
     };
 
     /// <returns>

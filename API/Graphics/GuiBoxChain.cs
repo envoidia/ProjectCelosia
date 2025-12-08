@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public sealed class GuiBoxChain(int l, int t, int b, Priority priority = Priority.Normal,
+public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = RenderPriority.B1Med,
     params int[] divisions) : GuiBox(l, -1, t, b, 2, priority) {
     /// <summary>
     /// Width of each division (not counting the first)
