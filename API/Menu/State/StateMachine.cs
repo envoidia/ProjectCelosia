@@ -13,12 +13,15 @@ namespace API.Menu.State;
 public static class StateMachine {
     private static readonly List<State> _Path = [];
 
-    private static readonly Label _InputPrompt = new() {
+    private static readonly Label _InputPrompt = new(RenderPriority.Highest) {
         Position = World.Vec - new Vector2(10, 10),
         Alignment = Alignment.BottomRight,
-        HasBackground = true,
-        Priority = RenderPriority.Highest
+        HasBackground = true
     };
+
+    internal static void _Initialize() {
+        Stage.Add(_InputPrompt);
+    }
 
     /// <returns>
     /// The last <c>State</c> in the <c>NavPath</c>

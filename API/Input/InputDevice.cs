@@ -25,32 +25,26 @@ public static class InputDeviceExtensions {
             switch (id) {
                 case KeybindId.LeftRight:
                     if (@this == InputDevice.Keyboard) {
-                        return Keybinds.Left.Key.GetGlyph() + Keybinds.Right.Key.GetGlyph();
+                        return $"{Keybinds.Left.Key.GetGlyph()}//{Keybinds.Right.Key.GetGlyph()}";
                     }
 
-                    return (Keybinds.Left.Button.GetGlyph(@this) + "/" +
-                            Keybinds.Right.Button.GetGlyph(@this))
+                    return $"{Keybinds.Left.Button.GetGlyph(@this)}//{Keybinds.Right.Button.GetGlyph(@this)}"
                         .Replace($"/i[{@this.GetGlyphIdentifier()}DL]//i[{@this.GetGlyphIdentifier()}DR]",
                             $"/i[{@this.GetGlyphIdentifier()}DX]");
                 case KeybindId.UpDown:
                     if (@this == InputDevice.Keyboard) {
-                        return Keybinds.Up.Key.GetGlyph() + Keybinds.Down.Key.GetGlyph();
+                        return $"{Keybinds.Up.Key.GetGlyph()}//{Keybinds.Down.Key.GetGlyph()}";
                     }
 
-                    return (Keybinds.Up.Button.GetGlyph(@this) + "/" +
-                            Keybinds.Down.Button.GetGlyph(@this))
+                    return $"{Keybinds.Up.Button.GetGlyph(@this)}//{Keybinds.Down.Button.GetGlyph(@this)}"
                         .Replace($"/i[{@this.GetGlyphIdentifier()}DU]//i[{@this.GetGlyphIdentifier()}DD]",
                             $"/i[{@this.GetGlyphIdentifier()}DY]");
                 case KeybindId.LeftRightUpDown:
                     if (@this == InputDevice.Keyboard) {
-                        return Keybinds.Left.Key.GetGlyph() + Keybinds.Right.Key.GetGlyph() +
-                               Keybinds.Up.Key.GetGlyph() + Keybinds.Down.Key.GetGlyph();
+                        return $"{Keybinds.Left.Key.GetGlyph()}//{Keybinds.Right.Key.GetGlyph()}//{Keybinds.Up.Key.GetGlyph()}//{Keybinds.Down.Key.GetGlyph()}";
                     }
 
-                    return (Keybinds.Left.Button.GetGlyph(@this) + "/" +
-                            Keybinds.Right.Button.GetGlyph(@this) + "/" +
-                            Keybinds.Up.Button.GetGlyph(@this) + "/" +
-                            Keybinds.Down.Button.GetGlyph(@this))
+                    return $"{Keybinds.Left.Button.GetGlyph(@this)}//{Keybinds.Right.Button.GetGlyph(@this)}//{Keybinds.Up.Button.GetGlyph(@this)}//{Keybinds.Down.Button.GetGlyph(@this)}"
                         .Replace(
                             $"/i[{@this.GetGlyphIdentifier()}DL]//i[{@this.GetGlyphIdentifier()}DR]//i[{@this.GetGlyphIdentifier()}DU]//i[{@this.GetGlyphIdentifier()}DD]",
                             $"/i[{@this.GetGlyphIdentifier()}D]");

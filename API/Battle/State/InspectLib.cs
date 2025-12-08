@@ -262,8 +262,8 @@ public sealed class InspectLib {
     }
 
     internal static string _GetInputPrompt() => _curPage == _InspectPage.Stats
-        ? Menu.State.State.GetInputPromptString(ScrollFaster, Back)
-        : Menu.State.State.GetInputPromptString(ScrollUpDown, ScrollFaster, Back);
+        ? Menu.State.State.GetInputPromptString(Faster, Back)
+        : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, Back);
 
     private static void _HandleInspectPage() { }
 

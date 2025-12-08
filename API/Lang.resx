@@ -180,8 +180,8 @@ etc todo</value>
     <data name="InputScroll" xml:space="preserve">
         <value>Scroll</value>
     </data>
-    <data name="InputScrollFaster" xml:space="preserve">
-        <value>Scroll Faster</value>
+    <data name="InputFaster" xml:space="preserve">
+        <value>Faster</value>
     </data>
     <data name="InputClose" xml:space="preserve">
         <value>Close</value>
@@ -197,6 +197,9 @@ etc todo</value>
     </data>
     <data name="InputInspect" xml:space="preserve">
         <value>Inspect</value>
+    </data>
+    <data name="InputInspectHere" xml:space="preserve">
+        <value>Inspect Here</value>
     </data>
     <data name="InputInspectStat" xml:space="preserve">
         <value>Stat Info</value>

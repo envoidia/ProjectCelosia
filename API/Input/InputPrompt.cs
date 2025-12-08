@@ -4,32 +4,38 @@ using API.Extensions;
 namespace API.Input;
 
 public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
-    public Keybind[] Keybinds => keybinds;
+    public MultiInputType multiInputType = MultiInputType.Or;
 
     public string GetText() {
         StringBuilder builder = new();
-        foreach (Keybind keybind in this.Keybinds) builder.Append(keybind.GetCurrentGlyph());
+
+        for (int i = 0; i < keybinds.Length; i++) {
+            builder.Append(keybinds[i].GetCurrentGlyph());
+
+            // Divider
+            if (i != keybinds.Length - 1) builder.Append(this.multiInputType == MultiInputType.Or ? "//" : '+');
+        }
+
         return builder.Append(' ').Append(keyName.GetLang()).ToString();
     }
 }
 
-// todo also display:
-// - ctrl: move faster (all allowHold menus)
-// - inspect + ctrl: open inspect on current unit/target (battle and regular targeting)
 public static class InputPrompts {
     public static readonly InputPrompt Confirm = new("InputConfirm", Keybinds.Confirm);
     public static readonly InputPrompt Back = new("InputBack", Keybinds.Back);
     public static readonly InputPrompt BackLog = new("InputBack", Keybinds.Back, Keybinds.Menu);
     public static readonly InputPrompt Close = new("InputClose", Keybinds.Confirm, Keybinds.Back);
 
+    public static readonly InputPrompt Move = new("InputMove", Keybinds.LeftRightUpDown);
     public static readonly InputPrompt MoveLeftRight = new("InputMove", Keybinds.LeftRight);
     public static readonly InputPrompt ScrollUpDown = new("InputScroll", Keybinds.UpDown);
-    public static readonly InputPrompt ScrollFaster = new("InputScrollFaster", Keybinds.Hotkey);
-
-    public static readonly InputPrompt Move = new("InputMove", Keybinds.LeftRightUpDown);
+    public static readonly InputPrompt Faster = new("InputFaster", Keybinds.Hotkey);
 
     public static readonly InputPrompt Log = new("InputLog", Keybinds.Menu);
     public static readonly InputPrompt Inspect = new("InputInspect", Keybinds.Map);
+    public static readonly InputPrompt InspectHere = new("InputInspectHere", Keybinds.Map, Keybinds.Hotkey) {
+        multiInputType = MultiInputType.And
+    };
 
     public static readonly InputPrompt Top = new("InputTop", Keybinds.PageL2);
     public static readonly InputPrompt Bottom = new("InputBottom", Keybinds.PageR2);
@@ -45,4 +51,9 @@ public static class InputPrompts {
     public static readonly InputPrompt InspectUnitR = new("Blank", Keybinds.PageR2);
     public static readonly InputPrompt InspectPageL = new("Blank", Keybinds.Left);
     public static readonly InputPrompt InspectPageR = new("Blank", Keybinds.Right);
+}
+
+public enum MultiInputType {
+    Or,
+    And
 }
