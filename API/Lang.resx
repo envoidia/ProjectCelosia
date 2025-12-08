@@ -77,7 +77,8 @@ Loaded Mods: {5}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
         <value>/i[KF3]: Write loaded mod list to log
-/i[KF4]: Write battle log to log
+/i[KF4]: Write battle log to log (in battle). Hold {0} to preserve formatting codes
+/i[KF5]: Write all actors to log
 etc todo</value>
     </data>
     <!--Basic options-->

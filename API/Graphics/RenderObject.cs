@@ -1,3 +1,4 @@
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -6,7 +7,7 @@ namespace API.Graphics;
 /// Base class for more complex renderable objects. Stores position, priority, and alignment
 /// </summary>
 // todo will this be used for anything other than Label? remove if not
-public abstract class RenderObject : Actor {
+public abstract class RenderObject(Priority priority = Priority.Normal) : Actor(priority) {
     private Vector2 _position = Vector2.Zero;
 
     public Vector2 Position {

@@ -105,7 +105,7 @@ public static class InputLib {
 
     private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind keybind) {
         // Bypasses held time checks
-        if (keybind.Id == KeybindId.ScrollFaster) return _CheckKeybind(keybind);
+        if (keybind.Id == KeybindId.Hotkey) return _CheckKeybind(keybind);
 
         if (!_CheckKeybind(keybind)) {
             _Held[(int) keybind.Id] = TimeSpan.Zero;
@@ -119,7 +119,7 @@ public static class InputLib {
 
         if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && _CheckKeybind(keybind)) {
             _Held[(int) keybind.Id] = _HoldInitDelay -
-                TimeSpan.FromSeconds(holdDelayS * Convert.ToInt32(_CheckKeybind(Keybinds.ScrollFaster)) + 1);
+                TimeSpan.FromSeconds(holdDelayS * Convert.ToInt32(_CheckKeybind(Keybinds.Hotkey)) + 1);
             return true;
         }
 

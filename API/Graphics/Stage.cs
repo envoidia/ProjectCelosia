@@ -1,59 +1,75 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public sealed class Stage {
-    private readonly List<Actor> _Actors = [];
+/// <summary>
+/// List of active <c>Actor</c>s with helper methods
+/// </summary>
+public static class Stage {
+    private static readonly List<Actor> _Actors = [];
 
     /// <summary>
-    /// Draws all the <c>Stage</c>'s visible actors and performs their actions
+    /// Whether sorting is needed
     /// </summary>
-    public void Draw(GameTime gameTime) {
-        foreach (Actor actor in this._Actors) actor.Act(gameTime);
+    internal static bool _needsSorting = false;
+
+    /// <summary>
+    /// Whether removal is needed
+    /// </summary>
+    internal static bool _needsRemoval = false;
+
+    /// <summary>
+    /// Draws all visible <c>Actor</c>s and performs their <c>Routine</c>s
+    /// </summary>
+    public static void Act(GameTime gameTime) {
+        for (int i = _Actors.Count - 1; i >= 0; i--) _Actors[i].Act(gameTime);
     }
 
     /// <summary>
-    /// Add an actor to the <c>Stage</c>. After you're done adding, call <c>Stage.Sort()</c> to order by <c>RenderPriority</c>
+    /// Add an <c>Actor</c>. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
-    public void Add(Actor actor) => this._Actors.Add(actor);
+    public static void Add(Actor actor) {
+        _Actors.Add(actor);
+        _needsSorting = true;
+    }
 
     /// <summary>
-    /// Remove an actor from the <c>Stage</c>
+    /// Add a range of <c>Actor</c>s. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
-    public void Remove(Actor actor) => this._Actors.Remove(actor);
+    public static void AddRange(params IEnumerable<Actor> actors) {
+        _Actors.AddRange(actors);
+        _needsSorting = true;
+    }
 
     /// <summary>
-    /// Sorts the <c>Stage</c>'s actors by their <c>RenderPriority</c>. Call after a batch of additions
+    /// Immediately removes an <c>Actor</c>. Prefer <c>Actor.MarkForRemoval()</c> when able
     /// </summary>
-    public void Sort() =>
-        this._Actors.Sort((a, b) =>
-           ((int) a.RenderPriority).CompareTo((int) b.RenderPriority));
-}
-
-public static class Stages {
-    /// <summary>
-    /// <c>Stage</c> that's always drawn first
-    /// </summary>
-    public static readonly Stage Base = new();
+    public static void ImmediateRemove(Actor actor) => _Actors.Remove(actor);
 
     /// <summary>
-    /// <c>Stage</c> that's only drawn during battle
+    /// Applies sorting and removal
     /// </summary>
-    public static readonly Stage Battle = new();
+    public static void Cleanup() {
+        if (_needsRemoval) {
+            _Actors.RemoveAll(a => a._marked);
 
-    /// <summary>
-    /// <c>Stage</c> that's only drawn in the inspect menu
-    /// </summary>
-    public static readonly Stage Inspect = new();
+            _needsRemoval = false;
+        }
 
-    /// <summary>
-    /// <c>Stage</c> that's only drawn with a popup
-    /// </summary>
-    public static readonly Stage Popup = new();
+        if (!_needsSorting) return;
 
-    /// <summary>
-    /// <c>Stage</c> that's always drawn last
-    /// </summary>
-    public static readonly Stage Super = new();
+        _Actors.Sort((a, b) =>
+           ((int) b.Priority).CompareTo((int) a.Priority));
+
+        Console.WriteLine("actors sorted!");
+
+        _needsSorting = false;
+    }
+
+    public new static string ToString() =>
+        string.Join("\n", [.. _Actors.Select(a => a.ToString())]);
 }

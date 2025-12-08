@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace API.Battle.State;
 
 public static class LogLib {
-    private static readonly Label _BattleLog = new(Stages.Battle) { Position = new Vector2(World.W2 - 300, 405) };
+    internal static readonly Label _BattleLog = new() { Position = new Vector2(World.W2 - 300, 405) };
 
     internal static readonly List<string> _LogText = new(1024); // todo decide capacity
 

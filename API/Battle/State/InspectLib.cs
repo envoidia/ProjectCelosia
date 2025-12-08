@@ -5,12 +5,18 @@ using Microsoft.Xna.Framework;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 using System;
+using System.Collections.Generic;
+using API.Util;
 
 namespace API.Battle.State;
 
 public sealed class InspectLib {
 
     #region Display Fields
+
+    // todo ensure this size is right
+    private static readonly List<Actor> _Actors = new(55);
+    private static readonly List<Actor> _AnimPrimActors = new(8);
 
     // Stat types
     private static readonly Label[] _StatCategoryHeaders = new Label[_StatTypeCount];
@@ -33,7 +39,7 @@ public sealed class InspectLib {
 
     // Page list
     private static readonly Label[] _PageList = new Label[TeamSize];
-    private static readonly GuiBoxChain _PageListBox = new(Stages.Inspect, 638, 446, 501);
+    private static readonly GuiBoxChain _PageListBox = new(638, 446, 501, Priority.VeryHigh);
 
     // Basic stat list
     /// <summary>
@@ -46,7 +52,7 @@ public sealed class InspectLib {
 
     // Unit list
     private static readonly Label[] _UnitList = new Label[UnitCount];
-    private static readonly GuiBoxChain _UnitListBox = new(Stages.Inspect, 518, 40, 106);
+    private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106, Priority.VeryHigh);
 
     // Input prompts
     private static readonly Label[] _Prompts = new Label[10];
@@ -58,37 +64,36 @@ public sealed class InspectLib {
 
     // Dividing paths
     private const int _Y = 600;
-    private static readonly Path _PageDivL = new(Stages.Inspect, new(30, _Y), new(370, _Y));
-    private static readonly Path _PageDivR = new(Stages.Inspect, new(900, _Y), new(1450, _Y));
+    private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y), Priority.ExtremelyHigh);
+    private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y), Priority.ExtremelyHigh);
 
-    private static readonly Path _MultP = new(Stages.Inspect, new(60, _Y), new(660, _Y));
-    private static readonly Path _ModP = new(Stages.Inspect, new(60 + 675, _Y), new(660 + 675, _Y));
-    private static readonly Path _OtherP = new(Stages.Inspect, new(60 + 1350, _Y), new(660 + 1350, _Y));
+    private static readonly Path _MultP = new(new(60, _Y), new(660, _Y), Priority.ExtremelyHigh);
+    private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y), Priority.ExtremelyHigh);
+    private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y), Priority.ExtremelyHigh);
 
     // Current unit items
-    private static readonly Label _Equip = new(Stages.Inspect) { Position = new Vector2(450, 320) };
-    private static readonly Label _Affinities = new(Stages.Inspect) { Position = new Vector2(1050, 320) };
+    private static readonly Label _Equip = new(Priority.ExtremelyHigh) { Position = new Vector2(450, 320) };
+    private static readonly Label _Affinities = new(Priority.ExtremelyHigh) { Position = new Vector2(1050, 320) };
 
-    private static readonly Label _Hp = new(Stages.Inspect) { Position = new Vector2(450, 165) };
-    private static readonly Label _Test = new(Stages.Inspect) { Position = new Vector2(450, 165) };
-    private static readonly Label _HpAmt = new(Stages.Inspect) {
+    private static readonly Label _Hp = new(Priority.ExtremelyHigh) { Position = new Vector2(450, 165) };
+    private static readonly Label _HpAmt = new(Priority.ExtremelyHigh) {
         Position = new Vector2(900, 165),
         Alignment = Alignment.TopRight
     };
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
-    private static readonly Label _Sp = new(Stages.Inspect) { Position = new Vector2(450, 210) };
-    private static readonly Label _SpAmt = new(Stages.Inspect) {
+    private static readonly Label _Sp = new(Priority.ExtremelyHigh) { Position = new Vector2(450, 210) };
+    private static readonly Label _SpAmt = new(Priority.ExtremelyHigh) {
         Position = new Vector2(450, 210),
         Alignment = Alignment.TopRight
     };
     //private static GuiBoxBar spBar = coolRectBars[CoolRectBars.SP_INSPECT.ordinal()];
 
     // Current page items
-    private static readonly Label _PageItemList = new(Stages.Inspect);
-    private static readonly Label _PageItemRightList = new(Stages.Inspect);
-    private static readonly Label _DescHeader = new(Stages.Inspect);
-    private static readonly Label _Desc = new(Stages.Inspect);
+    private static readonly Label _PageItemList = new(Priority.ExtremelyHigh);
+    private static readonly Label _PageItemRightList = new(Priority.ExtremelyHigh);
+    private static readonly Label _DescHeader = new(Priority.ExtremelyHigh);
+    private static readonly Label _Desc = new(Priority.ExtremelyHigh);
 
     #endregion
 
@@ -110,62 +115,59 @@ public sealed class InspectLib {
     private static int _indexPageList = 0;
     private static TimeSpan _timeOnSameTarget = TimeSpan.Zero;
 
-    // test
-    public static Label inspectSt = new(Stages.Inspect) { Position = new(1000, 1000) };
-
     #endregion
 
     #region Setup Methods
 
     public static void Initialize() {
+        // Add preinitialized actors
+        _Actors.AddRange(_Equip, _Affinities, _Hp, _HpAmt, _Sp, _SpAmt,
+            _PageItemList, _PageItemRightList, _DescHeader, _Desc);
+
+        // todo hp/sp bars
+        _AnimPrimActors.AddRange(GuiBoxes.CoverLeft, _PageListBox, _UnitListBox,
+            _PageDivL, _PageDivR, _MultP, _ModP, _OtherP);
+
         // Stat types
         for (int i = 0; i < _StatTypeCount; i++) {
             int x = 75 + (i * 675);
 
-            _StatCategoryHeaders[i] = new Label(Stages.Inspect) { Position = new Vector2(x, 570) };
+            _Actors.Add(_StatCategoryHeaders[i] = new Label(Priority.ExtremelyHigh) { Position = new Vector2(x, 570) });
 
             const int Y = 622;
 
-            _StatsPage[i] = new Label(Stages.Inspect) { Position = new Vector2(x, Y) };
+            _Actors.Add(_StatsPage[i] = new Label(Priority.ExtremelyHigh) { Position = new Vector2(x, Y) });
 
-            _StatsPageNum[i] = new Label(Stages.Inspect) {
+            _Actors.Add(_StatsPageNum[i] = new Label(Priority.ExtremelyHigh) {
                 Position = new Vector2(x + 585, Y),
                 Alignment = Alignment.TopRight
-            };
+            });
         }
 
         // Page list
-        int[] divs = new int[4];
-        int divTotal = 0;
         for (int i = 0; i < _PageCount; i++) {
-            _PageList[i] = new Label(Stages.Inspect) { Position = new Vector2(655 * divTotal, 480) };
-
-            int div = _PageList[i].Size.X + 20;
-            divs[i] = div;
-            divTotal += div;
+            _Actors.Add(_PageList[i] = new Label(Priority.ExtremelyHigh) { Y = 480 });
         }
-
-        _PageListBox.Divisions = divs;
 
         // Basic stat list
         for (int i = 0; i < StatCount; i++) {
             int x = i > 2 ? 1440 : 945;
             int y = 165 - (45 * (i % 3));
 
-            _StatsBasic[i] = new Label(Stages.Inspect) {
+            _Actors.Add(_StatsBasic[i] = new Label(Priority.ExtremelyHigh) {
                 Position = new Vector2(x, y),
                 Alignment = Alignment.TopLeft
-            };
+            });
 
-            _StatsBasicNum[i] = new Label(Stages.Inspect) {
+            _Actors.Add(_StatsBasicNum[i] = new Label(Priority.ExtremelyHigh) {
                 Position = new Vector2(x + 450, y),
                 Alignment = Alignment.TopRight
-            };
+            });
         }
 
         // Unit list
         for (int i = 0; i < UnitCount; i++) {
-            _UnitList[i] = new Label(Stages.Battle) { Y = 52 };
+            _Actors.Add(_UnitList[i] = new Label(Priority.ExtremelyHigh) { Y = 52 });
         }
 
         // Input prompts
@@ -175,10 +177,9 @@ public sealed class InspectLib {
             new(1125, 385), new(310, 52), new(0, 52), new(385, 320), new(857, 320)];
 
         for (int i = 0; i < _PromptCount; i++) {
-            _Prompts[i] = new Label(Stages.Inspect) { Position = promptPos[i] };
+            _Actors.Add(_Prompts[i] = new Label(Priority.ExtremelyHigh) { Position = promptPos[i] });
         }
 
-        Stages.Inspect.Sort();
         Translate();
     }
 
@@ -195,7 +196,20 @@ public sealed class InspectLib {
 
         // Page list
         names = [Lang.Skills, Lang.Passives, Lang.Buffs, Lang.Stats];
-        for (int i = 0; i < _PageCount; i++) _PageList[i].Text = names[i];
+
+        int[] divs = new int[4];
+        int divTotal = 0;
+
+        for (int i = 0; i < _PageCount; i++) {
+            _PageList[i].Text = names[i];
+            _PageList[i].X = 655 * divTotal;
+
+            int div = _PageList[i].Size.X + 20;
+            divs[i] = div;
+            divTotal += div;
+        }
+
+        _PageListBox.Divisions = divs;
 
         // Basic stat list
         names = [Lang.StatStr, Lang.StatMag, Lang.StatFth, Lang.StatAmr, Lang.StatRes, Lang.StatAgi];
@@ -216,15 +230,29 @@ public sealed class InspectLib {
 
     }
 
+    public static void Create() {
+        Stage.AddRange(_AnimPrimActors);
+        foreach (Actor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.In);
+
+        Stage.AddRange(_Actors);
+
+        Stage.Cleanup();
+    }
+
+    public static void Destroy() {
+        foreach (Actor a in _Actors) a.MarkForRemoval();
+        foreach (Actor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.Out);
+
+        Stage.Cleanup();
+    }
+
     #endregion
 
     #region Update Methods
 
     public static void Update(GameTime gameTime) {
-        HandleDebug();
-
         if (InputLib.Check(Keybinds.Back)) {
-            NavPath.Remove();
+            StateMachine.Remove();
             return;
         }
 

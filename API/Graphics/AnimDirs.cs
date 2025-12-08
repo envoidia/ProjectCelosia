@@ -4,6 +4,6 @@ namespace API.Graphics;
 /// Animation direction
 /// </summary>
 public enum AnimDirs {
-    Collapsing = -1,
-    Unfolding = 1
+    Out = -1,
+    In = 1
 }

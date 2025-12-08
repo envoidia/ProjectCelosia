@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public sealed class GuiBoxBar(Stage stage, int l, int r, int t, int b, params Color[] colors) : GuiBox(stage, l, r, t, b, 0) {
+public sealed class GuiBoxBar(int l, int r, int t, int b, params Color[] colors) : GuiBox(l, r, t, b, 0) {
     public Progress[] BarProgs { get; set; } = new Progress[colors.Length];
     public Color[] BarColors { get; } = colors;
 

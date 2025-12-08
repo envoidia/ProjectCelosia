@@ -25,10 +25,6 @@ public sealed class Game1 : Core {
     // Debug
     private static bool _isDebugInfoEnabled;
 
-    // temp
-    //private static float[][] barProgs = [[1, 0.5f, 0.25f], [0.5f, 0.35f, 1], [0.75f, 1, 0.15f]];
-    //private static int barIndex = -1;
-
 #if NATIVE_AOT
     private static Celosia.Main _celosiaMain = null!;
 #endif
@@ -49,14 +45,9 @@ public sealed class Game1 : Core {
     }
 
     protected override void Initialize() {
-        // temp
-        //GuiBoxesHigh.Add(new GuiBox(World.W2 - 880, World.W2 + 880, World.H2 - 400, World.H2 + 400));
-        //GuiBoxChainsHigh.Add(new GuiBoxChain(400, 1600, 500, 600, 120, 140, 180, 200, 80, 60, 130));
-        //GuiBoxBarsHigh.Add(new GuiBoxBar(400, 1600, 800, 900, Color.Red, Color.Green, Color.Blue));
-
         base.Initialize();
 
-        NavPath.Add(States.MainMenu);
+        StateMachine.Add(States.MainMenu);
 
 #if NATIVE_AOT
         celosiaMain = new Celosia.Main();
@@ -75,15 +66,23 @@ public sealed class Game1 : Core {
 
     protected override void Update(GameTime gameTime) {
         // Toggle debug info overlay
-        _isDebugInfoEnabled ^= InputLib.Check(Keybinds.DebugInfo);
+        if (InputLib.Check(Keybinds.DebugInfo)) {
+            if (!_isDebugInfoEnabled) {
+                _isDebugInfoEnabled = true;
+                MenuDebug.Create();
+            } else {
+                _isDebugInfoEnabled = false;
+                MenuDebug.Destroy();
+            }
+        }
 
-        MenuDebug.HandleDebugInfo(_isDebugInfoEnabled, gameTime);
+        if (_isDebugInfoEnabled) MenuDebug.Update(gameTime);
 
         // Switch input prompt between kb/controller
-        if (InputLib.InputDeviceChanged) NavPath.UpdateInputPrompt();
+        if (InputLib.InputDeviceChanged) StateMachine.UpdateInputPrompt();
 
         // Update the current State
-        NavPath.GetState().Update(gameTime);
+        StateMachine.GetState().Update(gameTime);
 
         base.Update(gameTime);
 
@@ -100,27 +99,15 @@ public sealed class Game1 : Core {
 
         SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
             null, null, null, Resolution.TransformationMatrix());
-
         ShapeBatch.Begin(Resolution.TransformationMatrix());
-
-        //SpriteBatch.Draw(bg, Vector2.Zero, Color.White);
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
-        Stages.Base.Draw(gameTime);
-
-        // Draw the current State
-        NavPath.GetState().Draw(gameTime);
-
-        Stages.Super.Draw(gameTime);
-
-        // temp
-        //foreach (GuiBox label in GuiBoxesHigh) label.Draw(gameTime);
-        //foreach (GuiBoxChain label in GuiBoxChainsHigh) label.Draw(gameTime);
-        //foreach (GuiBoxBar label in GuiBoxBarsHigh) label.Draw(gameTime);
+        // Act Actors
+        Stage.Act(gameTime);
 
         SpriteBatch.End();
-        ShapeBatch.End();
+        ShapeBatch.End(); // todo fix draw order
 
         base.Draw(gameTime);
     }

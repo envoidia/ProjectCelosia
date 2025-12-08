@@ -152,10 +152,6 @@ public class Core : Game {
 
         WhitePixel = new Texture2D(GraphicsDevice, 1, 1);
         WhitePixel.SetData([Color.White]);
-
-        // Sort stages
-        Stages.Base.Sort();
-        Stages.Super.Sort();
     }
 
     protected override void Update(GameTime gameTime) {

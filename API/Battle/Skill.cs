@@ -6,6 +6,7 @@ using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Util;
 
 namespace API.Battle;
 
@@ -14,7 +15,7 @@ public sealed class Skill : ComplexDescriptionEntity, IModItem {
     public int Cost { get; }
 
     public int Cooldown { get; init; } = 0;
-    public Prio Prio { get; init; } = Prio.Normal;
+    public Priority Prio { get; init; } = Priority.Normal;
     public bool IsBloom { get; init; } = false;
 
     public SkillRole[] SkillRoles { get; init; } = [];

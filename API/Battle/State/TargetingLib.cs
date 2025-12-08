@@ -17,15 +17,13 @@ public static class TargetingLib {
     private static int _extraActions = 0;
 
     public static void Update(GameTime gameTime) {
-        HandleDebug();
-
         if (InputLib.Check(Keybinds.Menu)) {
-            NavPath.Add(States.Log);
+            StateMachine.Add(States.Log);
             return;
         }
 
         if (InputLib.Check(Keybinds.Map)) {
-            NavPath.Add(States.Inspect);
+            StateMachine.Add(States.Inspect);
             return;
         }
 
@@ -33,7 +31,7 @@ public static class TargetingLib {
             //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";
 
-            NavPath.Remove();
+            StateMachine.Remove();
             return;
         }
 
@@ -67,21 +65,19 @@ public static class TargetingLib {
 
         _UpdateStatDisplay(_selectingMove);
 
-        NavPath.Remove();
+        StateMachine.Remove();
     }
 
     // todo merge
     public static void UpdateInspectTargeting(GameTime gameTime) {
-        HandleDebug();
-
         if (InputLib.Check(Keybinds.Back)) {
-            NavPath.Remove();
+            StateMachine.Remove();
             return;
         }
 
         if (InputLib.Check(Keybinds.Confirm, Keybinds.Map)) {
-            NavPath.Remove();
-            NavPath.Add(States.Inspect);
+            StateMachine.Remove();
+            StateMachine.Add(States.Inspect);
         }
     }
 }

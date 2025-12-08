@@ -24,7 +24,7 @@ public static class InputPrompts {
 
     public static readonly InputPrompt MoveLeftRight = new("InputMove", Keybinds.LeftRight);
     public static readonly InputPrompt ScrollUpDown = new("InputScroll", Keybinds.UpDown);
-    public static readonly InputPrompt ScrollFaster = new("InputScrollFaster", Keybinds.ScrollFaster);
+    public static readonly InputPrompt ScrollFaster = new("InputScrollFaster", Keybinds.Hotkey);
 
     public static readonly InputPrompt Move = new("InputMove", Keybinds.LeftRightUpDown);
 

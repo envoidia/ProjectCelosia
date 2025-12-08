@@ -9,9 +9,6 @@ namespace API.Menu.State;
 public static class MainMenuLib {
     private static int _index;
 
-    // temp
-    private static readonly GuiBox gbTest = new(Stages.Super, 500, 1000, 500, 1000);
-
     private enum _Options {
         Start,
         Encyclopedia,
@@ -27,17 +24,11 @@ public static class MainMenuLib {
         _index = MenuLib.CheckMovement1D(_index, _OptCount);
         // todo update cursor
 
-        //temp testing
-        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q)) {
-            gbTest.AddRoutine((gbTest.Prog == 1) ? IAnimatedPrimitive.Collapse : IAnimatedPrimitive.Unfold);
-        }
-
-
         if (InputLib.Check(Keybinds.Confirm)) {
             switch ((_Options) _index) {
                 case _Options.Start:
                     BattleLib.Initialize();
-                    NavPath.Add(States.Battle);
+                    StateMachine.Add(States.Battle);
                     return;
                 case _Options.Encyclopedia:
                     // todo
@@ -65,7 +56,4 @@ public static class MainMenuLib {
             }
         }
     }
-
-    // todo
-    public static void Draw(GameTime gameTime) { return; }
 }

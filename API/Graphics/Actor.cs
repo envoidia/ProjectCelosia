@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using API.Extensions;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -8,16 +9,23 @@ namespace API.Graphics;
 /// <summary>
 /// Type that can be rendered and can hold actions to be executed
 /// </summary>
-public abstract class Actor {
+public abstract class Actor(Priority priority = Priority.Normal) {
     /// <summary>
-    /// Whether to draw
+    /// Whether to draw this
     /// </summary>
+    // todo is this really needed
     public bool IsVisible { get; set; } = true;
 
     /// <summary>
-    /// Priority to draw with. Only applied on <c>Stage.Sort()</c>, and only within the <c>Stage</c>
+    /// Priority to draw with. Changes only applied on <c>Stage.Cleanup()</c>
     /// </summary>
-    public RenderPriority RenderPriority { get; set; } = RenderPriority.Low;
+    public Priority Priority {
+        get;
+        set {
+            field = value;
+            Stage._needsSorting = true;
+        }
+    } = priority;
 
     /// <summary>
     /// An action for an <c>Actor</c> to execute every frame. 
@@ -31,13 +39,26 @@ public abstract class Actor {
     private readonly List<Routine> _routines = [];
 
     /// <summary>
+    /// Whether this is marked to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
+    /// </summary>
+    internal bool _marked = false;
+
+    /// <summary>
     /// Add a <c>Routine</c> to execute when drawn
     /// </summary>
     /// <param name="routine"><c>Routine</c> to execute when drawn. When it returns true, it's removed from the list</param>
     public void AddRoutine(Routine routine) => this._routines.Add(routine);
 
     /// <summary>
-    /// Draws this <c>Actor</c> if it is visible, and performs its <c>Routine</c>s
+    /// Mark this to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
+    /// </summary>
+    public void MarkForRemoval() {
+        this._marked = true;
+        Stage._needsRemoval = true;
+    }
+
+    /// <summary>
+    /// Draws this if it is visible, and performs its <c>Routine</c>s
     /// </summary>
     public void Act(GameTime gameTime) {
         if (!this.IsVisible) return;

@@ -7,17 +7,22 @@ namespace API.Graphics;
 
 public interface IAnimatedPrimitive {
     /// <summary>
-    /// <c>Routine</c> to animate unfolding
+    /// <c>Routine</c> to animate in
     /// </summary>
-    static readonly Routine Unfold = static (actor, gameTime) =>
-        ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Unfolding);
+    static readonly Routine In = static (actor, gameTime) =>
+        ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.In);
 
     /// <summary>
-    /// <c>Routine</c> to animate collapsing
+    /// <c>Routine</c> to animate out
     /// </summary>
-    static readonly Routine Collapse = static (actor, gameTime) =>
-        ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Collapsing);
+    static readonly Routine Out = static (actor, gameTime) => {
+        if (((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Out)) {
+            Stage.ImmediateRemove(actor);
+            return true;
+        }
 
+        return false;
+    };
 
     /// <summary>
     /// Animation progress

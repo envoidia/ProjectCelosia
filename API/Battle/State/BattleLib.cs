@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using API.Battle.BuffEffects;
 using API.Battle.SkillEffects;
 using API.Extensions;
@@ -9,6 +10,7 @@ using API.Input;
 using API.Menu;
 using API.Menu.State;
 using API.Save;
+using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -39,7 +41,10 @@ public static class BattleLib {
 
     #region Display Fields
 
-    private static readonly Label _Queue = new(Stages.Battle) {
+    // todo ensure this size is right
+    private static readonly List<Actor> _Actors = new(30);
+
+    private static readonly Label _Queue = new() {
         Alignment = Alignment.Center,
         Position = new Vector2(World.W2, 180)
     };
@@ -50,6 +55,14 @@ public static class BattleLib {
     internal static readonly Label[] _Stats = new Label[UnitCount];
     private static readonly Label[] _Buffs = new Label[UnitCount];
     internal static readonly Label[] _Moves = new Label[UnitCount];
+
+    private static readonly Label _SkillsL = new();
+
+    private static readonly Label _Turn = new() {
+        Text = $"{Colors.Turn}{Lang.Turn} 1",
+        Alignment = Alignment.Center,
+        Position = new Vector2(World.W2, 90)
+    };
 
     #endregion
 
@@ -76,13 +89,6 @@ public static class BattleLib {
 
     #region Move Execution Fields
 
-    private static readonly Label _SkillsL = new(Stages.Battle);
-
-    private static readonly Label _Turn = new(Stages.Battle, $"{Colors.Turn}{Lang.Turn} 1") {
-        Alignment = Alignment.Center,
-        Position = new Vector2(World.W2, 90)
-    };
-
     /// <summary>
     /// Index of the currently-applying SkillEffect of the current Move
     /// </summary>
@@ -108,13 +114,16 @@ public static class BattleLib {
     #region Setup Methods
 
     public static void Initialize() {
+        // Add preinitialized actors
+        _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL, _Turn);
+
         // Setup Labels
         for (int i = 0; i < TeamCount; i++) {
             // todo midgame translation
-            _BloomLabels[i] = new Label(Stages.Battle) {
+            _Actors.Add(_BloomLabels[i] = new Label() {
                 Position = new Vector2(i == 1 ? World.W - 105 : 105, 135),
                 Alignment = i == 1 ? Alignment.TopRight : Alignment.TopLeft
-            };
+            });
         }
 
         // Per-unit Labels
@@ -129,17 +138,17 @@ public static class BattleLib {
                 y = 450 + (450 * (i - PosLib.LowestOpp));
             }
 
-            _Stats[i] = new Label(Stages.Battle) { Position = new Vector2(x1, y) };
-            _Buffs[i] = new Label(Stages.Battle) { Position = new Vector2(x1, y + 150) };
-            _Moves[i] = new Label(Stages.Battle) { Position = new Vector2(x2, y + 50) };
+            _Actors.Add(_Stats[i] = new Label() { Position = new Vector2(x1, y) });
+            _Actors.Add(_Buffs[i] = new Label() { Position = new Vector2(x1, y + 150) });
+            _Actors.Add(_Moves[i] = new Label() { Position = new Vector2(x2, y + 50) });
         }
 
-        Stages.Battle.Sort();
+        // todo Stages.Battle.Sort();
 
         InspectLib.Initialize();
     }
 
-    public static void StartBattle() {
+    public static void Create() {
         // temp setup teams
         Battle = Core.battle;
 
@@ -148,27 +157,33 @@ public static class BattleLib {
         LogLib.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
 
         _UpdateStatDisplay(0);
+
+        // setup stage
+        Stage.AddRange(_Actors);
+        Stage.Cleanup();
     }
 
-    public static void EndBattle() { }
+    public static void Destroy() {
+        foreach (Actor a in _Actors) a.MarkForRemoval();
+
+        Stage.Cleanup();
+    }
 
     #endregion
 
     #region Update Methods
 
     public static void Update(GameTime gameTime) {
-        HandleDebug();
-
         if (InputLib.Check(Keybinds.Menu)) {
-            NavPath.Add(States.Log);
+            StateMachine.Add(States.Log);
             return;
         }
 
         if (InputLib.Check(Keybinds.Map)) {
-            if (InputLib.Check(Keybinds.ScrollFaster)) {
+            if (InputLib.Check(Keybinds.Hotkey)) {
                 _indexTarget = _selectingMove;
-                NavPath.Add(States.Inspect);
-            } else NavPath.Add(States.InspectTargeting);
+                StateMachine.Add(States.Inspect);
+            } else StateMachine.Add(States.InspectTargeting);
 
             return;
         }
@@ -183,11 +198,6 @@ public static class BattleLib {
             case <= PosLib.HighestOpp: _SelectOpponentMove(); return;
             default: _ExecuteMove(); return;
         }
-    }
-
-    public static void HandleDebug() {
-        if (InputLib.Check(Keybinds.DebugDumpLog)) Console.WriteLine(string.Join('\n', LogLib._LogText));
-        if (InputLib.IsKeyJustPressed(Keys.W)) NavPath.Add(States.Popup);
     }
 
     // Updates bloom labels, queue, and Unit nameplates
@@ -345,7 +355,7 @@ public static class BattleLib {
         _SkillsL.Text = "";
 
         _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex();
-        NavPath.Add(States.Targeting);
+        StateMachine.Add(States.Targeting);
     }
 
     // todo split out into multiple fns

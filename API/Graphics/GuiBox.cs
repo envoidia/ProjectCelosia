@@ -5,19 +5,17 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public class GuiBox : Actor, IAnimatedPrimitive {
-    public int L { get; set; }
-    public int R { get; set; }
-    public int T { get; set; }
-    public int B { get; set; }
+public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10, Priority priority = Priority.Normal)
+    : Actor(priority), IAnimatedPrimitive {
+    public int L { get; set; } = l;
+    public int R { get; set; } = r;
+    public int T { get; set; } = t;
+    public int B { get; set; } = b;
 
     public Color Color { get; set; } = Color.Black;
 
-    public float OutlineThickness { get; set; }
+    public float OutlineThickness { get; set; } = outlineThickness;
     public Color OutlineColor { get; set; } = Color.White;
-
-    /// <inheritdoc cref="AnimDirs" />
-    public AnimDirs Dir { get; set; } = AnimDirs.Collapsing;
 
     /// <summary>
     /// Move X by 1 for every slant Y
@@ -30,15 +28,6 @@ public class GuiBox : Actor, IAnimatedPrimitive {
     public float Speed { get; set; } = 2f;
 
     public Progress Prog { get; set; } = new();
-
-    public GuiBox(Stage? stage, int l, int r, int t, int b, float outlineThickness = 10) {
-        this.L = l;
-        this.R = r;
-        this.T = t;
-        this.B = b;
-        this.OutlineThickness = outlineThickness;
-        stage?.Add(this);
-    }
 
     public override void Draw(GameTime gameTime) {
         if (this.Prog != 0) this._DrawInternal();
@@ -67,12 +56,12 @@ public class GuiBox : Actor, IAnimatedPrimitive {
 
 public static class GuiBoxes {
     /// <summary>
-    /// <c>GuiBox</c> that covers most of the left half of the screen. Not part of any <c>Stage</c>, so draw manually
+    /// <c>GuiBox</c> that covers most of the left half of the screen
     /// </summary>
     // todo how far offscreen is needed
-    public static readonly GuiBox CoverLeft = new(null, 8, 1750, 0, World.H) {
+    public static readonly GuiBox CoverLeft = new(8, 1750, 0, World.H) {
         Speed = 4f,
         SlantL = 0,
-        RenderPriority = RenderPriority.High
+        Priority = Priority.High
     };
 }

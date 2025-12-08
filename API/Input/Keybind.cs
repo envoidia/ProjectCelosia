@@ -16,12 +16,7 @@ public enum KeybindId {
     Right,
     Up,
     Down,
-
-    // Debug
     DebugInfo,
-    DebugHelp,
-    DebugDumpMods,
-    DebugDumpLog,
 
     /// <summary>
     /// Marker. Always add non-merged keybinds above this
@@ -31,7 +26,7 @@ public enum KeybindId {
     /// <summary>
     /// Hotkey, ignores hold time restrictions
     /// </summary>
-    ScrollFaster,
+    Hotkey,
 
     // Merged (must be last)
     LeftRight,
@@ -90,19 +85,15 @@ public static class Keybinds {
     public static readonly Keybind Down = new("KeyDown", KeybindId.Down, Keys.Down, Buttons.DPadDown);
 
     /// <summary>
-    /// Hold to double input repeat speed when holding. Also used for some other hotkeys
+    /// Used for various hotkeys, including doubling held input repeat speed
     /// </summary>
     // todo should it be more than double
-    // todo rename
-    public static readonly Keybind ScrollFaster = new("KeyScroll", KeybindId.ScrollFaster, Keys.LeftShift, Buttons.Start);
+    public static readonly Keybind Hotkey = new("KeyScroll", KeybindId.Hotkey, Keys.LeftShift, Buttons.Start);
 
     // Debug
     // Ensure names are never displayed
     // todo remake icons with more buttons (like stick clicks)
     public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
-    public static readonly Keybind DebugHelp = new("", KeybindId.DebugHelp, Keys.F2, Buttons.None);
-    public static readonly Keybind DebugDumpMods = new("", KeybindId.DebugDumpMods, Keys.F3, Buttons.None);
-    public static readonly Keybind DebugDumpLog = new("", KeybindId.DebugDumpLog, Keys.F4, Buttons.None);
 
     // Merged
     public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);
