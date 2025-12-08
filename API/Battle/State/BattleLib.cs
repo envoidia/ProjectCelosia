@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using API.Battle.BuffEffects;
@@ -41,8 +42,11 @@ public static class BattleLib {
 
     #region Display Fields
 
-    // todo ensure this size is right
-    private static readonly List<Actor> _Actors = new(30);
+    private const int _ActorCount = 30;
+    private static readonly List<Actor> _Actors = new(_ActorCount);
+
+    private const int _AnimPrimActorCount = 0; // todo
+    //private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     private static readonly Label _Queue = new() {
         Alignment = Alignment.Center,
@@ -143,16 +147,16 @@ public static class BattleLib {
             _Actors.Add(_Moves[i] = new Label() { Position = new Vector2(x2, y + 50) });
         }
 
-        // todo Stages.Battle.Sort();
+        Assert.SizeIs(_Actors, _ActorCount);
 
-        InspectLib._Initialize();
+        _InspectLib._Initialize();
     }
 
     internal static void _Create() {
         // temp setup teams
         Battle = Core.battle;
 
-        InspectLib._TranslateUnitNames();
+        _InspectLib._TranslateUnitNames();
 
         LogLib.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
 
@@ -306,7 +310,7 @@ public static class BattleLib {
     }
 
     private static void _SelectOpponentMove() {
-        if (Debug.SelectOpponentMoves) {
+        if (Settings.SelectOpponentMoves) {
             _SelectMove();
             return;
         }

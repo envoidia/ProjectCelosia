@@ -10,7 +10,7 @@ using API.Util;
 
 namespace API.Battle;
 
-public sealed class Skill : ComplexDescriptionEntity, IModItem {
+public sealed class Skill : ComplexDescriptionEntity, _IModItem {
     public Range Range { get; }
     public int Cost { get; }
 

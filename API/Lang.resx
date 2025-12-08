@@ -23,12 +23,10 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <!--#region Debug-->
     <!--Debug info-->
     <data name="ModName" xml:space="preserve">
         <value>API</value>
-    </data>
-    <data name="MultipleInstance" xml:space="preserve">
-        <value>Only a single {0} instance can be created</value>
     </data>
     <data name="Blank" xml:space="preserve">
         <value/>
@@ -48,8 +46,18 @@
     <data name="ErrGetMergedGlyphKeybindId" xml:space="preserve">
         <value>KeybindId must be LeftRight, UpDown, or LeftRightUpDown</value>
     </data>
-    <data name="Err0Args" xml:space="preserve">
-        <value>Must pass at least 1 arg</value>
+    <!-- Asserts -->
+    <data name="AssMultipleInstance" xml:space="preserve">
+        <value>Only a single {0} instance can be created</value>
+    </data>
+    <data name="AssInvalidType" xml:space="preserve">
+        <value>Argument must be convertible to type {0}</value>
+    </data>
+    <data name="AssSizeMismatch" xml:space="preserve">
+        <value>Size must be {0}, was {1}</value>
+    </data>
+    <data name="AssSize0" xml:space="preserve">
+        <value>Size must not be 0</value>
     </data>
     <!--Modloader info
     0 = mod name -->
@@ -81,6 +89,7 @@ Loaded Mods: {5}</value>
 /i[KF5]: Write all actors to log
 etc todo</value>
     </data>
+    <!--#endregion-->
     <!--Basic options-->
     <data name="Yes" xml:space="preserve">
         <value>Yes</value>

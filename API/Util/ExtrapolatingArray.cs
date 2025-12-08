@@ -2,6 +2,13 @@ using System;
 
 namespace API.Util;
 
+/// <summary>
+/// <c>int[]</c> that can be indexed out of bounds, using step values to extrapolate results
+/// </summary>
+/// <param name="core">Core array</param>
+/// <param name="offset">Indices to offset core by</param>
+/// <param name="stepUp">Amount to increase value by per index past last</param>
+/// <param name="stepDown">Amount to increase value by per index before first</param>
 public class ExtrapolatingArray(int[] core, int offset, int stepUp, int stepDown) {
     public int this[int i] {
         get {
@@ -11,7 +18,7 @@ public class ExtrapolatingArray(int[] core, int offset, int stepUp, int stepDown
             int value;
 
             // In bounds
-            if ((index >= 0) && (index < core.Length)) {
+            if (index >= 0 && index < core.Length) {
                 value = core[index];
             }
             // Above bounds

@@ -6,7 +6,7 @@ using static API.Battle.Target;
 
 namespace API.Battle;
 
-public sealed class Range : NamedEntity, IModItem {
+public sealed class Range : NamedEntity, _IModItem {
     public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] _Targets { get; }

@@ -93,7 +93,7 @@ public static class MenuDebug {
                 return;
             }
 
-            Console.WriteLine(Regexes.FormattingCodeRemover().Replace(str, ""));
+            Console.WriteLine(Regexes.RemoveFormattingCodes(str));
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F5)) Console.WriteLine(Stage.ToString());

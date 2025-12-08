@@ -50,8 +50,8 @@ public static class ModLoader {
 
         // Find entry point
         Type? entryPoint = asm.GetTypes()
-            .FirstOrDefault(t => t.IsStatic && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
-            ?? throw new ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
+            .FirstOrDefault(t => _IsStatic(t) && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
+            ?? throw new _ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
 
         // Find all GameMods in the entryPoint class and add them to LoadedMods
         _LoadedMods.AddRange(entryPoint
@@ -77,15 +77,9 @@ public static class ModLoader {
     /// Whether the given <c>IGameMod</c> is loaded
     /// </returns>
     public static bool IsModLoaded(GameMod mod) => _LoadedMods.Any(m => m == mod);
-}
 
-public static class TypeExtensions {
-    extension(Type @this) {
-        /// <returns>
-        /// Whether the given <c>Type</c> is <c>static</c>.
-        /// Actually checks that it is both <c>abstract</c> and <c>sealed</c>. Produces false positives with F# and VB.NET <c>modules</c>
-        /// </returns>
-        public bool IsStatic => @this.IsAbstract && @this.IsSealed;
-    }
+    private static bool _IsStatic(Type t) => t.IsAbstract && t.IsSealed;
+
+    private sealed class _ModLoadException(string msg) : Exception(msg);
 }
 #endif

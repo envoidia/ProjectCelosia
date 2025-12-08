@@ -3,7 +3,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public sealed class BoolStat : NamedEntity, IModItem {
+public sealed class BoolStat : NamedEntity, _IModItem {
     public string LogMsgKey { get; }
     public bool IsPositive { get; }
     public bool PossessiveNameInLogMsg { get; }

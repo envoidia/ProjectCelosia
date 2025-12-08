@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
 
-public static class MainMenuLib {
+internal static class _MainMenuLib {
     private static int _index;
 
     private enum _Options {
@@ -49,11 +49,8 @@ public static class MainMenuLib {
         }
 
         if (InputLib.Check(Keybinds.Back)) {
-            if ((_Options) _index == _Options.Quit) {
-                Core.Instance.Exit();
-            } else {
-                _index = (int) _Options.Quit;
-            }
+            if ((_Options) _index == _Options.Quit) Core.Instance.Exit();
+            _index = (int) _Options.Quit;
         }
     }
 }

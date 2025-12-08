@@ -7,7 +7,7 @@ using API.Util;
 
 namespace API.Battle;
 
-public sealed class Mult : NamedEntity, IModItem {
+public sealed class Mult : NamedEntity, _IModItem {
     public bool IsPositive { get; }
     public int MinValue { get; init; } = 100;
 

@@ -10,13 +10,13 @@ namespace API.Battle.State;
 using static API.Battle.State.BattleLib;
 
 
-public static class TargetingLib {
+internal static class _TargetingLib {
     /// <summary>
     /// How many extra actions have been used for the currently acting Unit
     /// </summary>
     private static int _extraActions = 0;
 
-    public static void Update(GameTime gameTime) {
+    internal static void _Update(GameTime gameTime) {
         if (InputLib.Check(Keybinds.Menu)) {
             StateMachine.Add(States.Log);
             return;
@@ -69,7 +69,7 @@ public static class TargetingLib {
     }
 
     // todo merge
-    public static void UpdateInspectTargeting(GameTime gameTime) {
+    internal static void _UpdateInspectTargeting(GameTime gameTime) {
         if (InputLib.Check(Keybinds.Back)) {
             StateMachine.Remove();
             return;

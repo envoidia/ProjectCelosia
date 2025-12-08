@@ -1,5 +1,5 @@
 namespace API.Modding;
 
-public interface IModItem {
+internal interface _IModItem {
     GameMod? Source { get; }
 }

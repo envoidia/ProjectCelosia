@@ -28,7 +28,6 @@ public static class Stage {
     /// Draws all visible <c>Actor</c>s and performs their <c>Routine</c>s
     /// </summary>
     public static void Act(GameTime gameTime) {
-        // > 7k main, >4k battle, >2k inspect
         int i = _Actors.Count - 1;
 
         // The only reason this gross stuff has to happen is bc SpriteBatch and ShapeBatch are separate

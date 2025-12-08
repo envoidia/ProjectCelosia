@@ -5,7 +5,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public sealed class Buff : ComplexDescriptionEntity, IModItem {
+public sealed class Buff : ComplexDescriptionEntity, _IModItem {
     public BuffType BuffType { get; }
     public int MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }

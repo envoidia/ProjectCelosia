@@ -14,13 +14,17 @@ public static class LogLib {
     /// </summary>
     private static int _logScroll = 0;
 
-    // todo limit size, try to consolidate to 1 fn? ienumerabel?
+    // todo limit size, try to consolidate to 1 fn? take any ienumerabel?
+    /// <summary>
+    /// Add to the battle log
+    /// </summary>
     public static void Add(params List<string> str) {
         _LogText.AddRange(str);
         _logScroll = 0;
         _UpdateLog();
     }
 
+    /// <inheritdoc cref="Add(List&lt;string&gt;)" />
     public static void Add(string[] str) {
         _LogText.AddRange(str);
         _logScroll = 0;

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using API.Modding;
+using API.Util;
 using Jeffijoe.MessageFormat;
 
 namespace API.Extensions;
@@ -47,39 +49,38 @@ public static class StringExtensions {
         /// then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// </returns>
         /// <para>Prefer calling <c>string.Format()</c> on the properties of <c>Lang</c> when possible, to avoid writing strings in code</para>  
-        /// <para>Throws <c>ArgumentException</c> if key is invalid or in debug and 0 args are passed</para>
+        /// <para>Throws <c>ArgumentException</c> if key is invalid. Asserts > 0 args passed</para>
         /// <param name="mod">The mod to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
-        /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
+        /// <exception cref="ArgumentException">If key is invalid</exception>
         public string FormatLang(GameMod? mod = null, params object?[] args) {
-#if DEBUG
-            if (args.Length == 0) throw new ArgumentException(Lang.Err0Args);
-#endif
-
+            Assert.SizeNotZero(args);
             return string.Format(@this.GetLang(mod), args);
         }
 
         /// <returns>
-        /// A formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s. Throws on invalid key
+        /// A formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// </returns>
+        /// <summary>
         /// <para>Prefer calling <c>string.Format()</c> on the properties of <c>Lang</c> when possible, to avoid writing strings in code</para>  
-        /// <para>Throws <c>ArgumentException</c> if key is invalid or in debug and 0 args are passed</para>
-        /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
+        /// <para>Throws <c>ArgumentException</c> if key is invalid. Asserts > 0 args passed</para>
+        /// </summary>
+        /// <exception cref="ArgumentException">If key is invalid. Asserts > 0 args passed</exception>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatLang(params object?[] args) => @this.FormatLang(null, args);
 
         /// <returns>
-        /// An ICU MessageFormat-formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s. Throws on invalid key
+        /// An ICU MessageFormat-formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// </returns>
+        /// <summary>
         /// <para>Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible, to avoid writing strings in code</para>  
-        /// <para>Throws <c>ArgumentException</c> if key is invalid or in debug and 0 args are passed</para>
-        /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
+        /// <para>Throws <c>ArgumentException</c> if key is invalid. Asserts > 0 args passed</para>
+        /// </summary>
+        /// <exception cref="ArgumentException">If key is invalid</exception>
         /// <param name="mod">The <c>IGameMod</c> to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcuLang(GameMod? mod, params object?[] args) {
-#if DEBUG
-            if (args.Length == 0) throw new ArgumentException(Lang.Err0Args);
-#endif
+            Assert.SizeNotZero(args);
 
             Dictionary<string, object?> dict = new(args.Length);
 
@@ -89,24 +90,26 @@ public static class StringExtensions {
         }
 
         /// <returns>
-        /// An ICU MessageFormat-formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s. Throws on invalid key
+        /// An ICU MessageFormat-formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// </returns>
+        /// <summary>
         /// <para>Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible, to avoid writing strings in code</para>  
-        /// <para>Throws <c>ArgumentException</c> if key is invalid or in debug and 0 args are passed</para>
-        /// <exception cref="ArgumentException">If key is invalid or in debug and 0 args are passed</exception>
+        /// <para>Throws <c>ArgumentException</c> if key is invalid. Asserts > 0 args passed</para>
+        /// </summary>
+        /// <exception cref="ArgumentException">If key is invalid</exception>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcuLang(params object?[] args) => @this.FormatIcuLang(null, args);
 
         /// <returns>
         /// The provided <c>string</c> formatted with ICU MessageFormat
         /// </returns>
-        /// <para>Throws <c>ArgumentException</c> if key is invalid or in debug and 0 args are passed</para>
-        /// <exception cref="ArgumentException">If in debug and 0 args are passed</exception>
+        /// <summary>
+        /// Throws <c>ArgumentException</c> if key is invalid. Asserts > 0 args passed
+        /// </summary>
+        /// <exception cref="ArgumentException">If key is invalid</exception>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcu(params object?[] args) {
-#if DEBUG
-            if (args.Length == 0) throw new ArgumentException(Lang.Err0Args);
-#endif
+            Assert.SizeNotZero(args);
 
             Dictionary<string, object?> dict = new(args.Length);
 

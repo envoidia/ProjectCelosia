@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
 
-public static class PopupLib {
+internal static class _PopupLib {
     private static readonly GuiBox _PopupBg = new(World.W2 - 660, World.H2 + 300, World.W2 + 660, World.H2 - 300) {
         Priority = RenderPriority.Highest
     };
@@ -48,12 +48,5 @@ public static class PopupLib {
         Stage._needsSorting = false;
 
         Stage.Cleanup();
-    }
-
-    public static void Update(GameTime gameTime) {
-        if (InputLib.Check(Keybinds.Back)) {
-            StateMachine.Remove();
-            return;
-        }
     }
 }

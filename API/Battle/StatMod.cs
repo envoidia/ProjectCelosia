@@ -6,7 +6,7 @@ using API.Util;
 
 namespace API.Battle;
 
-public sealed class StatMod : NamedEntity, IModItem {
+public sealed class StatMod : NamedEntity, _IModItem {
     public bool IsPositive { get; }
 
     public GameMod? Source { get; }

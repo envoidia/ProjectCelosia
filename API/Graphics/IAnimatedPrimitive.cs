@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using API.Util;
 using Microsoft.Xna.Framework;
 using static API.Graphics.Actor;
@@ -7,22 +8,27 @@ namespace API.Graphics;
 
 public interface IAnimatedPrimitive {
     /// <summary>
-    /// <c>Routine</c> to animate in
+    /// Animate in
     /// </summary>
-    static readonly Routine In = static (actor, gameTime) =>
-        ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.In);
+    static readonly Routine In = new(
+        static actor => Assert.Is<IAnimatedPrimitive>(actor),
+
+        static (actor, gameTime) => ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.In));
 
     /// <summary>
-    /// <c>Routine</c> to animate out
+    /// Animate out
     /// </summary>
-    static readonly Routine Out = static (actor, gameTime) => {
-        if (((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Out)) {
-            Stage.ImmediateRemove(actor);
-            return true;
-        }
+    static readonly Routine Out = new(
+        static actor => Assert.Is<IAnimatedPrimitive>(actor),
 
-        return false;
-    };
+        static (actor, gameTime) => {
+            if (((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Out)) {
+                Stage.ImmediateRemove(actor);
+                return true;
+            }
+
+            return false;
+        });
 
     /// <summary>
     /// Animation progress

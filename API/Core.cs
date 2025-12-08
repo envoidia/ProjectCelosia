@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using API.Battle;
 using API.Graphics;
@@ -72,9 +73,7 @@ public class Core : Game {
     /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created
-        if (Instance is not null) {
-            throw new InvalidOperationException(string.Format(Lang.MultipleInstance, nameof(Core)));
-        }
+        Debug.Assert(Instance is null, string.Format(Lang.AssMultipleInstance, nameof(Core)));
 
         // Store reference to engine for global member access
         Instance = this;

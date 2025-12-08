@@ -4,7 +4,7 @@ using API.Modding;
 
 namespace API.Battle;
 
-public sealed class Stat : NamedEntity, IModItem {
+public sealed class Stat : NamedEntity, _IModItem {
     public StageType StageType { get; }
 
     public GameMod? Source { get; }

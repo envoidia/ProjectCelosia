@@ -5,7 +5,7 @@ using API.Modding;
 namespace API.Battle;
 
 // todo represent available and equipped skills and equipped item
-public sealed class UnitType : DescriptionEntity, IModItem {
+public sealed class UnitType : DescriptionEntity, _IModItem {
 
     public Dictionary<Stat, int> Stats { get; }
     internal readonly Dictionary<Element, int> _Affinities; // todo change naming rule

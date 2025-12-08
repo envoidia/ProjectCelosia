@@ -7,16 +7,20 @@ using static API.Battle.State.BattleLib;
 using System;
 using System.Collections.Generic;
 using API.Util;
+using System.Diagnostics;
 
 namespace API.Battle.State;
 
-public sealed class InspectLib {
+internal sealed class _InspectLib {
 
     #region Display Fields
 
     // todo ensure this size is right
-    private static readonly List<Actor> _Actors = new(55);
-    private static readonly List<Actor> _AnimPrimActors = new(8);
+    private const int _ActorCount = 53;
+    private static readonly List<Actor> _Actors = new(_ActorCount);
+
+    private const int _AnimPrimActorCount = 8;
+    private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     // Stat types
     private static readonly Label[] _StatCategoryHeaders = new Label[_StatTypeCount];
@@ -179,6 +183,9 @@ public sealed class InspectLib {
         for (int i = 0; i < _PromptCount; i++) {
             _Actors.Add(_Prompts[i] = new Label(RenderPriority.B2High) { Position = promptPos[i] });
         }
+
+        Assert.SizeIs(_Actors, _ActorCount);
+        Assert.SizeIs(_AnimPrimActors, _AnimPrimActorCount);
 
         _Translate();
     }

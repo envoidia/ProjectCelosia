@@ -7,10 +7,10 @@ namespace API.Menu.State;
 using static API.Input.InputPrompts;
 
 public static class States {
-    public static readonly State MainMenu = new("Main", () => { }, () => { }, MainMenuLib._Update,
+    public static readonly State MainMenu = new("Main", () => { }, () => { }, _MainMenuLib._Update,
     static () => State.GetInputPromptString(ScrollUpDown, Faster, Confirm));
 
-    public static readonly State Popup = new("Popup", PopupLib._Create, PopupLib._Destroy,
+    public static readonly State Popup = new("Popup", _PopupLib._Create, _PopupLib._Destroy,
     static _ => {
         if (InputLib.Check(Keybinds.Confirm, Keybinds.Back)) {
             StateMachine.Remove();
@@ -25,7 +25,7 @@ static () => State.GetInputPromptString(Close));
         State.GetInputPromptString(ScrollUpDown, Faster, Confirm,
             Back, InputPrompts.Log, InputPrompts.Inspect, InspectHere));
 
-    public static readonly State Targeting = new("Targeting", () => { }, () => { }, TargetingLib.Update,
+    public static readonly State Targeting = new("Targeting", () => { }, () => { }, _TargetingLib._Update,
     static () => State.GetInputPromptString(Move, Faster, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect));
 
     public static readonly State Log = new("Log", () => { }, () => { },
@@ -36,9 +36,9 @@ static () => State.GetInputPromptString(Close));
         static () => State.GetInputPromptString(ScrollUpDown, Faster, Top, Bottom, BackLog));
 
     public static readonly State InspectTargeting = new("InspectTargeting", () => { }, () => { },
-    TargetingLib.UpdateInspectTargeting, static () =>
+    _TargetingLib._UpdateInspectTargeting, static () =>
         State.GetInputPromptString(Move, Faster, ConfirmInspect, Back, InputPrompts.Log));
 
-    public static readonly State Inspect = new("Inspect", InspectLib._Create, InspectLib._Destroy,
-        InspectLib._Update, InspectLib._GetInputPrompt);
+    public static readonly State Inspect = new("Inspect", _InspectLib._Create, _InspectLib._Destroy,
+        _InspectLib._Update, _InspectLib._GetInputPrompt);
 }

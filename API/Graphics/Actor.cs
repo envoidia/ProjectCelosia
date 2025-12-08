@@ -27,12 +27,6 @@ public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
     } = priority;
 
     /// <summary>
-    /// An action for an <c>Actor</c> to execute every frame. 
-    /// </summary>
-    /// <returns>Whether this <c>Routine</c> has ended and should be removed</returns>
-    public delegate bool Routine(Actor actor, GameTime gameTime);
-
-    /// <summary>
     /// <c>Routine</c> to execute when drawn
     /// </summary>
     private readonly List<Routine> _routines = [];
@@ -46,7 +40,10 @@ public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
     /// Add a <c>Routine</c> to execute when drawn
     /// </summary>
     /// <param name="routine"><c>Routine</c> to execute when drawn. When it returns true, it's removed from the list</param>
-    public void AddRoutine(Routine routine) => this._routines.Add(routine);
+    public void AddRoutine(Routine routine) {
+        routine.OnStart(this);
+        this._routines.Add(routine);
+    }
 
     /// <summary>
     /// Mark this to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
@@ -65,10 +62,8 @@ public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
         this.Draw(gameTime);
 
         // Execute routines
-        if (this._routines.Count == 0) return;
-
         for (int i = 0; i < this._routines.Count; i++) {
-            if (this._routines[i](this, gameTime)) this._routines.SwapRemove(i);
+            if (this._routines[i].OnTick(this, gameTime)) this._routines.SwapRemove(i);
         }
     }
 
