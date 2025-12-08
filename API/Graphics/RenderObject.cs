@@ -1,3 +1,4 @@
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -44,6 +45,7 @@ public abstract class RenderObject(RenderPriority priority = RenderPriority.B1Me
         Alignment.TopRight => new Point(this.Size.X, 0),
         Alignment.BottomLeft => new Point(0, this.Size.Y),
         Alignment.BottomRight => new Point(this.Size.X, this.Size.Y),
-        Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f))
+        Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f)),
+        _ => throw new ClosedEnumsWhenException()
     };
 }

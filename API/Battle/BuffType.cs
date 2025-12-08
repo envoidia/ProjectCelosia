@@ -1,3 +1,5 @@
+using API.Util;
+
 namespace API.Battle;
 
 // todo name
@@ -10,7 +12,8 @@ public static class BuffTypeExtensions {
     extension(BuffType @this) {
         public string GetName() => @this switch {
             BuffType.Buff => Lang.Buff,
-            BuffType.Debuff => Lang.Debuff
+            BuffType.Debuff => Lang.Debuff,
+            _ => throw new ClosedEnumsWhenException()
         };
     }
 }

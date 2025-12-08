@@ -1,4 +1,5 @@
 using System;
+using API.Util;
 
 namespace API.Input;
 
@@ -15,7 +16,8 @@ public static class InputDeviceExtensions {
         private string GetGlyphIdentifier() => @this switch {
             InputDevice.NintendoController => "N",
             InputDevice.PlaystationController => "P",
-            InputDevice.XboxController => "X"
+            InputDevice.XboxController => "X",
+            _ => throw new ClosedEnumsWhenException()
         };
 
         public string FormatSingleGlyph(string glyphType) =>
