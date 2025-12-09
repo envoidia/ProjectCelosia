@@ -1,6 +1,4 @@
-using System;
 using API.Battle.State;
-using API.Graphics;
 using API.Input;
 using Microsoft.Xna.Framework;
 

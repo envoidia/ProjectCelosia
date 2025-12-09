@@ -1,6 +1,4 @@
 using API.Graphics;
-using API.Input;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using API.Extensions;
 using API.Graphics;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;

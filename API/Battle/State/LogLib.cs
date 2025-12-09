@@ -31,7 +31,7 @@ public static class LogLib {
         _UpdateLog();
     }
 
-    private static void _UpdateLog() => _BattleLog.Text = _FormatLog();// todo full log
+    private static void _UpdateLog() => _BattleLog.Text = _FormatLog(); // todo full log
 
     private static string _FormatLog() =>
         /* todo

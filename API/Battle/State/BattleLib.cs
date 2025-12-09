@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 using API.Battle.BuffEffects;
 using API.Battle.SkillEffects;
 using API.Extensions;
@@ -13,7 +11,6 @@ using API.Menu.State;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace API.Battle.State;
 

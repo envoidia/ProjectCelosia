@@ -1,8 +1,6 @@
 using System;
-using System.Diagnostics;
 using API.Util;
 using Microsoft.Xna.Framework;
-using static API.Graphics.Actor;
 
 namespace API.Graphics;
 
