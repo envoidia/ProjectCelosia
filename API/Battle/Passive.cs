@@ -18,7 +18,7 @@ public sealed class Passive : ComplexDescribable, _IModItem {
         Core.Passives.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Passive, mod);
+    public override string GetName(GameMod? mod = null) => this.GetName(ColorCode.Passive, mod);
 
     public override string GetFullDesc(GameMod? mod = null) => "todo";
 }

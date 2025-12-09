@@ -25,9 +25,9 @@ public sealed class Element : _IModItem, INameable {
         Core.Elements.Add(this);
     }
 
-    public string GetName(string color, GameMod? mod = null) =>
+    public string GetName(ColorCode color, GameMod? mod = null) =>
         $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
-    public string GetName(GameMod? mod = null) => this.GetName(Colors.Element, mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Element, mod);
 }
 
 public static class Elements {

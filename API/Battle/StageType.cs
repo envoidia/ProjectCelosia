@@ -24,10 +24,10 @@ public sealed class StageType : _IModItem, IDescribable {
         Core.StageTypes.Add(this);
     }
 
-    public string GetName(string color, GameMod? mod = null) =>
+    public string GetName(ColorCode color, GameMod? mod = null) =>
         $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
 
-    public string GetName(GameMod? mod = null) => this.GetName(Colors.Buff, mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Buff, mod);
 
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 

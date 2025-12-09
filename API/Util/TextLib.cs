@@ -5,18 +5,18 @@ namespace API.Util;
 
 public static class TextLib {
     public static (string, string) GetColors(bool isPositive) =>
-        isPositive ? (Colors.Pos, Colors.Neg) : (Colors.Neg, Colors.Pos);
+        isPositive ? (ColorCode.Pos, ColorCode.Neg) : (ColorCode.Neg, ColorCode.Pos);
 
     /// <returns>
     /// The color that should be used when the value is increased beyond normal, depending on if it is desirable
     /// </returns>
-    public static string GetIncColor(bool isPositive) => isPositive ? Colors.Pos : Colors.Neg;
+    public static ColorCode GetIncColor(bool isPositive) => isPositive ? ColorCode.Pos : ColorCode.Neg;
 
     /// <returns>
     /// The color that should be used when the value is decreased below normal, depending on if it is desirable
     /// </returns>
-    public static string GetDecColor(bool isPositive) => isPositive ? Colors.Pos : Colors.Neg;
+    public static ColorCode GetDecColor(bool isPositive) => isPositive ? ColorCode.Pos : ColorCode.Neg;
 
     public static string FormatStat(int stat, int statDefault) =>
-        stat.Format(stat > statDefault ? Colors.Pos : stat < statDefault ? Colors.Neg : Colors.Num, false);
+        stat.Format(stat > statDefault ? ColorCode.Pos : stat < statDefault ? ColorCode.Neg : ColorCode.Num, false);
 }

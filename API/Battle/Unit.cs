@@ -6,6 +6,7 @@ using API.Battle.BuffEffects;
 using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
+using API.Util;
 using MonoGame.Extended.Collections;
 
 namespace API.Battle;
@@ -147,7 +148,7 @@ public sealed class Unit {
         StringBuilder str = new();
         foreach (Element element in Core.Elements) {
             this._Affinities.TryGetValue(element, out int aff);
-            str.Append(element.Icon).Append(aff.Format()).Append(Colors.White).Append("  ");
+            str.Append(element.Icon).Append(aff.Format()).Append(ColorCode.White).Append("  ");
         }
 
         return str.ToString();
@@ -168,18 +169,20 @@ public sealed class Unit {
 
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
-        builder.Append(Colors.White).Append(" (");
+        builder.Append(ColorCode.White).Append(" (");
         int statCount = stageType.Stats.Length;
+
         for (int i = 0; i < statCount; i++) {
             Stat stat = stageType.Stats[i];
             int statDefault = this._Stats[stat];
             int statOld = this.GetStat(stat);
             int statNew = this.GetStatWithStage(stat, stageNew);
             int change = statNew - statOld;
-            builder.Append(string.Format(Lang.LogStageStat, Colors.Stat + stat.KeyName,
-                statOld.Format(statDefault.ToString()),
-                statNew.Format(statDefault.ToString()),
-                statDefault.Format(Colors.Num), change.Format()));
+
+            builder.Append(string.Format(Lang.LogStageStat, this.FormatName(), stat.GetName(),
+                TextLib.FormatStat(statOld, statDefault), TextLib.FormatStat(statNew, statDefault),
+                statDefault.Format(ColorCode.Num), change.Format()));
+
             builder.Append(i == (statCount - 1) ? ")" : ", ");
         }
 
@@ -241,9 +244,9 @@ public sealed class Unit {
     }
 
     public string GetBoolStatString(BoolStat stat) {
-        if (this.IsImmuneToBoolStat(stat)) return Colors.Pos + Lang.Immune;
+        if (this.IsImmuneToBoolStat(stat)) return ColorCode.Pos + Lang.Immune;
 
-        return (stat.IsPositive ? Colors.Pos : Colors.Neg) + (this.IsBoolStat(stat) ? Lang.Yes : Lang.No);
+        return (stat.IsPositive ? ColorCode.Pos : ColorCode.Neg) + (this.IsBoolStat(stat) ? Lang.Yes : Lang.No);
     }
 
     #endregion
@@ -362,7 +365,7 @@ public sealed class Unit {
                 buffInstance.Turns = turns - 1;
             } else {
                 LogLib.Add(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
-                    buffInstance.Buff.MaxStacks, Colors.Num + buffInstance.Stacks,
+                    buffInstance.Buff.MaxStacks, ColorCode.Num + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks));
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
@@ -399,9 +402,9 @@ public sealed class Unit {
                 if (this.Defend > dmg) {
                     this.Defend -= dmg;
                     return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield, nameS,
-                        (defendOld + this.Shield).Format(Colors.Shield),
-                        (this.Defend + this.Shield).Format(Colors.Shield),
-                        this.GetStat(Stats.Hp).Format(Colors.Hp), dmgFull.Format()));
+                        (defendOld + this.Shield).Format(ColorCode.Shield),
+                        (this.Defend + this.Shield).Format(ColorCode.Shield),
+                        this.GetStat(Stats.Hp).Format(ColorCode.Hp), dmgFull.Format()));
                 }
 
                 // Destroy Defend and proceed to Shield
@@ -420,13 +423,13 @@ public sealed class Unit {
                     int shieldOld = this.Shield;
                     this.Shield -= dmg;
                     return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield,
-                        nameS, (defendOld + shieldOld).Format(Colors.Shield), this.Shield.Format(Colors.Shield),
-                        this.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-dmgFull).Format()));
+                        nameS, (defendOld + shieldOld).Format(ColorCode.Shield), this.Shield.Format(ColorCode.Shield),
+                        this.GetBaseStat(Stats.Hp).Format(ColorCode.Hp), (-dmgFull).Format()));
                 }
 
                 // Destroy Shield and proceed to HP
-                msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(Colors.Shield),
-                    Colors.Shield + 0, this.GetBaseStat(Stats.Hp).Format(Colors.Hp),
+                msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(ColorCode.Shield),
+                    ColorCode.Shield + 0, this.GetBaseStat(Stats.Hp).Format(ColorCode.Hp),
                     (-(defendOld + this.Shield)).Format()));
                 dmg -= this.Shield;
                 this.Shield = 0;
@@ -440,8 +443,8 @@ public sealed class Unit {
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
-        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(Colors.Hp, false), hpNew.Format(Colors.Hp, false),
-            this.GetBaseStat(Stats.Hp).Format(Colors.Hp, false), (-dmg).Format()));
+        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(ColorCode.Hp, false), hpNew.Format(ColorCode.Hp, false),
+            this.GetBaseStat(Stats.Hp).Format(ColorCode.Hp, false), (-dmg).Format()));
 
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {
@@ -457,7 +460,7 @@ public sealed class Unit {
     public string FormatName(bool possessive = true) {
         string name = this.UnitType.GetName(
             // Color
-            this.GetSide() == Side.Ally ? Colors.Ally : Colors.Opp) +
+            this.GetSide() == Side.Ally ? ColorCode.Ally : ColorCode.Opp) +
             // Dupe disambiguation
             (this.DupeIndex == 0 ? "" : $" {this.DupeIndex}");
 
@@ -468,6 +471,6 @@ public sealed class Unit {
             else suffix = "'s";
         }
 
-        return name + suffix + Colors.White;
+        return name + suffix + ColorCode.White;
     }
 }

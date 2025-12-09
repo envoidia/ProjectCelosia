@@ -11,6 +11,6 @@ public static class Skills {
             new Damage(50, SkillTypes.Mag, Elements.Ignis),
             new GiveBuff(Buffs.Burn, 3)
         ],
-        DescArgs = [$"{Colors.Neg}+1 ", Buffs.Burn, "2"]
+        DescArgs = [$"{ColorCode.Neg}+1 ", Buffs.Burn, "2"]
     };
 }

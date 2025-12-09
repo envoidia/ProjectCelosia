@@ -19,8 +19,8 @@ public sealed class ChangeDefend(int change) : IBuffEffect {
         int shield = self.Shield;
 
         LogLib.Add(string.Format(Lang.LogChangeShield, self.FormatName(),
-            (shield + defendOld).Format(Colors.Shield), (shield + defendNew).Format(Colors.Shield),
-            hpMax.Format(Colors.Hp), ((shield + defendNew) - (shield + defendOld)).Format(Colors.Shield)));
+            (shield + defendOld).Format(ColorCode.Shield), (shield + defendNew).Format(ColorCode.Shield),
+            hpMax.Format(ColorCode.Hp), ((shield + defendNew) - (shield + defendOld)).Format(ColorCode.Shield)));
     }
 
     public void OnRemove(Unit self, int stacks) {
@@ -30,11 +30,11 @@ public sealed class ChangeDefend(int change) : IBuffEffect {
 
         if (self.Shield > 0) {
             LogLib.Add(string.Format(Lang.LogChangeShield, self.FormatName(),
-                (shield + defendOld).Format(Colors.Shield), shield.Format(Colors.Shield),
-                self.GetBaseStat(Stats.Hp).Format(Colors.Hp), (-defendOld).Format(Colors.Shield)));
+                (shield + defendOld).Format(ColorCode.Shield), shield.Format(ColorCode.Shield),
+                self.GetBaseStat(Stats.Hp).Format(ColorCode.Hp), (-defendOld).Format(ColorCode.Shield)));
         } else {
             LogLib.Add(string.Format(Lang.LogChangeShield, self.FormatName(), false),
-                defendOld.Format(Colors.Shield));
+                defendOld.Format(ColorCode.Shield));
         }
     }
 }

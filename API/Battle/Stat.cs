@@ -21,8 +21,8 @@ public sealed class Stat : _IModItem, INameable {
         Core.Stats.Add(this);
     }
 
-    public string GetName(string color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(Colors.Stat, mod);
+    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);
 }
 
 public static class Stats {

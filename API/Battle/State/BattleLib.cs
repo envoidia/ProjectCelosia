@@ -60,7 +60,7 @@ public static class BattleLib {
     private static readonly Label _SkillsL = new();
 
     private static readonly Label _Turn = new() {
-        Text = $"{Colors.Turn}{Lang.Turn} 1",
+        Text = $"{ColorCode.Turn}{Lang.Turn} 1",
         Alignment = Alignment.Center,
         Position = new Vector2(World.W2, 90)
     };
@@ -155,7 +155,7 @@ public static class BattleLib {
 
         _InspectLib._TranslateUnitNames();
 
-        LogLib.Add($"{Colors.Turn}{Lang.Turn} 1{Colors.White}");
+        LogLib.Add($"{ColorCode.Turn}{Lang.Turn} 1{ColorCode.White}");
 
         _UpdateStatDisplay(0);
 
@@ -207,7 +207,7 @@ public static class BattleLib {
         for (int i = 0; i < TeamCount; i++) {
             // todo fix it getting confused by the /
             _BloomLabels[i].Text =
-                $"{Colors.Stat}{Lang.Bloom}{Colors.White}: {Colors.Bloom}{Battle.GetTeamBySide((Side) i).Bloom}{Colors.White}//{Colors.Bloom}1,000";
+                $"{ColorCode.Stat}{Lang.Bloom}{ColorCode.White}: {ColorCode.Bloom}{Battle.GetTeamBySide((Side) i).Bloom}{ColorCode.White}//{ColorCode.Bloom}1,000";
         }
 
         Unit[] units = Battle.GetAllUnits();
@@ -216,7 +216,7 @@ public static class BattleLib {
         // Update nameplates
         for (int i = 0; i < units.Length; i++) {
             // Stat display
-            _Stats[i].Text = $"{units[i].FormatName(false)}\nHP: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(Colors.Shield, false)}{Colors.White}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\nSP: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
+            _Stats[i].Text = $"{units[i].FormatName(false)}\nHP: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ColorCode.Shield, false)}{ColorCode.White}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\nSP: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
 
             // Buff display
             int buffCount = 0;
@@ -229,7 +229,7 @@ public static class BattleLib {
 
                     buffCount++;
 
-                    sb.Append(stageType.Icon).Append(Colors.White).Append((stage >= 1) ? '+' : "").Append(stage)
+                    sb.Append(stageType.Icon).Append(ColorCode.White).Append((stage >= 1) ? '+' : "").Append(stage)
                     .Append('(').Append(units[i].GetStageTurns(stageType)).Append(") ");
                 }
             }
@@ -243,15 +243,15 @@ public static class BattleLib {
                 buffCount++;
 
                 if (buffInstance.Buff == Buffs.Defend) {
-                    sb.Append(buffInstance.Buff.Icon).Append(Colors.White).Append('x')
+                    sb.Append(buffInstance.Buff.Icon).Append(ColorCode.White).Append('x')
                             .Append(units[i].Defend.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 } else if (buffInstance.Buff == Buffs.Shield) {
-                    sb.Append(buffInstance.Buff.Icon).Append(Colors.White).Append('x')
+                    sb.Append(buffInstance.Buff.Icon).Append(ColorCode.White).Append('x')
                             .Append(units[i].Shield.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 } else {
-                    sb.Append(buffInstance.Buff.Icon).Append(Colors.White);
+                    sb.Append(buffInstance.Buff.Icon).Append(ColorCode.White);
                     if (buffInstance.Buff.MaxStacks > 1) {
                         sb.Append('x').Append(buffInstance.Stacks);
                     }
@@ -279,7 +279,7 @@ public static class BattleLib {
 
             sb.Append(units[i].FormatName(false));
 
-            if (active) sb.Append(Colors.White).Append('>');
+            if (active) sb.Append(ColorCode.White).Append('>');
 
             if (i != units.Length - 1) sb.Append(", ");
         }
@@ -301,7 +301,7 @@ public static class BattleLib {
             $"{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Skill
                 // temp
                 // todo real skill description display
-                .GetName()}({Colors.Cooldown}{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Cooldown}{Colors.White})";
+                .GetName()}({ColorCode.Cooldown}{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Cooldown}{ColorCode.White})";
 
         _SelectMove();
     }
@@ -436,15 +436,15 @@ public static class BattleLib {
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(Convert.ToInt32(skill.IsBloom), spOld.Format(Colors.Sp, false),
-                        spNew.Format(Colors.Sp, false), change.Format());
+                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(Convert.ToInt32(skill.IsBloom), spOld.Format(ColorCode.Sp, false),
+                        spNew.Format(ColorCode.Sp, false), change.Format());
                 }
 
                 if (skill.IsBloom) team.Bloom = spNew;
                 else self.Sp = spNew;
 
                 LogLib.Add(Lang.LogSkillUse.FormatIcu(self.FormatName(false),
-                    skill.GetName(Colors.Skill),
+                    skill.GetName(ColorCode.Skill),
                     target.FormatName(false),
                     Convert.ToInt32(skill.IsRangeSelf()).ToString(), changeSp));
 
@@ -514,11 +514,11 @@ public static class BattleLib {
         _selectingMove = 0;
         Battle.Turn++;
 
-        _Turn.Text = $"{Colors.Turn}{Lang.Turn} {Battle.Turn}";
+        _Turn.Text = $"{ColorCode.Turn}{Lang.Turn} {Battle.Turn}";
 
         for (int i = 0; i < UnitCount; i++) {
             _Moves[i].Text = "";
-            //moves[i].Color = Colors.White;
+            //moves[i].Color = ColorCode.White;
         }
 
         foreach (Unit unit in Battle.GetAllUnits()) {
@@ -527,7 +527,7 @@ public static class BattleLib {
             foreach (Passive passive in unit.Passives) {
                 StringBuilder turnEnd1 =
                     new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(),
-                        Colors.Passive + passive.GetName())).Append(' ');
+                        ColorCode.Passive + passive.GetName())).Append(' ');
 
                 foreach (IBuffEffect buffEffect in passive.BuffEffects) {
                     StringBuilder turnEnd2 = new();
@@ -562,7 +562,7 @@ public static class BattleLib {
         }
 
         // todo is trailing white needed
-        LogLib.Add($"{Colors.Turn}{Lang.Turn} {Battle.Turn}{Colors.White}");
+        LogLib.Add($"{ColorCode.Turn}{Lang.Turn} {Battle.Turn}{ColorCode.White}");
         LogLib.Add(Lang.LogGainSpBloom);
 
         // Increase bloom

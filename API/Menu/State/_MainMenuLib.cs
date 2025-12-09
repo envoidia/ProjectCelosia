@@ -21,7 +21,7 @@ internal static class _MainMenuLib {
 
     private const int _OptCount = (int) _Options.Quit;
 
-    private static readonly Label _L = new() { Text = BoolStats.EffectBlock.GetName(Colors.Ally) };
+    private static readonly Label _L = new() { Text = BoolStats.EffectBlock.GetName(ColorCode.Ally) };
 
     internal static void _Update(GameTime gameTime) {
         _index = MenuLib.CheckMovement1D(_index, _OptCount);

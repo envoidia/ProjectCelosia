@@ -15,7 +15,7 @@ public static class NumberExtensions {
         /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive</param>
         /// <param name="suffix">Added after the formatted <c>int</c></param>
         /// <param name="divisor"><c>float</c> to divide the <c>int</c> by before displaying it</param>
-        public string Format(string color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
+        public string Format(ColorCode color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
             color + (useSign && @this > 0 ? '+' : null) + ((int) (@this / divisor)).ToString(IntegerFormat) + suffix;
 
         /// <returns>
@@ -24,12 +24,12 @@ public static class NumberExtensions {
         /// <param name="isPositive">Whether to insert a <c>+</c> if the <c>int</c> is positive</param>
         /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive and use <c>isPositive</c> to pick the color</param>
         public string Format(bool isPositive, bool useSign) {
-            if (!useSign) return @this.Format(Colors.White, useSign: false);
+            if (!useSign) return @this.Format(ColorCode.White, useSign: false);
 
             return @this switch {
                 > 0 => @this.Format(TextLib.GetIncColor(isPositive)),
                 < 0 => @this.Format(TextLib.GetDecColor(isPositive)),
-                _ => @this.Format(Colors.Num)
+                _ => @this.Format(ColorCode.Num)
             };
         }
 
@@ -48,7 +48,7 @@ public static class NumberExtensions {
         /// <param name="useSign">Whether to insert a <c>+</c> if the <c>float</c> is positive</param>
         /// <param name="suffix">Added after the formatted <c>float</c></param>
         /// <param name="divisor"><c>float</c> to divide the <c>float</c> by before displaying it</param>
-        public string Format(string color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
+        public string Format(ColorCode color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
             color + (useSign && @this > 0 ? '+' : null) + (@this / divisor).ToString(NumberFormat) + suffix;
     }
 }

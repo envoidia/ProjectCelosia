@@ -24,11 +24,11 @@ public sealed class StatMod : _IModItem, INameable {
     public string Format(int val) => val switch {
         > 1000 => val.Format(TextLib.GetIncColor(this.IsPositive)),
         < 1000 => val.Format(TextLib.GetDecColor(this.IsPositive)),
-        _ => val.Format(Colors.Num)
+        _ => val.Format(ColorCode.Num)
     };
 
-    public string GetName(string color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(Colors.Stat, mod);
+    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);
 }
 
 public static class StatMods {

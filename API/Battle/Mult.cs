@@ -26,17 +26,17 @@ public sealed class Mult : _IModItem, INameable {
     public string Format(int val) => Math.Max(val, this.MinValue).Format(val switch {
         > 1000 => TextLib.GetIncColor(this.IsPositive),
         < 1000 => TextLib.GetDecColor(this.IsPositive),
-        _ => Colors.Num
+        _ => ColorCode.Num
     }, true, '%', 10f);
 
     public string FormatChange(float val) => Math.Max(val, this.MinValue).Format(val switch {
         > 0 => TextLib.GetIncColor(this.IsPositive),
         < 0 => TextLib.GetDecColor(this.IsPositive),
-        _ => Colors.Num
+        _ => ColorCode.Num
     }, true, '%');
 
-    public string GetName(string color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(Colors.Stat, mod);
+    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);
 
 }
 

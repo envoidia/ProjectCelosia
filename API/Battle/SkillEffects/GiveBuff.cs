@@ -47,7 +47,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 buffInstance.Stacks = stacksNew;
 
                 str.Append(string.Format(Lang.LogGiveBuffStacks, unit.FormatName(), buffName,
-                    Colors.Num + stacksOld, Colors.Num + stacksNew));
+                    ColorCode.Num + stacksOld, ColorCode.Num + stacksNew));
             }
 
             int turnsOld = buffInstance.Turns;
@@ -55,10 +55,10 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 buffInstance.Turns = turnsMod;
 
                 if (stacksNew != stacksOld) {
-                    str.Append(string.Format(Lang.LogTurnsNameless, Colors.Num + turnsOld, Colors.Num + turnsMod));
+                    str.Append(string.Format(Lang.LogTurnsNameless, ColorCode.Num + turnsOld, ColorCode.Num + turnsMod));
                 } else {
                     str = new StringBuilder(string.Format(Lang.LogGiveBuffTurns, unit.FormatName(),
-                        buffName, Colors.Num + turnsOld, Colors.Num + turnsMod));
+                        buffName, ColorCode.Num + turnsOld, ColorCode.Num + turnsMod));
                 }
             }
 
@@ -74,8 +74,8 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
         } else {
             // Add buff
             LogLib.Add(Lang.LogGiveBuffGain.FormatIcu(unit.FormatName(false),
-                buffName, buff.MaxStacks, Colors.Num + stacksMod, stacksMod,
-                Colors.Num + turnsMod, turnsMod));
+                buffName, buff.MaxStacks, ColorCode.Num + stacksMod, stacksMod,
+                ColorCode.Num + turnsMod, turnsMod));
 
             unit.BuffInstances.Add(new BuffInstance(buff, turnsMod, stacksMod));
             buffInstance = unit.BuffInstances[^1];

@@ -23,11 +23,11 @@ public sealed class Buff : ComplexDescribable, _IModItem {
         Core.Buffs.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Buff, mod);
+    public override string GetName(GameMod? mod = null) => this.GetName(ColorCode.Buff, mod);
 
     public override string GetFullDesc(GameMod? mod = null) =>
         string.Format(Lang.BuffDesc, this.BuffType.GetName(),
-            this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
+            this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, ColorCode.Num + this.MaxStacks),
             this._GetFormattedDescInclusions(mod));
 }
 
