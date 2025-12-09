@@ -1,25 +1,33 @@
-using API.Entity;
+using API.Extensions;
+using API.Graphics;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class BoolStat : NamedEntity, _IModItem {
+public sealed class BoolStat : _IModItem, INameable {
     public string LogMsgKey { get; }
     public bool IsPositive { get; }
     public bool PossessiveNameInLogMsg { get; }
     public bool IsVisible { get; }
 
     public GameMod? Source { get; }
+    public string KeyName { get; }
 
     public BoolStat(GameMod? source, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
-        bool isVisible) : base(keyName) {
+        bool isVisible) {
         this.Source = source;
+        this.KeyName = keyName;
+
         this.LogMsgKey = logMsgKey;
         this.IsPositive = isPositive;
         this.PossessiveNameInLogMsg = possessiveNameInLogMsg;
         this.IsVisible = isVisible;
+
         Core.BoolStats.Add(this);
     }
+
+    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
 
     // todo format?
 }

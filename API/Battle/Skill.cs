@@ -94,15 +94,15 @@ public sealed class Skill : ComplexDescriptionEntity, _IModItem {
 
             if (effectType is null) continue;
 
-            skillTypes.Add(effectType.GetName(mod) + Colors.White);
+            skillTypes.Add(effectType.GetName(mod: mod) + Colors.White);
         }
 
         string skillTypesStr = skillTypes.Count != 0
             ? string.Join(", ", skillTypes)
-            : SkillTypes.Stat.GetName(mod) + Colors.White;
+            : SkillTypes.Stat.GetName(mod: mod) + Colors.White;
 
-        return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(mod),
-            this.Range.GetName(mod), pow == 0 ? "" : $", {Colors.Num}{pow} {Colors.White}{Lang.Pow}",
+        return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(mod: mod),
+            this.Range.GetName(mod: mod), pow == 0 ? "" : $", {Colors.Num}{pow} {Colors.White}{Lang.Pow}",
             this.Prio == 0
                 ? ""
                 : $", {((int) this.Prio).Format()} {Colors.White}{Lang.Prio}",

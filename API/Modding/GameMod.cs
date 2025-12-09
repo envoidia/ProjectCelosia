@@ -10,7 +10,7 @@ namespace API.Modding;
 /// <param name="id">Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters</param>
 /// <param name="version">Mod version</param>
 /// <param name="resourceManager">Mod's <c>Lang.ResourceManager</c></param>
-public class GameMod(string id, Version version, ResourceManager resourceManager) {
+public sealed class GameMod(string id, Version version, ResourceManager resourceManager) {
     /// <summary>
     /// Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters
     /// </summary>

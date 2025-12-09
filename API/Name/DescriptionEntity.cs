@@ -1,5 +1,6 @@
 using API.Extensions;
 using API.Modding;
+using API.Name;
 
 namespace API.Entity;
 

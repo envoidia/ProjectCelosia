@@ -41,8 +41,8 @@ public class Core : Game {
 
     #endregion
 
-    #region IModItem Lists
-
+    #region _IModItem Lists
+    // todo add custom IModItem categories?
     public static readonly List<Accessory> Accessories = [];
     public static readonly List<BoolStat> BoolStats = [];
     public static readonly List<Buff> Buffs = [];

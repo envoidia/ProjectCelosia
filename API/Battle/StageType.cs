@@ -1,24 +1,35 @@
 using API.Entity;
+using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class StageType : IconEntity, _IModItem {
+public sealed class StageType : _IModItem, IDescribable {
     public Stat[] Stats { get; }
 
     public GameMod? Source { get; }
+    public string KeyName { get; }
+    public string Icon { get; }
+    public string KeyDesc { get; }
 
-    public StageType(GameMod? source, string keyName, string descKey, string icon, params Stat[] stats)
-        : base(keyName, descKey, icon) {
+    public StageType(GameMod? source, string keyName, string keyDesc, string icon, params Stat[] stats) {
         this.Source = source;
+        this.KeyName = keyName;
+        this.Icon = icon;
+        this.KeyDesc = keyDesc;
+
         this.Stats = stats;
         Core.StageTypes.Add(this);
     }
 
+    public string GetName(string color = Colors.Buff, GameMod? mod = null) =>
+        $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
+
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Buff);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
 }
 
 public static class StageTypes {

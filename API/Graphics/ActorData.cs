@@ -8,7 +8,7 @@ namespace API.Graphics;
 /// <summary>
 /// Data holder for <c>IActor</c>
 /// </summary>
-public class ActorData(IActor actor, RenderPriority priority = RenderPriority.B1Med) {
+public sealed class ActorData(IActor actor, RenderPriority priority = RenderPriority.B1Med) {
     /// <summary>
     /// Whether to draw this
     /// </summary>
@@ -35,7 +35,6 @@ public class ActorData(IActor actor, RenderPriority priority = RenderPriority.B1
     /// Whether this is marked to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
     /// </summary>
     internal bool _marked = false;
-
 
     /// <summary>
     /// Add a <c>Routine</c> to execute when drawn

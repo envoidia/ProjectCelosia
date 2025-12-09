@@ -1,4 +1,7 @@
+
+using API.Battle;
 using API.Battle.State;
+using API.Graphics;
 using API.Input;
 using Microsoft.Xna.Framework;
 
@@ -18,6 +21,8 @@ internal static class _MainMenuLib {
 
     private const int _OptCount = (int) _Options.Quit;
 
+    private static readonly Label _L = new() { Text = BoolStats.EffectBlock.GetName(Colors.Ally) };
+
     internal static void _Update(GameTime gameTime) {
         _index = MenuLib.CheckMovement1D(_index, _OptCount);
         // todo update cursor
@@ -25,6 +30,7 @@ internal static class _MainMenuLib {
         if (InputLib.Check(Keybinds.Confirm)) {
             switch ((_Options) _index) {
                 case _Options.Start:
+                    Stage.Add(_L);
                     BattleLib._Initialize();
                     StateMachine.Add(States.Battle);
                     return;

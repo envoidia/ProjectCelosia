@@ -9,7 +9,7 @@ namespace API.Util;
 /// <param name="offset">Indices to offset core by</param>
 /// <param name="stepUp">Amount to increase value by per index past last</param>
 /// <param name="stepDown">Amount to increase value by per index before first</param>
-public class ExtrapolatingArray(int[] core, int offset, int stepUp, int stepDown) {
+public sealed class ExtrapolatingArray(int[] core, int offset, int stepUp, int stepDown) {
     public int this[int i] {
         get {
             // Real index

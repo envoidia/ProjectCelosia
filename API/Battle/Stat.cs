@@ -1,21 +1,26 @@
-using API.Entity;
+using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class Stat : NamedEntity, _IModItem {
+public sealed class Stat : _IModItem, INameable {
     public StageType StageType { get; }
 
     public GameMod? Source { get; }
+    public string KeyName { get; }
 
     public Stat(GameMod? source, string keyName, StageType stageType) : base(keyName) {
         this.Source = source;
+        this.KeyName = keyName;
+
         this.StageType = stageType;
+
         Core.Stats.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Stat);
+    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
 }
 
 public static class Stats {

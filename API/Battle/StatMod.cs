@@ -1,19 +1,23 @@
-using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 using API.Util;
 
 namespace API.Battle;
 
-public sealed class StatMod : NamedEntity, _IModItem {
+public sealed class StatMod : _IModItem, INameable {
     public bool IsPositive { get; }
 
     public GameMod? Source { get; }
+    public string KeyName { get; }
 
-    public StatMod(GameMod? source, string keyName, bool isPositive) : base(keyName) {
+    public StatMod(GameMod? source, string keyName, bool isPositive) {
         this.Source = source;
+        this.KeyName = keyName;
+
         this.IsPositive = isPositive;
+
         Core.StatMods.Add(this);
     }
 
@@ -22,6 +26,8 @@ public sealed class StatMod : NamedEntity, _IModItem {
         < 1000 => val.Format(TextLib.GetDecColor(this.IsPositive)),
         _ => val.Format(Colors.Num)
     };
+
+    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
 }
 
 public static class StatMods {

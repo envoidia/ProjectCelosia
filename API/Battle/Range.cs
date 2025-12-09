@@ -1,12 +1,14 @@
 using System.Collections.Generic;
-using API.Entity;
+using API.Extensions;
+using API.Graphics;
 using API.Modding;
+using API.Name;
 using static API.Battle.PosLib;
 using static API.Battle.Target;
 
 namespace API.Battle;
 
-public sealed class Range : NamedEntity, _IModItem {
+public sealed class Range : _IModItem, INameable {
     public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] _Targets { get; }
@@ -15,14 +17,17 @@ public sealed class Range : NamedEntity, _IModItem {
     public int TargetCount { get; init; } = 1;
 
     public GameMod? Source { get; }
+    public string KeyName { get; }
 
 
-    public Range(GameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) :
-        base(keyName) {
+    public Range(GameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) {
         this.Source = source;
+        this.KeyName = keyName;
+
         this.RangeVertical = rangeVertical;
         this.Side = side;
         this._Targets = targets;
+
         Core.Ranges.Add(this);
     }
 
@@ -47,6 +52,9 @@ public sealed class Range : NamedEntity, _IModItem {
 
         return [.. pos];
     }
+
+    public string GetName(string color = Colors.White, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+
 }
 
 public static class Ranges {

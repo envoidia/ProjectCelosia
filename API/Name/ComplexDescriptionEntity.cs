@@ -3,6 +3,7 @@ using System.Text;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 using OneOf;
 using static API.Entity.DescriptionArgType;
 
@@ -23,6 +24,7 @@ public abstract class ComplexDescriptionEntity(string name, string keyDescriptio
         return args;
     }
 
+    // ???
     protected virtual HashSet<DescriptionEntity> _GetDescriptionInclusions() => this.DescriptionInclusions;
 
     protected string _GetFormattedDescriptionInclusions(GameMod? mod = null) {
@@ -50,7 +52,7 @@ public enum DescriptionArgType {
 }
 
 // todo if base C# gets unions, use that
-public class DescriptionArg(OneOf<string, NamedEntity> value, DescriptionArgType descriptionArgType = PlainText) {
+public sealed class DescriptionArg(OneOf<string, NamedEntity> value, DescriptionArgType descriptionArgType = PlainText) {
     public string GetString(GameMod? mod) => value.Match(
         str => descriptionArgType == PlainText ? str : str.GetLang(),
         ne => ne.GetName(mod));

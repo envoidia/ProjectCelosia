@@ -1,18 +1,22 @@
-using API.Entity;
+using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class SkillType : NamedEntity, _IModItem {
+public sealed class SkillType : _IModItem, INameable {
     public GameMod? Source { get; }
+    public string KeyName { get; }
 
-    public SkillType(GameMod? source, string keyName) : base(keyName) {
+    public SkillType(GameMod? source, string keyName) {
         this.Source = source;
+        this.KeyName = keyName;
+
         Core.SkillTypes.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Stat);
+    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
 }
 
 public static class SkillTypes {

@@ -1,21 +1,25 @@
 using System;
-using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 using API.Util;
 
 namespace API.Battle;
 
-public sealed class Mult : NamedEntity, _IModItem {
+public sealed class Mult : _IModItem, INameable {
     public bool IsPositive { get; }
     public int MinValue { get; init; } = 100;
 
     public GameMod? Source { get; }
+    public string KeyName { get; }
 
-    public Mult(GameMod? source, string keyName, bool isPositive) : base(keyName) {
+    public Mult(GameMod? source, string keyName, bool isPositive) {
         this.Source = source;
+        this.KeyName = keyName;
+
         this.IsPositive = isPositive;
+
         Core.Mults.Add(this);
     }
 
@@ -30,6 +34,9 @@ public sealed class Mult : NamedEntity, _IModItem {
         < 0 => TextLib.GetDecColor(this.IsPositive),
         _ => Colors.Num
     }, true, '%');
+
+    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+
 }
 
 public static class Mults {

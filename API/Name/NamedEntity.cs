@@ -2,7 +2,7 @@ using API.Extensions;
 using API.Graphics;
 using API.Modding;
 
-namespace API.Entity;
+namespace API.Name;
 
 public abstract class NamedEntity(string keyName) {
     public string KeyName => keyName;
