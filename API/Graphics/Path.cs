@@ -15,6 +15,12 @@ public sealed class Path : IActor, IAnimatedPrimitive {
 
     public ActorData Data { get; }
 
+    public RenderPriority Priority {
+        get => this.Data.Priority;
+        set => this.Data.Priority = value;
+    }
+
+
     public Progress Prog { get; set; } = new();
     public float Speed { get; set; } = 2f;
 

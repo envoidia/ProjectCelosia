@@ -12,20 +12,20 @@ public interface IActor {
     /// </summary>
     ActorData Data { get; }
 
+    /// <inheritdoc cref="ActorData.Priority" />
+    /// Implement as get => this.Data.Priority; set => this.Data.Priority = value;
+    RenderPriority Priority { get; set; }
+
     /// <summary>
     /// Draws this
     /// </summary>
     void Draw(GameTime gameTime);
 
-    /// <summary>
     /// <inheritdoc cref="ActorData.AddRoutine" />
-    /// <para>Implement as <c>this.Data.AddRoutine(routine)</c></para>
-    /// </summary>
+    /// Implement as this.Data.AddRoutine(routine)
     void AddRoutine(Routine routine);
 
-    /// <summary>
     /// <inheritdoc cref="ActorData.MarkForRemoval" />
-    /// <para>Implement as <c>this.Data.MarkForRemoval()</c></para>
-    /// </summary>
+    /// Implement as this.Data.MarkForRemoval()
     void MarkForRemoval();
 }

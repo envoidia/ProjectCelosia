@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 /// <summary>
-/// Renderable text object
+/// Renderable text <c>IActor</c>
 /// </summary>
 public sealed class Label : IActor {
     private Vector2 _position = Vector2.Zero;
@@ -54,7 +54,6 @@ public sealed class Label : IActor {
 
     public ActorData Data { get; }
 
-    /// <inheritdoc cref="ActorData.Priority" />
     public RenderPriority Priority {
         get => this.Data.Priority;
         set => this.Data.Priority = value;
