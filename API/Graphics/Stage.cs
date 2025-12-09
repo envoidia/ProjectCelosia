@@ -88,8 +88,6 @@ public static class Stage {
         _Actors.Sort((a, b) =>
            ((int) b.Data.Priority).CompareTo((int) a.Data.Priority));
 
-        Console.WriteLine("actors sorted!");
-
         _needsSorting = false;
     }
 
