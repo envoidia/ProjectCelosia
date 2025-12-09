@@ -14,8 +14,6 @@ public static class Assert {
     /// Asserts to assert that asserts assert
     /// </summary>
     static Assert() {
-        Console.WriteLine("Running in debug mode");
-
         // Passes
         Zero(0);
         NotZero(10);

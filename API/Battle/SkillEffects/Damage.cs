@@ -29,8 +29,8 @@ public sealed class Damage : SkillEffect {
             def = target.GetStat(Stats.Res);
         }
 
-        float affMultDmgDealt = AffLib.DmgDealt[self.GetAffinity(this.Element)] / 1000f;
-        float affMultDmgTaken = AffLib.DmgTaken[target.GetAffinity(this.Element)] / 1000f;
+        float affMultDmgDealt = self.GetElementDmgDealt(this.Element) / 1000f;
+        float affMultDmgTaken = target.GetElementDmgTaken(this.Element) / 1000f;
 
         float multWeakDmgDealt = 1;
         float multWeakDmgTaken = 1;

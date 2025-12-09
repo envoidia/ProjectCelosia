@@ -144,6 +144,42 @@ public sealed class Unit {
     public bool IsImmuneTo(Element element) => this._Affinities.GetValueOrDefault(element, 0) >= 5;
     public bool IsNeutralTo(Element element) => this._Affinities.GetValueOrDefault(element, 0) == 0;
 
+    private static readonly int[] _CoreDmgDealt = [300, 500, 650, 800, 900, 1000, 1100, 1200, 1350, 1500, 1700];
+    public int GetElementDmgDealt(Element element) =>
+        _Extrapolate(this.GetAffinity(element), _CoreDmgDealt, 200, -200);
+
+    private static readonly int[] _CoreDmgTaken = [2500, 2000, 1700, 1400, 1200, 1000, 900, 800, 650, 500, 0];
+    public int GetElementDmgTaken(Element element) =>
+        _Extrapolate(this.GetAffinity(element), _CoreDmgTaken, 0, 500);
+
+    private static readonly int[] _CoreSpCost = [1700, 1500, 1300, 1200, 1100, 1000, 950, 900, 850, 800, 750];
+    public int GetElementSpCost(Element element) =>
+            _Extrapolate(this.GetAffinity(element), _CoreSpCost, -50, 200);
+
+    private static int _Extrapolate(int i, int[] core, int stepUp, int stepDown) {
+        // Real index
+        int index = i + 5;
+
+        int value;
+
+        // In bounds
+        if (index >= 0 && index < core.Length) {
+            value = core[index];
+        }
+        // Above bounds
+        else if (i >= core.Length) {
+            value = core[^1] + ((stepUp * index) - (core.Length - 1));
+        }
+        // Below bounds
+        else {
+            value = core[0] + (stepDown * Math.Abs(index));
+        }
+
+        // Max to 0
+        return Math.Max(value, 0);
+    }
+
+
     public string GetAffinitiesString() {
         StringBuilder str = new();
         foreach (Element element in Core.Elements) {

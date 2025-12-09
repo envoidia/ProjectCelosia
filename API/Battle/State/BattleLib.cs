@@ -417,7 +417,7 @@ public static class BattleLib {
             int cost = self.IsBoolStat(BoolStats.InfiniteSp) && !skill.IsBloom ? 0 : skill.Cost;
 
             // Make sure cost doesn't go below 1 unless the skill has a base 0 SP cost
-            int costMod = cost > 0 ? (int) Math.Max(cost * (AffLib.SpCost[self.GetAffinity(element)] / 1000d), 1) : 0;
+            int costMod = cost > 0 ? (int) Math.Max(cost * (self.GetElementSpCost(element) / 1000d), 1) : 0;
 
             int change = (int) (skill.IsBloom ? costMod : costMod * self.GetMult(Mults.SpUse));
             spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
