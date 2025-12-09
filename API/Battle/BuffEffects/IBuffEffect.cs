@@ -14,17 +14,17 @@ public interface IBuffEffect {
 
     void OnDealDamage(Unit self, Unit target, int stacks, int damage, Element element) { }
 
-    // target = attacker if there is one, otherwise target = self
+    /// <param name="target">Attacker if there is one, otherwise self</param>
     void OnTakeDamage(Unit self, Unit target, int stacks, int damage, Element? element) { }
 
     void OnDealHeal(Unit self, Unit target, int stacks, int heal, int overheal) { }
 
-    // target = healer if there is one, otherwise target = self
+    /// <param name="target">Healer if there is one, otherwise self</param>
     void OnTakeHeal(Unit self, Unit target, int stacks, int heal, int overheal) { }
 
     void OnDealShield(Unit self, Unit target, int stacks, int turns, int heal) { }
 
-    // target = shielder if there is one, otherwise target = self
+    /// <param name="target">Shielder if there is one, otherwise self</param>
     void OnTakeShield(Unit self, Unit target, int stacks, int turns, int heal) { }
 
     void OnGiveBuff(Unit self, Unit target, int stacks, Buff buff, int turns, int stacksChange) { }

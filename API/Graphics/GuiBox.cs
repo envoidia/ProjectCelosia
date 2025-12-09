@@ -3,8 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-// todo cleanup
-public sealed class GuiBox : IActor, IAnimatedPrimitive {
+public class GuiBox : IActor, IAnimatedPrimitive {
     public int L { get; set; }
     public int R { get; set; }
     public int T { get; set; }
@@ -44,15 +43,12 @@ public sealed class GuiBox : IActor, IAnimatedPrimitive {
         this.Data = new ActorData(this, priority);
     }
 
-    public void Draw(GameTime gameTime) {
+    public virtual void Draw(GameTime gameTime) {
         if (this.Prog == 0) return;
 
         RenderLib.DrawParallelogram(this.L, this.R, this.T, this.B, this.Color, this.OutlineColor,
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
-
-    public void AddRoutine(Routine routine) => this.Data.AddRoutine(routine);
-    public void MarkForRemoval() => this.Data.MarkForRemoval();
 }
 
 public static class GuiBoxes {

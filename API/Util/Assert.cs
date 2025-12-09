@@ -11,43 +11,6 @@ namespace API.Util;
 /// </summary>
 public static class Assert {
     /// <summary>
-    /// Asserts to assert that asserts assert
-    /// </summary>
-    static Assert() {
-        // Passes
-        Zero(0);
-        NotZero(10);
-        Is<IEnumerable>(new List<int>());
-        SizeIs(new List<int> { 1, 2, 3 }, 3);
-        SizeNotZero([1, 2, 3]);
-
-        Trace.Listeners.Clear();
-
-        // So we can test assert fails by catching them
-        Trace.Listeners.Add(new _AssertListener());
-
-        // Fails
-        tryHelper(() => Zero(0.001f));
-        tryHelper(() => NotZero(0));
-        tryHelper(() => Is<int>(1f));
-        tryHelper(() => Is<int>(new int[] { 1, 2, 3 }));
-        tryHelper(() => SizeIs(new List<int> { 1, 2, 3 }, 4));
-        tryHelper(() => SizeNotZero([]));
-
-        static void tryHelper(Action a) {
-            bool threw = false;
-
-            try {
-                a();
-            } catch (Exception) {
-                threw = true;
-            }
-
-            Debug.Assert(threw);
-        }
-    }
-
-    /// <summary>
     /// Asserts that a value is 0
     /// </summary>
     [Conditional("DEBUG")]
@@ -69,25 +32,70 @@ public static class Assert {
         Debug.Assert(v is T, $"{v} must be type {typeof(T)}");
 
     /// <summary>
-    /// Asserts that the given collection is a specific size
+    /// Asserts that the given collection is a specific length
     /// </summary>
     [Conditional("DEBUG")]
-    public static void SizeIs(IList c, int s) =>
+    public static void LenIs(IList c, int s) =>
         Debug.Assert(c.Count == s, $"Size of {c} must be {s}, was {c.Count}");
 
     /// <summary>
-    /// Asserts that the given collection is a non-zero size
+    /// Asserts that the given collection is a non-zero length
     /// </summary>
     [Conditional("DEBUG")]
-    public static void SizeNotZero(object?[] c) =>
+    public static void LenNotZero(object?[] c) =>
         Debug.Assert(c.Length != 0, $"Size of {c} must not be 0");
-}
 
-file class _AssertListener : TraceListener {
-    public override void Write(string? message) { }
-    public override void WriteLine(string? message) { }
+    /// <summary>
+    /// Asserts to assert that asserts assert.
+    /// Also known as <c>Assert.Debug()</c>
+    /// </summary>
+    static Assert() {
+        // Passes
+        Zero(0);
+        NotZero(10);
+        Is<IEnumerable>(new List<int>());
+        LenIs(new List<int> { 1, 2, 3 }, 3);
+        LenNotZero([1, 2, 3]);
 
-    public override void Fail(string? message, string? detailMessage) {
-        throw new Exception($"Assert failed: {message} {detailMessage}");
+        Trace.Listeners.Clear();
+
+        // So we can test assert fails by catching them
+        // Since I don't bother restoring the default behavior, this means asserts can be caught forever now
+        // So don't do that
+        Trace.Listeners.Add(new _AssertListener());
+
+        // Fails
+        tryHelper(() => Zero(0.001f));
+        tryHelper(() => NotZero(0));
+        tryHelper(() => Is<int>(1f));
+        tryHelper(() => Is<int>(new int[] { 1, 2, 3 }));
+        tryHelper(() => LenIs(new List<int> { 1, 2, 3 }, 4));
+        tryHelper(() => LenNotZero([]));
+
+        static void tryHelper(Action a) {
+            bool threw = false;
+
+            try {
+                a();
+            } catch (_AssertFailedException) {
+                Console.WriteLine("Ignore this exception");
+                threw = true;
+            }
+
+            Debug.Assert(threw);
+        }
     }
+
+    private class _AssertListener : TraceListener {
+        public override void Write(string? message) { }
+        public override void WriteLine(string? message) { }
+
+        public override void Fail(string? message, string? detailMessage) {
+            throw new _AssertFailedException(
+                $"Assert failed: {message} {detailMessage}");
+        }
+    }
+
+    private class _AssertFailedException(string msg) : Exception(msg);
 }
+

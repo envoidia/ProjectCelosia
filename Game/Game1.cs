@@ -33,7 +33,7 @@ public sealed class Game1 : Core {
 #if NATIVE_AOT
         // Prevent crash caused by reflection in the atlas reader
         // Make sure to change this after updating MGE
-        // todo whats the difference between () => ... and _ => ...
+        // todo can i write it without ()
         ContentTypeReaderManager.AddTypeCreator(
             "MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader, MonoGame.Extended, Version=5.2.0.0, Culture=neutral, PublicKeyToken=null",
             () => new Texture2DAtlasReader()

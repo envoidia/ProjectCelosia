@@ -53,7 +53,7 @@ public static class StringExtensions {
         /// <param name="args">The formatting arguments to apply</param>
         /// <exception cref="ArgumentException">If key is invalid</exception>
         public string FormatLang(GameMod? mod = null, params object[] args) {
-            Assert.SizeNotZero(args);
+            Assert.LenNotZero(args);
             return string.Format(@this.GetLang(mod), args);
         }
 
@@ -79,7 +79,7 @@ public static class StringExtensions {
         /// <param name="mod">The <c>IGameMod</c> to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcuLang(GameMod? mod, params object[] args) {
-            Assert.SizeNotZero(args);
+            Assert.LenNotZero(args);
 
             Dictionary<string, object?> dict = new(args.Length);
 
@@ -108,7 +108,7 @@ public static class StringExtensions {
         /// <exception cref="ArgumentException">If key is invalid</exception>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcu(params object[] args) {
-            Assert.SizeNotZero(args);
+            Assert.LenNotZero(args);
 
             Dictionary<string, object?> dict = new(args.Length);
 

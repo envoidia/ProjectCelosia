@@ -54,11 +54,6 @@ public sealed class Label : IActor {
 
     public ActorData Data { get; }
 
-    public RenderPriority Priority {
-        get => this.Data.Priority;
-        set => this.Data.Priority = value;
-    }
-
     internal Point _Origin { get; set; } = Point.Zero;
 
     private RichTextLayout _RichTextLayout { get; set; } = new() { Font = Core.Koruri50 };
@@ -82,9 +77,6 @@ public sealed class Label : IActor {
 
         this._RichTextLayout.Draw(Core.SpriteBatch, this.Position, Color.White, 0f, this._Origin.ToVector2());
     }
-
-    public void AddRoutine(Routine routine) => this.Data.AddRoutine(routine);
-    public void MarkForRemoval() => this.Data.MarkForRemoval();
 
     internal void _CalcOrigin() => this._Origin = this.Alignment switch {
         Alignment.TopLeft => Point.Zero,

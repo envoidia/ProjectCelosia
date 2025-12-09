@@ -144,7 +144,7 @@ public static class BattleLib {
             _Actors.Add(_Moves[i] = new Label() { Position = new Vector2(x2, y + 50) });
         }
 
-        Assert.SizeIs(_Actors, _ActorCount);
+        Assert.LenIs(_Actors, _ActorCount);
     }
 
     internal static void _Create() {

@@ -183,8 +183,8 @@ internal sealed class _InspectLib {
             _Actors.Add(_Prompts[i] = new Label(RenderPriority.B2High) { Position = promptPos[i] });
         }
 
-        Assert.SizeIs(_Actors, _ActorCount);
-        Assert.SizeIs(_AnimPrimActors, _AnimPrimActorCount);
+        Assert.LenIs(_Actors, _ActorCount);
+        Assert.LenIs(_AnimPrimActors, _AnimPrimActorCount);
 
         _Translate();
     }

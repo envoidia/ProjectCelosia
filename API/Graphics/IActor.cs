@@ -11,20 +11,25 @@ public interface IActor {
     /// </summary>
     ActorData Data { get; }
 
-    /// <inheritdoc cref="ActorData.Priority" />
-    /// Implement as get => this.Data.Priority; set => this.Data.Priority = value;
-    RenderPriority Priority { get; set; }
-
     /// <summary>
     /// Draws this
     /// </summary>
     void Draw(GameTime gameTime);
+}
 
-    /// <inheritdoc cref="ActorData.AddRoutine" />
-    /// Implement as this.Data.AddRoutine(routine)
-    void AddRoutine(Routine routine);
+public static class ActorExtensions {
+    extension(IActor @this) {
+        /// <inheritdoc cref="ActorData.Priority" />
+        public RenderPriority Priority {
+            get => @this.Data.Priority;
+            set => @this.Data.Priority = value;
+        }
 
-    /// <inheritdoc cref="ActorData.MarkForRemoval" />
-    /// Implement as this.Data.MarkForRemoval()
-    void MarkForRemoval();
+        /// <inheritdoc cref="ActorData.AddRoutine" />
+        public void AddRoutine(Routine routine) => @this.Data.AddRoutine(routine);
+
+        /// <inheritdoc cref="ActorData.MarkForRemoval" />
+        public void MarkForRemoval() => @this.Data.MarkForRemoval();
+
+    }
 }
