@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using API;
 using API.Battle;
 using CBattle = Celosia.Battle;
-using API.Graphics; // temp
 
 namespace Celosia;
 
@@ -16,8 +15,6 @@ public static class Main {
     public static GameMod Mod { get; } = new("Celosia", new Version(0, 1), Lang.ResourceManager) {
         // Really gross temporary initialize for testing battles
         Initialize = () => {
-            Stage.Add(_L);
-
             Core.battle = new API.Battle.Battle(new Team(
             new Unit(CBattle.UnitTypes.Johny, 19, null, CBattle.Skills.Fireball, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend),
@@ -29,6 +26,4 @@ public static class Main {
                 new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend)));
         }
     };
-
-    private static readonly Label _L = new() { Text = CBattle.Elements.Ignis.GetName(mod: Mod) };
 }

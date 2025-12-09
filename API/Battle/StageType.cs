@@ -1,4 +1,3 @@
-using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -11,6 +10,7 @@ public sealed class StageType : _IModItem, IDescribable {
 
     public GameMod? Source { get; }
     public string KeyName { get; }
+
     public string Icon { get; }
     public string KeyDesc { get; }
 
@@ -24,8 +24,10 @@ public sealed class StageType : _IModItem, IDescribable {
         Core.StageTypes.Add(this);
     }
 
-    public string GetName(string color = Colors.Buff, GameMod? mod = null) =>
+    public string GetName(string color, GameMod? mod = null) =>
         $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
+
+    public string GetName(GameMod? mod = null) => this.GetName(Colors.Buff, mod);
 
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 

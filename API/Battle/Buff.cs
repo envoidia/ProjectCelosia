@@ -1,32 +1,34 @@
 using API.Battle.BuffEffects;
-using API.Entity;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class Buff : ComplexDescriptionEntity, _IModItem {
+public sealed class Buff : ComplexDescribable, _IModItem {
     public BuffType BuffType { get; }
     public int MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }
 
     public GameMod? Source { get; }
 
-    public Buff(GameMod? source, string keyName, string keyDescription, string icon, BuffType buffType, int maxStacks,
-        params IBuffEffect[] buffEffects) : base(keyName, keyDescription, icon) {
-        this.Source = source;
+    public Buff(GameMod? source, string keyName, string icon, string keyDesc, BuffType buffType,
+        int maxStacks, params IBuffEffect[] buffEffects) : base(keyName, icon, keyDesc) {
         this.BuffType = buffType;
         this.MaxStacks = maxStacks;
         this.BuffEffects = buffEffects;
+
+        this.Source = source;
+
         Core.Buffs.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Buff);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Buff, mod);
 
-    public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
+    public override string GetFullDesc(GameMod? mod = null) =>
         string.Format(Lang.BuffDesc, this.BuffType.GetName(),
             this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, Colors.Num + this.MaxStacks),
-            this._GetFormattedDescriptionInclusions(mod));
+            this._GetFormattedDescInclusions(mod));
 }
 
 public static class Buffs {

@@ -1,11 +1,11 @@
 using API.Battle.BuffEffects;
-using API.Entity;
 using API.Graphics;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class Passive : ComplexDescriptionEntity, _IModItem {
+public sealed class Passive : ComplexDescribable, _IModItem {
     public IBuffEffect[] BuffEffects { get; init; }
 
     public GameMod? Source { get; }
@@ -18,7 +18,7 @@ public sealed class Passive : ComplexDescriptionEntity, _IModItem {
         Core.Passives.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Passive);
+    public override string GetName(GameMod? mod = null) => this.GetName(Colors.Passive, mod);
 
-    public override string GetDescriptionWithInclusions(GameMod? mod = null) => "todo";
+    public override string GetFullDesc(GameMod? mod = null) => "todo";
 }

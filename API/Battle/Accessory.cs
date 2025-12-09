@@ -1,32 +1,26 @@
 using System.Collections.Generic;
-using API.Entity;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class Accessory : ComplexDescriptionEntity, IEquippable, _IModItem {
+public sealed class Accessory : ComplexDescribable, _IModItem, IEquippable {
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
     public GameMod? Source { get; }
 
-    public Accessory(GameMod? source, string keyName, string keyDescription, string icon) : base(keyName,
-        keyDescription, icon) {
+    public Accessory(GameMod? source, string keyName, string icon, string keyDesc)
+        : base(keyName, icon, keyDesc) {
         this.Source = source;
         Core.Accessories.Add(this);
     }
 
-    protected override HashSet<DescriptionEntity> _GetDescriptionInclusions() {
-        HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
+    public override string GetFullDesc(GameMod? mod = null) =>
+        string.Format(Lang.AccessoryDesc, this._GetFormattedDescInclusions(mod));
 
-        inclusions.UnionWith(this.Skills);
-        inclusions.UnionWith(this.Passives);
-
-        return inclusions;
-    }
-
-    public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
-        string.Format(Lang.AccessoryDesc, this._GetFormattedDescriptionInclusions(mod));
+    protected override HashSet<IDescribable> _GetDescInclusions() =>
+       IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);
 
     public void Apply(Unit unit, bool give) {
         if (give) {

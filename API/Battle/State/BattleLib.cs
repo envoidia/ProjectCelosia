@@ -165,7 +165,7 @@ public static class BattleLib {
     }
 
     internal static void _Destroy() {
-        foreach (ActorData a in _Actors) a.MarkForRemoval();
+        foreach (IActor a in _Actors) a.MarkForRemoval();
 
         Stage.Cleanup();
     }

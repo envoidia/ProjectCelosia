@@ -1,4 +1,3 @@
-using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -26,8 +25,9 @@ public sealed class Element : _IModItem, INameable {
         Core.Elements.Add(this);
     }
 
-    public string GetName(string color = Colors.Element, GameMod? mod = null) =>
+    public string GetName(string color, GameMod? mod = null) =>
         $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
+    public string GetName(GameMod? mod = null) => this.GetName(Colors.Element, mod);
 }
 
 public static class Elements {

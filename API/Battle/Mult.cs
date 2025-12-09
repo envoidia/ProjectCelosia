@@ -35,7 +35,8 @@ public sealed class Mult : _IModItem, INameable {
         _ => Colors.Num
     }, true, '%');
 
-    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(string color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(Colors.Stat, mod);
 
 }
 

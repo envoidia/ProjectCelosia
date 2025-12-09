@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using API.Name;
+
 namespace API.Battle;
 
 public interface IEquippable {
@@ -6,4 +9,14 @@ public interface IEquippable {
     void Equip(Unit unit) => this.Apply(unit, true);
 
     void Unequip(Unit unit) => this.Apply(unit, false);
+
+    static HashSet<IDescribable> GetDescInclusions(HashSet<IDescribable> inclusions, Skill[] skills, Passive[] passives) {
+        HashSet<IDescribable> inclusionsCopy = [.. inclusions];
+
+        inclusionsCopy.UnionWith(skills);
+        inclusionsCopy.UnionWith(passives);
+
+        return inclusionsCopy;
+    }
+    
 }

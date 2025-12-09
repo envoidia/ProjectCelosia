@@ -1,12 +1,12 @@
-using API.Entity;
+using API.Name;
 
 namespace API.Battle.SkillEffects;
 
 // todo arbitrary predicates (here and IBuffEffect)
-public abstract class SkillEffect(int pow = 0, SkillType? skillType = null, IconEntity? descInclusion = null) {
+public abstract class SkillEffect(int pow = 0, SkillType? skillType = null, IDescribable? descInclusion = null) {
     public int Pow => pow;
     public SkillType? SkillType => skillType;
-    public DescriptionEntity? DescInclusion { get; init; } = descInclusion;
+    public IDescribable? DescInclusion { get; init; } = descInclusion;
 
     public bool GiveToSelf { get; init; } = false;
     public bool MainTargetOnly { get; init; } = false;

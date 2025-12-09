@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using API.Entity;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -31,7 +30,8 @@ public sealed class UnitType : _IModItem, IDescribable {
         Core.UnitTypes.Add(this);
     }
 
-    public string GetName(string color = Colors.White, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(string color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(Colors.White, mod);
     public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
 
 }

@@ -11,7 +11,8 @@ public sealed class Stat : _IModItem, INameable {
     public GameMod? Source { get; }
     public string KeyName { get; }
 
-    public Stat(GameMod? source, string keyName, StageType stageType) : base(keyName) {
+
+    public Stat(GameMod? source, string keyName, StageType stageType) {
         this.Source = source;
         this.KeyName = keyName;
 
@@ -20,7 +21,8 @@ public sealed class Stat : _IModItem, INameable {
         Core.Stats.Add(this);
     }
 
-    public string GetName(string color = Colors.Stat, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(string color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(Colors.Stat, mod);
 }
 
 public static class Stats {

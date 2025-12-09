@@ -8,7 +8,7 @@ using API.Graphics;
 namespace API.Battle.SkillEffects;
 
 // todo special case for shield
-public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect(descInclusion: buff) {
+public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect(/*descInclusion: buff*/) {
     public ResultType MinResultType { get; init; } = ResultType.Success;
 
     public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {

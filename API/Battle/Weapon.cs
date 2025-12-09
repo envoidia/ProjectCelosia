@@ -1,32 +1,26 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using API.Entity;
 using API.Extensions;
 using API.Modding;
+using API.Name;
 
 namespace API.Battle;
 
-public sealed class Weapon : ComplexDescriptionEntity, IEquippable {
-    public required FrozenDictionary<Element, int> Affinities { get; init; }
-
+public sealed class Weapon : ComplexDescribable, IEquippable {
+    public Dictionary<Element, int> Affinities { get; init; }
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-    public Weapon(string keyName, string keyDescription, string icon) : base(keyName, keyDescription, icon) {
+    public Weapon(string keyName, string keyDesc, string icon, Dictionary<Element, int> affinities) : base(keyName, icon, keyDesc) {
+        this.Affinities = affinities;
         Core.Weapons.Add(this);
     }
 
-    protected override HashSet<DescriptionEntity> _GetDescriptionInclusions() {
-        HashSet<DescriptionEntity> inclusions = [.. this.DescriptionInclusions];
+    public override string GetFullDesc(GameMod? mod = null) =>
+        string.Format(Lang.WeaponDesc, this._GetFormattedDescInclusions(mod));
 
-        inclusions.UnionWith(this.Skills);
-        inclusions.UnionWith(this.Passives);
-
-        return inclusions;
-    }
-
-    public override string GetDescriptionWithInclusions(GameMod? mod = null) =>
-        string.Format(Lang.WeaponDesc, this._GetFormattedDescriptionInclusions(mod));
+    protected override HashSet<IDescribable> _GetDescInclusions() =>
+        IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);
 
     public void Apply(Unit unit, bool give) {
         int multiplier = give.ToSign();

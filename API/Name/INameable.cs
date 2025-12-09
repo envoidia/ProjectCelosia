@@ -1,5 +1,3 @@
-using System;
-using API.Graphics;
 using API.Modding;
 
 namespace API.Name;
@@ -10,5 +8,7 @@ namespace API.Name;
 public interface INameable {
     string KeyName { get; }
 
-    string GetName(string color = Colors.White, GameMod? mod = null);
+    string GetName(string color, GameMod? mod = null);
+    string GetName(GameMod? mod = null);
+
 }
