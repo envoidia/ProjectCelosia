@@ -54,12 +54,13 @@ public sealed class Damage : SkillEffect {
         if (affMultDmgTaken == 0) {
             dmg = 0;
         } else {
+            float mdd = this.Element.MultDmgDealt is null ? 1f : self.GetMult(this.Element.MultDmgDealt);
+            float mdt = this.Element.MultDmgTaken is null ? 1f : target.GetMult(this.Element.MultDmgTaken);
+
             // todo null safety
             dmg = BattleLib.StatMult * (int) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
-                                               self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) *
-                                               self.GetMult(this.Element.MultDmgDealt) *
-                                               target.GetMult(this.Element.MultDmgTaken) * multWeakDmgDealt *
-                                               multWeakDmgTaken * multFollowUpDmgDealt * multFollowUpDmgTaken);
+                self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) * mdd * mdt * multWeakDmgDealt *
+                multWeakDmgTaken * multFollowUpDmgDealt * multFollowUpDmgTaken);
 
             self.OnDealDamage(target, dmg, this.Element);
             target.OnTakeDamage(self, dmg, this.Element);

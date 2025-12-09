@@ -18,10 +18,10 @@ public sealed class Label(RenderPriority priority = RenderPriority.B1Med) : Rend
         }
     }
 
-    public int Width {
+    /*public int Width {
         get => (int) this._RichTextLayout.Width; // todo null safety
         set => this._RichTextLayout.Width = value; // todo remeasure
-    }
+    }*/
 
     public override Point Size => this._RichTextLayout.Size; // todo fix crash
 
