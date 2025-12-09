@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using API.Extensions;
 using Microsoft.Xna.Framework;
@@ -5,9 +6,9 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 /// <summary>
-/// Type that can be rendered and can hold actions to be executed
+/// Data holder for <c>IActor</c>
 /// </summary>
-public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
+public class ActorData(IActor actor, RenderPriority priority = RenderPriority.B1Med) {
     /// <summary>
     /// Whether to draw this
     /// </summary>
@@ -35,12 +36,13 @@ public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
     /// </summary>
     internal bool _marked = false;
 
+
     /// <summary>
     /// Add a <c>Routine</c> to execute when drawn
     /// </summary>
     /// <param name="routine"><c>Routine</c> to execute when drawn. When it returns true, it's removed from the list</param>
     public void AddRoutine(Routine routine) {
-        routine.OnStart(this);
+        routine.OnStart(actor);
         this._routines.Add(routine);
     }
 
@@ -58,16 +60,11 @@ public abstract class Actor(RenderPriority priority = RenderPriority.B1Med) {
     public void Act(GameTime gameTime) {
         if (!this.IsVisible) return;
 
-        this.Draw(gameTime);
+        actor.Draw(gameTime);
 
         // Execute routines
         for (int i = 0; i < this._routines.Count; i++) {
-            if (this._routines[i].OnTick(this, gameTime)) this._routines.SwapRemove(i);
+            if (this._routines[i].OnTick(actor, gameTime)) this._routines.SwapRemove(i);
         }
     }
-
-    /// <summary>
-    /// Draws this
-    /// </summary>
-    public abstract void Draw(GameTime gameTime);
 }

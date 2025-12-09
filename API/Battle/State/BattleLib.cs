@@ -40,7 +40,7 @@ public static class BattleLib {
     #region Display Fields
 
     private const int _ActorCount = 30;
-    private static readonly List<Actor> _Actors = new(_ActorCount);
+    private static readonly List<IActor> _Actors = new(_ActorCount);
 
     private const int _AnimPrimActorCount = 0; // todo
     //private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
@@ -165,7 +165,7 @@ public static class BattleLib {
     }
 
     internal static void _Destroy() {
-        foreach (Actor a in _Actors) a.MarkForRemoval();
+        foreach (ActorData a in _Actors) a.MarkForRemoval();
 
         Stage.Cleanup();
     }

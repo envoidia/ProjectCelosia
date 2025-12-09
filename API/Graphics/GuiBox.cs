@@ -4,16 +4,15 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 // todo cleanup
-public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10, RenderPriority priority = RenderPriority.B1Med)
-    : Actor(priority), IAnimatedPrimitive {
-    public int L { get; set; } = l;
-    public int R { get; set; } = r;
-    public int T { get; set; } = t;
-    public int B { get; set; } = b;
+public sealed class GuiBox : IActor, IAnimatedPrimitive {
+    public int L { get; set; }
+    public int R { get; set; }
+    public int T { get; set; }
+    public int B { get; set; }
 
     public Color Color { get; set; } = Color.Black;
 
-    public float OutlineThickness { get; set; } = outlineThickness;
+    public float OutlineThickness { get; set; }
     public Color OutlineColor { get; set; } = Color.White;
 
     /// <summary>
@@ -24,33 +23,36 @@ public class GuiBox(int l, int r, int t, int b, float outlineThickness = 10, Ren
     /// <inheritdoc cref="SlantL" />
     public int SlantR { get; set; } = 6;
 
-    public float Speed { get; set; } = 2f;
+    public ActorData Data { get; }
+
+    /// <inheritdoc cref="ActorData.Priority" />
+    public RenderPriority Priority {
+        get => this.Data.Priority;
+        set => this.Data.Priority = value;
+    }
 
     public Progress Prog { get; set; } = new();
+    public float Speed { get; set; } = 2f;
 
-    public override void Draw(GameTime gameTime) {
-        if (this.Prog != 0) this._DrawInternal();
+    public GuiBox(int l, int r, int t, int b, float outlineThickness = 10,
+        RenderPriority priority = RenderPriority.B1Med) {
+        this.L = l;
+        this.R = r;
+        this.T = t;
+        this.B = b;
+        this.OutlineThickness = outlineThickness;
+        this.Data = new ActorData(this, priority);
     }
 
-    protected void _DrawInternal(int l, int r, int t, int b, Color color, Progress prog) {
-        float height = b - t;
+    public void Draw(GameTime gameTime) {
+        if (this.Prog == 0) return;
 
-        float angLOff = this.SlantL > 0 ? height / this.SlantL : 0;
-        float angROff = this.SlantR > 0 ? height / this.SlantR : 0;
-
-        Vector2 tl = new(l + angLOff, t);
-        Vector2 tr = new(MathHelper.SmoothStep(tl.X, r + angROff, (float) prog), t);
-        Vector2 bl = new(l, b);
-        Vector2 br = new(MathHelper.SmoothStep(bl.X, r, (float) prog), b);
-
-        Core.ShapeBatch.DrawTriangleStrip(tl, tr, bl, br, color, this.OutlineColor, this.OutlineThickness);
+        RenderLib.DrawParallelogram(this.L, this.R, this.T, this.B, this.Color, this.OutlineColor,
+            this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
 
-    protected void _DrawInternal(int l, int r, int t, int b, Color color) =>
-        this._DrawInternal(l, r, t, b, color, this.Prog);
-
-    protected void _DrawInternal() =>
-        this._DrawInternal(this.L, this.R, this.T, this.B, this.Color, this.Prog);
+    public void AddRoutine(Routine routine) => this.Data.AddRoutine(routine);
+    public void MarkForRemoval() => this.Data.MarkForRemoval();
 }
 
 public static class GuiBoxes {

@@ -16,10 +16,10 @@ internal sealed class _InspectLib {
 
     // todo ensure this size is right
     private const int _ActorCount = 53;
-    private static readonly List<Actor> _Actors = new(_ActorCount);
+    private static readonly List<IActor> _Actors = new(_ActorCount);
 
     private const int _AnimPrimActorCount = 8;
-    private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
+    private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     // Stat types
     private static readonly Label[] _StatCategoryHeaders = new Label[_StatTypeCount];
@@ -42,7 +42,7 @@ internal sealed class _InspectLib {
 
     // Page list
     private static readonly Label[] _PageList = new Label[TeamSize];
-    private static readonly GuiBoxChain _PageListBox = new(638, 446, 501, RenderPriority.B2Med);
+    private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Basic stat list
     /// <summary>
@@ -55,7 +55,7 @@ internal sealed class _InspectLib {
 
     // Unit list
     private static readonly Label[] _UnitList = new Label[UnitCount];
-    private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106, RenderPriority.B2Med);
+    private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106) { Priority = RenderPriority.B2Med };
 
     // Input prompts
     private static readonly Label[] _Prompts = new Label[10];
@@ -238,7 +238,7 @@ internal sealed class _InspectLib {
 
     internal static void _Create() {
         Stage.AddRange(_AnimPrimActors);
-        foreach (Actor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.In);
+        foreach (IActor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.In);
 
         Stage.AddRange(_Actors);
 
@@ -246,8 +246,8 @@ internal sealed class _InspectLib {
     }
 
     internal static void _Destroy() {
-        foreach (Actor a in _Actors) a.MarkForRemoval();
-        foreach (Actor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.Out);
+        foreach (IActor a in _Actors) a.MarkForRemoval();
+        foreach (IActor a in _AnimPrimActors) a.AddRoutine(IAnimatedPrimitive.Out);
 
         Stage.Cleanup();
     }

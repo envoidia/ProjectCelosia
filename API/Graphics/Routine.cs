@@ -12,11 +12,11 @@ public sealed record Routine(Routine.Start OnStart, Routine.Tick OnTick) {
     /// <summary>
     /// Executes on start
     /// </summary>
-    public delegate void Start(Actor actor);
+    public delegate void Start(IActor actor);
 
     /// <summary>
     /// Executes every frame
     /// </summary>
     /// <returns>Whether this has ended and should be removed</returns>
-    public delegate bool Tick(Actor actor, GameTime gameTime);
+    public delegate bool Tick(IActor actor, GameTime gameTime);
 }

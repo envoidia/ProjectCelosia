@@ -36,7 +36,6 @@ public static class MenuDebug {
         Position = new Vector2(10, World.H - 10),
         Alignment = Alignment.BottomLeft,
         HasBackground = true,
-        IsVisible = false,
         Priority = RenderPriority.Highest
     };
 
@@ -78,7 +77,7 @@ public static class MenuDebug {
         _timeSinceUpdate += gameTime.ElapsedGameTime;
 
         // Check for inputs
-        _DebugInfoHelp.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
+        _DebugInfoHelp.Data.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
 
         if (InputLib.IsKeyJustPressed(Keys.F3)) {
             Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));

@@ -11,7 +11,7 @@ namespace API.Graphics;
 /// List of active <c>Actor</c>s with helper methods
 /// </summary>
 public static class Stage {
-    private static readonly List<Actor> _Actors = [];
+    private static readonly List<IActor> _Actors = [];
 
     /// <summary>
     /// Whether sorting is needed
@@ -31,13 +31,13 @@ public static class Stage {
 
         // The only reason this gross stuff has to happen is bc SpriteBatch and ShapeBatch are separate
         begin();
-        for (; i >= 0 && _Actors[i].Priority < RenderPriority.B2Low; i--) _Actors[i].Act(gameTime);
+        for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.B2Low; i--) _Actors[i].Data.Act(gameTime);
         end();
         begin();
-        for (; i >= 0 && _Actors[i].Priority < RenderPriority.B3Low; i--) _Actors[i].Act(gameTime);
+        for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.B3Low; i--) _Actors[i].Data.Act(gameTime);
         end();
         begin();
-        for (; i >= 0; i--) _Actors[i].Act(gameTime);
+        for (; i >= 0; i--) _Actors[i].Data.Act(gameTime);
         end();
 
         static void begin() {
@@ -55,7 +55,7 @@ public static class Stage {
     /// <summary>
     /// Add an <c>Actor</c>. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
-    public static void Add(Actor actor) {
+    public static void Add(IActor actor) {
         _Actors.Add(actor);
         _needsSorting = true;
     }
@@ -63,7 +63,7 @@ public static class Stage {
     /// <summary>
     /// Add a range of <c>Actor</c>s. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
-    public static void AddRange(params IEnumerable<Actor> actors) {
+    public static void AddRange(params IEnumerable<IActor> actors) {
         _Actors.AddRange(actors);
         _needsSorting = true;
     }
@@ -71,14 +71,14 @@ public static class Stage {
     /// <summary>
     /// Immediately removes an <c>Actor</c>. Prefer <c>Actor.MarkForRemoval()</c> when able
     /// </summary>
-    public static void ImmediateRemove(Actor actor) => _Actors.Remove(actor);
+    public static void ImmediateRemove(IActor actor) => _Actors.Remove(actor);
 
     /// <summary>
     /// Applies sorting and removal
     /// </summary>
     public static void Cleanup() {
         if (_needsRemoval) {
-            _Actors.RemoveAll(a => a._marked);
+            _Actors.RemoveAll(a => a.Data._marked);
 
             _needsRemoval = false;
         }
@@ -86,7 +86,7 @@ public static class Stage {
         if (!_needsSorting) return;
 
         _Actors.Sort((a, b) =>
-           ((int) b.Priority).CompareTo((int) a.Priority));
+           ((int) b.Data.Priority).CompareTo((int) a.Data.Priority));
 
         Console.WriteLine("actors sorted!");
 
