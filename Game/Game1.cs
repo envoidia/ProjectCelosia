@@ -53,7 +53,7 @@ public sealed class Game1 : Core {
         celosiaMain = new Celosia.Main();
         celosiaMain.Initialize();
 #else
-        ModLoader.InitializeAllMods();
+        ModLoader.LoadAllMods();
 #endif
     }
 

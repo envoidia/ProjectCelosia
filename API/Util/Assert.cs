@@ -11,9 +11,11 @@ namespace API.Util;
 /// </summary>
 public static class Assert {
     /// <summary>
-    /// Assert that asserts work correctly
+    /// Asserts to assert that asserts assert
     /// </summary>
     static Assert() {
+        Console.WriteLine("Running in debug mode");
+
         // Passes
         Zero(0);
         NotZero(10);
@@ -34,10 +36,16 @@ public static class Assert {
         tryHelper(() => SizeIs(new List<int> { 1, 2, 3 }, 4));
         tryHelper(() => SizeNotZero([]));
 
-        Console.WriteLine("asserts ok");
-
         static void tryHelper(Action a) {
-            try { a(); } catch (Exception e) { Console.WriteLine($"Caught failed assert: {e.Message}"); }
+            bool threw = false;
+
+            try {
+                a();
+            } catch (Exception) {
+                threw = true;
+            }
+
+            Debug.Assert(threw);
         }
     }
 

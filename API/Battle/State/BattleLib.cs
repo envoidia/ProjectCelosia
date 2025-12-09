@@ -114,7 +114,7 @@ public static class BattleLib {
 
     #region Setup Methods
 
-    internal static void _Initialize() {
+    static BattleLib() {
         // Add preinitialized actors
         _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL, _Turn);
 
@@ -145,8 +145,6 @@ public static class BattleLib {
         }
 
         Assert.SizeIs(_Actors, _ActorCount);
-
-        _InspectLib._Initialize();
     }
 
     internal static void _Create() {

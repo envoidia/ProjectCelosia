@@ -18,7 +18,7 @@ public static class StateMachine {
         HasBackground = true
     };
 
-    internal static void _Initialize() {
+    static StateMachine() {
         Stage.Add(_InputPrompt);
     }
 

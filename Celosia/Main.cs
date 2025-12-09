@@ -12,10 +12,11 @@ public static class Main {
     /// <summary>
     /// <c>GameMod</c> instance
     /// </summary>
-    public static GameMod Mod { get; } = new("Celosia", new Version(0, 1), Lang.ResourceManager) {
+    public static GameMod Mod { get; } = new("Celosia", new Version(0, 1), Lang.ResourceManager);
+
+    static Main() {
         // Really gross temporary initialize for testing battles
-        Initialize = () => {
-            Core.battle = new API.Battle.Battle(new Team(
+        Core.battle = new API.Battle.Battle(new Team(
             new Unit(CBattle.UnitTypes.Johny, 19, null, CBattle.Skills.Fireball, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, 19, null, Skills.Nothing, Skills.Defend),
@@ -24,6 +25,5 @@ public static class Main {
                 new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend),
                 new Unit(CBattle.UnitTypes.Johny, 19, null, Skills.Nothing, Skills.Defend),
                 new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend)));
-        }
-    };
+    }
 }

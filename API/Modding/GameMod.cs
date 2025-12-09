@@ -32,11 +32,6 @@ public sealed class GameMod(string id, Version version, ResourceManager resource
     public ResourceManager ResourceManager { get; } = resourceManager;
 
     /// <summary>
-    /// Called once, on mod load
-    /// </summary>
-    public Action Initialize { get; init; } = () => { };
-
-    /// <summary>
     /// Called every frame
     /// </summary>
     public Action<GameTime> Update { get; init; } = _ => { };
