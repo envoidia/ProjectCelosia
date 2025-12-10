@@ -74,7 +74,7 @@ public class Core : Game {
     /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
     public Core(string title, int width, int height, bool fullScreen) {
         // Ensure that multiple cores are not created
-        Debug.Assert(Instance is null, string.Format(Lang.AssMultipleInstance, nameof(Core)));
+        Debug.Assert(Instance is null, "Only a single instance of Core should be");
 
         // Store reference to engine for global member access
         Instance = this;

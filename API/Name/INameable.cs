@@ -11,5 +11,4 @@ public interface INameable {
 
     string GetName(ColorCode color, GameMod? mod = null);
     string GetName(GameMod? mod = null);
-
 }

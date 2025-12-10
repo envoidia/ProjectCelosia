@@ -14,7 +14,8 @@ namespace API.Menu.State;
 /// <param name="Update">Called every frame when this <c>State</c> is active, during the logic phase</param>
 /// <param name="GetInputPrompt">Called when this <c>State</c> is first reached,
 /// to update the input prompt <c>Label</c> in the bottom-right corner</param>
-public sealed record State(string Name, Action Create, Action Destroy, Action<GameTime> Update, Func<string> GetInputPrompt) {
+public sealed record State(string Name, Action Create, Action Destroy,
+    Action<GameTime> Update, Func<string> GetInputPrompt) {
     public static string GetInputPromptString(params InputPrompt[] inputPrompts) {
         StringBuilder inputs = new();
 

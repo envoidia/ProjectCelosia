@@ -34,13 +34,13 @@ public class GuiBox : IActor, IAnimatedPrimitive {
     public float Speed { get; set; } = 2f;
 
     public GuiBox(int l, int r, int t, int b, float outlineThickness = 10,
-        RenderPriority priority = RenderPriority.B1Med) {
+        RenderPriority renderPriority = RenderPriority.B1Med) {
         this.L = l;
         this.R = r;
         this.T = t;
         this.B = b;
         this.OutlineThickness = outlineThickness;
-        this.Data = new ActorData(this, priority);
+        this.Data = new ActorData(this, renderPriority);
     }
 
     public virtual void Draw(GameTime gameTime) {

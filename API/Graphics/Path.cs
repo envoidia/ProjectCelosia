@@ -24,11 +24,11 @@ public sealed class Path : IActor, IAnimatedPrimitive {
     public Progress Prog { get; set; } = new();
     public float Speed { get; set; } = 2f;
 
-    public Path(Vector2 start, Vector2 end, RenderPriority priority = RenderPriority.B1Med, float thickness = 5f) {
+    public Path(Vector2 start, Vector2 end, RenderPriority renderPriority = RenderPriority.B1Med, float thickness = 5f) {
         this.Start = start;
         this.End = end;
         this.Thickness = thickness;
-        this.Data = new(this, priority);
+        this.Data = new(this, renderPriority);
     }
 
     public void Draw(GameTime gameTime) =>

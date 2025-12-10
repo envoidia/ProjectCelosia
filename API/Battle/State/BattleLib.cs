@@ -434,7 +434,8 @@ public static class BattleLib {
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(Convert.ToInt32(skill.IsBloom), spOld.Format(ColorCode.Sp, false),
+                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(Convert.ToInt32(skill.IsBloom),
+                        spOld.Format(ColorCode.Sp, false),
                         spNew.Format(ColorCode.Sp, false), change.Format());
                 }
 
@@ -541,8 +542,8 @@ public static class BattleLib {
 
             foreach (BuffInstance buffInstance in unit.BuffInstances) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(), buffInstance.Buff.GetName()))
-                        .Append(' ');
+                    new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(),
+                    buffInstance.Buff.GetName())).Append(' ');
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
                     StringBuilder turnEnd2 = new();

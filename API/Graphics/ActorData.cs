@@ -7,7 +7,7 @@ namespace API.Graphics;
 /// <summary>
 /// Data holder for <c>IActor</c>
 /// </summary>
-public sealed class ActorData(IActor actor, RenderPriority priority = RenderPriority.B1Med) {
+public sealed class ActorData(IActor actor, RenderPriority renderPriority = RenderPriority.B1Med) {
     /// <summary>
     /// Whether to draw this
     /// </summary>
@@ -23,7 +23,7 @@ public sealed class ActorData(IActor actor, RenderPriority priority = RenderPrio
             field = value;
             Stage._needsSorting = true;
         }
-    } = priority;
+    } = renderPriority;
 
     /// <summary>
     /// <c>Routine</c> to execute when drawn

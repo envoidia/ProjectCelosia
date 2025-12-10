@@ -54,11 +54,9 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Large functions should be split apart when possible
 - Use `is`/`is not` over `==`/`!=` when checking for types or `null`
 - In switch statements, prefer `return` over `break` when able
-- All classes should be `sealed` if they are not `static` or explicitly intended to be inherited from
+- All classes that are not intended to be inherited from should be `sealed`
 
 # Numbers
-- Default to `uint`
-- Only use `int` if negative values are needed (or if casting due to a lack of `uint` support gets annoying)
 - Only use `float` if floating-point values are needed
 - Only use larger types if needed
 - Only use smaller types if performance is critical
