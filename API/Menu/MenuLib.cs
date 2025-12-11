@@ -1,30 +1,21 @@
 using System;
 using API.Battle;
 using API.Input;
+using API.Menu.State;
 
 namespace API.Menu;
 
 public static class MenuLib {
     private const float _LogScrollDelayS = 0.01f;
 
-    public static int CheckMovement1D(int index, int optCount) {
-        if (InputLib.Check(Keybinds.Up, Keybinds.Left, true)) {
+    public static int CheckMovement1D(int index, int optCount, WidgetSelectionType dir = WidgetSelectionType.HorizVert) {
+        if (InputLib.Check(dir.GetDec(), true)) {
+            if (InputLib.Check(Keybinds.Hotkey2)) return 0;
             return index == 0 ? optCount - 1 : index - 1;
         }
 
-        if (InputLib.Check(Keybinds.Down, Keybinds.Right, true)) {
-            return index == (optCount - 1) ? 0 : index + 1;
-        }
-
-        return Math.Min(index, optCount - 1);
-    }
-
-    public static int CheckMovement1D(int index, int optCount, Keybind dec, Keybind inc) {
-        if (InputLib.Check(dec, true)) {
-            return index == 0 ? optCount - 1 : index - 1;
-        }
-
-        if (InputLib.Check(inc, true)) {
+        if (InputLib.Check(dir.GetInc(), true)) {
+            if (InputLib.Check(Keybinds.Hotkey2)) return optCount - 1;
             return index == (optCount - 1) ? 0 : index + 1;
         }
 
@@ -79,14 +70,14 @@ public static class MenuLib {
         }
 
         // To top
-        if (InputLib.Check(Keybinds.PageL2, false)) {
+        /*if (InputLib.Check(Keybinds.PageL2, false)) {
             return Math.Max(lines - off, 0);
         }
 
         // To bottom
         if (InputLib.Check(Keybinds.PageR2, false)) {
             return 0;
-        }
+        }*/
 
         return logScroll;
     }

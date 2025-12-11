@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Menu;
 
-public static class MenuDebug {
+public static class DebugMenu {
     private const int _Mb = 1024 * 1024;
 
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
@@ -36,8 +36,12 @@ public static class MenuDebug {
         Position = new Vector2(10, World.H - 10),
         Alignment = Alignment.BottomLeft,
         HasBackground = true,
-        Priority = RenderPriority.Highest
+        Priority = RenderPriority.Highest,
+        IsVisible = false
     };
+
+    // temp
+    internal static bool _drawActorOutlines = true;
 
     /// <summary>
     /// Adds the relevant <c>Actor</c>s to the <c>Stage</c>.
@@ -79,14 +83,14 @@ public static class MenuDebug {
         // Check for inputs
         _DebugInfoHelp.Data.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
 
-        if (InputLib.IsKeyJustPressed(Keys.F3)) {
-            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
-        }
+        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
 
-        if (InputLib.IsKeyJustPressed(Keys.F4)) {
+        if (InputLib.IsKeyJustPressed(Keys.F4)) Console.WriteLine(Stage.ToString());
+
+        if (InputLib.IsKeyJustPressed(Keys.F5)) {
             string str = string.Join('\n', LogLib._LogText);
 
-            if (InputLib.Check(Keybinds.Hotkey)) {
+            if (InputLib.Check(Keybinds.Hotkey1)) {
                 Console.WriteLine(str);
                 return;
             }
@@ -94,12 +98,13 @@ public static class MenuDebug {
             Console.WriteLine(Regexes.RemoveFormattingCodes(str));
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F5)) Console.WriteLine(Stage.ToString());
+        if (InputLib.IsKeyJustPressed(Keys.F6)) {
+            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+        }
 
         // Update timed text
         if (_timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
-        // todo is it at all reasonable to stackalloc this (probably not)
         _DebugInfoR.Text = string.Format(Lang.DebugInfoR,
             $"{(int) (1 / _avgFrameTime.TotalSeconds)}({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})", // todo temp
             GC.GetTotalMemory(false) / _Mb,
@@ -116,5 +121,5 @@ public static class MenuDebug {
         string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
 
     private static string _GetDebugInfoHelpText() =>
-        string.Format(Lang.DebugInfoHelp, Keybinds.Hotkey.GetCurrentGlyph());
+        string.Format(Lang.DebugInfoHelp, Keybinds.Hotkey1.GetCurrentGlyph());
 }

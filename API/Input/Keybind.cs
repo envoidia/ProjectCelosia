@@ -6,12 +6,10 @@ namespace API.Input;
 public enum KeybindId {
     Confirm,
     Back,
-    Menu,
-    Map,
-    PageL1,
-    PageR1,
-    PageL2,
-    PageR2,
+    Menu1,
+    Menu2,
+    PageL,
+    PageR,
     Left,
     Right,
     Up,
@@ -19,16 +17,16 @@ public enum KeybindId {
     DebugInfo,
 
     /// <summary>
-    /// Marker. Always add non-merged keybinds above this
+    /// Marker. Always add non-merged, non-hotkey keybinds above this
     /// </summary>
     LastBeforeMerged,
 
-    /// <summary>
-    /// Hotkey, ignores hold time restrictions
-    /// </summary>
-    Hotkey,
+    Hotkey1,
+    Hotkey2,
 
     // Merged (must be last)
+    LeftUp,
+    RightDown,
     LeftRight,
     UpDown,
     LeftRightUpDown
@@ -65,17 +63,15 @@ public static class Keybinds {
     /// <summary>
     /// Open menu/full log. Top face button
     /// </summary>
-    public static readonly Keybind Menu = new("KeyMenu", KeybindId.Menu, Keys.C, Buttons.Y);
+    public static readonly Keybind Menu1 = new("KeyMenu1", KeybindId.Menu1, Keys.C, Buttons.Y);
 
     /// <summary>
     /// Open map/inspect. Left face button
     /// </summary>
-    public static readonly Keybind Map = new("KeyMap", KeybindId.Map, Keys.V, Buttons.X);
+    public static readonly Keybind Menu2 = new("KeyMenu2", KeybindId.Menu2, Keys.V, Buttons.X);
 
-    public static readonly Keybind PageL1 = new("KeyPageL1", KeybindId.PageL1, Keys.F, Buttons.LeftShoulder);
-    public static readonly Keybind PageR1 = new("KeyPageR1", KeybindId.PageR1, Keys.G, Buttons.RightShoulder);
-    public static readonly Keybind PageL2 = new("KeyPageL2", KeybindId.PageL2, Keys.S, Buttons.LeftTrigger);
-    public static readonly Keybind PageR2 = new("KeyPageR2", KeybindId.PageR2, Keys.D, Buttons.RightTrigger);
+    public static readonly Keybind PageL = new("KeyPageL", KeybindId.PageL, Keys.S, Buttons.LeftShoulder);
+    public static readonly Keybind PageR = new("KeyPageR", KeybindId.PageR, Keys.D, Buttons.RightShoulder);
 
     public static readonly Keybind Left = new("KeyLeft", KeybindId.Left, Keys.Left, Buttons.DPadLeft);
     public static readonly Keybind Right = new("KeyRight", KeybindId.Right, Keys.Right, Buttons.DPadRight);
@@ -83,10 +79,15 @@ public static class Keybinds {
     public static readonly Keybind Down = new("KeyDown", KeybindId.Down, Keys.Down, Buttons.DPadDown);
 
     /// <summary>
-    /// Used for various hotkeys, including doubling held input repeat speed
+    /// Used for various hotkeys, including doubling held input repeat speed. Ignores held time restrictions
     /// </summary>
     // todo should it be more than double
-    public static readonly Keybind Hotkey = new("KeyScroll", KeybindId.Hotkey, Keys.LeftShift, Buttons.Start);
+    public static readonly Keybind Hotkey1 = new("KeyHotkey1", KeybindId.Hotkey1, Keys.LeftShift, Buttons.LeftTrigger);
+
+    /// <summary>
+    /// Used for various hotkeys, including jump to start/end. Ignores held time restrictions
+    /// </summary>
+    public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
 
     // Debug
     // Ensure names are never displayed
@@ -94,6 +95,11 @@ public static class Keybinds {
     public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
 
     // Merged
+    // Acceptable for InputLib.Check():
+    public static readonly Keybind LeftUp = new("", KeybindId.LeftUp, Keys.None, Buttons.None);
+    public static readonly Keybind RightDown = new("", KeybindId.RightDown, Keys.None, Buttons.None);
+
+    // Not acceptable:
     public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);
     public static readonly Keybind UpDown = new("", KeybindId.UpDown, Keys.None, Buttons.None);
     public static readonly Keybind LeftRightUpDown = new("", KeybindId.LeftRightUpDown, Keys.None, Buttons.None);

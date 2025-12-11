@@ -11,16 +11,10 @@ namespace API.Graphics;
 /// List of active <c>Actor</c>s with helper methods
 /// </summary>
 public static class Stage {
-    private static readonly List<IActor> _Actors = [];
+    // todo decide starting size
+    private static readonly List<IActor> _Actors = new(30);
 
-    /// <summary>
-    /// Whether sorting is needed
-    /// </summary>
     internal static bool _needsSorting = false;
-
-    /// <summary>
-    /// Whether removal is needed
-    /// </summary>
     internal static bool _needsRemoval = false;
 
     /// <summary>
@@ -57,6 +51,7 @@ public static class Stage {
     /// </summary>
     public static void Add(IActor actor) {
         _Actors.Add(actor);
+        actor.Create();
         _needsSorting = true;
     }
 
@@ -65,6 +60,10 @@ public static class Stage {
     /// </summary>
     public static void AddRange(params IEnumerable<IActor> actors) {
         _Actors.AddRange(actors);
+        foreach (IActor actor in actors) {
+            _Actors.Add(actor);
+            actor.Create();
+        }
         _needsSorting = true;
     }
 

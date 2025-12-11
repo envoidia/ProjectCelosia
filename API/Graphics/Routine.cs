@@ -6,8 +6,8 @@ namespace API.Graphics;
 /// An action for an <c>Actor</c> to execute
 /// </summary>
 /// <param name="OnStart">Executes on start</param>
-/// <param name="OnTick">Executes every frame</param>
-public sealed record Routine(Routine.Start OnStart, Routine.Tick OnTick) {
+/// <param name="OnUpdate">Executes every frame</param>
+public sealed record Routine(Routine.Start OnStart, Routine.Update OnUpdate) {
 
     /// <summary>
     /// Executes on start
@@ -18,5 +18,5 @@ public sealed record Routine(Routine.Start OnStart, Routine.Tick OnTick) {
     /// Executes every frame
     /// </summary>
     /// <returns>Whether this has ended and should be removed</returns>
-    public delegate bool Tick(IActor actor, GameTime gameTime);
+    public delegate bool Update(IActor actor, GameTime gameTime);
 }

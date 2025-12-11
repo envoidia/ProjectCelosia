@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using API.Extensions;
+using API.Menu;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -8,10 +11,6 @@ namespace API.Graphics;
 /// Data holder for <c>IActor</c>
 /// </summary>
 public sealed class ActorData(IActor actor, RenderPriority renderPriority = RenderPriority.B1Med) {
-    /// <summary>
-    /// Whether to draw this
-    /// </summary>
-    // todo is this really needed
     public bool IsVisible { get; set; } = true;
 
     /// <summary>
@@ -25,9 +24,49 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         }
     } = renderPriority;
 
+    private Vector2 _position = Vector2.Zero;
+    public Vector2 Position {
+        get => this._position;
+        set => this._position = value;
+    }
+    public float X {
+        get => this._position.X;
+        set => this._position.X = value;
+    }
+    public float Y {
+        get => this._position.Y;
+        set => this._position.Y = value;
+    }
+
+    private Point _size = Point.Zero;
+    public Point Size {
+        get => this._size;
+        set => this._size = value;
+    }
+    public int Width {
+        get => this._size.X;
+        set => this._size.X = value;
+    }
+    public int Height {
+        get => this._size.Y;
+        set => this._size.Y = value;
+    }
+
     /// <summary>
-    /// <c>Routine</c> to execute when drawn
+    /// Padding to apply to this when (and only when) it is inside of an <c>IWidget</c>
     /// </summary>
+    public Padding Padding { get; set; }
+
+    public Alignment Alignment {
+        get;
+        set {
+            field = value;
+            this.Origin = this.CalcOrigin();
+        }
+    } = Alignment.TopLeft;
+
+    public Point Origin { get; set; } = Point.Zero;
+
     private readonly List<Routine> _routines = [];
 
     /// <summary>
@@ -53,16 +92,38 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
 
     /// <summary>
-    /// Draws this if it is visible, and performs its <c>Routine</c>s
+    /// Draws this if it is visible and performs its <c>Routine</c>s
     /// </summary>
     public void Act(GameTime gameTime) {
         if (!this.IsVisible) return;
 
         actor.Draw(gameTime);
 
+        if (DebugMenu._drawActorOutlines) {
+            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
+                new Vector2(this.Width, this.Height),
+                Colors.Trans, Colors.ActorOutline);
+
+            if (this.Padding != Padding.Zero) {
+                Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
+                new Vector2(this.Padding.L, this.Padding.T),
+                new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
+                Colors.ActorPadding);
+            }
+        }
+
         // Execute routines
         for (int i = 0; i < this._routines.Count; i++) {
-            if (this._routines[i].OnTick(actor, gameTime)) this._routines.SwapRemove(i);
+            if (this._routines[i].OnUpdate(actor, gameTime)) this._routines.SwapRemove(i);
         }
     }
+
+    public Point CalcOrigin() => this.Alignment switch {
+        Alignment.TopLeft => Point.Zero,
+        Alignment.TopRight => new Point(this.Size.X, 0),
+        Alignment.BottomLeft => new Point(0, this.Size.Y),
+        Alignment.BottomRight => new Point(this.Size.X, this.Size.Y),
+        Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f)),
+        _ => throw new ClosedEnumsWhenException()
+    };
 }

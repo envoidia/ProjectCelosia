@@ -31,7 +31,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Indent with 4 spaces
 - Spaces between operators (including after casts)
 - Wrap at 120 columns (in some cases, a little over might be fine)
-  - Wrap after operators
+  - Wrap after operators (except ternary operators)
 - Opening brackets on the same line with 1 preceding space
 - 1 statement per line
 - 1 line between lines of code that aren't extremely closely related/simple

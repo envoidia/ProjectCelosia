@@ -1,18 +1,23 @@
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class GuiBox : IActor, IAnimatedPrimitive {
+/// <summary>
+/// todo
+/// </summary>
+// todo use Position
+public class Parellelogram : IActor, IAnimatedPrimitive {
     public int L { get; set; }
     public int R { get; set; }
     public int T { get; set; }
     public int B { get; set; }
 
-    public Color Color { get; set; } = Color.Black;
+    public Color Color { get; set; } = Settings.ColorBg;
 
     public float OutlineThickness { get; set; }
-    public Color OutlineColor { get; set; } = Color.White;
+    public Color OutlineColor { get; set; } = Settings.ColorFg;
 
     /// <summary>
     /// Move X by 1 for every slant Y
@@ -33,7 +38,7 @@ public class GuiBox : IActor, IAnimatedPrimitive {
     public Progress Prog { get; set; } = new();
     public float Speed { get; set; } = 2f;
 
-    public GuiBox(int l, int r, int t, int b, float outlineThickness = 10,
+    public Parellelogram(int l, int r, int t, int b, float outlineThickness = 10,
         RenderPriority renderPriority = RenderPriority.B1Med) {
         this.L = l;
         this.R = r;
@@ -49,14 +54,17 @@ public class GuiBox : IActor, IAnimatedPrimitive {
         RenderLib.DrawParallelogram(this.L, this.R, this.T, this.B, this.Color, this.OutlineColor,
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
+
+    public void Create() => this.AddRoutine(IAnimatedPrimitive.In);
+    public void Destroy() => this.AddRoutine(IAnimatedPrimitive.Out);
 }
 
 public static class GuiBoxes {
     /// <summary>
-    /// <c>GuiBox</c> that covers most of the left half of the screen
+    /// <c>Parellelogram</c> that covers most of the left half of the screen
     /// </summary>
     // todo how far offscreen is needed
-    public static readonly GuiBox CoverLeft = new(8, 1750, 0, World.H) {
+    public static readonly Parellelogram CoverLeft = new(8, 1750, 0, World.H) {
         Speed = 4f,
         SlantL = 0,
         Priority = RenderPriority.B2Low

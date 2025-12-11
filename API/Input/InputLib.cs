@@ -26,7 +26,7 @@ public static class InputLib {
     /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
-    private const float _DefaultHoldDelay = 0.15f;
+    private const float _DefaultHoldDelay = 0.5f;
 
     /// <summary>
     /// Time from <c>Keybind</c> first becoming held to first trigger
@@ -105,7 +105,17 @@ public static class InputLib {
 
     private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind keybind) {
         // Bypasses held time checks
-        if (keybind.Id == KeybindId.Hotkey) return _CheckKeybind(keybind);
+        if (keybind.Id is KeybindId.Hotkey1 or KeybindId.Hotkey2) return _CheckKeybind(keybind);
+
+        if (keybind == Keybinds.LeftUp) {
+            return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Left) ||
+                _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Up);
+        }
+
+        if (keybind == Keybinds.RightDown) {
+            return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Right) ||
+                _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Down);
+        }
 
         if (!_CheckKeybind(keybind)) {
             _Held[(int) keybind.Id] = TimeSpan.Zero;
@@ -118,8 +128,9 @@ public static class InputLib {
         }
 
         if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && _CheckKeybind(keybind)) {
-            _Held[(int) keybind.Id] = _HoldInitDelay -
-                TimeSpan.FromSeconds(holdDelayS * Convert.ToInt32(_CheckKeybind(Keybinds.Hotkey)) + 1);
+            _Held[(int) keybind.Id] = _HoldInitDelay - (_CheckKeybind(Keybinds.Hotkey1)
+                ? TimeSpan.FromSeconds(holdDelayS / 2)
+                : TimeSpan.FromSeconds(holdDelayS));
             return true;
         }
 
@@ -128,26 +139,18 @@ public static class InputLib {
     }
 
     private static bool _CheckKeybind(Keybind keybind) {
-        if (_IsKeyDown(keybind)) {
+        if (_IsKeyDown(keybind.Key)) {
             LastInputSource = InputDevice.Keyboard;
             return true;
         }
 
-        if (_IsButtonDown(keybind)) {
+        if (_IsButtonDown(keybind.Button)) {
             LastInputSource = InputDevice.XboxController; // todo
             return true;
         }
 
         return false;
     }
-
-    private static bool _IsKeyDown(Keybind keybind) => keybind.Id switch {
-        KeybindId.LeftRight => _IsKeyDown(Keybinds.Left.Key) || _IsKeyDown(Keybinds.Right.Key),
-        KeybindId.UpDown => _IsKeyDown(Keybinds.Up.Key) || _IsKeyDown(Keybinds.Down.Key),
-        KeybindId.LeftRightUpDown => _IsKeyDown(Keybinds.Left.Key) || _IsKeyDown(Keybinds.Right.Key) ||
-            _IsKeyDown(Keybinds.Up.Key) || _IsKeyDown(Keybinds.Down.Key),
-        _ => _IsKeyDown(keybind.Key)
-    };
 
     private static bool _IsKeyDown(Keys key) => key switch {
         Keys.LeftShift or Keys.RightShift => _KeyboardState.IsKeyDown(Keys.LeftShift) ||
@@ -159,14 +162,6 @@ public static class InputLib {
         Keys.LeftWindows or Keys.RightWindows => _KeyboardState.IsKeyDown(Keys.LeftWindows) ||
             _KeyboardState.IsKeyDown(Keys.RightWindows),
         _ => _KeyboardState.IsKeyDown(key),
-    };
-
-    private static bool _IsButtonDown(Keybind keybind) => keybind.Id switch {
-        KeybindId.LeftRight => _IsButtonDown(Keybinds.Left.Button) || _IsButtonDown(Keybinds.Right.Button),
-        KeybindId.UpDown => _IsButtonDown(Keybinds.Up.Button) || _IsButtonDown(Keybinds.Down.Button),
-        KeybindId.LeftRightUpDown => _IsButtonDown(Keybinds.Left.Button) || _IsButtonDown(Keybinds.Right.Button) ||
-            _IsButtonDown(Keybinds.Up.Button) || _IsButtonDown(Keybinds.Down.Button),
-        _ => _IsButtonDown(keybind.Button)
     };
 
     private static bool _IsButtonDown(Buttons button) => button switch {

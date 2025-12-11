@@ -34,6 +34,6 @@ public sealed class Path : IActor, IAnimatedPrimitive {
     public void Draw(GameTime gameTime) =>
         Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, this.Color, this.Color, 0);
 
-    public void AddRoutine(Routine routine) => this.Data.AddRoutine(routine);
-    public void MarkForRemoval() => this.Data.MarkForRemoval();
+    public void Create() => this.AddRoutine(IAnimatedPrimitive.In);
+    public void Destroy() => this.AddRoutine(IAnimatedPrimitive.Out);
 }

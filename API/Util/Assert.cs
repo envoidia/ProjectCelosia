@@ -44,5 +44,5 @@ public static class Assert {
     [Conditional("DEBUG")]
     public static void LenNotZero(object?[] c) =>
         Debug.Assert(c.Length != 0, $"Size of {c} must not be 0");
-}
+    }
 

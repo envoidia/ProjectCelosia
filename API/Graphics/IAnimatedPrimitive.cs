@@ -37,14 +37,17 @@ public interface IAnimatedPrimitive {
     /// Speed multiplier. 1f = animation completes in 1s. 2f = 0.5s. Speed is doubled when closing
     /// </summary>
     float Speed { get; set; }
+}
 
-    /// <summary>
-    /// Updates <c>Prog</c>
-    /// </summary>
-    /// <returns>Whether the animation is finished</returns>
-    bool Update(GameTime gameTime, AnimDirs dir) {
-        int isNeg = Convert.ToInt32((int) dir == -1);
-        this.Prog += (float) (gameTime.ElapsedGameTime.TotalSeconds * (int) dir * this.Speed * (1 + isNeg));
-        return this.Prog == 1 - isNeg;
+public static class AnimatedPrimitiveExtensions {
+    extension(IAnimatedPrimitive @this) {
+        /// <summary>
+        /// Updates <c>Prog</c>
+        /// </summary>
+        /// <returns>Whether the animation is finished</returns>
+        public bool Update(GameTime gameTime, AnimDirs dir) {
+            @this.Prog = RenderLib.UpdateProg(@this.Prog, @this.Speed, gameTime, dir);
+            return @this.Prog == 1 - Convert.ToInt32((int) dir == -1);
+        }
     }
 }

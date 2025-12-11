@@ -29,7 +29,7 @@ public sealed class Game1 : Core {
     private static Celosia.Main _celosiaMain = null!;
 #endif
 
-    public Game1() : base("Project Celosia", 0, 0, false) {
+    public Game1() : base("Project Celosia") {
 #if NATIVE_AOT
         // Prevent crash caused by reflection in the atlas reader
         // Make sure to change this after updating MGE
@@ -41,7 +41,7 @@ public sealed class Game1 : Core {
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(1920, 1080), false, false, false));
+            new Point(2560, 1440), true, false, false));
     }
 
     protected override void Initialize() {
@@ -69,20 +69,20 @@ public sealed class Game1 : Core {
         if (InputLib.Check(Keybinds.DebugInfo)) {
             if (!_isDebugInfoEnabled) {
                 _isDebugInfoEnabled = true;
-                MenuDebug.Create();
+                DebugMenu.Create();
             } else {
                 _isDebugInfoEnabled = false;
-                MenuDebug.Destroy();
+                DebugMenu.Destroy();
             }
         }
 
-        if (_isDebugInfoEnabled) MenuDebug.Update(gameTime);
+        if (_isDebugInfoEnabled) DebugMenu.Update(gameTime);
 
         // Switch input prompt between kb/controller
         if (InputLib.InputDeviceChanged) StateMachine.UpdateInputPrompt();
 
         // Update the current State
-        StateMachine.GetState().Update(gameTime);
+        StateMachine.GetState().OnUpdate?.Invoke(gameTime);
 
         base.Update(gameTime);
 

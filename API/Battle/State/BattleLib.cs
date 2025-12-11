@@ -173,13 +173,13 @@ public static class BattleLib {
     #region Update Methods
 
     internal static void _Update(GameTime gameTime) {
-        if (InputLib.Check(Keybinds.Menu)) {
+        if (InputLib.Check(Keybinds.Menu1)) {
             StateMachine.Add(States.Log);
             return;
         }
 
-        if (InputLib.Check(Keybinds.Map)) {
-            if (InputLib.Check(Keybinds.Hotkey)) {
+        if (InputLib.Check(Keybinds.Menu2)) {
+            if (InputLib.Check(Keybinds.Hotkey1)) {
                 _indexTarget = _selectingMove;
                 StateMachine.Add(States.Inspect);
             } else StateMachine.Add(States.InspectTargeting);

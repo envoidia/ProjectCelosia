@@ -79,15 +79,15 @@ Version: {1}</value>
         <value>FPS: {0}
 RAM: {1}MB
 Resolution: {2}
-NavPath: {3}
+States: {3}
 Overworld Location: {4}
 Loaded Mods: {5}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
-        <value>/i[KF3]: Write loaded mod list to log
-/i[KF4]: Write battle log to log (in battle). Hold {0} to preserve formatting codes
-/i[KF5]: Write all actors to log
-etc todo</value>
+        <value>/i[KF3]: Toggle actor outline display (pink = size, blue = padding)
+/i[KF4]: Write all actors to console
+/i[KF5]: Write battle log to console. Hold {0} to preserve formatting codes
+/i[KF6]: Write loaded mod list to console</value>
     </data>
     <!--#endregion-->
     <!--#region Basic-->
@@ -112,11 +112,11 @@ etc todo</value>
     <data name="KeyBack" xml:space="preserve">
         <value>Back/Defend</value>
     </data>
-    <data name="KeyMenu" xml:space="preserve">
-        <value>Menu/Log</value>
+    <data name="KeyMenu1" xml:space="preserve">
+        <value>Menu 1</value>
     </data>
-    <data name="KeyMap" xml:space="preserve">
-        <value>Map/Inspect</value>
+    <data name="KeyMenu2" xml:space="preserve">
+        <value>Menu 2</value>
     </data>
     <data name="KeyLeft" xml:space="preserve">
         <value>Left</value>
@@ -130,20 +130,17 @@ etc todo</value>
     <data name="KeyDown" xml:space="preserve">
         <value>Down</value>
     </data>
-    <data name="KeyPageL1" xml:space="preserve">
-        <value>Page L1</value>
+    <data name="KeyPageL" xml:space="preserve">
+        <value>Page Left</value>
     </data>
-    <data name="KeyPageL2" xml:space="preserve">
-        <value>Page L2</value>
+    <data name="KeyPageR" xml:space="preserve">
+        <value>Page Right</value>
     </data>
-    <data name="KeyPageR1" xml:space="preserve">
-        <value>Page R1</value>
+    <data name="KeyHotkey1" xml:space="preserve">
+        <value>Hotkey 1</value>
     </data>
-    <data name="KeyPageR2" xml:space="preserve">
-        <value>Page R2</value>
-    </data>
-    <data name="KeyScroll" xml:space="preserve">
-        <value>Scroll</value>
+    <data name="KeyHotkey2" xml:space="preserve">
+        <value>Hotkey 2</value>
     </data>
     <!--Buttons
     todo remove if these arent used-->
@@ -193,6 +190,9 @@ etc todo</value>
     </data>
     <data name="InputFaster" xml:space="preserve">
         <value>Faster</value>
+    </data>
+    <data name="InputJump" xml:space="preserve">
+        <value>Jump</value>
     </data>
     <data name="InputClose" xml:space="preserve">
         <value>Close</value>

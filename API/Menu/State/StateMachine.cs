@@ -48,7 +48,7 @@ public static class StateMachine {
     /// <summary>
     /// Update the input prompt <c>Label</c> in the bottom-right corner
     /// </summary>
-    public static void UpdateInputPrompt() => _InputPrompt.Text = GetState().GetInputPrompt();
+    public static void UpdateInputPrompt() => _InputPrompt.Text = GetState().GetInputPrompt?.Invoke() ?? "";
 
     public new static string ToString() => string.Join(", ", [.. _Path.Select(s => s.Name)]);
 }

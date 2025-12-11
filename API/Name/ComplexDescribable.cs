@@ -7,6 +7,10 @@ using OneOf;
 
 namespace API.Name;
 
+/// <summary>
+/// An item that can be named and described, with a description that can include formatting args
+/// and the descriptions of any <c>IDescribable</c>
+/// </summary>
 public abstract class ComplexDescribable(string keyName, string icon, string keyDesc) : IDescribable {
     public DescArg[] DescArgs { private get; init; } = [];
     public HashSet<IDescribable> DescInclusions { protected get; init; } = [];
@@ -28,6 +32,9 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     public virtual string GetDesc(GameMod? mod = null) =>
         this.KeyDesc.FormatLang(mod, this._GetDescArgs(mod));
 
+    /// <returns>
+    /// The description of this with all inclusions
+    /// </returns>
     public abstract string GetFullDesc(GameMod? mod = null);
 
     protected virtual HashSet<IDescribable> _GetDescInclusions() => this.DescInclusions;
@@ -53,6 +60,10 @@ public enum DescArgType {
 
 // todo unions when
 // todo must take IDescribable
+
+/// <summary>
+/// A formatting argument for the description. Can be an <c>INameable</c> or a <c>string</c>
+/// </summary>
 public sealed class DescArg(OneOf<string, ComplexDescribable> value, DescArgType descriptionArgType = DescArgType.PlainText) {
     public string GetString(GameMod? mod) => value.Match(
         str => descriptionArgType == DescArgType.PlainText ? str : str.GetLang(),

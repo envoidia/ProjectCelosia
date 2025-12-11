@@ -34,7 +34,7 @@ public class Core : Game {
 
     // Fonts
     public static FontSystem KoruriSystem { get; set; } = null!;
-    public static DynamicSpriteFont Koruri50 { get; private set; } = null!;
+    public static DynamicSpriteFont Koruri60 { get; private set; } = null!;
 
     // todo should this be hiding
     public new static ContentManager Content { get; private set; } = null!;
@@ -69,10 +69,7 @@ public class Core : Game {
     /// Creates a new Core instance.
     /// </summary>
     /// <param name="title">The title to display in the title bar of the game window.</param>
-    /// <param name="width">The initial width, in pixels, of the game window.</param>
-    /// <param name="height">The initial height, in pixels, of the game window.</param>
-    /// <param name="fullScreen">Indicates if the game should start in fullscreen mode.</param>
-    public Core(string title, int width, int height, bool fullScreen) {
+    public Core(string title) {
         // Ensure that multiple cores are not created
         Debug.Assert(Instance is null, "Only a single instance of Core should be");
 
@@ -81,9 +78,6 @@ public class Core : Game {
 
         // Create a new graphics device manager
         Graphics = new GraphicsDeviceManager(this) {
-            PreferredBackBufferWidth = width,
-            PreferredBackBufferHeight = height,
-            IsFullScreen = fullScreen,
             SynchronizeWithVerticalRetrace = false, // Vsync
             GraphicsProfile = GraphicsProfile.HiDef
             //PreferMultiSampling = true
@@ -105,7 +99,7 @@ public class Core : Game {
 
         KoruriSystem = new FontSystem();
         KoruriSystem.AddFont(File.ReadAllBytes("Font/koruri.ttf"));
-        Koruri50 = KoruriSystem.GetFont(50);
+        Koruri60 = KoruriSystem.GetFont(60);
 
         // Apply the graphic presentation changes.
         //Graphics.PreferMultiSampling = true;

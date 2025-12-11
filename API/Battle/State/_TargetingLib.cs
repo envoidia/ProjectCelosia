@@ -17,12 +17,12 @@ internal static class _TargetingLib {
     private static int _extraActions = 0;
 
     internal static void _Update(GameTime gameTime) {
-        if (InputLib.Check(Keybinds.Menu)) {
+        if (InputLib.Check(Keybinds.Menu1)) {
             StateMachine.Add(States.Log);
             return;
         }
 
-        if (InputLib.Check(Keybinds.Map)) {
+        if (InputLib.Check(Keybinds.Menu2)) {
             StateMachine.Add(States.Inspect);
             return;
         }
@@ -75,7 +75,7 @@ internal static class _TargetingLib {
             return;
         }
 
-        if (InputLib.Check(Keybinds.Confirm, Keybinds.Map)) {
+        if (InputLib.Check(Keybinds.Confirm, Keybinds.Menu2)) {
             StateMachine.Remove();
             StateMachine.Add(States.Inspect);
         }

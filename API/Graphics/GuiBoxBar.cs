@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
+// todo rename
 public sealed class GuiBoxBar(int l, int r, int t, int b, RenderPriority priority = RenderPriority.B1Med,
-    params Color[] colors) : GuiBox(l, r, t, b, renderPriority: priority) {
+    params Color[] colors) : Parellelogram(l, r, t, b, renderPriority: priority) {
     public Progress[] BarProgs { get; set; } = new Progress[colors.Length];
     public Color[] BarColors { get; } = colors;
 

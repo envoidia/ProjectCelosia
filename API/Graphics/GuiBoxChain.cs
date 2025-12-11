@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = RenderPriority.B1Med,
-    params int[] divisions) : GuiBox(l, -1, t, b, renderPriority: priority) {
+    params int[] divisions) : Parellelogram(l, -1, t, b, renderPriority: priority) {
     /// <summary>
     /// Width of each division (not counting the first)
     /// </summary>
@@ -31,7 +31,7 @@ public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = R
     private const int _SelectedOffset = 10;
 
     // todo settable prop?
-    private Color _selectedColor = Colors.VPurple;
+    private Color _selectedColor = Colors.Accent;
 
     // todo is it really uninitialized tho
     private Progress[] _selectedProg = new Progress[divisions.Length];
@@ -68,7 +68,4 @@ public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = R
             void draw(int l, int r, int t, int b) => drawP(l, r, t, b, this.Color, this.Prog);
         }
     }
-
-    public void AddRoutine(Routine routine) => this.Data.AddRoutine(routine);
-    public void MarkForRemoval() => this.Data.MarkForRemoval();
 }
