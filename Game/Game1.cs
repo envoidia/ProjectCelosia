@@ -8,7 +8,6 @@ using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 using API.Menu.State;
 
-
 #if NATIVE_AOT
 using Microsoft.Xna.Framework.Content;
 using MonoGame.Extended.Content.ContentReaders;
@@ -25,10 +24,6 @@ public sealed class Game1 : Core {
     // Debug
     private static bool _isDebugInfoEnabled;
 
-#if NATIVE_AOT
-    private static Celosia.Main _celosiaMain = null!;
-#endif
-
     public Game1() : base("Project Celosia") {
 #if NATIVE_AOT
         // Prevent crash caused by reflection in the atlas reader
@@ -36,8 +31,13 @@ public sealed class Game1 : Core {
         // todo can i write it without ()
         ContentTypeReaderManager.AddTypeCreator(
             "MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader, MonoGame.Extended, Version=5.2.0.0, Culture=neutral, PublicKeyToken=null",
-            () => new Texture2DAtlasReader()
-        );
+            () => new Texture2DAtlasReader());
+
+        ContentTypeReaderManager.AddTypeCreator(
+            "Microsoft.Xna.Framework.Content.EffectReader, MonoGame.Framework, Version=3.8.4.0, Culture=neutral, PublicKeyToken=null",
+            () => new Texture2DAtlasReader());
+
+        // todo fix Apos.Shapes AOT crash
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
@@ -49,17 +49,16 @@ public sealed class Game1 : Core {
 
         StateMachine.Add(States.MainMenu);
 
-#if NATIVE_AOT
-        celosiaMain = new Celosia.Main();
-        celosiaMain.Initialize();
-#else
+#if !NATIVE_AOT
         ModLoader.LoadAllMods();
+#else
+        // todo: Force Celosia.Main to be loaded
 #endif
     }
 
     protected override void LoadContent() {
-        _bg = Content.Load<Texture2D>("img/bg");
-        IconsAtlas = Content.Load<Texture2DAtlas>("img/icons");
+        _bg = this.Content.Load<Texture2D>("img/bg");
+        IconsAtlas = this.Content.Load<Texture2DAtlas>("img/icons");
 
         base.LoadContent();
     }
@@ -86,11 +85,10 @@ public sealed class Game1 : Core {
 
         base.Update(gameTime);
 
-#if NATIVE_AOT
-        celosiaMain.Update(gameTime);
-#else
+#if !NATIVE_AOT
         ModLoader.UpdateAllMods(gameTime);
 #endif
+        // todo: if AOT and Celosia gets an Update: Celosia.Main.Mod.OnUpdate(gameTime);
     }
 
     protected override void Draw(GameTime gameTime) {

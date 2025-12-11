@@ -1,5 +1,3 @@
-using System;
-using API.Util;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 

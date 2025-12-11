@@ -34,5 +34,5 @@ public sealed class GameMod(string id, Version version, ResourceManager resource
     /// <summary>
     /// Called every frame
     /// </summary>
-    public Action<GameTime>? Update { get; init; } = null;
+    public Action<GameTime>? OnUpdate { get; init; } = null;
 }

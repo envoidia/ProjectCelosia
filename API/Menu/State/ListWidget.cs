@@ -1,6 +1,5 @@
 using System;
 using API.Graphics;
-using API.Input;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;

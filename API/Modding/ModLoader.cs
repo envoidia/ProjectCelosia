@@ -64,7 +64,7 @@ public static class ModLoader {
 
     /// <inheritdoc cref="LoadAllMods" />
     public static void UpdateAllMods(GameTime gameTime) {
-        foreach (GameMod mod in _LoadedMods) mod.Update?.Invoke(gameTime);
+        foreach (GameMod mod in _LoadedMods) mod.OnUpdate?.Invoke(gameTime);
     }
 
     /// <param name="mod">The <c>IGameMod</c> to look for</param>

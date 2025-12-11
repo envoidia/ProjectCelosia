@@ -4,6 +4,7 @@ using API.Graphics;
 
 namespace API.Menu.State;
 
+// todo: how can widgets communicate with eachother? move input prompt logic here (partially)
 public sealed class Menu {
     public IActor[] Actors { get; init; }
 

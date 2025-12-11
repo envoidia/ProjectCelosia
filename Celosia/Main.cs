@@ -15,6 +15,8 @@ public static class Main {
     public static GameMod Mod { get; } = new("Celosia", new Version(0, 1), Lang.ResourceManager);
 
     static Main() {
+        Console.WriteLine("running Celosia.Main static constructor");
+
         // Really gross temporary initialize for testing battles
         Core.battle = new API.Battle.Battle(new Team(
             new Unit(CBattle.UnitTypes.Johny, 19, null, CBattle.Skills.Fireball, Skills.Defend),

@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using API.Battle;
 using API.Graphics;
 using API.Input;
-using API.Menu.State;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
@@ -14,7 +12,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Graphics;
-using OneOf.Types;
 
 namespace API;
 
@@ -35,9 +32,6 @@ public class Core : Game {
     // Fonts
     public static FontSystem KoruriSystem { get; set; } = null!;
     public static DynamicSpriteFont Koruri60 { get; private set; } = null!;
-
-    // todo should this be hiding
-    public new static ContentManager Content { get; private set; } = null!;
 
     public static bool ExitOnEscape { get; set; }
 
@@ -108,11 +102,8 @@ public class Core : Game {
         // Set the window title.
         this.Window.Title = title;
 
-        // Set the core's content manager to a reference of the base Game's content manager.
-        Content = base.Content;
-
         // Set the root directory for content.
-        Content.RootDirectory = "Content";
+        this.Content.RootDirectory = "Content";
 
         // Setup stuff
 
@@ -143,7 +134,7 @@ public class Core : Game {
 
         // Create sprite and shape batches
         SpriteBatch = new SpriteBatch(GraphicsDevice);
-        ShapeBatch = new ShapeBatch(GraphicsDevice, Content);
+        ShapeBatch = new ShapeBatch(GraphicsDevice, this.Content);
 
         WhitePixel = new Texture2D(GraphicsDevice, 1, 1);
         WhitePixel.SetData([Color.White]);
