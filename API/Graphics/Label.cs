@@ -1,3 +1,4 @@
+using API.Save;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 
@@ -18,8 +19,11 @@ public sealed class Label : IActor {
     }
 
     // Background
+    // todo remove and just call rect at site?
     public bool HasBackground { get; set; } = false;
     public Color BackgroundColor { get; set; } = Colors.TransBlack;
+
+    // todo use regular padding
     public Vector2 BackgroundPadding { get; set; } = new(10, 10);
 
     public ActorData Data { get; }
@@ -43,7 +47,8 @@ public sealed class Label : IActor {
                 (int) (this.Size.Y + (this.BackgroundPadding.Y * 2))), this.BackgroundColor);
         }
 
-        this._RichTextLayout.Draw(Core.SpriteBatch, this.Position, Color.White, 0f, this.Origin.ToVector2());
+        this._RichTextLayout.Draw(Core.SpriteBatch, this.Position,
+            Settings.ColorFg, 0f, this.Origin.ToVector2());
     }
 
     public void Create() { }

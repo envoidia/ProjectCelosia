@@ -41,5 +41,12 @@ public static class Assert {
     [Conditional("DEBUG")]
     public static void LenNotZero(object?[] c) =>
         Debug.Assert(c.Length != 0, $"Size of {c} must not be 0");
-    }
+
+    /// <summary>
+    /// Asserts that the given collection doesn't contain the given object
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void DoesntContain(IList c, object v) =>
+        Debug.Assert(!c.Contains(v), $"{c} must not contain {v}");
+}
 

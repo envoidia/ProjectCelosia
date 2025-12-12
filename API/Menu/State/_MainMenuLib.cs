@@ -1,3 +1,4 @@
+using System;
 using API.Graphics;
 using API.Save;
 using API.Util;
@@ -19,26 +20,17 @@ internal static class _MainMenuLib {
 
     private const int _OptCount = (int) _Options.Quit;
 
-    internal static readonly Menu _MainMenu = new(new ListWidget("lorem", "ipsum", "dolor", "si", "amet",
-        "foo", "bar", "among", "us", "impostor", "is", "sus") {
-        Position = new Vector2(1200, 800)
-    });
-
-    private static readonly Label _L = new() {
-        Position = new Vector2(2000, 400),
-        Text = "awawawawawawawaAAAAAAAAAAAAAAAAAAAAA",
-        Padding = new(30, 30, 30, 30)
-    };
-
-    static _MainMenuLib() {
-        Stage.Add(_L);
-    }
+    // internal static readonly Menu _MainMenu = new(new ListWidget(_MainMenu, new Vector2(1200, 800),
+    //     "lorem", "ipsum", "dolor", "si", "amet",
+    //     "foo", "bar", "among", "us", "impostor", "is", "sus"),
+    //     new TabBarWidget(_MainMenu, new Vector2(1200, 600), "lorem", "ipsum", "dolor", "si", "amet"));
 
     internal static void _Update(GameTime gameTime) {
-        RenderLib.DrawParallelogram(new Vector2(1600, 400),
-                    new Point(400, 60),
-                    Point.Zero, Settings.ColorAccent,
-                    Settings.ColorAccent, 0f, 6, 6, new Progress(1f));
+        StateMachine.Add(States.Battle);
+        // RenderLib.DrawParallelogram(new Vector2(1500, 800),
+        //             new Point(1200, 800),
+        //             Point.Zero, Settings.ColorBg,
+        //             Settings.ColorFg, 15f, 6, 6, new Progress(Math.Min(1f, i / 2000f)));
         /*_index = MenuLib.CheckMovement1D(_index, _OptCount);
         // todo update cursor
 

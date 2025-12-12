@@ -47,7 +47,11 @@ public static class AnimatedPrimitiveExtensions {
         /// <returns>Whether the animation is finished</returns>
         public bool Update(GameTime gameTime, AnimDirs dir) {
             @this.Prog = RenderLib.UpdateProg(@this.Prog, @this.Speed, gameTime, dir);
-            return @this.Prog == 1 - Convert.ToInt32((int) dir == -1);
+            if (@this.Prog == 1 - Convert.ToInt32((int) dir == -1)) {
+                Console.WriteLine($"returning true with dir {dir}");
+                return true;
+            }
+            return false;
         }
     }
 }

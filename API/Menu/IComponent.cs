@@ -1,6 +1,6 @@
 using System;
 
-namespace API.Menu.State;
+namespace API.Menu;
 
 public interface IComponent {
     int Index { get; set; }

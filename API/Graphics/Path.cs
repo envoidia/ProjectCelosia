@@ -20,7 +20,6 @@ public sealed class Path : IActor, IAnimatedPrimitive {
         set => this.Data.Priority = value;
     }
 
-
     public Progress Prog { get; set; } = new();
     public float Speed { get; set; } = 2f;
 

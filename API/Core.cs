@@ -15,6 +15,7 @@ using MonoGame.Extended.Graphics;
 
 namespace API;
 
+// todo move stuff to static ctor
 public class Core : Game {
     public static Core Instance { get; private set; } = null!;
 

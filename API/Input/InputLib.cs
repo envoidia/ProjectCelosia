@@ -107,6 +107,7 @@ public static class InputLib {
         // Bypasses held time checks
         if (keybind.Id is KeybindId.Hotkey1 or KeybindId.Hotkey2) return _CheckKeybind(keybind);
 
+        // Merged keybinds
         if (keybind == Keybinds.LeftUp) {
             return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Left) ||
                 _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Up);
@@ -116,7 +117,8 @@ public static class InputLib {
             return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Right) ||
                 _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Down);
         }
-
+        
+        // Normal keybinds
         if (!_CheckKeybind(keybind)) {
             _Held[(int) keybind.Id] = TimeSpan.Zero;
             return false;

@@ -151,7 +151,7 @@ public static class BattleLib {
         // temp setup teams
         Battle = Core.battle;
 
-        _InspectLib._TranslateUnitNames();
+        _InspectLib._LateInit();
 
         LogLib.Add($"{ColorCode.Turn}{Lang.Turn} 1{ColorCode.White}");
 
@@ -173,18 +173,22 @@ public static class BattleLib {
     #region Update Methods
 
     internal static void _Update(GameTime gameTime) {
-        if (InputLib.Check(Keybinds.Menu1)) {
-            StateMachine.Add(States.Log);
-            return;
-        }
+        //Parellelograms.TimeWithCoverLeftClosed += gameTime.ElapsedGameTime;
 
-        if (InputLib.Check(Keybinds.Menu2)) {
-            if (InputLib.Check(Keybinds.Hotkey1)) {
+        if (Parellelograms.CoverLeft.Prog == 0) {
+            if (InputLib.Check(Keybinds.Menu1)) {
+                //Parellelograms.TimeWithCoverLeftClosed = TimeSpan.Zero;
+                StateMachine.Add(States.Log);
+                return;
+            }
+
+            if (InputLib.Check(Keybinds.Menu2)) {
+                //Parellelograms.TimeWithCoverLeftClosed = TimeSpan.Zero;
                 _indexTarget = _selectingMove;
                 StateMachine.Add(States.Inspect);
-            } else StateMachine.Add(States.InspectTargeting);
+                return;
+            }
 
-            return;
         }
 
         if (_delay > TimeSpan.Zero) {
@@ -284,6 +288,7 @@ public static class BattleLib {
 
         _Queue.Text = sb.ToString();
     }
+
     #endregion
 
     #region Move Execution Methods
@@ -574,6 +579,8 @@ public static class BattleLib {
     #endregion
 
     #region Utility Methods
+
     public static BuffType GetStageBuffType(int stacks) => stacks >= 0 ? BuffType.Buff : BuffType.Debuff;
+
     #endregion
 }

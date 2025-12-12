@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ResolutionBuddy;
@@ -35,8 +37,9 @@ public static class Stage {
 
         static void begin() {
             Core.ShapeBatch.Begin(Resolution.TransformationMatrix());
-            Core.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
-            null, null, null, Resolution.TransformationMatrix());
+            Core.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
+            SamplerState.PointClamp, null, null, null,
+            Resolution.TransformationMatrix());
         }
 
         static void end() {
@@ -49,6 +52,7 @@ public static class Stage {
     /// Add an <c>Actor</c>. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
     public static void Add(IActor actor) {
+        Assert.DoesntContain(_Actors, actor);
         _Actors.Add(actor);
         actor.Create();
         _needsSorting = true;
@@ -58,11 +62,12 @@ public static class Stage {
     /// Add a range of <c>Actor</c>s. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
     public static void AddRange(params IEnumerable<IActor> actors) {
-        _Actors.AddRange(actors);
         foreach (IActor actor in actors) {
+            Assert.DoesntContain(_Actors, actor);
             _Actors.Add(actor);
             actor.Create();
         }
+
         _needsSorting = true;
     }
 
@@ -88,6 +93,8 @@ public static class Stage {
 
         _needsSorting = false;
     }
+
+    public static int ActorCount() => _Actors.Count;
 
     public new static string ToString() =>
         string.Join("\n", [.. _Actors.Select(a => a.ToString())]);

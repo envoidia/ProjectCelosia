@@ -27,6 +27,7 @@ public enum KeybindId {
     // Merged (must be last)
     LeftUp,
     RightDown,
+
     LeftRight,
     UpDown,
     LeftRightUpDown
@@ -95,11 +96,11 @@ public static class Keybinds {
     public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
 
     // Merged
-    // Acceptable for InputLib.Check():
+    // Acceptable for InputLib.Check(), has no glyph:
     public static readonly Keybind LeftUp = new("", KeybindId.LeftUp, Keys.None, Buttons.None);
     public static readonly Keybind RightDown = new("", KeybindId.RightDown, Keys.None, Buttons.None);
 
-    // Not acceptable:
+    // Not acceptable, has glyph:
     public static readonly Keybind LeftRight = new("", KeybindId.LeftRight, Keys.None, Buttons.None);
     public static readonly Keybind UpDown = new("", KeybindId.UpDown, Keys.None, Buttons.None);
     public static readonly Keybind LeftRightUpDown = new("", KeybindId.LeftRightUpDown, Keys.None, Buttons.None);

@@ -1,10 +1,13 @@
 using System;
 using API.Graphics;
 
-namespace API.Menu.State;
+namespace API.Menu;
 
 public interface IWidget : IActor {
-    int Index { get; set; }
+    /// <summary>
+    /// The <c>Menu</c> this is a part of
+    /// </summary>
+    Menu Menu { get; }
 
     /// <inheritdoc cref="WidgetSelectionType" />
     WidgetSelectionType PrefDir { get; }
@@ -13,8 +16,6 @@ public interface IWidget : IActor {
     /// The directions that this is currently using for input
     /// </summary>
     WidgetSelectionType CurDir { get; set; }
-
-    Padding Padding { get; set; }
 
     Action? OnSelect { get; set; }
 

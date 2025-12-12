@@ -20,6 +20,4 @@ public readonly struct Progress(float p = 0) {
     public static bool operator !=(Progress l, float r) => l._p != r;
 
     public static explicit operator float(Progress p) => p._p;
-
-    public static explicit operator Progress(float p) => new(p);
 }

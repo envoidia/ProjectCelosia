@@ -52,13 +52,13 @@ public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = R
             int b = this.B + offset;
 
             this._selectedDir[i] = (this.SelectedDiv == i).ToSign();
-            this._selectedProg[i] = (Progress) Math.Clamp((float) this._selectedProg[i] +
-                (float) (gameTime.ElapsedGameTime.TotalSeconds * this._selectedDir[i] * (this.Speed * 2)), 0f, 1f);
+            this._selectedProg[i] = new Progress(Math.Clamp((float) this._selectedProg[i] +
+                (float) (gameTime.ElapsedGameTime.TotalSeconds * this._selectedDir[i] * (this.Speed * 2)), 0f, 1f));
 
             draw(l, r, t, b);
 
             // Cursor
-            Progress cursorProg = (Progress) Math.Min((float) this._selectedProg[i], (float) this.Prog);
+            Progress cursorProg = new(Math.Min((float) this._selectedProg[i], (float) this.Prog));
             if (cursorProg != 0) drawP(l, r, t, b, this._selectedColor, cursorProg);
 
             void drawP(int l, int r, int t, int b, Color color, Progress prog) =>

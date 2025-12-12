@@ -80,14 +80,16 @@ Version: {1}</value>
 RAM: {1}MB
 Resolution: {2}
 States: {3}
-Overworld Location: {4}
-Loaded Mods: {5}</value>
+Actors on Stage: {4}
+Overworld Location: {5}
+Loaded Mods: {6}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
         <value>/i[KF3]: Toggle actor outline display (pink = size, blue = padding)
 /i[KF4]: Write all actors to console
 /i[KF5]: Write battle log to console. Hold {0} to preserve formatting codes
-/i[KF6]: Write loaded mod list to console</value>
+/i[KF6]: Write loaded mod list to console
+/i[KF12]: Force GC collect</value>
     </data>
     <!--#endregion-->
     <!--#region Basic-->

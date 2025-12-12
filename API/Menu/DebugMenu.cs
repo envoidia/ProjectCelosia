@@ -102,6 +102,9 @@ public static class DebugMenu {
             Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
         }
 
+        // todo use first unused F key
+        if (InputLib.IsKeyJustPressed(Keys.F12)) GC.Collect();
+
         // Update timed text
         if (_timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
@@ -110,6 +113,7 @@ public static class DebugMenu {
             GC.GetTotalMemory(false) / _Mb,
             "todo",
             StateMachine.ToString(),
+            Stage.ActorCount(),
             "todo",
             ModLoader._LoadedMods.Count);
 

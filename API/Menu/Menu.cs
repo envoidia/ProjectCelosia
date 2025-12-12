@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using API.Graphics;
 
-namespace API.Menu.State;
+namespace API.Menu;
 
 // todo: how can widgets communicate with eachother? move input prompt logic here (partially)
 public sealed class Menu {

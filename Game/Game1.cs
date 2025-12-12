@@ -41,7 +41,7 @@ public sealed class Game1 : Core {
 #endif
 
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(2560, 1440), true, false, false));
+            new Point(1920, 1080), false, false, false));
     }
 
     protected override void Initialize() {
@@ -53,6 +53,7 @@ public sealed class Game1 : Core {
         ModLoader.LoadAllMods();
 #else
         // todo: Force Celosia.Main to be loaded
+        // The easy way is to call a dummy method from it
 #endif
     }
 

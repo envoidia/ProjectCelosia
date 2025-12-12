@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using API.Extensions;
 using API.Input;
 using Microsoft.Xna.Framework;
 
@@ -25,12 +26,14 @@ public sealed record State(string Name,
     /// </summary>
     public Action? OnDestroy { get; init; }
 
-    // todo fix 0 len crash
+    /// <summary>
+    /// Current list of menus that have been traveled through in this
+    /// </summary>
     public List<Menu> Menus { get; init; } = [];
 
     public void Create() {
         this.OnCreate?.Invoke();
-        this.Menus[0].Create();
+        if (this.Menus.Count > 0) this.Menus[0].Create();
     }
 
     public void Destroy() {
@@ -38,8 +41,13 @@ public sealed record State(string Name,
     }
 
     public void Update(GameTime gameTime) {
-        this.Menus[^1].Update();
+        if (this.Menus.Count > 0) this.Menus[^1].Update();
         this.OnUpdate?.Invoke(gameTime);
+    }
+
+    public void RemoveMenu() {
+        this.Menus[^1].Destroy();
+        this.Menus.RemoveLast();
     }
 
     public static string GetInputPromptString(params InputPrompt[] inputPrompts) {

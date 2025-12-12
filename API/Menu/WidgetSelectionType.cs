@@ -1,7 +1,7 @@
 using API.Input;
 using API.Util;
 
-namespace API.Menu.State;
+namespace API.Menu;
 
 /// <summary>
 /// The directions that an <c>IWidget</c> would like to use for input
@@ -40,6 +40,7 @@ public static class WidgetSelectionTypeExtensions {
             WidgetSelectionType.Horiz => Keybinds.Right,
             WidgetSelectionType.Vert => Keybinds.Down,
             WidgetSelectionType.HorizVert => Keybinds.RightDown,
+            WidgetSelectionType.Page => Keybinds.PageR,
             _ => throw new ClosedEnumsWhenException()
         };
 
@@ -47,6 +48,7 @@ public static class WidgetSelectionTypeExtensions {
             WidgetSelectionType.Horiz => Keybinds.Left,
             WidgetSelectionType.Vert => Keybinds.Up,
             WidgetSelectionType.HorizVert => Keybinds.LeftUp,
+            WidgetSelectionType.Page => Keybinds.PageL,
             _ => throw new ClosedEnumsWhenException()
         };
     }
