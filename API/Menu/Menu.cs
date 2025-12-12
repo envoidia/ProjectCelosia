@@ -6,13 +6,19 @@ namespace API.Menu;
 
 // todo: how can widgets communicate with eachother? move input prompt logic here (partially)
 public sealed class Menu {
-    public IActor[] Actors { get; init; }
+    public IActor[] Actors { get; private set; } = null!;
 
     public Action? OnCreate { get; init; }
     public Action? OnDestroy { get; init; }
     public Action? OnUpdate { get; init; }
 
+    public Menu() { }
+
     public Menu(params IActor[] actors) {
+        this.Setup(actors);
+    }
+
+    public void Setup(params IActor[] actors) {
         this.Actors = actors;
 
         this._SetupWidgets();

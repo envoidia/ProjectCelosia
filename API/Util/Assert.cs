@@ -15,6 +15,13 @@ public static class Assert {
         Debug.Assert(v.Equals(0), $"{v} must be 0");
 
     /// <summary>
+    /// Asserts that a value is 1
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void One(object v) =>
+        Debug.Assert(v.Equals(1), $"{v} must be 0");
+
+    /// <summary>
     /// Asserts that a value is not 0
     /// </summary>
     [Conditional("DEBUG")]

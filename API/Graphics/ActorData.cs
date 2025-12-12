@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using API.Extensions;
-using API.Menu;
 using API.Util;
 using Microsoft.Xna.Framework;
 
@@ -52,7 +51,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
 
     /// <summary>
-    /// Padding to apply to this when (and only when) it is inside of an <c>IWidget</c>
+    /// Padding to apply to this when calling <c>DrawBackground()</c> and arranging it inside of an <c>IWidget</c>
     /// </summary>
     public Padding Padding { get; set; }
 
@@ -64,6 +63,9 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         }
     } = Alignment.TopLeft;
 
+    /// <summary>
+    /// Distance from Position to draw at
+    /// </summary>
     public Point Origin { get; set; } = Point.Zero;
 
     private readonly List<Routine> _routines = [];
@@ -90,6 +92,8 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         Stage._needsRemoval = true;
     }
 
+    private const int _OriginDebugSize = 10;
+
     /// <summary>
     /// Draws this if it is visible and performs its <c>Routine</c>s
     /// </summary>
@@ -98,23 +102,40 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
 
         actor.Draw(gameTime);
 
-        if (DebugMenu._drawActorOutlines) {
-            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
-                new Vector2(this.Width, this.Height),
-                Colors.Trans, Colors.ActorOutline);
-
-            if (this.Padding != Padding.Zero) {
-                Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
-                new Vector2(this.Padding.L, this.Padding.T),
-                new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
-                Colors.ActorPadding);
-            }
-        }
-
         // Execute routines
         for (int i = 0; i < this._routines.Count; i++) {
             if (this._routines[i].OnUpdate(actor, gameTime)) this._routines.SwapRemove(i);
         }
+    }
+
+    public void DrawBackground(Color c) {
+        Core.SpriteBatch.Draw(Core.WhitePixel, new Rectangle(
+            (int) (this.Position.X - this.Padding.L - this.Origin.X),
+            (int) (this.Position.Y - this.Padding.T - this.Origin.Y),
+            this.Size.X + this.Padding.LR, this.Size.Y + this.Padding.TB), c);
+    }
+
+    public void DrawDebug() {
+        // Position
+        Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
+            new Vector2(this.Width, this.Height),
+            Colors.Trans, Colors.ActorOutline);
+
+        // Padding
+        if (this.Padding != Padding.Zero) {
+            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
+            new Vector2(this.Padding.L, this.Padding.T),
+            new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
+            Colors.ActorPadding);
+        }
+
+        // Marked
+        if (this._marked) this.DrawBackground(Colors.ActorMarked);
+
+        // Origin
+        Core.ShapeBatch.FillRectangle(this.Position - new Vector2(_OriginDebugSize),
+            new Vector2(_OriginDebugSize * 2),
+            Colors.ActorOrigin);
     }
 
     public Point CalcOrigin() => this.Alignment switch {

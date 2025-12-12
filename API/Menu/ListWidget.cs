@@ -94,7 +94,10 @@ public sealed class ListWidget : IWidget {
             h += this.Labels[i].Height + this.Labels[i].Padding.TB;
         }
 
-        foreach (Label l in this.Labels) l.Data.Act(gameTime);
+        foreach (Label l in this.Labels) {
+            l.Data.Act(gameTime);
+            if(DebugMenu._drawActorOutlines) l.Data.DrawDebug();
+        }
     }
 
     public void CalcLayout() {

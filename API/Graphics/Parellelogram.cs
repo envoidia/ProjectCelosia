@@ -1,4 +1,3 @@
-using System;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
@@ -70,19 +69,4 @@ public static class Parellelograms {
         SlantL = 0,
         Priority = RenderPriority.B2Low
     };
-
-    // /// <summary>
-    // /// Time that CoverLeft has been closed for
-    // /// </summary>
-    // public static TimeSpan TimeWithCoverLeftClosed { get; set; }
-
-    // /// <summary>
-    // /// Time that CoverLeft has been open for
-    // /// </summary>
-    // public static TimeSpan TimeWithCoverLeftOpen { get; set; }
-
-    // /// <summary>
-    // /// Time that CoverLeft should remain closed for before it can be reopened
-    // /// </summary>
-    // public static readonly TimeSpan CoverLeftCooldown = TimeSpan.FromSeconds(1f);
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using API.Extensions;
@@ -45,10 +46,12 @@ public static class StateMachine {
         UpdateInputPrompt();
     }
 
+    public new static string ToString() =>
+        string.Join(", ", [.. _Path.Select(s => s.Name)]);
+
     /// <summary>
     /// Update the input prompt <c>Label</c> in the bottom-right corner
     /// </summary>
-    public static void UpdateInputPrompt() => _InputPrompt.Text = GetState().GetInputPrompt?.Invoke() ?? "";
-
-    public new static string ToString() => string.Join(", ", [.. _Path.Select(s => s.Name)]);
+    public static void UpdateInputPrompt() =>
+        _InputPrompt.Text = StateMachine.GetState().GetInputPrompt?.Invoke() ?? "";
 }

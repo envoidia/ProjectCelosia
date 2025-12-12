@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using API.Menu;
 using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,6 +36,13 @@ public static class Stage {
         for (; i >= 0; i--) _Actors[i].Data.Act(gameTime);
         end();
 
+        // Debug overlay (F3)
+        if (DebugMenu._drawActorOutlines) {
+            begin();
+            foreach (IActor a in _Actors) a.Data.DrawDebug();
+            end();
+        }
+
         static void begin() {
             Core.ShapeBatch.Begin(Resolution.TransformationMatrix());
             Core.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
@@ -53,8 +61,11 @@ public static class Stage {
     /// </summary>
     public static void Add(IActor actor) {
         Assert.DoesntContain(_Actors, actor);
+
         _Actors.Add(actor);
+    actor.Data._marked = false;
         actor.Create();
+
         _needsSorting = true;
     }
 
@@ -64,7 +75,9 @@ public static class Stage {
     public static void AddRange(params IEnumerable<IActor> actors) {
         foreach (IActor actor in actors) {
             Assert.DoesntContain(_Actors, actor);
+
             _Actors.Add(actor);
+            actor.Data._marked = false;
             actor.Create();
         }
 

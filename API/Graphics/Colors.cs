@@ -13,6 +13,8 @@ public static class Colors {
     // Debug outlines for actors
     public static readonly Color ActorOutline = Color.Fuchsia;
     public static readonly Color ActorPadding = Color.Cyan;
+    public static readonly Color ActorOrigin = Color.Lime;
+    public static readonly Color ActorMarked = new(1f, 0f, 0f, 0.1f);
 
     // Icons
     // todo public const string ShieldIcon = $"{Shield}[+vibrating-shield]";

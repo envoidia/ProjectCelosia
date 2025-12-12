@@ -1,6 +1,5 @@
 using Apos.Shapes;
 using Microsoft.Xna.Framework;
-using Vector2Extensions;
 
 namespace API.Graphics;
 

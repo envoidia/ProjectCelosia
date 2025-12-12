@@ -9,7 +9,10 @@ public interface IAnimatedPrimitive {
     /// Animate in
     /// </summary>
     static readonly Routine In = new(
-        static actor => Assert.Is<IAnimatedPrimitive>(actor),
+        static actor => {
+            Assert.Is<IAnimatedPrimitive>(actor);
+            Assert.Zero(((IAnimatedPrimitive) actor).Prog);
+        },
 
         static (actor, gameTime) => ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.In));
 
@@ -17,7 +20,10 @@ public interface IAnimatedPrimitive {
     /// Animate out
     /// </summary>
     static readonly Routine Out = new(
-        static actor => Assert.Is<IAnimatedPrimitive>(actor),
+        static actor => {
+            Assert.Is<IAnimatedPrimitive>(actor);
+            Assert.One(((IAnimatedPrimitive) actor).Prog);
+        },
 
         static (actor, gameTime) => {
             if (((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Out)) {
@@ -47,11 +53,7 @@ public static class AnimatedPrimitiveExtensions {
         /// <returns>Whether the animation is finished</returns>
         public bool Update(GameTime gameTime, AnimDirs dir) {
             @this.Prog = RenderLib.UpdateProg(@this.Prog, @this.Speed, gameTime, dir);
-            if (@this.Prog == 1 - Convert.ToInt32((int) dir == -1)) {
-                Console.WriteLine($"returning true with dir {dir}");
-                return true;
-            }
-            return false;
+            return @this.Prog == 1 - Convert.ToInt32((int) dir == -1);
         }
     }
 }

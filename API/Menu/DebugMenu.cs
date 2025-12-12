@@ -20,22 +20,25 @@ public static class DebugMenu {
     private static readonly Label _DebugInfoL = new() {
         Text = _GetDebugInfoLText(),
         Position = new Vector2(10, 10),
+        Padding = new Padding(10),
         HasBackground = true,
         Priority = RenderPriority.Highest
     };
 
     private static readonly Label _DebugInfoR = new() {
         Position = new Vector2(World.W - 10, 10),
-        Alignment = Alignment.TopRight,
+        Padding = new Padding(10),
         HasBackground = true,
+        Alignment = Alignment.TopRight,
         Priority = RenderPriority.Highest
     };
 
     private static readonly Label _DebugInfoHelp = new() {
         Text = _GetDebugInfoHelpText(),
         Position = new Vector2(10, World.H - 10),
-        Alignment = Alignment.BottomLeft,
+        Padding = new Padding(10),
         HasBackground = true,
+        Alignment = Alignment.BottomLeft,
         Priority = RenderPriority.Highest,
         IsVisible = false
     };
@@ -45,7 +48,6 @@ public static class DebugMenu {
 
     /// <summary>
     /// Adds the relevant <c>Actor</c>s to the <c>Stage</c>.
-    /// Doesn't resort because these should always be on top
     /// </summary>
     public static void Create() {
         Stage.Add(_DebugInfoL);
@@ -57,7 +59,6 @@ public static class DebugMenu {
 
     /// <summary>
     /// Removes the relevant <c>Actor</c>s from the <c>Stage</c>.
-    /// Doesn't resort because these should always be on top
     /// </summary>
     public static void Destroy() {
         _DebugInfoL.MarkForRemoval();
@@ -75,35 +76,13 @@ public static class DebugMenu {
 
         // todo update text if lang changed
 
+        // Toggle help text
+        _DebugInfoHelp.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
+
         // Lerped FPS counter
         _avgFrameTime += (gameTime.ElapsedGameTime - _avgFrameTime) * 0.01f;
 
         _timeSinceUpdate += gameTime.ElapsedGameTime;
-
-        // Check for inputs
-        _DebugInfoHelp.Data.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
-
-        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
-
-        if (InputLib.IsKeyJustPressed(Keys.F4)) Console.WriteLine(Stage.ToString());
-
-        if (InputLib.IsKeyJustPressed(Keys.F5)) {
-            string str = string.Join('\n', LogLib._LogText);
-
-            if (InputLib.Check(Keybinds.Hotkey1)) {
-                Console.WriteLine(str);
-                return;
-            }
-
-            Console.WriteLine(Regexes.RemoveFormattingCodes(str));
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F6)) {
-            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
-        }
-
-        // todo use first unused F key
-        if (InputLib.IsKeyJustPressed(Keys.F12)) GC.Collect();
 
         // Update timed text
         if (_timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
@@ -118,6 +97,32 @@ public static class DebugMenu {
             ModLoader._LoadedMods.Count);
 
         _timeSinceUpdate = TimeSpan.Zero;
+    }
+
+    internal static void _CheckDebugHotkeys() {
+        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
+
+        if (InputLib.IsKeyJustPressed(Keys.F4)) Console.WriteLine(Stage.ToString());
+
+        if (InputLib.IsKeyJustPressed(Keys.F5)) Stage.Cleanup();
+
+        if (InputLib.IsKeyJustPressed(Keys.F6)) {
+            string str = string.Join('\n', LogLib._LogText);
+
+            if (InputLib.Check(Keybinds.Hotkey1)) {
+                Console.WriteLine(str);
+                return;
+            }
+
+            Console.WriteLine(Regexes.RemoveFormattingCodes(str));
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.F7)) {
+            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+        }
+
+        // todo use first unused F key
+        if (InputLib.IsKeyJustPressed(Keys.F12)) GC.Collect();
     }
 
     // todo cleanup

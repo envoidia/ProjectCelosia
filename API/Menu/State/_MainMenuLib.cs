@@ -1,7 +1,3 @@
-using System;
-using API.Graphics;
-using API.Save;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;

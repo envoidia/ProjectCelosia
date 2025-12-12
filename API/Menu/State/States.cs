@@ -13,8 +13,7 @@ public static class States {
 
     public static readonly State Battle = new("Battle", BattleLib._Update,
     static () =>
-        State.GetInputPromptString(ScrollUpDown, Faster, Confirm,
-            Back, InputPrompts.Log, InputPrompts.Inspect)) {
+        State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect)) {
         OnCreate = BattleLib._Create, OnDestroy = BattleLib._Destroy
     };
 

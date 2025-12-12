@@ -6,7 +6,6 @@ using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 using System;
 using System.Collections.Generic;
-using API.Util;
 using API.Menu;
 
 namespace API.Battle.State;
@@ -22,7 +21,7 @@ internal sealed class _InspectLib {
     private const int _AnimPrimActorCount = 6; //8;
     private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
-    private static Menu.Menu _menu = null!;
+    private static readonly Menu.Menu _Menu = new();
 
     // Stat types
     private static readonly Label[] _StatCategoryHeaders = new Label[_StatTypeCount];
@@ -209,7 +208,7 @@ internal sealed class _InspectLib {
         // Page list
         names = [Lang.Skills, Lang.Passives, Lang.Buffs, Lang.Stats];
 
-        _pageTabs = new(_menu, new Vector2(638, 446), names) {
+        _pageTabs = new(_Menu, new Vector2(638, 446), names) {
             Priority = RenderPriority.B2Med
         };
 
@@ -243,15 +242,15 @@ internal sealed class _InspectLib {
         for (int i = 0; i < UnitCount; i++) _UnitList[i] = u[i].FormatName(false);
         // todo set their X here
 
-        _unitTabs = new TabBarWidget(_menu, new Vector2(518, 40), _UnitList) {
+        _unitTabs = new TabBarWidget(_Menu, new Vector2(518, 40), _UnitList) {
             Priority = RenderPriority.B2Med
         };
 
-        _menu = new Menu.Menu([.. _AnimPrimActors, .. _Actors, _pageTabs, _unitTabs]);
+        _Menu.Setup([.. _AnimPrimActors, .. _Actors, _pageTabs, _unitTabs]);
     }
 
     internal static void _Create() {
-        States.Inspect.Menus.Add(_menu);
+        States.Inspect.Menus.Add(_Menu);
 
         Stage.Cleanup();
     }
@@ -276,8 +275,8 @@ internal sealed class _InspectLib {
     }
 
     internal static string _GetInputPrompt() => _curPage == _InspectPage.Stats
-        ? Menu.State.State.GetInputPromptString(Faster, Back)
-        : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, Back);
+        ? Menu.State.State.GetInputPromptString(Faster, Jump, Back)
+        : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, Jump, Back);
 
     private static void _HandleInspectPage() { }
 

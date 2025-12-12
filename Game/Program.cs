@@ -1,4 +1,4 @@
-﻿using Game;
+﻿using API;
 
-using Game1 game = new();
-game.Run();
+using Core core = new("Project Celosia");
+core.Run();

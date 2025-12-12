@@ -86,7 +86,10 @@ public sealed class TabBarWidget : IWidget {
             w += this.Labels[i].Width + this.Labels[i].Padding.LR;
         }
 
-        foreach (Label l in this.Labels) l.Data.Act(gameTime);
+        foreach (Label l in this.Labels) {
+            l.Data.Act(gameTime);
+            if (DebugMenu._drawActorOutlines) l.Data.DrawDebug();
+        }
     }
 
     public void CalcLayout() {

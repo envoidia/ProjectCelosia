@@ -26,7 +26,7 @@ public static class InputLib {
     /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
-    private const float _DefaultHoldDelay = 0.5f;
+    private const float _DefaultHoldDelay = 0.25f;
 
     /// <summary>
     /// Time from <c>Keybind</c> first becoming held to first trigger
@@ -117,7 +117,7 @@ public static class InputLib {
             return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Right) ||
                 _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Down);
         }
-        
+
         // Normal keybinds
         if (!_CheckKeybind(keybind)) {
             _Held[(int) keybind.Id] = TimeSpan.Zero;

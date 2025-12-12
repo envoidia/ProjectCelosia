@@ -1,3 +1,4 @@
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
@@ -11,7 +12,7 @@ public sealed class Path : IActor, IAnimatedPrimitive {
     public Vector2 Start { get; set; }
     public Vector2 End { get; set; }
     public float Thickness { get; set; }
-    public Color Color { get; set; } = Color.White;
+    public Color Color { get; set; } = Settings.ColorFg;
 
     public ActorData Data { get; }
 

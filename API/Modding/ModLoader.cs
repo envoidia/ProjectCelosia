@@ -27,10 +27,7 @@ public static class ModLoader {
 
     private static readonly string _ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
 
-    /// <summary>
-    /// Do not call outside of the <c>Game1</c> instance
-    /// </summary>
-    public static void LoadAllMods() {
+    internal static void _LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder, "*.dll", SearchOption.AllDirectories);
         foreach (string dllPath in dllFiles) _LoadSingleModAssembly(dllPath);
     }
@@ -62,8 +59,7 @@ public static class ModLoader {
             .Cast<GameMod>());
     }
 
-    /// <inheritdoc cref="LoadAllMods" />
-    public static void UpdateAllMods(GameTime gameTime) {
+    internal static void _UpdateAllMods(GameTime gameTime) {
         foreach (GameMod mod in _LoadedMods) mod.OnUpdate?.Invoke(gameTime);
     }
 
