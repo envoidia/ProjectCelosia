@@ -7,7 +7,6 @@ using static API.Battle.State.BattleLib;
 using System;
 using System.Collections.Generic;
 using API.Menu;
-using System.Linq;
 
 namespace API.Battle.State;
 
@@ -24,16 +23,21 @@ internal sealed class _InspectLib {
     private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     private static readonly Menu.Menu _Menu = new("Inspect") {
-        // Set selected unit to current unit
         OnCreate = static () => {
             _Queue.CheckInput = true;
+
+            // Set selected unit in queue to current
             _UpdateQueueIndex(_indexTarget);
         },
 
         OnDestroy = static () => {
             _Queue.CheckInput = false;
+
+            // Set selected unit in queue to what it was
             _UpdateQueueIndex(_GetQueuePos());
         },
+
+        OnUpdate = _Update,
 
         InputWidgets = [_Queue]
     };
@@ -59,7 +63,7 @@ internal sealed class _InspectLib {
 
     // Page list
     private static readonly Label[] _PageList = new Label[TeamSize];
-    private static TabBarWidget _pageTabs = null!;
+    private static TabBarWidget _pageTabs = null!; // todo why is the input for this all fucky wucky
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Basic stat list
@@ -261,8 +265,8 @@ internal sealed class _InspectLib {
     }
 
     internal static void _Create() {
-        //States.Inspect.AddMenu(_Menu); // todo remove inspect state
-        States.Inspect._Menus.Add(_Menu);
+        //States.Battle.AddMenu(_Menu); // todo remove inspect state
+        States.Battle.AddMenu(_Menu);
     }
 
     internal static void _Destroy() => States.Inspect.RemoveMenu();
@@ -273,7 +277,8 @@ internal sealed class _InspectLib {
 
     internal static void _Update(GameTime gameTime) {
         if (Parellelograms.CoverLeft.Prog == 1 && InputLib.Check(Keybinds.Back)) {
-            StateMachine.Remove();
+            //StateMachine.Remove();
+            States.Battle.RemoveMenu();
             return;
         }
 

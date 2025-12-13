@@ -74,11 +74,12 @@ Loaded Mods: {7}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
         <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if input disabled)
-/i[KF4]: Write all actors to console
-/i[KF5]: Force stage cleanup
-/i[KF5]: Write battle log to console. Hold {0} to preserve formatting codes
-/i[KF6]: Write loaded mod list to console
-/i[KF12]: Force GC collect</value>
+/i[KF4]: Toggle input view
+/i[KF5]: Write all actors on stage to console
+/i[KF6]: Force stage cleanup
+/i[KF7]: Write battle log to console. Hold {0} to preserve formatting codes
+/i[KF8]: Write loaded mod list to console
+/i[KF9]: Force GC collect</value>
     </data>
     <!--#endregion-->
     <!--#region Basic-->
@@ -98,10 +99,10 @@ Loaded Mods: {7}</value>
     <!--#region Input-->
     <!--Keybinds-->
     <data name="KeyConfirm" xml:space="preserve">
-        <value>Confirm/Attack</value>
+        <value>Confirm</value>
     </data>
     <data name="KeyBack" xml:space="preserve">
-        <value>Back/Defend</value>
+        <value>Back</value>
     </data>
     <data name="KeyMenu1" xml:space="preserve">
         <value>Menu 1</value>
@@ -132,6 +133,9 @@ Loaded Mods: {7}</value>
     </data>
     <data name="KeyHotkey2" xml:space="preserve">
         <value>Hotkey 2</value>
+    </data>
+    <data name="KeyDebugInfo" xml:space="preserve">
+        <value>Debug Info</value>
     </data>
     <!--Buttons
     todo remove if these arent used-->

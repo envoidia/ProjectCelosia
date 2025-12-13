@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using API.Extensions;
@@ -13,8 +12,10 @@ namespace API.Menu.State;
 public static class StateMachine {
     private static readonly List<State> _Path = [];
 
-    private static readonly Label _InputPrompt = new(RenderPriority.Highest) {
-        Position = World.Vec - new Vector2(10, 10),
+    internal static readonly Label _InputPrompt = new(RenderPriority.Highest) {
+        Text = "W", // Initialize with max height for height check in <c>DebugMenu</c>
+        Position = World.Vec - new Vector2(10),
+        Padding = new(10),
         Alignment = Alignment.BottomRight,
         HasBackground = true
     };

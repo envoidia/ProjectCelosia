@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Linq;
 using API.Graphics;
-using API.Menu.State;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu;

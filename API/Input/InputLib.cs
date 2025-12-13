@@ -1,4 +1,7 @@
 using System;
+using System.Text;
+using API.Graphics;
+using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -19,19 +22,51 @@ public static class InputLib {
     public static bool InputDeviceChanged { get; private set; } = true;
 
     /// <summary>
-    /// How long each <c>Keybind</c> has been held down for
+    /// How long each standard <c>Keybind</c> has been held down for
     /// </summary>
-    private static readonly TimeSpan[] _Held = new TimeSpan[Keybinds.KeybindCount];
+    private static readonly TimeSpan[] _Held = new TimeSpan[Keybinds.StdKeybindCount];
 
     /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
-    private const float _DefaultHoldDelay = 0.25f;
+    private const float _DefaultHoldDelayS = 0.25f;
 
     /// <summary>
     /// Time from <c>Keybind</c> first becoming held to first trigger
     /// </summary>
-    private static readonly TimeSpan _HoldInitDelay = TimeSpan.FromSeconds(0.3);
+    private const float _HoldInitDelayS = 0.3f;
+
+    /// <inheritdoc cref="_HoldInitDelayS" />
+    private static readonly TimeSpan _HoldInitDelay = TimeSpan.FromSeconds(_HoldInitDelayS);
+
+    /// <summary>
+    /// Tracks the status of input
+    /// </summary>
+    public static readonly Routine TrackInput = new(a => Assert.Is<Label>(a),
+        (a, gameTime) => {
+            Label l = (Label) a;
+
+            StringBuilder sb = new();
+            foreach (TimeSpan held in _Held) {
+                double s = held.TotalSeconds;
+
+                Assert.InRange((float) Math.Round(s), 0, _HoldInitDelayS);
+
+                sb.Append(s == 0 ? ColorCode.White : ColorCode.ElectricBlue)
+                    .Append(s.ToString("0.##"))
+                    .Append('\n');
+            }
+
+            bool check = _CheckKeybind(Keybinds.Hotkey1);
+            sb.Append(check ? ColorCode.Lime : ColorCode.Red).Append(check).Append('\n');
+
+            check = _CheckKeybind(Keybinds.Hotkey2);
+            sb.Append(check ? ColorCode.Lime : ColorCode.Red).Append(check);
+
+            l.Text = sb.ToString();
+
+            return false;
+        });
 
     /// <summary>
     /// Most recent <c>ElapsedGameTime</c>
@@ -45,7 +80,7 @@ public static class InputLib {
 
     #endregion
 
-    /*for (int i = 0; i < 4; i++)
+    /*todo multi controllers for (int i = 0; i < 4; i++)
         {
             GamePads[i] = new GamePadState((PlayerIndex)i);
         }*/
@@ -89,13 +124,13 @@ public static class InputLib {
     /// <summary>
     /// Check for input from 1 <c>Keybind</c>
     /// </summary>
-    public static bool Check(Keybind? keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelay) =>
+    public static bool Check(Keybind? keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS) =>
         _IsKeybindPressed(allowHold, holdDelayS, keybind);
 
     /// <summary>
     /// Check for input from either of 2 <c>Keybind</c>s
     /// </summary>
-    public static bool Check(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelay) =>
+    public static bool Check(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS) =>
         _IsKeybindPressed(allowHold, holdDelayS, keybind1) ||
         _IsKeybindPressed(allowHold, holdDelayS, keybind2);
 

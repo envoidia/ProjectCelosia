@@ -180,6 +180,9 @@ public static class BattleLib {
     #region Update Methods
 
     internal static void _Update(GameTime gameTime) {
+        // Return if log/inspect. TODO: convert skill select and move exec to menus and remove this check
+        if (States.Battle._Menus.Count == 1) return;
+
         _CheckOpenLogInspect(true);
 
         if (_delay > TimeSpan.Zero) {
@@ -206,8 +209,8 @@ public static class BattleLib {
 
             if (InputLib.Check(Keybinds.Menu2)) {
                 if (changeTarget) _indexTarget = _GetQueuePos();
-                StateMachine.Add(States.Inspect);
-                //_InspectLib._Create(); todo inspect Menu not State
+                //StateMachine.Add(States.Inspect);
+                _InspectLib._Create();
                 return;
             }
         }

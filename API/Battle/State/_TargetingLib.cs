@@ -34,7 +34,7 @@ internal static class _TargetingLib {
             return;
         }
 
-        // todo move to InputWidget
+        // todo move to InputWidget + rendering
         _indexTarget = MenuLib.CheckMovementTargeting(_indexTarget, _selectingMove, _selectedSkillInstance.Skill.Range);
 
         //MenuLib.handleOptColor(stats, indexTarget);

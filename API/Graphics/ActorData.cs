@@ -80,7 +80,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// </summary>
     /// <param name="routine"><c>Routine</c> to execute when drawn. When it returns true, it's removed from the list</param>
     public void AddRoutine(Routine routine) {
-        routine.OnStart(actor);
+        routine.OnStart?.Invoke(actor);
         this._routines.Add(routine);
     }
 
@@ -114,17 +114,21 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
 
     public void DrawDebug() {
+        (Color, Color) colors = this.IsVisible 
+            ? (Colors.ActorOutline, Colors.ActorPadding) 
+            : (Colors.ActorOutlineInvis, Colors.ActorPaddingInvis);
+
         // Position
         Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
             new Vector2(this.Width, this.Height),
-            Colors.Trans, Colors.ActorOutline);
+            Colors.Trans, colors.Item1);
 
         // Padding
         if (this.Padding != Padding.Zero) {
             Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
             new Vector2(this.Padding.L, this.Padding.T),
             new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
-            Colors.ActorPadding);
+            colors.Item2);
         }
 
         // Marked

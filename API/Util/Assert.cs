@@ -43,6 +43,13 @@ public static class Assert {
         Debug.Assert(i <= max && i >= min, $"{i} must between {min} and {max} (inclusive)");
 
     /// <summary>
+    /// Asserts that a float is within 2 others
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void InRange(float i, float min, float max) =>
+        Debug.Assert(i <= max && i >= min, $"{i} must between {min} and {max} (inclusive)");
+
+    /// <summary>
     /// Asserts that an int is within 2 others or is a special exception
     /// </summary>
     [Conditional("DEBUG")]

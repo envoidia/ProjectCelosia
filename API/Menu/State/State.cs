@@ -29,6 +29,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// <summary>
     /// Current list of menus that have been traveled through in this
     /// </summary>
+    // todo private
     internal List<Menu> _Menus { get; init; } = [];
 
     /// <inheritdoc cref="OnCreate" />

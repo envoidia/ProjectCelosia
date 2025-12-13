@@ -1,3 +1,8 @@
+using System.Collections.Generic;
+using API.Extensions;
+using API.Graphics;
+using API.Modding;
+using API.Name;
 using Microsoft.Xna.Framework.Input;
 
 namespace API.Input;
@@ -19,7 +24,7 @@ public enum KeybindId {
     /// <summary>
     /// Marker. Always add non-merged, non-hotkey keybinds above this
     /// </summary>
-    LastBeforeMerged,
+    LastBeforeAbnormal,
 
     Hotkey1,
     Hotkey2,
@@ -33,11 +38,12 @@ public enum KeybindId {
     LeftRightUpDown
 }
 
-public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) {
-    public string KeyName => keyName;
+public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) : INameable {
     public KeybindId Id => id;
     public Keys Key { get; set; } = key;
     public Buttons Button { get; set; } = button;
+
+    public string KeyName => keyName;
 
     public string GetCurrentGlyph() => this.Id switch {
         KeybindId.LeftRight or KeybindId.UpDown or KeybindId.LeftRightUpDown =>
@@ -46,10 +52,16 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
             ? this.Key.GetGlyph()
             : this.Button.GetGlyph(InputLib.LastInputSource)
     };
+
+    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.White, mod);
 }
 
 public static class Keybinds {
-    public const int KeybindCount = (int) KeybindId.LastBeforeMerged;
+    /// <summary>
+    /// Number of <c>Keybinds</c> with standard check behavior
+    /// </summary>
+    public const int StdKeybindCount = (int) KeybindId.LastBeforeAbnormal;
 
     /// <summary>
     /// Confirm/Yes. Bottom face button
@@ -90,10 +102,13 @@ public static class Keybinds {
     /// </summary>
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
 
-    // Debug
-    // Ensure names are never displayed
-    // todo remake icons with more buttons (like stick clicks)
-    public static readonly Keybind DebugInfo = new("", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
+    public static readonly Keybind DebugInfo = new("KeyDebugInfo", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
+
+    /// <summary>
+    /// Keybinds that don't call other keybinds
+    /// </summary>
+    public static readonly List<Keybind> UniqueKeybinds =
+        [Confirm, Back, Menu1, Menu2, PageL, PageR, Left, Right, Up, Down, DebugInfo, Hotkey1, Hotkey2];
 
     // Merged
     // Acceptable for InputLib.Check(), has no glyph:

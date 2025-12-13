@@ -13,6 +13,17 @@ public readonly record struct ColorCode(Color Color) {
 
     public override string ToString() => this;
 
+    public static readonly ColorCode Red = new(Color.Red);
+    public static readonly ColorCode Orange = new(Color.Orange);
+    public static readonly ColorCode Yellow = new(Color.Yellow);
+    public static readonly ColorCode Lime = new(Color.Lime);
+    public static readonly ColorCode Green = new(Color.Green);
+    public static readonly ColorCode ElectricBlue = new(74, 176, 231);
+    public static readonly ColorCode Cyan = new(Color.Cyan);
+    public static readonly ColorCode Blue = new(Color.Blue);
+    public static readonly ColorCode Purple = new(Color.Purple);
+    public static readonly ColorCode Fuchsia = new(Color.Fuchsia);
+
     /// <summary>
     /// Positive numbers
     /// </summary>
