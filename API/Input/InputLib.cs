@@ -50,8 +50,6 @@ public static class InputLib {
             foreach (TimeSpan held in _Held) {
                 double s = held.TotalSeconds;
 
-                Assert.InRange((float) Math.Round(s), 0, _HoldInitDelayS);
-
                 sb.Append(s == 0 ? ColorCode.White : ColorCode.ElectricBlue)
                     .Append(s.ToString("0.##"))
                     .Append('\n');

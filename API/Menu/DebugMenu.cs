@@ -44,7 +44,7 @@ public static class DebugMenu {
         IsVisible = false
     };
 
-    private const int _KeyYOff = 950;
+    private const int _KeyYOff = 927;
 
     private static readonly Label _DebugInfoKeyNames = new() {
         Text = _GetKeyNameText(),
