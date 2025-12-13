@@ -51,12 +51,8 @@ public static class InputLib {
                 TimeSpan held = _Held[i];
                 double s = held.TotalSeconds;
 
-                // todo does this magic number always work
-                ColorCode c = s <= 0.0001f
-                    ? _CheckKeybind(Keybinds.UniqueKeybinds[i])
-                        ? ColorCode.Fuchsia
-                        : ColorCode.White
-                    : ColorCode.ElectricBlue;
+                ColorCode c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
+                    ? ColorCode.ElectricBlue : ColorCode.White;
 
                 sb.Append(c).Append(s.ToString("0.##")).Append('\n');
             }
