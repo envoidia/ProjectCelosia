@@ -177,6 +177,7 @@ public class Core : Game {
         StateMachine.Add(States.MainMenu);
     }
 
+    // Update is called before Draw
     protected override void Update(GameTime gameTime) {
         // Update the input manager.
         InputLib.Update(gameTime);
@@ -200,7 +201,7 @@ public class Core : Game {
         if (InputLib.InputDeviceChanged) StateMachine.UpdateInputPrompt();
 
         // Update the current State
-        StateMachine.GetState().OnUpdate?.Invoke(gameTime);
+        StateMachine.GetState().Update(gameTime);
 
 #if !NATIVE_AOT
         ModLoader._UpdateAllMods(gameTime);

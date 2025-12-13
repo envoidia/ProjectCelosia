@@ -92,6 +92,7 @@ public static class DebugMenu {
             GC.GetTotalMemory(false) / _Mb,
             "todo",
             StateMachine.ToString(),
+            StateMachine.GetState().GetMenuString(),
             Stage.ActorCount(),
             "todo",
             ModLoader._LoadedMods.Count);

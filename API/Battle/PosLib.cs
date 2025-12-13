@@ -4,10 +4,11 @@ using API.Battle.State;
 namespace API.Battle;
 
 public static class PosLib {
-
+    public const int Lowest = 0;
+    public const int Highest = BattleLib.UnitCount - 1;
     public const int HighestAlly = BattleLib.TeamSize - 1;
     public const int LowestOpp = HighestAlly + 1;
-    public const int HighestOpp = BattleLib.UnitCount - 1;
+    public const int HighestOpp = Highest;
     public const int Invalid = -1;
 
     /// <returns>

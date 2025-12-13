@@ -100,20 +100,18 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     public void Act(GameTime gameTime) {
         if (!this.IsVisible) return;
 
-        actor.Draw(gameTime);
-
         // Execute routines
         for (int i = 0; i < this._routines.Count; i++) {
             if (this._routines[i].OnUpdate(actor, gameTime)) this._routines.SwapRemove(i);
         }
+
+        actor.Draw(gameTime);
     }
 
-    public void DrawBackground(Color c) {
-        Core.SpriteBatch.Draw(Core.WhitePixel, new Rectangle(
-            (int) (this.Position.X - this.Padding.L - this.Origin.X),
-            (int) (this.Position.Y - this.Padding.T - this.Origin.Y),
-            this.Size.X + this.Padding.LR, this.Size.Y + this.Padding.TB), c);
-    }
+    public void DrawBackground(Color c) => Core.SpriteBatch.Draw(Core.WhitePixel,
+        new Rectangle((int) (this.Position.X - this.Padding.L - this.Origin.X),
+        (int) (this.Position.Y - this.Padding.T - this.Origin.Y),
+        this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
 
     public void DrawDebug() {
         // Position

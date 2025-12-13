@@ -29,7 +29,7 @@ internal static class _PopupLib {
         Stage.Add(_PopupTitle);
         Stage.Add(_PopupText);
 
-        _PopupBg.AddRoutine(IAnimatedPrimitive.In);
+        _PopupBg.AddRoutine(IAnimated.In);
 
         Stage._needsSorting = false;
     }
@@ -42,7 +42,7 @@ internal static class _PopupLib {
         _PopupTitle.MarkForRemoval();
         _PopupText.MarkForRemoval();
 
-        _PopupBg.AddRoutine(IAnimatedPrimitive.Out);
+        _PopupBg.AddRoutine(IAnimated.Out);
 
         Stage._needsSorting = false;
 

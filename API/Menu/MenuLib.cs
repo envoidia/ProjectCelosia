@@ -1,13 +1,16 @@
 using System;
+using System.Reflection.Emit;
 using API.Battle;
 using API.Input;
+using API.Util;
+using OneOf;
 
 namespace API.Menu;
 
 public static class MenuLib {
     private const float _LogScrollDelayS = 0.01f;
 
-    public static int CheckMovement1D(int index, int optCount, WidgetSelectionType dir = WidgetSelectionType.HorizVert) {
+    public static int CheckMovement1D(int index, int optCount, SelectionType dir = SelectionType.HorizVert) {
         if (InputLib.Check(dir.GetDec(), true)) {
             if (InputLib.Check(Keybinds.Hotkey2)) return 0;
             return index == 0 ? optCount - 1 : index - 1;

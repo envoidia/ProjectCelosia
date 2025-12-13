@@ -8,7 +8,7 @@ namespace API.Graphics;
 /// todo
 /// </summary>
 // todo use Position
-public class Parellelogram : IActor, IAnimatedPrimitive {
+public class Parellelogram : IActor, IAnimated {
     public int L { get; set; }
     public int R { get; set; }
     public int T { get; set; }
@@ -55,8 +55,8 @@ public class Parellelogram : IActor, IAnimatedPrimitive {
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
 
-    public void Create() => this.AddRoutine(IAnimatedPrimitive.In);
-    public void Destroy() => this.AddRoutine(IAnimatedPrimitive.Out);
+    public void Create() => this.AddRoutine(IAnimated.In);
+    public void Destroy() => this.AddRoutine(IAnimated.Out);
 }
 
 public static class Parellelograms {

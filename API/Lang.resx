@@ -46,19 +46,6 @@
     <data name="ErrGetMergedGlyphKeybindId" xml:space="preserve">
         <value>KeybindId must be LeftRight, UpDown, or LeftRightUpDown</value>
     </data>
-    <!-- Asserts -->
-    <data name="AssMultipleInstance" xml:space="preserve">
-        <value>Only a single {0} instance can be created</value>
-    </data>
-    <data name="AssInvalidType" xml:space="preserve">
-        <value>Argument must be convertible to type {0}</value>
-</data>
-    <data name="AssSizeMismatch" xml:space="preserve">
-        <value>Size must be {0}, was {1}</value>
-    </data>
-    <data name="AssSize0" xml:space="preserve">
-        <value>Size must not be 0</value>
-    </data>
     <!--Modloader info
     0 = mod name -->
     <data name="ErrModCantFindEntryPoint" xml:space="preserve">
@@ -80,12 +67,13 @@ Version: {1}</value>
 RAM: {1}MB
 Resolution: {2}
 States: {3}
-Actors on Stage: {4}
-Overworld Location: {5}
-Loaded Mods: {6}</value>
+Menus: {4}
+Actors on Stage: {5}
+Overworld Location: {6}
+Loaded Mods: {7}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
-        <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked)
+        <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if IInputWidget with disabled input)
 /i[KF4]: Write all actors to console
 /i[KF5]: Force stage cleanup
 /i[KF5]: Write battle log to console. Hold {0} to preserve formatting codes

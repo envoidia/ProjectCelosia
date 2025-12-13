@@ -22,8 +22,8 @@ public sealed class Skill : ComplexDescribable, _IModItem {
 
     public GameMod? Source { get; }
 
-    public Skill(GameMod? source, string keyName, string keyDesc, Range range, int cost)
-        : base(keyName, "", keyDesc) {
+    public Skill(GameMod? source, string keyName, string keyDesc, Range range, int cost) :
+        base(keyName, "", keyDesc) {
         this.Range = range;
         this.Cost = cost;
 

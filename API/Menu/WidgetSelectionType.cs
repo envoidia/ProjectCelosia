@@ -6,7 +6,7 @@ namespace API.Menu;
 /// <summary>
 /// The directions that an <c>IWidget</c> would like to use for input
 /// </summary>
-public enum WidgetSelectionType {
+public enum SelectionType {
     /// <summary>
     /// No navigation
     /// </summary>
@@ -33,22 +33,24 @@ public enum WidgetSelectionType {
     Page
 }
 
-// todo account for page
-public static class WidgetSelectionTypeExtensions {
-    extension(WidgetSelectionType @this) {
-        public Keybind GetInc() => @this switch {
-            WidgetSelectionType.Horiz => Keybinds.Right,
-            WidgetSelectionType.Vert => Keybinds.Down,
-            WidgetSelectionType.HorizVert => Keybinds.RightDown,
-            WidgetSelectionType.Page => Keybinds.PageR,
+// todo account for none
+public static class SelectionTypeExtensions {
+    extension(SelectionType @this) {
+        public Keybind? GetInc() => @this switch {
+            SelectionType.Horiz => Keybinds.Right,
+            SelectionType.Vert => Keybinds.Down,
+            SelectionType.HorizVert => Keybinds.RightDown,
+            SelectionType.Page => Keybinds.PageR,
+            SelectionType.None => null,
             _ => throw new ClosedEnumsWhenException()
         };
 
-        public Keybind GetDec() => @this switch {
-            WidgetSelectionType.Horiz => Keybinds.Left,
-            WidgetSelectionType.Vert => Keybinds.Up,
-            WidgetSelectionType.HorizVert => Keybinds.LeftUp,
-            WidgetSelectionType.Page => Keybinds.PageL,
+        public Keybind? GetDec() => @this switch {
+            SelectionType.Horiz => Keybinds.Left,
+            SelectionType.Vert => Keybinds.Up,
+            SelectionType.HorizVert => Keybinds.LeftUp,
+            SelectionType.Page => Keybinds.PageL,
+            SelectionType.None => null,
             _ => throw new ClosedEnumsWhenException()
         };
     }

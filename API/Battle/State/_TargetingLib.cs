@@ -17,15 +17,7 @@ internal static class _TargetingLib {
     private static int _extraActions = 0;
 
     internal static void _Update(GameTime gameTime) {
-        if (InputLib.Check(Keybinds.Menu1)) {
-            StateMachine.Add(States.Log);
-            return;
-        }
-
-        if (InputLib.Check(Keybinds.Menu2)) {
-            StateMachine.Add(States.Inspect);
-            return;
-        }
+        _CheckOpenLogInspect();
 
         if (InputLib.Check(Keybinds.Back)) {
             //foreach (Label stat in stats) stat.Color = ColorCode.White;
@@ -66,18 +58,5 @@ internal static class _TargetingLib {
         _UpdateStatDisplay(_selectingMove);
 
         StateMachine.Remove();
-    }
-
-    // todo merge
-    internal static void _UpdateInspectTargeting(GameTime gameTime) {
-        if (InputLib.Check(Keybinds.Back)) {
-            StateMachine.Remove();
-            return;
-        }
-
-        if (InputLib.Check(Keybinds.Confirm, Keybinds.Menu2)) {
-            StateMachine.Remove();
-            StateMachine.Add(States.Inspect);
-        }
     }
 }

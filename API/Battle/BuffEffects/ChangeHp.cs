@@ -5,8 +5,8 @@ using API.Graphics;
 
 namespace API.Battle.BuffEffects;
 
-public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercentage = true, bool isPierce = false)
-    : IBuffEffect {
+public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercentage = true, bool isPierce = false) :
+    IBuffEffect {
     // todo this might need to display the name if immediate
     public void OnGive(Unit self, int stacks) {
         if (!isImmediate) return;

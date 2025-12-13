@@ -27,10 +27,7 @@ public static class States {
 
         static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Top, Bottom, BackLog));
 
-    public static readonly State InspectTargeting = new("InspectTargeting",
-    _TargetingLib._UpdateInspectTargeting, static () =>
-        State.GetInputPromptString(Move, Faster, Jump, ConfirmInspect, Back, InputPrompts.Log));
-
+    // todo remove
     public static readonly State Inspect = new("Inspect",
         _InspectLib._Update, _InspectLib._GetInputPrompt) {
         OnCreate = _InspectLib._Create, OnDestroy = _InspectLib._Destroy

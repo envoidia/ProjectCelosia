@@ -15,6 +15,7 @@ public static class Colors {
     public static readonly Color ActorPadding = Color.Cyan;
     public static readonly Color ActorOrigin = Color.Lime;
     public static readonly Color ActorMarked = new(1f, 0f, 0f, 0.1f);
+    public static readonly Color ActorDisabledInput = new(0f, 0f, 1f, 0.1f);
 
     // Icons
     // todo public const string ShieldIcon = $"{Shield}[+vibrating-shield]";

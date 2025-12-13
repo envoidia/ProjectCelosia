@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using API.Battle.BuffEffects;
 using API.Battle.SkillEffects;
@@ -30,24 +31,21 @@ public static class BattleLib {
     public const int StatCount = 6;
     public const int UnitCount = TeamSize * TeamCount;
 
-    /// <summary>
-    /// If <c>selectingMove</c> is this, then moves are currently executing
-    /// </summary>
-    private const int _ExecutionPhase = 100;
-
     #endregion
 
     #region Display Fields
 
-    private const int _ActorCount = 30;
+    private const int _ActorCount = 29;
     private static readonly List<IActor> _Actors = new(_ActorCount);
 
     private const int _AnimPrimActorCount = 0; // todo
     //private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
 
-    private static readonly Label _Queue = new() {
+    private static readonly string[] _UnitList = new string[UnitCount];
+    internal static readonly TabBarWidget _Queue = new(new Vector2(World.W2, 100), UnitCount) {
+        CheckInput = false,
         Alignment = Alignment.Center,
-        Position = new Vector2(World.W2, 180)
+        Priority = RenderPriority.B2Med
     };
 
     private static readonly Label[] _BloomLabels = new Label[TeamCount];
@@ -59,12 +57,6 @@ public static class BattleLib {
 
     private static readonly Label _SkillsL = new();
 
-    private static readonly Label _Turn = new() {
-        Text = $"{ColorCode.Turn}{Lang.Turn} 1",
-        Alignment = Alignment.Center,
-        Position = new Vector2(World.W2, 90)
-    };
-
     #endregion
 
     #region Logic Fields
@@ -75,6 +67,13 @@ public static class BattleLib {
     /// Pos of the Unit that's currently selecting their move. <c>ExecutionPhase</c> = moves are executing
     /// </summary>
     internal static int _selectingMove = 0;
+    internal const int _ExecutionPhase = 100;
+
+    /// <summary>
+    /// Pos of the Unit that's currently using their move. <c>SelectionPhase</c> = moves are being selected
+    /// </summary>
+    internal static int _usingMove = _SelectionPhase;
+    internal const int _SelectionPhase = 200;
 
     internal static SkillInstance _selectedSkillInstance = null!; // todo
 
@@ -116,7 +115,7 @@ public static class BattleLib {
 
     static BattleLib() {
         // Add preinitialized actors
-        _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL, _Turn);
+        _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL);
 
         // Setup Labels
         for (int i = 0; i < TeamCount; i++) {
@@ -151,6 +150,14 @@ public static class BattleLib {
         // temp setup teams
         Battle = Core.battle;
 
+        // Setup unit names for queue
+        // todo account for non-8 units?
+        // todo unify for nameplates
+        Unit[] u = Battle.GetAllUnits();
+        for (int i = 0; i < UnitCount; i++) _UnitList[i] = u[i].FormatName(false);
+
+        _Queue.SetText(_UnitList);
+
         _InspectLib._LateInit();
 
         LogLib.Add($"{ColorCode.Turn}{Lang.Turn} 1{ColorCode.White}");
@@ -173,38 +180,46 @@ public static class BattleLib {
     #region Update Methods
 
     internal static void _Update(GameTime gameTime) {
-        //Parellelograms.TimeWithCoverLeftClosed += gameTime.ElapsedGameTime;
-
-        if (Parellelograms.CoverLeft.Prog == 0) {
-            if (InputLib.Check(Keybinds.Menu1)) {
-                //Parellelograms.TimeWithCoverLeftClosed = TimeSpan.Zero;
-                StateMachine.Add(States.Log);
-                return;
-            }
-
-            if (InputLib.Check(Keybinds.Menu2)) {
-                //Parellelograms.TimeWithCoverLeftClosed = TimeSpan.Zero;
-                _indexTarget = _selectingMove;
-                StateMachine.Add(States.Inspect);
-                return;
-            }
-
-        }
+        _CheckOpenLogInspect(true);
 
         if (_delay > TimeSpan.Zero) {
             _delay -= gameTime.ElapsedGameTime;
             return;
         }
 
+        Assert.InRangeOr(_selectingMove, 0, PosLib.Highest, _ExecutionPhase);
+
         switch (_selectingMove) {
             case < PosLib.LowestOpp: _SelectPlayerMove(); return;
-            case <= PosLib.HighestOpp: _SelectOpponentMove(); return;
-            default: _ExecuteMove(); return;
+            case <= PosLib.Highest: _SelectOpponentMove(); return;
+            case _ExecutionPhase: _ExecuteMove(); return;
         }
     }
 
-    // Updates bloom labels, queue, and Unit nameplates
+    internal static void _CheckOpenLogInspect(bool changeTarget = false) {
+        // todo fix it might still be possible to double the coverleft???
+        if (Parellelograms.CoverLeft.Prog == 0) {
+            if (InputLib.Check(Keybinds.Menu1)) {
+                StateMachine.Add(States.Log);
+                return;
+            }
+
+            if (InputLib.Check(Keybinds.Menu2)) {
+                if (changeTarget) _indexTarget = _GetQueuePos();
+                StateMachine.Add(States.Inspect);
+                //_InspectLib._Create(); todo inspect Menu not State
+                return;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Updates bloom labels, queue, and Unit nameplates
+    /// </summary>
     internal static void _UpdateStatDisplay(int curPos) {
+        Assert.InRange(curPos, 0, PosLib.Highest);
+
         // Update bloom labels
         for (int i = 0; i < TeamCount; i++) {
             // todo fix it getting confused by the /
@@ -231,8 +246,8 @@ public static class BattleLib {
 
                     buffCount++;
 
-                    sb.Append(stageType.Icon).Append(ColorCode.White).Append((stage >= 1) ? '+' : "").Append(stage)
-                    .Append('(').Append(units[i].GetStageTurns(stageType)).Append(") ");
+                    sb.Append(stageType.Icon).Append(ColorCode.White).Append((stage >= 1) ? '+' : "")
+                    .Append(stage).Append('(').Append(units[i].GetStageTurns(stageType)).Append(") ");
                 }
             }
 
@@ -271,23 +286,24 @@ public static class BattleLib {
         }
 
         // Update queue
-        sb = new StringBuilder();
-        units.Sort((a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
+        SortByAgi(units);
+        _UpdateQueueIndex(curPos, units);
+        _Queue.SetText([.. units.Select(u => u.FormatName(false))]);
+    }
 
-        for (int i = 0; i < units.Length; i++) {
-            bool active = units[i].Pos == curPos;
-
-            if (active) sb.Append('<');
-
-            sb.Append(units[i].FormatName(false));
-
-            if (active) sb.Append(ColorCode.White).Append('>');
-
-            if (i != units.Length - 1) sb.Append(", ");
+    /// <summary>
+    /// Set queue index to the Unit currently acting or selecting their move
+    /// </summary>
+    internal static void _UpdateQueueIndex(int curPos, Unit[]? units = null) {
+        if (units is null) {
+            units = Battle.GetAllUnits();
+            SortByAgi(units);
         }
 
-        _Queue.Text = sb.ToString();
+        _Queue.Index = units.IndexOf(units.FirstOrDefault(u => u.Pos == curPos));
     }
+
+    internal static int _GetQueuePos() => _selectingMove == _ExecutionPhase ? _usingMove : _selectingMove;
 
     #endregion
 
@@ -315,11 +331,6 @@ public static class BattleLib {
             return;
         }
 
-        if ((_selectingMove - PosLib.LowestOpp) > Battle.OpponentTeam.Units.Length) {
-            _selectingMove = _ExecutionPhase;
-            return;
-        }
-
         // temp
         Skill selectedSkill = Skills.Nothing;
         // todo AI
@@ -328,16 +339,21 @@ public static class BattleLib {
         _Moves[_selectingMove].Text = $"{selectedSkill.GetName()} → {target.FormatName(false)}";
         _CurMoves.Add(new Move(new SkillInstance(selectedSkill),
             Battle.OpponentTeam.Units[_selectingMove - PosLib.LowestOpp], target.Pos));
+
         _selectingMove++;
+
+        if (_selectingMove > PosLib.Highest) _selectingMove = _ExecutionPhase;
     }
 
     private static void _SelectMove() {
         // Cancel
-        if (InputLib.Check(Keybinds.Back) && _selectingMove != 0) {
+        if (_selectingMove != 0 && InputLib.Check(Keybinds.Back)) {
             // todo
             _SkillsL.Text = "";
 
             _selectingMove--;
+            _UpdateQueueIndex(_selectingMove);
+
             _indexSkill = 0;
             _Moves[_selectingMove].Text = "";
 
@@ -386,6 +402,9 @@ public static class BattleLib {
 
         Move move = _CurMoves[0];
         Unit self = move.Self;
+        _usingMove = self.Pos;
+
+        _UpdateStatDisplay(self.Pos);
 
         if (self.IsBoolStat(BoolStats.UnableToAct)) {
             LogLib.Add(string.Format(Lang.LogSkillFailUnableToAct, move.GetTriesToUseString(),
@@ -469,9 +488,10 @@ public static class BattleLib {
 
         // The check for reaching skillEffects.length will only apply here if the length is 0, because otherwise it'll
         // be applied at the end
+        // todo should this be checking _applyingEffect > _nonFails
         if (spNew < 0 || _applyingEffect == skillEffects.Length || (_nonFails == 0 && _applyingEffect > 0)) {
-            _EndMove();
             _UpdateStatDisplay(self.Pos);
+            _EndMove();
             return;
         }
 
@@ -516,9 +536,8 @@ public static class BattleLib {
 
     private static void _EndTurn() {
         _selectingMove = 0;
+        _usingMove = _SelectionPhase;
         Battle.Turn++;
-
-        _Turn.Text = $"{ColorCode.Turn}{Lang.Turn} {Battle.Turn}";
 
         for (int i = 0; i < UnitCount; i++) {
             _Moves[i].Text = "";
@@ -581,6 +600,9 @@ public static class BattleLib {
     #region Utility Methods
 
     public static BuffType GetStageBuffType(int stacks) => stacks >= 0 ? BuffType.Buff : BuffType.Debuff;
+
+    public static void SortByAgi(Unit[] units) =>
+        units.Sort((a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
 
     #endregion
 }

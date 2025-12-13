@@ -8,7 +8,7 @@ namespace API.Graphics;
 /// A line
 /// </summary>
 // todo: support more than 2 points
-public sealed class Path : IActor, IAnimatedPrimitive {
+public sealed class Path : IActor, IAnimated {
     public Vector2 Start { get; set; }
     public Vector2 End { get; set; }
     public float Thickness { get; set; }
@@ -34,6 +34,6 @@ public sealed class Path : IActor, IAnimatedPrimitive {
     public void Draw(GameTime gameTime) =>
         Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, this.Color, this.Color, 0);
 
-    public void Create() => this.AddRoutine(IAnimatedPrimitive.In);
-    public void Destroy() => this.AddRoutine(IAnimatedPrimitive.Out);
+    public void Create() => this.AddRoutine(IAnimated.In);
+    public void Destroy() => this.AddRoutine(IAnimated.Out);
 }

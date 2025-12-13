@@ -12,11 +12,6 @@ public interface IActor {
     ActorData Data { get; }
 
     /// <summary>
-    /// Draws this
-    /// </summary>
-    void Draw(GameTime gameTime);
-
-    /// <summary>
     /// Called when this is added to the stage.
     /// In most cases, will be blank
     /// </summary>
@@ -27,6 +22,11 @@ public interface IActor {
     /// In most cases, should be implemented as `this.MarkForRemoval()`
     /// </summary>
     void Destroy();
+
+    /// <summary>
+    /// Draws this
+    /// </summary>
+    void Draw(GameTime gameTime);
 }
 
 public static class ActorExtensions {

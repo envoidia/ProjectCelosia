@@ -1,27 +1,52 @@
 using System;
+using System.Collections;
 using System.Linq;
 using API.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace API.Menu;
 
 // todo: how can widgets communicate with eachother? move input prompt logic here (partially)
+/// <summary>
+/// A set of actors and <c>IInputWidgets</c>. Handles when they should be added to / removed from the stage
+/// and assigns controls
+/// </summary>
 public sealed class Menu {
+    /// <summary>
+    /// Display name for this (todo i18n)
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// <c>IActors</c> that this will add to the stage. Also handles controls for any that are <c>IInputWidgets</c>
+    /// </summary>
     public IActor[] Actors { get; private set; } = null!;
+
+    /// <summary>
+    /// <c>IInputWidgets</c> that this will handle controls for in addition to its actors
+    /// </summary>
+    public IInputWidget[] InputWidgets { get; init; } = [];
 
     public Action? OnCreate { get; init; }
     public Action? OnDestroy { get; init; }
     public Action? OnUpdate { get; init; }
 
-    public Menu() { }
+    /// <summary>
+    /// Initializes this with no behavior or actors
+    /// </summary>
+    public Menu(string name) {
+        this.Name = name;
+    }
 
-    public Menu(params IActor[] actors) {
+    public Menu(string name, params IActor[] actors) {
+        this.Name = name;
         this.Setup(actors);
     }
 
     public void Setup(params IActor[] actors) {
         this.Actors = actors;
 
-        this._SetupWidgets();
+        this.SetupWidgets();
     }
 
     public void Create() {
@@ -38,84 +63,96 @@ public sealed class Menu {
         Stage.Cleanup();
     }
 
-    public void Update() {
+    public void Update(GameTime gameTime) {
+        foreach (IInputWidget w in this.InputWidgets) w.Input(gameTime);
         this.OnUpdate?.Invoke();
     }
 
-    #region Internals
+    /// <returns>
+    /// The <c>IInputWidget</c> currently assigned to a given <c>SelectionType</c>, if any
+    /// </returns>
+    public IInputWidget? GetInputWidget(SelectionType st) {
+        if (st is SelectionType.Horiz or SelectionType.Vert) {
+            return this.Actors.OfType<IInputWidget>().Concat(this.InputWidgets)
+                .FirstOrDefault(w => w.CurDir == st || w.CurDir == SelectionType.HorizVert);
+        }
 
-    private void _SetupWidgets() {
+        return this.Actors.OfType<IInputWidget>().Concat(this.InputWidgets)
+            .FirstOrDefault(w => w.CurDir == st);
+    }
+
+    public void SetupWidgets() {
         // Assign inputs to each Widget based off of what they prefer and what's available
         bool usedHoriz = false;
         bool usedVert = false;
         bool usedPage = false;
 
-        foreach (IWidget w in this.Actors.OfType<IWidget>()) {
+        foreach (IInputWidget ia in this.Actors.OfType<IInputWidget>().Concat(this.InputWidgets)) {
             // todo cleanup
-            switch (w.PrefDir) {
-                case WidgetSelectionType.Horiz:
+            switch (ia.PrefDir) {
+                case SelectionType.Horiz:
                     if (!usedHoriz) {
-                        w.CurDir = WidgetSelectionType.Horiz;
+                        ia.CurDir = SelectionType.Horiz;
                         usedHoriz = true;
                         break;
                     }
 
                     if (!usedPage) {
-                        w.CurDir = WidgetSelectionType.Page;
+                        ia.CurDir = SelectionType.Page;
                         usedPage = true;
                         break;
                     }
 
                     if (!usedVert) {
-                        w.CurDir = WidgetSelectionType.Vert;
+                        ia.CurDir = SelectionType.Vert;
                         usedVert = true;
                         break;
                     }
 
                     throw new _MenuAssignException();
-                case WidgetSelectionType.Vert:
+                case SelectionType.Vert:
                     if (!usedVert) {
-                        w.CurDir = WidgetSelectionType.Vert;
+                        ia.CurDir = SelectionType.Vert;
                         usedVert = true;
                         break;
                     }
 
                     if (!usedHoriz) {
-                        w.CurDir = WidgetSelectionType.Horiz;
+                        ia.CurDir = SelectionType.Horiz;
                         usedHoriz = true;
                         break;
                     }
 
                     if (!usedPage) {
-                        w.CurDir = WidgetSelectionType.Page;
+                        ia.CurDir = SelectionType.Page;
                         usedPage = true;
                         break;
                     }
 
                     throw new _MenuAssignException();
-                case WidgetSelectionType.Page:
+                case SelectionType.Page:
                     if (!usedPage) {
-                        w.CurDir = WidgetSelectionType.Page;
+                        ia.CurDir = SelectionType.Page;
                         usedPage = true;
                         break;
                     }
 
                     if (!usedHoriz) {
-                        w.CurDir = WidgetSelectionType.Horiz;
+                        ia.CurDir = SelectionType.Horiz;
                         usedHoriz = true;
                         break;
                     }
 
                     if (!usedVert) {
-                        w.CurDir = WidgetSelectionType.Vert;
+                        ia.CurDir = SelectionType.Vert;
                         usedVert = true;
                         break;
                     }
 
                     throw new _MenuAssignException();
-                case WidgetSelectionType.HorizVert:
+                case SelectionType.HorizVert:
                     if (!usedHoriz && !usedVert) {
-                        w.CurDir = WidgetSelectionType.HorizVert;
+                        ia.CurDir = SelectionType.HorizVert;
                         usedHoriz = true;
                         usedVert = true;
                         break;
@@ -128,21 +165,19 @@ public sealed class Menu {
         if ((usedHoriz && usedVert) || (!usedHoriz && !usedVert)) return;
 
         // Assign secondary inputs, if there are leftovers
-        foreach (IWidget w in this.Actors.OfType<IWidget>()) {
-            if (!usedHoriz && w.CurDir == WidgetSelectionType.Vert) {
-                w.CurDir = WidgetSelectionType.HorizVert;
+        foreach (IInputWidget w in this.Actors.OfType<IInputWidget>()) {
+            if (!usedHoriz && w.CurDir == SelectionType.Vert) {
+                w.CurDir = SelectionType.HorizVert;
                 return;
             }
 
-            if (!usedVert && w.CurDir == WidgetSelectionType.Horiz) {
-                w.CurDir = WidgetSelectionType.HorizVert;
+            if (!usedVert && w.CurDir == SelectionType.Horiz) {
+                w.CurDir = SelectionType.HorizVert;
                 return;
             }
         }
     }
 
-    private class _MenuAssignException()
-        : Exception("Could not assign controls to Menu IWidgets because all directions were used. If you got this from requesting a GridWidget, try requesting it first");
-
-    #endregion
+    private class _MenuAssignException() :
+        Exception("Could not assign controls to Menu widgets because all directions were used. If you got this from requesting a GridWidget, try requesting it first");
 }

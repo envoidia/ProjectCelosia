@@ -2,8 +2,6 @@ using System;
 
 namespace API.Util;
 
-
-
 /// <summary>
 /// A float clamped from 0-1 representing progress of some action
 /// </summary>
@@ -20,18 +18,20 @@ public readonly struct Progress(float p = 0) {
 
     public static explicit operator float(Progress p) => p._p;
 
-    public override bool Equals(object? obj) {
-        if (obj is null) return false;
-
-        return obj switch {
-            Progress p => this._p == p._p,
-            int i => this._p == i,
-            long l => this._p == l,
-            float f => this._p == f,
-            double d => this._p == d,
-            _ => base.Equals(obj)
-        };
-    }
+    public override bool Equals(object? obj) => obj switch {
+        int i => this._p == i,
+        float f => this._p == f,
+        Progress p => this._p == p._p,
+        long l => this._p == l,
+        double d => this._p == d,
+        null => false,
+        _ => base.Equals(obj)
+    };
 
     public override int GetHashCode() => this._p.GetHashCode();
+
+    /// <returns>
+    /// The lesser of 2 <c>Progress</c>es
+    /// </returns>
+    public static Progress Min(Progress a, Progress b) => a._p > b._p ? b : a;
 }

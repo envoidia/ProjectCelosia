@@ -4,29 +4,29 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public interface IAnimatedPrimitive {
+public interface IAnimated {
     /// <summary>
     /// Animate in
     /// </summary>
     static readonly Routine In = new(
         static actor => {
-            Assert.Is<IAnimatedPrimitive>(actor);
-            Assert.Zero(((IAnimatedPrimitive) actor).Prog);
+            Assert.Is<IAnimated>(actor);
+            Assert.Zero(((IAnimated) actor).Prog);
         },
 
-        static (actor, gameTime) => ((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.In));
+        static (actor, gameTime) => ((IAnimated) actor).Update(gameTime, AnimDirs.In));
 
     /// <summary>
     /// Animate out
     /// </summary>
     static readonly Routine Out = new(
         static actor => {
-            Assert.Is<IAnimatedPrimitive>(actor);
-            Assert.One(((IAnimatedPrimitive) actor).Prog);
+            Assert.Is<IAnimated>(actor);
+            Assert.One(((IAnimated) actor).Prog);
         },
 
         static (actor, gameTime) => {
-            if (((IAnimatedPrimitive) actor).Update(gameTime, AnimDirs.Out)) {
+            if (((IAnimated) actor).Update(gameTime, AnimDirs.Out)) {
                 Stage.ImmediateRemove(actor);
                 return true;
             }
@@ -42,11 +42,11 @@ public interface IAnimatedPrimitive {
     /// <summary>
     /// Speed multiplier. 1f = animation completes in 1s. 2f = 0.5s. Speed is doubled when closing
     /// </summary>
-    float Speed { get; set; }
+    float Speed { get; }
 }
 
 public static class AnimatedPrimitiveExtensions {
-    extension(IAnimatedPrimitive @this) {
+    extension(IAnimated @this) {
         /// <summary>
         /// Updates <c>Prog</c>
         /// </summary>

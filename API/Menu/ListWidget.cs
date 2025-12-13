@@ -10,43 +10,47 @@ namespace API.Menu;
 /* todo:
     - internal label alignment setting
     - max height (creates scrollbar)
+    - make ianimatedprim
 */
-public sealed class ListWidget : IWidget {
+public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated {
     public List<Label> Labels { get; private set; }
 
-    /// <summary>
-    /// Animation progress per-item
-    /// </summary>
-    public Progress[] Progs { get; private set; }
+    public SelectionType PrefDir => SelectionType.Vert;
+    public SelectionType CurDir { get; set; } = SelectionType.None;
+
+    public bool CheckInput { get; set; } = true;
 
     public int Index { get; set; } = 0;
-    public int MaxIndex { get; private set; }
-
-    public Menu Menu { get; }
-
-    public WidgetSelectionType PrefDir => WidgetSelectionType.Vert;
-    public WidgetSelectionType CurDir { get; set; }
+    public int OptCount { get; private set; }
 
     public Action? OnSelect { get; set; }
 
     public ActorData Data { get; }
 
-    public ListWidget(Menu menu, Vector2 pos, params string[] optionText) {
-        this.Menu = menu;
+    public Progress Prog { get; set; } = new();
+
+    /// <summary>
+    /// Animation progress per-item
+    /// </summary>
+    public List<Progress> Progs { get; }
+
+    public float Speed { get; private set; } = 4f;
+
+    public ListWidget(Vector2 pos, params string[] optionText) {
         this.Data = new ActorData(this, RenderPriority.B2Med);
 
         this.Position = pos;
         this.Size = Point.Zero;
 
-        this.Labels = new(optionText.Length);
+        this.Labels = new List<Label>(optionText.Length);
 
         for (int i = 0; i < optionText.Length; i++) this.Labels.Add(new Label() {
             Text = optionText[i],
             Padding = new(40, 20, 20, 20)
         });
 
-        this.Progs = new Progress[optionText.Length];
-        this.MaxIndex = optionText.Length;
+        this.Progs = new List<Progress>(optionText.Length);
+        this.OptCount = optionText.Length;
 
         this.CalcLayout();
     }
@@ -55,49 +59,25 @@ public sealed class ListWidget : IWidget {
         int i = 0;
         for (; i < optionText.Length && i < this.Labels.Count; i++) this.Labels[i].Text = optionText[i];
 
-        // New list shorter, blank out remaining Labels
-        for (; i < this.Labels.Count; i++) this.Labels[i].Text = "";
+        // New list shorter, blank out remaining Labels and progs
+        for (; i < this.Labels.Count; i++) {
+            this.Labels[i].Text = "";
+            this.Progs[i] = new();
+        }
 
-        // New list longer, add more Labels
-        for (; i < optionText.Length; i++) this.Labels.Add(new Label() {
-            Text = optionText[i],
-            Padding = new(40, 20, 20, 20)
-        });
+        // New list longer, add more Labels and progs
+        for (; i < optionText.Length; i++) {
+            this.Labels.Add(new Label() {
+                Text = optionText[i],
+                Padding = new(30, 20)
+            });
 
-        this.Progs = new Progress[optionText.Length];
-        this.MaxIndex = optionText.Length;
+            this.Progs.Add(new Progress());
+        }
+
+        this.OptCount = optionText.Length;
 
         this.CalcLayout();
-    }
-
-    public void Create() { }
-    public void Destroy() => this.MarkForRemoval();
-
-    public void Draw(GameTime gameTime) {
-        this.Index = MenuLib.CheckMovement1D(this.Index, this.MaxIndex, this.CurDir);
-
-        int h = 0;
-        for (int i = 0; i < this.Progs.Length; i++) {
-            this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], 2f, gameTime,
-                i == this.Index ? AnimDirs.In : AnimDirs.Out);
-
-            if (this.Progs[i] != 0) {
-                // Cursor
-                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L,
-                    this.Position.Y + h - this.Padding.T),
-                    new Point(this.Width + this.Padding.LR, this.Labels[i].Height +
-                    this.Labels[i].Padding.TB + this.Padding.TB),
-                    this.Origin, Settings.ColorAccent,
-                    Settings.ColorAccent, 0f, 6, 6, this.Progs[i]);
-            }
-
-            h += this.Labels[i].Height + this.Labels[i].Padding.TB;
-        }
-
-        foreach (Label l in this.Labels) {
-            l.Data.Act(gameTime);
-            if(DebugMenu._drawActorOutlines) l.Data.DrawDebug();
-        }
     }
 
     public void CalcLayout() {
@@ -108,6 +88,45 @@ public sealed class ListWidget : IWidget {
             l.Position = this.Position + new Vector2(l.Padding.L, this.Height);
             this.Height += l.Height + l.Padding.B;
             if (l.Width + l.Padding.LR > this.Width) this.Width = l.Width + l.Padding.LR;
+        }
+
+        this.Origin = this.Data.CalcOrigin();
+    }
+
+    public void Input(GameTime gameTime) => this.Index = this.CheckInput();
+
+    public void Create() => this.AddRoutine(IAnimated.In);
+    public void Destroy() => this.AddRoutine(IAnimated.Out);
+
+    public void Draw(GameTime gameTime) {
+        this.Input(gameTime);
+
+        int h = 0;
+        for (int i = 0; i < this.OptCount; i++) {
+            this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], 2f, gameTime,
+                i == this.Index ? AnimDirs.In : AnimDirs.Out);
+
+            if (this.Progs[i] != 0) {
+                // Cursor
+                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L - this.Origin.X,
+                    this.Position.Y + h - this.Padding.T - this.Origin.Y),
+                    new Point(this.Width + this.Padding.LR, this.Labels[i].Height +
+                    this.Labels[i].Padding.TB + this.Padding.TB),
+                    this.Origin, Settings.ColorAccent, Settings.ColorAccent,
+                    0f, 6, 6, Progress.Min(this.Prog, this.Progs[i]));
+            }
+
+            h += this.Labels[i].Height + this.Labels[i].Padding.TB;
+        }
+
+        foreach (Label l in this.Labels) {
+            l.Data.Act(gameTime);
+            if (DebugMenu._drawActorOutlines) l.Data.DrawDebug();
+        }
+
+        // Disabled input overlay
+        if (DebugMenu._drawActorOutlines) {
+            if (!this.CheckInput) this.Data.DrawBackground(Colors.ActorDisabledInput);
         }
     }
 }

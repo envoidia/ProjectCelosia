@@ -29,6 +29,28 @@ public static class Assert {
         Debug.Assert(!v.Equals(0), $"{v} must not be 0");
 
     /// <summary>
+    /// Asserts that an int is less than another
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void LessThan(int i1, int i2) =>
+        Debug.Assert(i1 < i2, $"{i1} must be less than {i2}");
+
+    /// <summary>
+    /// Asserts that an int is within 2 others
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void InRange(int i, int min, int max) =>
+        Debug.Assert(i <= max && i >= min, $"{i} must between {min} and {max} (inclusive)");
+
+    /// <summary>
+    /// Asserts that an int is within 2 others or is a special exception
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void InRangeOr(int i, int min, int max, int exception) =>
+        Debug.Assert((i <= max && i >= min) || i == exception,
+            $"{i} must between {min} and {max} (inclusive), or must be {exception}");
+
+    /// <summary>
     /// Asserts that the given value is convertible to <c>T</c>
     /// </summary>
     [Conditional("DEBUG")]

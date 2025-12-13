@@ -89,7 +89,7 @@ public static class InputLib {
     /// <summary>
     /// Check for input from 1 <c>Keybind</c>
     /// </summary>
-    public static bool Check(Keybind keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelay) =>
+    public static bool Check(Keybind? keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelay) =>
         _IsKeybindPressed(allowHold, holdDelayS, keybind);
 
     /// <summary>
@@ -103,7 +103,9 @@ public static class InputLib {
 
     #region Internals
 
-    private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind keybind) {
+    private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind? keybind) {
+        if (keybind is null) return false;
+
         // Bypasses held time checks
         if (keybind.Id is KeybindId.Hotkey1 or KeybindId.Hotkey2) return _CheckKeybind(keybind);
 

@@ -10,7 +10,7 @@ using ResolutionBuddy;
 namespace API.Graphics;
 
 /// <summary>
-/// List of active <c>Actor</c>s with helper methods
+/// List of active <c>IActor</c>s with helper methods
 /// </summary>
 public static class Stage {
     // todo decide starting size
@@ -20,7 +20,7 @@ public static class Stage {
     internal static bool _needsRemoval = false;
 
     /// <summary>
-    /// Draws all visible <c>Actor</c>s and performs their <c>Routine</c>s
+    /// Draws all visible <c>IActor</c>s and performs their <c>Routine</c>s
     /// </summary>
     public static void Act(GameTime gameTime) {
         int i = _Actors.Count - 1;
@@ -57,27 +57,24 @@ public static class Stage {
     }
 
     /// <summary>
-    /// Add an <c>Actor</c>. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
+    /// Add <c>IActor</c>(s). Do NOT add an actor that is already on the Stage.
+    /// After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
     /// </summary>
     public static void Add(IActor actor) {
         Assert.DoesntContain(_Actors, actor);
 
         _Actors.Add(actor);
-    actor.Data._marked = false;
         actor.Create();
 
         _needsSorting = true;
     }
 
-    /// <summary>
-    /// Add a range of <c>Actor</c>s. After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
-    /// </summary>
+    /// <inheritdoc cref="Add" />
     public static void AddRange(params IEnumerable<IActor> actors) {
         foreach (IActor actor in actors) {
             Assert.DoesntContain(_Actors, actor);
 
             _Actors.Add(actor);
-            actor.Data._marked = false;
             actor.Create();
         }
 
@@ -85,7 +82,7 @@ public static class Stage {
     }
 
     /// <summary>
-    /// Immediately removes an <c>Actor</c>. Prefer <c>Actor.MarkForRemoval()</c> when able
+    /// Immediately removes an <c>IActor</c>. Prefer <c>IActor.MarkForRemoval()</c> when able
     /// </summary>
     public static void ImmediateRemove(IActor actor) => _Actors.Remove(actor);
 
@@ -94,7 +91,14 @@ public static class Stage {
     /// </summary>
     public static void Cleanup() {
         if (_needsRemoval) {
-            _Actors.RemoveAll(a => a.Data._marked);
+            _Actors.RemoveAll(a => {
+                if (a.Data._marked) {
+                    a.Data._marked = false;
+                    return true;
+                }
+
+                return false;
+            });
 
             _needsRemoval = false;
         }
