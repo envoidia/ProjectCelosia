@@ -181,9 +181,11 @@ public static class BattleLib {
 
     internal static void _Update(GameTime gameTime) {
         // Return if log/inspect. TODO: convert skill select and move exec to menus and remove this check
-        if (States.Battle._Menus.Count == 1) return;
+        if (States.Battle._Menus.Count > 0 && States.Battle._Menus[^1] == _InspectLib._Menu) return;
 
         _CheckOpenLogInspect(true);
+
+        if (States.Battle._Menus.Count > 0 && States.Battle._Menus[^1] == _TargetingLib._Menu) return;
 
         if (_delay > TimeSpan.Zero) {
             _delay -= gameTime.ElapsedGameTime;

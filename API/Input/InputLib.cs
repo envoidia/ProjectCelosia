@@ -47,12 +47,18 @@ public static class InputLib {
             Label l = (Label) a;
 
             StringBuilder sb = new();
-            foreach (TimeSpan held in _Held) {
+            for (int i = 0; i < _Held.Length; i++) {
+                TimeSpan held = _Held[i];
                 double s = held.TotalSeconds;
 
-                sb.Append(s == 0 ? ColorCode.White : ColorCode.ElectricBlue)
-                    .Append(s.ToString("0.##"))
-                    .Append('\n');
+                // todo does this magic number always work
+                ColorCode c = s <= 0.0001f
+                    ? _CheckKeybind(Keybinds.UniqueKeybinds[i])
+                        ? ColorCode.Fuchsia
+                        : ColorCode.White
+                    : ColorCode.ElectricBlue;
+
+                sb.Append(c).Append(s.ToString("0.##")).Append('\n');
             }
 
             bool check = _CheckKeybind(Keybinds.Hotkey1);

@@ -74,7 +74,7 @@ Loaded Mods: {7}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
         <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if input disabled)
-/i[KF4]: Toggle input view
+/i[KF4]: Toggle input view (pink = pressed but not being checked)
 /i[KF5]: Write all actors on stage to console
 /i[KF6]: Force stage cleanup
 /i[KF7]: Write battle log to console. Hold {0} to preserve formatting codes

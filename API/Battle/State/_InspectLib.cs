@@ -2,11 +2,11 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
-using static API.Input.InputPrompts;
-using static API.Battle.State.BattleLib;
 using System;
 using System.Collections.Generic;
 using API.Menu;
+using static API.Input.InputPrompts;
+using static API.Battle.State.BattleLib;
 
 namespace API.Battle.State;
 
@@ -22,7 +22,7 @@ internal sealed class _InspectLib {
     private const int _AnimPrimActorCount = 6; //8;
     private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
-    private static readonly Menu.Menu _Menu = new("Inspect") {
+    internal static readonly Menu.Menu _Menu = new("Inspect") {
         OnCreate = static () => {
             _Queue.CheckInput = true;
 
