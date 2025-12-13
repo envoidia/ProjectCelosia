@@ -375,6 +375,7 @@ public static class BattleLib {
         _SkillsL.Text = "";
 
         _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex();
+        //States.Battle.AddMenu(_TargetingLib._Menu); todo
         StateMachine.Add(States.Targeting);
     }
 

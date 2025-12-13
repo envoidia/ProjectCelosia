@@ -17,9 +17,12 @@ public static class States {
         OnCreate = BattleLib._Create, OnDestroy = BattleLib._Destroy
     };
 
+    // todo remove
     public static readonly State Targeting = new("Targeting", _TargetingLib._Update,
-    static () => State.GetInputPromptString(Move, Faster, Jump, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect));
+    static () =>
+        State.GetInputPromptString(Move, Faster, Jump, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect));
 
+    // todo remove
     public static readonly State Log = new("Log",
         static _ => {
             if (InputLib.Check(Keybinds.Back, Keybinds.Menu1)) StateMachine.Remove();

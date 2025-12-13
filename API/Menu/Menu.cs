@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using API.Graphics;
+using API.Menu.State;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu;
@@ -16,6 +17,11 @@ public sealed class Menu {
     /// Display name for this (todo i18n)
     /// </summary>
     public string Name { get; }
+
+    /// <summary>
+    /// Called when this is first reached to update the input prompt <c>Label</c> in the bottom-right corner
+    /// </summary>
+    public Func<string>? GetInputPrompt { get; init; }
 
     /// <summary>
     /// <c>IActors</c> that this will add to the stage. Also handles controls for any that are <c>IInputWidgets</c>

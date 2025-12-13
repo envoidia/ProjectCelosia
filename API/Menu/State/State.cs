@@ -13,9 +13,9 @@ namespace API.Menu.State;
 /// </summary>
 /// <param name="Name">Display name for this (todo i18n)</param>
 /// <param name="OnUpdate">Called every frame when this is active, during the logic phase</param>
-/// <param name="GetInputPrompt">Called when this is first reached,
-/// to update the input prompt <c>Label</c> in the bottom-right corner</param>
-public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>? GetInputPrompt) {
+/// <param name="OnGetInputPrompt">Called when this is first reached to update the input prompt <c>Label</c>
+/// in the bottom-right corner. Menus can override this</param>
+public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>? OnGetInputPrompt) {
     /// <summary>
     /// Called on <c>StateMachine.Add</c>. Do not call elsewhere
     /// </summary>
@@ -27,7 +27,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     public Action? OnDestroy { get; init; }
 
     /// <summary>
-    /// Current list of menus that have been traveled through in this. Use <c>RemoveMenu</c> rather than direct removal
+    /// Current list of menus that have been traveled through in this
     /// </summary>
     internal List<Menu> _Menus { get; init; } = [];
 
@@ -45,14 +45,28 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
         this.OnUpdate?.Invoke(gameTime);
     }
 
+    /// <returns>
+    /// Called when this is first reached and on menu change to update the input prompt <c>Label</c> in the bottom-right corner
+    /// </returns>
+    public string GetInputPrompt() =>
+        this._Menus[^1].GetInputPrompt?.Invoke() ?? this.OnGetInputPrompt?.Invoke() ?? "";
+
+    /// <summary>
+    /// Add and initialize a <c>Menu</c>
+    /// </summary>
     public void AddMenu(Menu menu) {
         menu.Create();
         this._Menus.Add(menu);
+        StateMachine.UpdateInputPrompt();
     }
 
+    /// <summary>
+    /// Remove and deinitialize the current <c>Menu</c>
+    /// </summary>
     public void RemoveMenu() {
         this._Menus[^1].Destroy();
         this._Menus.RemoveLast();
+        StateMachine.UpdateInputPrompt();
     }
 
     public string GetMenuString() =>

@@ -52,6 +52,5 @@ public static class StateMachine {
     /// <summary>
     /// Update the input prompt <c>Label</c> in the bottom-right corner
     /// </summary>
-    public static void UpdateInputPrompt() =>
-        _InputPrompt.Text = StateMachine.GetState().GetInputPrompt?.Invoke() ?? "";
+    public static void UpdateInputPrompt() => _InputPrompt.Text = GetState().GetInputPrompt();
 }
