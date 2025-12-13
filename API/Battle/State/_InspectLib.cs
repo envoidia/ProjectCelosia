@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace API.Battle.State;
 
+// todo cleanup
 internal sealed class _InspectLib {
 
     #region Display Fields

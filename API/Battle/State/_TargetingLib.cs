@@ -8,25 +8,33 @@ namespace API.Battle.State;
 
 // Significant using order
 using static API.Battle.State.BattleLib;
-
+using static API.Input.InputPrompts;
 
 internal static class _TargetingLib {
+    internal static readonly Menu.Menu _Menu = new("Targeting") {
+        OnUpdate = _Update,
+        GetInputPrompt = static () =>
+            Menu.State.State.GetInputPromptString(Move, Faster, Jump, Confirm, Back, Log, Inspect)
+    };
+
     /// <summary>
     /// How many extra actions have been used for the currently acting Unit
     /// </summary>
     private static int _extraActions = 0;
 
-    internal static void _Update(GameTime gameTime) {
+    private static void _Update(GameTime gameTime) {
         _CheckOpenLogInspect();
 
         if (InputLib.Check(Keybinds.Back)) {
             //foreach (Label stat in stats) stat.Color = ColorCode.White;
             _Moves[_selectingMove].Text = "";
 
-            StateMachine.Remove();
+            //StateMachine.Remove();
+            States.Battle.RemoveMenu();
             return;
         }
 
+        // todo move to InputWidget
         _indexTarget = MenuLib.CheckMovementTargeting(_indexTarget, _selectingMove, _selectedSkillInstance.Skill.Range);
 
         //MenuLib.handleOptColor(stats, indexTarget);
@@ -57,6 +65,7 @@ internal static class _TargetingLib {
 
         _UpdateStatDisplay(_selectingMove);
 
-        StateMachine.Remove();
+        //StateMachine.Remove();
+        States.Battle.RemoveMenu();
     }
 }

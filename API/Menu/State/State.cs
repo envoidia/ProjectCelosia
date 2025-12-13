@@ -48,8 +48,18 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// <returns>
     /// Called when this is first reached and on menu change to update the input prompt <c>Label</c> in the bottom-right corner
     /// </returns>
-    public string GetInputPrompt() =>
-        this._Menus[^1].GetInputPrompt?.Invoke() ?? this.OnGetInputPrompt?.Invoke() ?? "";
+    public string GetInputPrompt() {
+        // Use Menu prompt
+        if (this._Menus.Count > 0) {
+            Func<string>? menuPrompt = this._Menus[^1].GetInputPrompt;
+            if (menuPrompt is not null) {
+                return menuPrompt();
+            }
+        }
+
+        // Use State prompt
+        return this.OnGetInputPrompt?.Invoke() ?? "";
+    }
 
     /// <summary>
     /// Add and initialize a <c>Menu</c>

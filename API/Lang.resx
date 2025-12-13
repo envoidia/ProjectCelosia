@@ -73,7 +73,7 @@ Overworld Location: {6}
 Loaded Mods: {7}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
-        <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if IInputWidget with disabled input)
+        <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if input disabled)
 /i[KF4]: Write all actors to console
 /i[KF5]: Force stage cleanup
 /i[KF5]: Write battle log to console. Hold {0} to preserve formatting codes

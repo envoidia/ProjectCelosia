@@ -26,7 +26,7 @@ public sealed class Menu {
     /// <summary>
     /// <c>IActors</c> that this will add to the stage. Also handles controls for any that are <c>IInputWidgets</c>
     /// </summary>
-    public IActor[] Actors { get; private set; } = null!;
+    public IActor[] Actors { get; private set; } = [];
 
     /// <summary>
     /// <c>IInputWidgets</c> that this will handle controls for in addition to its actors
@@ -35,7 +35,7 @@ public sealed class Menu {
 
     public Action? OnCreate { get; init; }
     public Action? OnDestroy { get; init; }
-    public Action? OnUpdate { get; init; }
+    public Action<GameTime>? OnUpdate { get; init; }
 
     /// <summary>
     /// Initializes this with no behavior or actors
@@ -71,7 +71,7 @@ public sealed class Menu {
 
     public void Update(GameTime gameTime) {
         foreach (IInputWidget w in this.InputWidgets) w.Input(gameTime);
-        this.OnUpdate?.Invoke();
+        this.OnUpdate?.Invoke(gameTime);
     }
 
     /// <returns>
