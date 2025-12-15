@@ -12,8 +12,8 @@ namespace API.Graphics;
 /// List of active <c>IActor</c>s with helper methods
 /// </summary>
 public static class Stage {
-    // todo decide starting size
-    private static readonly List<IActor> _Actors = new(30);
+    // todo decide starting size (use max size and assert it?)
+    private static readonly List<IActor> _Actors = new(250);
 
     internal static bool _needsSorting = false;
     internal static bool _needsRemoval = false;
@@ -90,7 +90,7 @@ public static class Stage {
     /// </summary>
     public static void Cleanup() {
         if (_needsRemoval) {
-            _Actors.RemoveAll(a => {
+            _Actors.RemoveAll(static a => {
                 if (a.Data._marked) {
                     a.Data._marked = false;
                     return true;
@@ -104,7 +104,7 @@ public static class Stage {
 
         if (!_needsSorting) return;
 
-        _Actors.Sort((a, b) =>
+        _Actors.Sort(static (a, b) =>
            ((int) b.Data.Priority).CompareTo((int) a.Data.Priority));
 
         _needsSorting = false;
@@ -113,5 +113,5 @@ public static class Stage {
     public static int ActorCount() => _Actors.Count;
 
     public new static string ToString() =>
-        string.Join("\n", [.. _Actors.Select(a => a.ToString())]);
+        string.Join("\n", [.. _Actors.Select(static a => a.ToString())]);
 }

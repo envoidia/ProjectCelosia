@@ -108,11 +108,11 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
 
             if (this.Progs[i] != 0) {
                 // Cursor
-                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L - this.Origin.X,
-                    this.Position.Y + h - this.Padding.T - this.Origin.Y),
+                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L, 
+                    this.Position.Y + h - this.Padding.T),
                     new Point(this.Width + this.Padding.LR, this.Labels[i].Height +
                     this.Labels[i].Padding.TB + this.Padding.TB),
-                    this.Origin, Settings.ColorAccent, Settings.ColorAccent,
+                    this.Origin, Settings.ColorAccent, Color.Red,
                     0f, 6, 6, Progress.Min(this.Prog, this.Progs[i]));
             }
 

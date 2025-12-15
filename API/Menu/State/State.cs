@@ -81,7 +81,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     }
 
     public string GetMenuString() =>
-        string.Join(", ", [.. this._Menus.Select(m => m.Name)]);
+        string.Join(", ", [.. this._Menus.Select(static m => m.Name)]);
 
     public static string GetInputPromptString(params InputPrompt[] inputPrompts) {
         StringBuilder inputs = new();

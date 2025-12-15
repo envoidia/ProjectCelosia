@@ -293,7 +293,7 @@ public static class BattleLib {
         // Update queue
         SortByAgi(units);
         _UpdateQueueIndex(curPos, units);
-        _Queue.SetText([.. units.Select(u => u.FormatName(false))]);
+        _Queue.SetText([.. units.Select(static u => u.FormatName(false))]);
     }
 
     /// <summary>
@@ -393,7 +393,7 @@ public static class BattleLib {
 
         // Sort moves
         // todo test
-        _CurMoves.Sort((a, b) => {
+        _CurMoves.Sort(static (a, b) => {
             // Sort by Prio
             int prioComparison = a.SkillInstance.Skill.Prio.CompareTo(b.SkillInstance.Skill.Prio);
             if (prioComparison != 0) return prioComparison;
@@ -608,7 +608,7 @@ public static class BattleLib {
     public static BuffType GetStageBuffType(int stacks) => stacks >= 0 ? BuffType.Buff : BuffType.Debuff;
 
     public static void SortByAgi(Unit[] units) =>
-        units.Sort((a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
+        units.Sort(static (a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
 
     #endregion
 }

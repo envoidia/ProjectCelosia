@@ -42,8 +42,8 @@ public static class InputLib {
     /// <summary>
     /// Tracks the status of input
     /// </summary>
-    public static readonly Routine TrackInput = new(a => Assert.Is<Label>(a),
-        (a, gameTime) => {
+    internal static readonly Routine _TrackInput = new(a => Assert.Is<Label>(a),
+        static (a, gameTime) => {
             Label l = (Label) a;
 
             StringBuilder sb = new();

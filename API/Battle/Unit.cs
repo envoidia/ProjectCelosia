@@ -83,11 +83,11 @@ public sealed class Unit {
         this.UnitType = unitType;
         this.Lvl = lvl;
 
-        this._Stats = unitType.Stats.ToDictionary(kvp => kvp.Key,
+        this._Stats = unitType.Stats.ToDictionary(static kvp => kvp.Key,
             kvp => kvp.Value + ((kvp.Value / 2) * this.Lvl * BattleLib.StatMult));
         this.Hp = this._Stats[Stats.Hp];
 
-        this.SkillInstances = [.. skills.Select(skill => new SkillInstance(skill))];
+        this.SkillInstances = [.. skills.Select(static skill => new SkillInstance(skill))];
         this.Passives = [.. unitType.Passives];
         this._Affinities = unitType._Affinities;
 

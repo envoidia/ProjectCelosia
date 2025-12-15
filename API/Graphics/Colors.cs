@@ -1,3 +1,4 @@
+using Apos.Shapes;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -6,8 +7,9 @@ public static class Colors {
     public static readonly Color Trans = new(0f, 0f, 0f, 0f);
     public static readonly Color TransBlack = new(0f, 0f, 0f, 0.6f);
 
-    public static readonly Color Bg = new(17, 0, 17);
-    public static readonly Color Fg = new(231, 199, 231);
+    // todo pick better colors
+    public static readonly Color Bg = new(0, 0, 0);
+    public static readonly Color Fg = new(255, 255, 255);
     public static readonly Color Accent = new(160, 32, 240);
 
     // Debug outlines for actors

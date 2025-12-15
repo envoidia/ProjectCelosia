@@ -67,10 +67,7 @@ public sealed class Menu {
         Stage.Cleanup();
     }
 
-    public void Update(GameTime gameTime) {
-        foreach (IInputWidget w in this.InputWidgets) w.Input(gameTime);
-        this.OnUpdate?.Invoke(gameTime);
-    }
+    public void Update(GameTime gameTime) => this.OnUpdate?.Invoke(gameTime);
 
     /// <returns>
     /// The <c>IInputWidget</c> currently assigned to a given <c>SelectionType</c>, if any

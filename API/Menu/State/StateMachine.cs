@@ -17,7 +17,7 @@ public static class StateMachine {
         Position = World.Vec - new Vector2(10),
         Padding = new(10),
         Alignment = Alignment.BottomRight,
-        HasBackground = true
+        HasBackground = true/*  */
     };
 
     static StateMachine() {
@@ -48,7 +48,7 @@ public static class StateMachine {
     }
 
     public new static string ToString() =>
-        string.Join(", ", [.. _Path.Select(s => s.Name)]);
+        string.Join(", ", [.. _Path.Select(static s => s.Name)]);
 
     /// <summary>
     /// Update the input prompt <c>Label</c> in the bottom-right corner

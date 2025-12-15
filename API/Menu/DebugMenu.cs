@@ -48,7 +48,7 @@ public static class DebugMenu {
 
     private static readonly Label _DebugInfoKeyNames = new() {
         Text = _GetKeyNameText(),
-        Position = World.Vec - new Vector2(430, _KeyYOff),
+        Position = World.Vec - new Vector2(412, _KeyYOff),
         Padding = new(10),
         HasBackground = true,
         Priority = RenderPriority.Highest,
@@ -57,7 +57,7 @@ public static class DebugMenu {
 
     private static readonly Label _DebugInfoKeyHeld = new() {
         Text = _GetKeyNameText(),
-        Position = World.Vec - new Vector2(120, _KeyYOff),
+        Position = World.Vec - new Vector2(112, _KeyYOff),
         Padding = new(10, 120, 10, 10),
         HasBackground = true,
         Priority = RenderPriority.Highest,
@@ -72,7 +72,7 @@ public static class DebugMenu {
         Stage.Add(_DebugInfoKeyNames);
 
         Stage.Add(_DebugInfoKeyHeld);
-        _DebugInfoKeyHeld.AddRoutine(InputLib.TrackInput);
+        _DebugInfoKeyHeld.AddRoutine(InputLib._TrackInput);
     }
 
     /// <summary>

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 /// <summary>
-/// An action for an <c>Actor</c> to execute
+/// An action for an <c>IActor</c> to execute
 /// </summary>
 /// <param name="OnStart">Executes on start</param>
 /// <param name="OnUpdate">Executes every frame</param>

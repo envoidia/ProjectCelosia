@@ -16,7 +16,6 @@ public static class Settings {
     public static Color ColorBg { get; } = Colors.Bg;
     public static Color ColorFg { get; } = Colors.Fg;
     public static Color ColorAccent { get; } = Colors.Accent;
-
     #endregion
 
     #region Debug

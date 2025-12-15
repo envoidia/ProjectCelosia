@@ -19,8 +19,9 @@ public sealed class Battle {
         // Assign disambiguation identifiers to duplicate UnitTypes
         Unit[] units = this.GetAllUnits();
 
-        Dictionary<UnitType, int> countDict = units.GroupBy(u => u.UnitType)
-            .ToDictionary(g => g.Key, g => g.Count());
+        Dictionary<UnitType, int> countDict = units.GroupBy(static u => u.UnitType)
+            .ToDictionary(static g => g.Key,
+                static g => g.Count());
         Dictionary<UnitType, int> counterDict = [];
 
         for (int i = 0; i < units.Length; i++) {

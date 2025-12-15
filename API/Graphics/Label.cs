@@ -19,13 +19,12 @@ public sealed class Label : IActor {
     }
 
     // Background
-    // todo remove and just call rect at site?
     public bool HasBackground { get; set; } = false;
     public Color BackgroundColor { get; set; } = Colors.TransBlack;
 
-    public ActorData Data { get; }
-
     private RichTextLayout _RichTextLayout { get; set; } = new() { Font = Core.Koruri60 };
+
+    public ActorData Data { get; }
 
     public Label(RenderPriority priority = RenderPriority.B1Med) {
         this.Data = new ActorData(this, priority);

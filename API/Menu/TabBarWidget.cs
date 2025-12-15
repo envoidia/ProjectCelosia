@@ -123,8 +123,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
 
             float yOff = (float) this.Progs[i] * _YOffset;
 
-            Vector2 pos = new(this.Position.X + w - this.Padding.L - this.Origin.X,
-                this.Position.Y - this.Padding.T - this.Origin.Y - yOff);
+            Vector2 pos = new(this.Position.X + w - this.Padding.L, this.Position.Y - this.Padding.T - yOff);
+            
             Point size = new(this.Labels[i].Width + this.Labels[i].Padding.LR - _OutlineWidth,
                 (int) (this.Height + this.Padding.TB + yOff * 2));
 
@@ -134,7 +134,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
             if (this.Progs[i] != 0) {
                 // Cursor
                 RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorAccent,
-                    Settings.ColorAccent, 0f, 6, 6,
+                    Color.Red, 0f, 6, 6,
                     Progress.Min(this.Prog, this.Progs[i]));
             }
 

@@ -101,6 +101,7 @@ public class Core : Game {
         // Make sure to change this after updating MGE
         // todo can i write it without ()
         // todo can this be in static ctor
+        // todo can the lambda be static
         ContentTypeReaderManager.AddTypeCreator(
             "MonoGame.Extended.Content.ContentReaders.Texture2DAtlasReader, MonoGame.Extended, Version=5.2.0.0, Culture=neutral, PublicKeyToken=null",
             () => new Texture2DAtlasReader());

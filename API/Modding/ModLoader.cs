@@ -42,13 +42,13 @@ public static class ModLoader {
 
         // Find entry point
         Type? entryPoint = asm.GetTypes()
-            .FirstOrDefault(t => _IsStatic(t) && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
+            .FirstOrDefault(static t => _IsStatic(t) && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
             ?? throw new _ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
 
         // Find all GameMods in the entryPoint class and add them to LoadedMods
         _LoadedMods.AddRange(entryPoint
             .GetProperties(BindingFlags.Static | BindingFlags.Public)
-            .Where(prop => {
+            .Where(static prop => {
                 if (prop.PropertyType != typeof(GameMod)) return false;
                 return prop.GetValue(null) is not null;
             })
