@@ -11,7 +11,7 @@ namespace API.Menu;
     - internal label alignment setting
     - max height (creates scrollbar)
 */
-public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated {
+public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor {
     public List<Label> Labels { get; private set; }
 
     public SelectionType PrefDir => SelectionType.Vert;
@@ -25,16 +25,12 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
 
     public Action<int>? OnSelect { get; set; }
 
-    public ActorData Data { get; }
-
-    public Progress Prog { get; set; } = new();
-
     /// <summary>
     /// Animation progress per-item
     /// </summary>
     public List<Progress> Progs { get; }
 
-    public float Speed => IAnimated.DefaultSpeed;
+    public ActorData Data { get; }
 
     public ListWidget(Vector2 pos, params string[] optionText) {
         this.Data = new ActorData(this, RenderPriority.B2Med);
@@ -86,6 +82,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
         foreach (Label l in this.Labels) {
             this.Height += l.Padding.T;
             l.Position = this.Position + new Vector2(l.Padding.L, this.Height);
+            l.BasePos = new Vector2(Const.OffXDest, l.Y);
             this.Height += l.Height + l.Padding.B;
             if (l.Width + l.Padding.LR > this.Width) this.Width = l.Width + l.Padding.LR;
         }
@@ -95,8 +92,15 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
 
     public void Input(GameTime gameTime) => this.Index = this.CheckInput();
 
-    public void Create() => this.AddRoutine(IAnimated.In);
-    public void Destroy() => this.AddRoutine(IAnimated.Out);
+    public void Create() {
+        this.AddRoutine(IActor.In);
+        foreach (Label l in this.Labels) l.AddRoutine(IActor.In);
+    }
+
+    public void Destroy() {
+        this.AddRoutine(IActor.Out);
+        foreach (Label l in this.Labels) l.AddRoutine(IActor.Out);
+    }
 
     public void Draw(GameTime gameTime) {
         this.Input(gameTime);

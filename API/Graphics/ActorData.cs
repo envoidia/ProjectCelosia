@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using API.Extensions;
 using API.Util;
@@ -67,6 +68,16 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// Distance from Position to draw at
     /// </summary>
     public Point Origin { get; set; } = Point.Zero;
+
+    /// <summary>
+    /// Animation progress
+    /// </summary>
+    public Progress Prog { get; set; }
+
+    /// <summary>
+    /// Speed multiplier. 1f = animation completes in 1s. 2f = 0.5s. Speed is doubled when closing
+    /// </summary>
+    public float Speed { get; set; } = IActor.DefaultSpeed;
 
     private readonly List<Routine> _routines = [];
 
@@ -151,4 +162,13 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         Alignment.Controlled => this.Origin,
         _ => throw new ClosedEnumsWhenException()
     };
+
+    /// <summary>
+    /// Updates <c>Prog</c>
+    /// </summary>
+    /// <returns>Whether the animation is finished</returns>
+    public bool UpdateProg(GameTime gameTime, AnimDirs dir) {
+        this.Prog = RenderLib.UpdateProg(this.Prog, this.Speed, gameTime, dir);
+        return this.Prog == 1 - Convert.ToInt32((int) dir == -1);
+    }
 }

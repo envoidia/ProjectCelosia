@@ -1,5 +1,6 @@
 using System;
 using API.Save;
+using API.Util;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 
@@ -18,6 +19,11 @@ public sealed class Label : IActor {
             this.Origin = this.Data.CalcOrigin();
         }
     }
+
+    /// <summary>
+    /// Position to interpolate to/from during create/destroy animation
+    /// </summary>
+    public Vector2 BasePos { get; set; }
 
     // Background
     public bool HasBackground { get; set; } = false;
@@ -39,10 +45,11 @@ public sealed class Label : IActor {
 
         if (this.HasBackground) this.Data.DrawBackground(this.BackgroundColor);
 
-        this._RichTextLayout.Draw(Core.SpriteBatch, this.Position,
+        this._RichTextLayout.Draw(Core.SpriteBatch,
+            MathUtil.SmoothStep(this.BasePos, this.Position, (float) this.Prog),
             Settings.ColorFg, 0f, this.Origin.ToVector2());
     }
 
-    public void Create() { }
-    public void Destroy() => this.MarkForRemoval();
+    public void Create() => this.AddRoutine(IActor.In);
+    public void Destroy() => this.AddRoutine(IActor.Out);
 }

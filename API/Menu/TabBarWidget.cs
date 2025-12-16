@@ -13,7 +13,7 @@ namespace API.Menu;
 /// A set of tabs
 /// </summary>
 // todo display inputs
-public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimated {
+public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     public List<Label> Labels { get; private set; } = null!;
 
     public SelectionType PrefDir => SelectionType.Horiz;
@@ -45,16 +45,12 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
 
     public Action<int>? OnSelect { get; set; }
 
-    public ActorData Data { get; private set; } = null!;
-
-    public Progress Prog { get; set; } = new();
-
     /// <summary>
     /// Animation progress per-item
     /// </summary>
     public List<Progress> Progs { get; private set; } = null!;
 
-    public float Speed => IAnimated.DefaultSpeed;
+    public ActorData Data { get; private set; } = null!;
 
     private const int _OutlineWidth = 10;
     private const int _YOffset = 9;
@@ -118,6 +114,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
         foreach (Label l in this.Labels) {
             this.Width += l.Padding.L;
             l.Position = new Vector2(this.X + this.Width, this.Y + l.Padding.T);
+            l.BasePos = new Vector2(l.X, Const.OffYDest);
             this.Width += l.Width + l.Padding.R;
 
             if (l.Height + l.Padding.TB > this.Height) this.Height = l.Height + l.Padding.TB;
@@ -136,8 +133,15 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
 
     public void Input(GameTime gameTime) => this.Index = this.CheckInput();
 
-    public void Create() => this.AddRoutine(IAnimated.In);
-    public void Destroy() => this.AddRoutine(IAnimated.Out);
+    public void Create() {
+        this.AddRoutine(IActor.In);
+        foreach (Label l in this.Labels) l.AddRoutine(IActor.In);
+    }
+
+    public void Destroy() {
+        this.AddRoutine(IActor.Out);
+        foreach (Label l in this.Labels) l.AddRoutine(IActor.Out);
+    }
 
     public void Draw(GameTime gameTime) {
         this.PromptL.IsVisible = this.CheckInput;

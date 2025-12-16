@@ -29,6 +29,30 @@ public interface IActor {
     /// Draws this
     /// </summary>
     void Draw(GameTime gameTime);
+
+    /// <summary>
+    /// Animate in
+    /// </summary>
+    static readonly Routine In = new(
+        static actor => Assert.Zero(actor.Prog),
+        static (actor, gameTime) => actor.UpdateProg(gameTime, AnimDirs.In));
+
+    /// <summary>
+    /// Animate out
+    /// </summary>
+    static readonly Routine Out = new(
+        static actor => Assert.One(actor.Prog),
+
+        static (actor, gameTime) => {
+            if (actor.UpdateProg(gameTime, AnimDirs.Out)) {
+                Stage.ImmediateRemove(actor);
+                return true;
+            }
+
+            return false;
+        });
+
+    const float DefaultSpeed = 4f;
 }
 
 public static class ActorExtensions {
@@ -85,12 +109,26 @@ public static class ActorExtensions {
             get => @this.Data.Padding;
             set => @this.Data.Padding = value;
         }
+
+        /// <inheritdoc cref="ActorData.Prog" />
+        public Progress Prog {
+            get => @this.Data.Prog;
+            set => @this.Data.Prog = value;
+        }
+
+        /// <inheritdoc cref="ActorData.Speed" />
+        public float Speed {
+            get => @this.Data.Speed;
+            set => @this.Data.Speed = value;
+        }
         
         /// <inheritdoc cref="ActorData.AddRoutine" />
         public void AddRoutine(Routine routine) => @this.Data.AddRoutine(routine);
 
         /// <inheritdoc cref="ActorData.MarkForRemoval" />
         public void MarkForRemoval() => @this.Data.MarkForRemoval();
+
+        public bool UpdateProg(GameTime gameTime, AnimDirs dir) => @this.Data.UpdateProg(gameTime, dir);
 
     }
 }

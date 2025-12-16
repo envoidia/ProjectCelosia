@@ -9,7 +9,7 @@ namespace API.Graphics;
 /// A line
 /// </summary>
 // todo: support more than 2 points
-public sealed class Path : IActor, IAnimated {
+public sealed class Path : IActor {
     public Vector2 Start { get; set; }
     public Vector2 End { get; set; }
     public float Thickness { get; set; }
@@ -22,9 +22,6 @@ public sealed class Path : IActor, IAnimated {
         set => this.Data.Priority = value;
     }
 
-    public Progress Prog { get; set; } = new();
-    public float Speed { get; set; } = 2f;
-
     public Path(Vector2 start, Vector2 end, RenderPriority renderPriority = RenderPriority.B1Med, float thickness = 5f) {
         this.Start = start;
         this.End = end;
@@ -35,6 +32,6 @@ public sealed class Path : IActor, IAnimated {
     public void Draw(GameTime gameTime) =>
         Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, this.Color, this.Color, 0);
 
-    public void Create() => this.AddRoutine(IAnimated.In);
-    public void Destroy() => this.AddRoutine(IAnimated.Out);
+    public void Create() => this.AddRoutine(IActor.In);
+    public void Destroy() => this.AddRoutine(IActor.Out);
 }

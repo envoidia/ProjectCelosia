@@ -104,6 +104,7 @@ internal sealed class _InspectLib {
     // Current unit items
     private static readonly RectangleActor _UnitBounds = new() {
         Position = new Vector2(30, 30),
+        BasePos = new Vector2(-500, 30),
         Size = new Point(384),
         Priority = RenderPriority.B2Med
     };
@@ -115,6 +116,7 @@ internal sealed class _InspectLib {
     private const int _StatGapY = 65;
 
     private static readonly Label _Lvl = new(RenderPriority.B2Med) {
+        BasePos = new Vector2(Const.OffXDest, _StatStartY),
         Position = new Vector2(_StatStartX, _StatStartY)
     };
 
@@ -146,9 +148,11 @@ internal sealed class _InspectLib {
     // };
 
     private static readonly Label _Equip = new(RenderPriority.B2Med) {
+        BasePos = new Vector2(Const.OffXDest, _StatStartY + (_StatGapY * 3)),
         Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 3))
     };
     private static readonly Label _Affinities = new(RenderPriority.B2Med) {
+        BasePos = new Vector2(Const.OffXDest, _StatStartY + (_StatGapY * 4)),
         Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 4))
     };
 
@@ -208,7 +212,10 @@ internal sealed class _InspectLib {
         for (int i = 0; i < _StatTypeCount; i++) {
             int x = 75 + (i * 675);
 
-            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med) { Position = new Vector2(x, 650) });
+            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med) {
+                Position = new Vector2(x, 650),
+                BasePos = new Vector2(Const.OffXDest, 650)
+            });
 
             const int Y = 702;
 

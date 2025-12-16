@@ -9,7 +9,7 @@ namespace API.Graphics;
 /// todo
 /// </summary>
 // todo use Position + deprecate
-public class Parellelogram : IActor, IAnimated {
+public class Parellelogram : IActor {
     public int L { get; set; }
     public int R { get; set; }
     public int T { get; set; }
@@ -36,9 +36,6 @@ public class Parellelogram : IActor, IAnimated {
         set => this.Data.Priority = value;
     }
 
-    public Progress Prog { get; set; } = new();
-    public float Speed { get; set; } = 2f;
-
     public Parellelogram(int l, int r, int t, int b, float outlineThickness = 10,
         RenderPriority renderPriority = RenderPriority.B1Med) {
         this.L = l;
@@ -56,8 +53,8 @@ public class Parellelogram : IActor, IAnimated {
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
 
-    public void Create() => this.AddRoutine(IAnimated.In);
-    public void Destroy() => this.AddRoutine(IAnimated.Out);
+    public void Create() => this.AddRoutine(IActor.In);
+    public void Destroy() => this.AddRoutine(IActor.Out);
 }
 
 public static class Parellelograms {
@@ -66,7 +63,7 @@ public static class Parellelograms {
     /// </summary>
     // todo how far offscreen is needed
     public static readonly Parellelogram CoverLeft = new(10, 2000, 0, World.H) {
-        Speed = IAnimated.DefaultSpeed,
+        Speed = IActor.DefaultSpeed,
         SlantL = 0,
         Priority = RenderPriority.B2Low
     };
