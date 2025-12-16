@@ -18,7 +18,7 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
     /// <summary>
     /// Colors for layers after the first 2
     /// </summary>
-    private static readonly Color[] _Layers = [Colors.Pos, Color.Cyan, Colors.LightPurple, Color.White];
+    private static readonly Color[] _Layers = [Colors.Pos, Color.Cyan, Colors.SpBack, Color.White];
 
     /// <summary>
     /// The value being tracked

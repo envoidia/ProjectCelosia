@@ -68,7 +68,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
     private void _Update() {
         float hpLen = this.Hp / (float) this.MaxHp;
         this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, Math.Max(hpLen - 1, 0)];
-        this._layers = [Colors.Hp, Colors.Shield, Colors.Overheal];
+        this._layers = [Colors.Hp, Colors.Shield, Colors.OverhealSp];
 
         Array.Sort(this._barLens, this._layers);
 
