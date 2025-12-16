@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
+/// <summary>
+/// Base class for StatBarWidget and HpBarWidget
+/// </summary>
 public abstract class StatBarWidgetBase : ILayoutWidget, IActor, IAnimated {
     protected const int _BarStartOffset = 90;
 

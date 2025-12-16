@@ -1,3 +1,5 @@
+using System;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -19,7 +21,7 @@ public interface IActor {
 
     /// <summary>
     /// Called when this should be removed from the stage.
-    /// In most cases, should be implemented as `this.MarkForRemoval()`
+    /// In most cases, should be implemented as <c>this.MarkForRemoval()</c>
     /// </summary>
     void Destroy();
 

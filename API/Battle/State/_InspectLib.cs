@@ -18,10 +18,10 @@ namespace API.Battle.State;
 internal sealed class _InspectLib {
     #region Display Fields
 
-    private const int _ActorCount = 49; // todo
+    private const int _ActorCount = 51; // todo
     private static readonly List<IActor> _Actors = new(_ActorCount);
 
-    private const int _AnimPrimActorCount = 6; //todo;
+    private const int _AnimPrimActorCount = 6; //todo merge;
     private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     internal static readonly Menu.Menu _Menu = new("Inspect") {
@@ -68,6 +68,9 @@ internal sealed class _InspectLib {
     private static readonly TabBarWidget _PageTabs = new(new Vector2(1135, 600), 8) {
         Priority = RenderPriority.B2Med
     };
+
+    private static readonly LineActor _PageDivL = new(new Vector2(35, 590), new Point(635, 20));
+    private static readonly LineActor _PageDivR = new(new Vector2(1600, 590), new Point(635, 20));
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Unit tabs
@@ -86,17 +89,17 @@ internal sealed class _InspectLib {
 
     // todo Dividing paths
     private const int _Y = 800;
-    private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y),
-        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-    private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y),
-        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
+    // private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y),
+    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
+    // private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y),
+    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
-    private static readonly Path _MultP = new(new(60, _Y), new(660, _Y),
-        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-    private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y),
-        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-    private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y),
-        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
+    // private static readonly Path _MultP = new(new(60, _Y), new(660, _Y),
+    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
+    // private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y),
+    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
+    // private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y),
+    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
     // Current unit items
     private static readonly RectangleActor _UnitBounds = new() {
@@ -185,8 +188,8 @@ internal sealed class _InspectLib {
     private const int _PromptCount = 10;
 
     private static _InspectPage _curPage = _InspectPage.Skills;
-    private static int _indexPageList = 0;
-    private static TimeSpan _timeOnSameTarget = TimeSpan.Zero;
+    //private static int _indexPageList = 0;
+    //private static TimeSpan _timeOnSameTarget = TimeSpan.Zero;
 
     #endregion
 
@@ -195,7 +198,7 @@ internal sealed class _InspectLib {
     static _InspectLib() {
         // Add preinitialized actors
         _Actors.AddRange(_UnitBounds, _Equip, _Affinities, _Lvl, _Hp, _Sp,
-            _PageItemList, _PageItemRightList, _DescHeader, _Desc);
+            _PageItemList, _PageItemRightList, _DescHeader, _Desc, _PageDivL, _PageDivR);
 
         // todo hp/sp bars
         _AnimPrimActors.AddRange(Parellelograms.CoverLeft/*, _PageListBox, _UnitListBox,*/

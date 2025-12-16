@@ -1,3 +1,4 @@
+using System;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
@@ -7,7 +8,7 @@ namespace API.Graphics;
 /// <summary>
 /// todo
 /// </summary>
-// todo use Position
+// todo use Position + deprecate
 public class Parellelogram : IActor, IAnimated {
     public int L { get; set; }
     public int R { get; set; }
