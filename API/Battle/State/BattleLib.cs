@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Battle.State;
 
-// todo finish + cleanup + reduce visibility when possible + rename to BattleLib
+// todo finish + cleanup + reduce visibility when possible
 public static class BattleLib {
     public static Battle Battle { get; private set; } = null!; // todo
 
@@ -42,10 +42,10 @@ public static class BattleLib {
     //private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     private static readonly string[] _UnitList = new string[UnitCount];
-    internal static readonly TabBarWidget _Queue = new(new Vector2(World.W2, 100), UnitCount) {
+    internal static readonly TabBarWidget _Queue = new(new Vector2(World.W2, 90), UnitCount) {
         CheckInput = false,
-        Alignment = Alignment.Center,
-        Priority = RenderPriority.B2Med
+        Priority = RenderPriority.B2Med,
+        OnSelect = _InspectLib._UpdateInspectUnitPage
     };
 
     private static readonly Label[] _BloomLabels = new Label[TeamCount];
@@ -292,22 +292,27 @@ public static class BattleLib {
 
         // Update queue
         SortByAgi(units);
-        _UpdateQueueIndex(curPos, units);
+        _Queue.Index = _GetQueueIndex(curPos, units);
         _Queue.SetText([.. units.Select(static u => u.FormatName(false))]);
     }
 
-    /// <summary>
-    /// Set queue index to the Unit currently acting or selecting their move
-    /// </summary>
-    internal static void _UpdateQueueIndex(int curPos, Unit[]? units = null) {
-        if (units is null) {
-            units = Battle.GetAllUnits();
-            SortByAgi(units);
-        }
-
-        _Queue.Index = units.IndexOf(units.FirstOrDefault(u => u.Pos == curPos));
+    internal static Unit[] _GetUnitsSortedByAgi() {
+        Unit[] units = Battle.GetAllUnits();
+        SortByAgi(units);
+        return units;
     }
 
+    /// <summary>
+    /// Gets the queue index of the Unit currently acting or selecting their move
+    /// </summary>
+    internal static int _GetQueueIndex(int curPos, Unit[]? units = null) {
+        units ??= _GetUnitsSortedByAgi();
+        return units.IndexOf(units.FirstOrDefault(u => u.Pos == curPos));
+    }
+
+    /// <returns>
+    /// Pos of the Unit that the queue should currently be focused on
+    /// </returns>
     internal static int _GetQueuePos() => _selectingMove == _ExecutionPhase ? _usingMove : _selectingMove;
 
     #endregion
@@ -357,7 +362,7 @@ public static class BattleLib {
             _SkillsL.Text = "";
 
             _selectingMove--;
-            _UpdateQueueIndex(_selectingMove);
+            _Queue.Index = _GetQueueIndex(_selectingMove);
 
             _indexSkill = 0;
             _Moves[_selectingMove].Text = "";

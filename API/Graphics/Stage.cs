@@ -114,4 +114,7 @@ public static class Stage {
 
     public new static string ToString() =>
         string.Join("\n", [.. _Actors.Select(static a => a.ToString())]);
+
+    internal static void _RecalcLayoutWidgets() =>
+        _Actors.OfType<ILayoutWidget>().ToList().ForEach(w => w.CalcLayout());
 }

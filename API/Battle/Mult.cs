@@ -3,7 +3,6 @@ using API.Extensions;
 using API.Graphics;
 using API.Modding;
 using API.Name;
-using API.Util;
 
 namespace API.Battle;
 
@@ -23,17 +22,10 @@ public sealed class Mult : _IModItem, INameable {
         Core.Mults.Add(this);
     }
 
-    public string Format(int val) => Math.Max(val, this.MinValue).Format(val switch {
-        > 1000 => TextLib.GetIncColor(this.IsPositive),
-        < 1000 => TextLib.GetDecColor(this.IsPositive),
-        _ => ColorCode.Num
-    }, true, '%', 10f);
+    public string Format(int val) => Math.Max(val, this.MinValue).FormatPerc(isPositive: this.IsPositive);
 
-    public string FormatChange(float val) => Math.Max(val, this.MinValue).Format(val switch {
-        > 0 => TextLib.GetIncColor(this.IsPositive),
-        < 0 => TextLib.GetDecColor(this.IsPositive),
-        _ => ColorCode.Num
-    }, true, '%');
+    public string FormatChange(float val) =>
+        Math.Max(val, this.MinValue).FormatPerc(true, isPositive: this.IsPositive);
 
     public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
     public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);

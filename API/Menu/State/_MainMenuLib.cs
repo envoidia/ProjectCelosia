@@ -1,3 +1,4 @@
+using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
@@ -16,10 +17,14 @@ internal static class _MainMenuLib {
 
     private const int _OptCount = (int) _Options.Quit;
 
-    // internal static readonly Menu _MainMenu = new(new ListWidget(_MainMenu, new Vector2(1200, 800),
+    // internal static readonly Menu _MainMenu = new("Main", new TabBarWidget(new Vector2(1000, 500),
     //     "lorem", "ipsum", "dolor", "si", "amet",
     //     "foo", "bar", "among", "us", "impostor", "is", "sus"),
-    //     new TabBarWidget(_MainMenu, new Vector2(1200, 600), "lorem", "ipsum", "dolor", "si", "amet"));
+    //     new TabBarWidget(new Vector2(1000, 700), "lorem", "ipsum", "dolor", "si", "amet"));
+
+    // internal static readonly TabBarWidget TestT1 = new(new Vector2(1000, 1100), "aaa", "bbbbb", "cccccc", "wjkdhas") {
+    //     CurDir = SelectionType.Horiz
+    // };
 
     internal static void _Update(GameTime gameTime) {
         StateMachine.Add(States.Battle);

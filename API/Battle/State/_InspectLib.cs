@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using API.Menu;
+using API.Extensions;
+using API.Util;
+
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 
@@ -12,14 +15,12 @@ namespace API.Battle.State;
 
 // todo cleanup
 internal sealed class _InspectLib {
-
     #region Display Fields
 
-    // todo ensure this size is right
-    private const int _ActorCount = 53;
+    private const int _ActorCount = 51; // todo
     private static readonly List<IActor> _Actors = new(_ActorCount);
 
-    private const int _AnimPrimActorCount = 6; //8;
+    private const int _AnimPrimActorCount = 6; //todo;
     private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     internal static readonly Menu.Menu _Menu = new("Inspect") {
@@ -27,14 +28,14 @@ internal sealed class _InspectLib {
             _Queue.CheckInput = true;
 
             // Set selected unit in queue to current
-            _UpdateQueueIndex(_indexTarget);
+            _Queue.Index = _GetQueueIndex(_indexTarget);
         },
 
         OnDestroy = static () => {
             _Queue.CheckInput = false;
 
             // Set selected unit in queue to what it was
-            _UpdateQueueIndex(_GetQueuePos());
+            _Queue.Index = _GetQueueIndex(_GetQueuePos());
         },
 
         OnUpdate = _Update,
@@ -62,18 +63,10 @@ internal sealed class _InspectLib {
     private static readonly Label[] _StatsPageNum = new Label[_StatTypeCount];
 
     // Page list
-    private static readonly Label[] _PageList = new Label[TeamSize];
-    private static TabBarWidget _pageTabs = null!; // todo why is the input for this all fucky wucky
+    private static readonly TabBarWidget _PageTabs = new(new Vector2(1135, 600), 8) {
+        Priority = RenderPriority.B2Med
+    };
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
-
-    // Basic stat list
-    /// <summary>
-    /// List of basic stats
-    /// </summary>
-    private static readonly Label[] _StatsBasic = new Label[StatCount];
-
-    /// <inheritdoc cref="_StatsBasic" />
-    private static readonly Label[] _StatsBasicNum = new Label[StatCount];
 
     // Unit tabs
     private static readonly string[] _UnitList = new string[UnitCount];
@@ -89,43 +82,79 @@ internal sealed class _InspectLib {
             InspectUnitL, InspectUnitR,
             InspectPageL, InspectPageR];
 
-    // Dividing paths
-    private const int _Y = 600;
+    // todo Dividing paths
+    private const int _Y = 800;
     private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y),
-        RenderPriority.B2High) { Speed = 4f };
+        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
     private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y),
-        RenderPriority.B2High) { Speed = 4f };
+        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
     private static readonly Path _MultP = new(new(60, _Y), new(660, _Y),
-        RenderPriority.B2High) { Speed = 4f };
+        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
     private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y),
-        RenderPriority.B2High) { Speed = 4f };
+        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
     private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y),
-        RenderPriority.B2High) { Speed = 4f };
+        RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
     // Current unit items
-    private static readonly Label _Equip = new(RenderPriority.B2High) { Position = new Vector2(450, 320) };
-    private static readonly Label _Affinities = new(RenderPriority.B2High) { Position = new Vector2(1050, 320) };
+    private static readonly RectangleActor _UnitBounds = new() {
+        Position = new Vector2(30, 30),
+        Size = new Point(384),
+        Priority = RenderPriority.B2Med
+    };
 
-    private static readonly Label _Hp = new(RenderPriority.B2High) { Position = new Vector2(450, 165) };
-    private static readonly Label _HpAmt = new(RenderPriority.B2High) {
-        Position = new Vector2(900, 165),
+    private const int _StatStartX = 450;
+    private const int _StatGapX = 595;
+    private const int _StatStartY = 175;
+    private const int _StatGapY = 65;
+
+    private static readonly Label _Lvl = new(RenderPriority.B2Med) {
+        Position = new Vector2(_StatStartX, _StatStartY)
+    };
+
+    private static readonly Label _Hp = new(RenderPriority.B2Med) {
+        Text = "HP",
+        Position = new Vector2(_StatStartX, _StatStartY + _StatGapY)
+    };
+    private static readonly Label _HpAmt = new(RenderPriority.B2Med) {
+        Position = new Vector2(900, _StatStartY + _StatGapY),
         Alignment = Alignment.TopRight
     };
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
-    private static readonly Label _Sp = new(RenderPriority.B2High) { Position = new Vector2(450, 210) };
-    private static readonly Label _SpAmt = new(RenderPriority.B2High) {
-        Position = new Vector2(450, 210),
+    private static readonly Label _Sp = new(RenderPriority.B2Med) {
+        Text = "SP",
+        Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 2))
+    };
+    private static readonly Label _SpAmt = new(RenderPriority.B2Med) {
+        Position = new Vector2(900, _StatStartY + (_StatGapY * 2)),
         Alignment = Alignment.TopRight
     };
+
+    private static readonly Label _Equip = new(RenderPriority.B2Med) {
+        Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 3))
+    };
+    private static readonly Label _Affinities = new(RenderPriority.B2Med) {
+        Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 4))
+    };
+
+    /// <summary>
+    /// List of basic stats
+    /// </summary>
+    private static readonly Stat[] _StatList = [Stats.Str, Stats.Mag, Stats.Fth, Stats.Amr, Stats.Res, Stats.Agi];
+
+    /// <inheritdoc cref="_StatList"/>
+    private static readonly Label[] _StatsBasic = new Label[StatCount];
+
+    /// <inheritdoc cref="_StatsBasic" />
+    private static readonly Label[] _StatsBasicNum = new Label[StatCount];
     //private static GuiBoxBar spBar = coolRectBars[CoolRectBars.SP_INSPECT.ordinal()];
 
     // Current page items
-    private static readonly Label _PageItemList = new(RenderPriority.B2High);
-    private static readonly Label _PageItemRightList = new(RenderPriority.B2High);
-    private static readonly Label _DescHeader = new(RenderPriority.B2High);
-    private static readonly Label _Desc = new(RenderPriority.B2High);
+    private static readonly Label _PageItemList = new(RenderPriority.B2Med);
+    private static readonly Label _PageItemRightList = new(RenderPriority.B2Med);
+    private static readonly Label _DescHeader = new(RenderPriority.B2Med);
+    private static readonly Label _Desc = new(RenderPriority.B2Med);
 
     #endregion
 
@@ -153,46 +182,41 @@ internal sealed class _InspectLib {
 
     static _InspectLib() {
         // Add preinitialized actors
-        _Actors.AddRange(_Equip, _Affinities, _Hp, _HpAmt, _Sp, _SpAmt,
+        _Actors.AddRange(_UnitBounds, _Equip, _Affinities, _Lvl, _Hp, _HpAmt, _Sp, _SpAmt,
             _PageItemList, _PageItemRightList, _DescHeader, _Desc);
 
         // todo hp/sp bars
-        _AnimPrimActors.AddRange(Parellelograms.CoverLeft, /*_PageListBox, _UnitListBox,*/
-            _PageDivL, _PageDivR, _MultP, _ModP, _OtherP);
+        _AnimPrimActors.AddRange(Parellelograms.CoverLeft/*, _PageListBox, _UnitListBox,*/
+            /*_PageDivL, _PageDivR, _MultP, _ModP, _OtherP*/);
 
         // Stat types
         for (int i = 0; i < _StatTypeCount; i++) {
             int x = 75 + (i * 675);
 
-            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2High) { Position = new Vector2(x, 570) });
+            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med) { Position = new Vector2(x, 650) });
 
-            const int Y = 622;
+            const int Y = 702;
 
-            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2High) { Position = new Vector2(x, Y) });
+            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2Med) { Position = new Vector2(x, Y) });
 
-            _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2High) {
+            _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2Med) {
                 Position = new Vector2(x + 585, Y),
                 Alignment = Alignment.TopRight
             });
         }
 
-        // Page list
-        for (int i = 0; i < _PageCount; i++) {
-            _Actors.Add(_PageList[i] = new Label(RenderPriority.B2High) { Y = 480 });
-        }
-
         // Basic stat list
         for (int i = 0; i < StatCount; i++) {
-            int x = i > 2 ? 1440 : 945;
-            int y = 165 - (45 * (i % 3));
+            int x = _StatStartX + _StatGapX * (i > 2 ? 2 : 1);
+            int y = _StatStartY + (_StatGapY * (i % 3));
 
-            _Actors.Add(_StatsBasic[i] = new Label(RenderPriority.B2High) {
+            _Actors.Add(_StatsBasic[i] = new Label(RenderPriority.B2Med) {
                 Position = new Vector2(x, y),
                 Alignment = Alignment.TopLeft
             });
 
-            _Actors.Add(_StatsBasicNum[i] = new Label(RenderPriority.B2High) {
-                Position = new Vector2(x + 450, y),
+            _Actors.Add(_StatsBasicNum[i] = new Label(RenderPriority.B2Med) {
+                Position = new Vector2(x + 550, y),
                 Alignment = Alignment.TopRight
             });
         }
@@ -204,9 +228,10 @@ internal sealed class _InspectLib {
             new(1125, 385), new(310, 52), new(0, 52), new(385, 320), new(857, 320)];
 
         for (int i = 0; i < _PromptCount; i++) {
-            _Actors.Add(_Prompts[i] = new Label(RenderPriority.B2High) { Position = promptPos[i] });
+            //todo _Actors.Add(_Prompts[i] = new Label(RenderPriority.B2Med) { Position = promptPos[i] });
         }
 
+        // todo
         // Assert.LenIs(_Actors, _ActorCount);
         // Assert.LenIs(_AnimPrimActors, _AnimPrimActorCount);
 
@@ -225,33 +250,10 @@ internal sealed class _InspectLib {
         for (int i = 0; i < _StatTypeCount; i++) _StatCategoryHeaders[i].Text = names[i];
 
         // Page list
-        names = [Lang.Skills, Lang.Passives, Lang.Buffs, Lang.Stats];
-
-        _pageTabs = new(new Vector2(638, 446), names) {
-            Priority = RenderPriority.B2Med
-        };
-
-        // int[] divs = new int[4];
-        // int divTotal = 0;
-
-        for (int i = 0; i < _PageCount; i++) {
-            _PageList[i].Text = names[i];
-            // _PageList[i].X = 655 * divTotal;
-
-            // int div = _PageList[i].Size.X + 20;
-            // divs[i] = div;
-            // divTotal += div;
-        }
-
-        //_PageListBox.Divisions = divs;
+        _PageTabs.SetText([Lang.Skills, Lang.Passives, Lang.Buffs, Lang.Stats]);
 
         // Basic stat list
-        names = [Lang.StatStr, Lang.StatMag, Lang.StatFth, Lang.StatAmr, Lang.StatRes, Lang.StatAgi];
-        for (int i = 0; i < StatCount; i++) _StatsBasic[i].Text = names[i];
-
-        // Current unit items
-        _Hp.Text = Lang.Hp;
-        _Sp.Text = Lang.Sp;
+        for (int i = 0; i < StatCount; i++) _StatsBasic[i].Text = _StatList[i].GetName();
     }
 
     internal static void _LateInit() {
@@ -261,7 +263,7 @@ internal sealed class _InspectLib {
         for (int i = 0; i < UnitCount; i++) _UnitList[i] = u[i].FormatName(false);
         // todo set their X here
 
-        _Menu.Setup([.. _AnimPrimActors, .. _Actors, _pageTabs]);
+        _Menu.Setup([.. _AnimPrimActors, .. _Actors, _PageTabs]);
     }
 
     internal static void _Create() {
@@ -290,6 +292,28 @@ internal sealed class _InspectLib {
     internal static string _GetInputPrompt() => _curPage == _InspectPage.Stats
         ? Menu.State.State.GetInputPromptString(Faster, Jump, Back)
         : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, Jump, Back);
+
+    internal static void _UpdateInspectUnitPage(int index) {
+        Unit u = _GetUnitsSortedByAgi()[index];
+
+        _Lvl.Text = $"Lvl {ColorCode.Num}{u.Lvl + 1}";
+
+        // HP and SP (todo: bars)
+        _HpAmt.Text = $"{u.Hp.Format(ColorCode.White, false)}//{u.GetBaseStat(Stats.Hp)
+            .Format(ColorCode.White, false)}";
+        _SpAmt.Text = $"{u.Sp.Format(ColorCode.White, false)}/2,000";
+
+        _Equip.Text = u.GetEquipString();
+        _Affinities.Text = u.GetAffinitiesString(true);
+
+        // Basic stats
+        // todo bar
+        for (int i = 0; i < StatCount; i++) {
+            int baseStat = u.GetBaseStat(_StatList[i]);
+            _StatsBasicNum[i].Text = $"{u.GetStat(_StatList[i]).Format(false)}//{baseStat
+                .Format(false)}";
+        }
+    }
 
     private static void _HandleInspectPage() { }
 

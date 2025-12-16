@@ -48,7 +48,7 @@ public class Core : Game {
     public static readonly List<Element> Elements = [];
     public static readonly List<Mult> Mults = [];
     public static readonly List<Passive> Passives = [];
-    public static readonly List<Battle.Range> Ranges = [];
+    public static readonly List<Range> Ranges = [];
     public static readonly List<Skill> Skills = [];
     public static readonly List<SkillType> SkillTypes = [];
     public static readonly List<StageType> StageTypes = [];
@@ -81,7 +81,7 @@ public class Core : Game {
         Koruri60 = KoruriSystem.GetFont(60);
 
         // Images in text
-        RichTextDefaults.ImageResolver = str => {
+        RichTextDefaults.ImageResolver = static str => {
             if (TextureCache.TryGetValue(str, out Texture2DRegion? region)) {
                 return new TextureFragmentColored(region.Texture, region.Bounds);
             }
@@ -154,7 +154,7 @@ public class Core : Game {
 
         // Scaling
         Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(2560, 1440), true, false, false));
+            new Point(1920, 1080), false, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;

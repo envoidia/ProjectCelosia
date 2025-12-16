@@ -25,7 +25,6 @@ public static class RenderLib {
         Core.ShapeBatch.DrawTriangleStrip(tl, tr, bl, br, color, outlineColor, outlineThickness);
     }
 
-    // todo use origin
     public static void DrawParallelogram(Vector2 pos, Point size, Point origin, Color color, Color outlineColor,
         float outlineThickness, int slantL, int slantR, Progress prog) {
 

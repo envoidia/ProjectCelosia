@@ -13,11 +13,10 @@ public static class StateMachine {
     private static readonly List<State> _Path = [];
 
     internal static readonly Label _InputPrompt = new(RenderPriority.Highest) {
-        Text = "W", // Initialize with max height for height check in <c>DebugMenu</c>
         Position = World.Vec - new Vector2(10),
         Padding = new(10),
         Alignment = Alignment.BottomRight,
-        HasBackground = true/*  */
+        HasBackground = true
     };
 
     static StateMachine() {

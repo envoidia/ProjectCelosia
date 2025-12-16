@@ -3,6 +3,9 @@ using API.Name;
 
 namespace API.Battle;
 
+/// <summary>
+/// An equippable item. Must also be IDescribable
+/// </summary>
 public interface IEquippable {
     void Apply(Unit unit, bool giving);
 

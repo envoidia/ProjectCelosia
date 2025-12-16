@@ -6,6 +6,7 @@ using API.Battle.BuffEffects;
 using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
+using API.Name;
 using API.Util;
 using MonoGame.Extended.Collections;
 
@@ -69,6 +70,7 @@ public sealed class Unit {
     public IEquippable? Equipped {
         get;
         set {
+            if (value is not null) Assert.Is<IDescribable>(value);
             field?.Unequip(this);
             field = value;
             field?.Equip(this);
@@ -163,31 +165,36 @@ public sealed class Unit {
         int value;
 
         // In bounds
-        if (index >= 0 && index < core.Length) {
-            value = core[index];
-        }
+        if (index >= 0 && index < core.Length) value = core[index];
         // Above bounds
-        else if (i >= core.Length) {
-            value = core[^1] + ((stepUp * index) - (core.Length - 1));
-        }
+        else if (i >= core.Length) value = core[^1] + ((stepUp * index) - (core.Length - 1));
         // Below bounds
-        else {
-            value = core[0] + (stepDown * Math.Abs(index));
-        }
+        else value = core[0] + (stepDown * Math.Abs(index));
 
         // Max to 0
         return Math.Max(value, 0);
     }
 
 
-    public string GetAffinitiesString() {
-        StringBuilder str = new();
+    /// <param name="current">Whether to compare to base</param>
+    /// <returns>Affinities of this formatted readably</returns>
+    public string GetAffinitiesString(bool current) {
+        Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
+
+        StringBuilder sb = new($"{ColorCode.Stat}{Lang.Affinities}{ColorCode.White}: ");
         foreach (Element element in Core.Elements) {
-            this._Affinities.TryGetValue(element, out int aff);
-            str.Append(element.Icon).Append(aff.Format()).Append(ColorCode.White).Append("  ");
+            sb.Append(element.Icon).Append(' ')
+                .Append(affs.GetValueOrDefault(element, 0).Format());
+
+            if (current) {
+                sb.Append(ColorCode.White).Append("//")
+                    .Append(this.UnitType._Affinities.GetValueOrDefault(element, 0).Format());
+            }
+
+            sb.Append("   ");
         }
 
-        return str.ToString();
+        return sb.ToString();
     }
 
     #endregion
@@ -380,6 +387,12 @@ public sealed class Unit {
 
     #endregion
 
+    #region Misc
+
+    // todo weapon
+    public string GetEquipString() =>
+        $"{ColorCode.Stat}{Lang.Accessory}{ColorCode.White}: {(this.Equipped as INameable)?.GetName() ?? Lang.None}";
+
     public void DecrementTurns() {
         // Stages
         foreach (StageType stageType in Core.StageTypes) {
@@ -509,4 +522,6 @@ public sealed class Unit {
 
         return name + suffix + ColorCode.White;
     }
+
+    #endregion
 }

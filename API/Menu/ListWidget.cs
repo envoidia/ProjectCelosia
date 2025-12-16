@@ -10,7 +10,6 @@ namespace API.Menu;
 /* todo:
     - internal label alignment setting
     - max height (creates scrollbar)
-    - make ianimatedprim
 */
 public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated {
     public List<Label> Labels { get; private set; }
@@ -20,10 +19,17 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
 
     public bool CheckInput { get; set; } = true;
 
-    public int Index { get; set; } = 0;
+    public int Index {
+        get;
+        set {
+            this.OnSelect?.Invoke(value);
+            field = value;
+        }
+    } = 0;
+    
     public int OptCount { get; private set; }
 
-    public Action? OnSelect { get; set; }
+    public Action<int>? OnSelect { get; set; }
 
     public ActorData Data { get; }
 
@@ -34,7 +40,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
     /// </summary>
     public List<Progress> Progs { get; }
 
-    public float Speed { get; private set; } = 4f;
+    public float Speed => IAnimated.DefaultSpeed;
 
     public ListWidget(Vector2 pos, params string[] optionText) {
         this.Data = new ActorData(this, RenderPriority.B2Med);
@@ -108,12 +114,13 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
 
             if (this.Progs[i] != 0) {
                 // Cursor
-                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L, 
+                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L,
                     this.Position.Y + h - this.Padding.T),
                     new Point(this.Width + this.Padding.LR, this.Labels[i].Height +
                     this.Labels[i].Padding.TB + this.Padding.TB),
                     this.Origin, Settings.ColorAccent, Color.Red,
-                    0f, 6, 6, Progress.Min(this.Prog, this.Progs[i]));
+                    0f, Parellelogram.DefaultSlant, Parellelogram.DefaultSlant,
+                    Progress.Min(this.Prog, this.Progs[i]));
             }
 
             h += this.Labels[i].Height + this.Labels[i].Padding.TB;

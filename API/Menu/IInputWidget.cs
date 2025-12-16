@@ -26,7 +26,7 @@ public interface IInputWidget {
     /// <summary>
     /// Triggered when Index changes
     /// </summary>
-    Action? OnSelect { get; set; }
+    Action<int>? OnSelect { get; set; }
 
     /// <inheritdoc cref="SelectionType" />
     SelectionType PrefDir { get; }
@@ -49,7 +49,11 @@ public static class InputAcceptorExtensions {
             Assert.InRange(@this.Index, 0, @this.OptCount - 1);
 
             if (@this.CheckInput) {
-                return MenuLib.CheckMovement1D(@this.Index, @this.OptCount, @this.CurDir);
+                int newIndex = MenuLib.CheckMovement1D(@this.Index, @this.OptCount, @this.CurDir);
+                if (@this.Index != newIndex) {
+                    @this.OnSelect?.Invoke(newIndex);
+                    return newIndex;
+                }
             }
 
             return @this.Index;

@@ -19,13 +19,15 @@ public class Parellelogram : IActor, IAnimated {
     public float OutlineThickness { get; set; }
     public Color OutlineColor { get; set; } = Settings.ColorFg;
 
+    public const int DefaultSlant = 6;
+
     /// <summary>
     /// Move X by 1 for every slant Y
     /// </summary>
-    public int SlantL { get; set; } = 6;
+    public int SlantL { get; set; } = DefaultSlant;
 
     /// <inheritdoc cref="SlantL" />
-    public int SlantR { get; set; } = 6;
+    public int SlantR { get; set; } = DefaultSlant;
 
     public ActorData Data { get; }
 
@@ -64,8 +66,8 @@ public static class Parellelograms {
     /// <c>Parellelogram</c> that covers most of the left half of the screen
     /// </summary>
     // todo how far offscreen is needed
-    public static readonly Parellelogram CoverLeft = new(8, 1750, 0, World.H) {
-        Speed = 4f,
+    public static readonly Parellelogram CoverLeft = new(10, 2000, 0, World.H) {
+        Speed = IAnimated.DefaultSpeed,
         SlantL = 0,
         Priority = RenderPriority.B2Low
     };

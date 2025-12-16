@@ -1,4 +1,5 @@
 using API.Battle.State;
+using API.Graphics;
 using API.Input;
 
 namespace API.Menu.State;
@@ -8,7 +9,9 @@ using static API.Input.InputPrompts;
 public static class States {
     public static readonly State MainMenu = new("Main", _MainMenuLib._Update,
     static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm)) {
-        //OnCreate = () => MainMenu!.Menus.Add(_MainMenuLib._MainMenu)
+        // OnCreate = () => {
+        //     Stage.Add(_MainMenuLib.TestT1);
+        //     MainMenu!._Menus.Add(_MainMenuLib._MainMenu);}
     };
 
     public static readonly State Battle = new("Battle", BattleLib._Update,

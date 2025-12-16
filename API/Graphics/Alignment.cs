@@ -6,5 +6,11 @@ public enum Alignment {
     TopRight,
     BottomLeft,
     BottomRight,
-    Center
+    Center,
+
+    /// <summary>
+    /// Origin will never automatically update.
+    /// Intended for <c>IActor</c>s that are part of an <c>ILayoutWidget</c> that controls their origin
+    /// </summary>
+    Controlled
 }

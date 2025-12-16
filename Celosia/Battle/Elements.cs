@@ -20,7 +20,7 @@ public static class Elements {
         "/c[lightBrown]/i[rock]", Mults.TerraDmgDealt, Mults.TerraDmgTaken);
 
     public static readonly Element Lux = new(Main.Mod, "ElementLux",
-        $"{ColorCode.Lux}/i[todo]", Mults.LuxDmgDealt, Mults.LuxDmgTaken);
+        $"{ColorCode.Lux}/i[sparkles]", Mults.LuxDmgDealt, Mults.LuxDmgTaken);
 
     public static readonly Element Malum = new(Main.Mod, "ElementMalum",
         "/c[red]/i[evil-wings]", Mults.MalumDmgDealt, Mults.MalumDmgTaken);

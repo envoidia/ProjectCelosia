@@ -51,7 +51,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
 
     /// <summary>
-    /// Padding to apply to this when calling <c>DrawBackground()</c> and arranging it inside of an <c>IWidget</c>
+    /// Padding to apply to this when calling <c>DrawBackground()</c> and arranging it inside of an <c>ILayoutWidget</c>
     /// </summary>
     public Padding Padding { get; set; }
 
@@ -108,14 +108,14 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         actor.Draw(gameTime);
     }
 
-    public void DrawBackground(Color c) => Core.SpriteBatch.Draw(Core.WhitePixel,
-        new Rectangle((int) (this.Position.X - this.Padding.L - this.Origin.X),
-        (int) (this.Position.Y - this.Padding.T - this.Origin.Y),
-        this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
+    public void DrawBackground(Color c) => Core.ShapeBatch.FillRectangle(
+            new Vector2((int) (this.Position.X - this.Padding.L - this.Origin.X),
+            (int) (this.Position.Y - this.Padding.T - this.Origin.Y)),
+            new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
 
-    public void DrawDebug() {
-        (Color, Color) colors = this.IsVisible 
-            ? (Colors.ActorOutline, Colors.ActorPadding) 
+    public void DrawDebug(bool drawOrigin = true) {
+        (Color, Color) colors = this.IsVisible
+            ? (Colors.ActorOutline, Colors.ActorPadding)
             : (Colors.ActorOutlineInvis, Colors.ActorPaddingInvis);
 
         // Position
@@ -135,9 +135,11 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         if (this._marked) this.DrawBackground(Colors.ActorMarked);
 
         // Origin
-        Core.ShapeBatch.FillRectangle(this.Position - new Vector2(_OriginDebugSize),
-            new Vector2(_OriginDebugSize * 2),
-            Colors.ActorOrigin);
+        if (drawOrigin) {
+            Core.ShapeBatch.FillRectangle(this.Position - new Vector2(_OriginDebugSize),
+                new Vector2(_OriginDebugSize * 2),
+                Colors.ActorOrigin);
+        }
     }
 
     public Point CalcOrigin() => this.Alignment switch {
@@ -146,6 +148,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         Alignment.BottomLeft => new Point(0, this.Size.Y),
         Alignment.BottomRight => new Point(this.Size.X, this.Size.Y),
         Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f)),
+        Alignment.Controlled => this.Origin,
         _ => throw new ClosedEnumsWhenException()
     };
 }

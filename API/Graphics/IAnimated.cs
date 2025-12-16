@@ -34,6 +34,8 @@ public interface IAnimated {
             return false;
         });
 
+    const float DefaultSpeed = 4f;
+
     /// <summary>
     /// Animation progress
     /// </summary>

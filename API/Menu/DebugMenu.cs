@@ -64,13 +64,11 @@ public static class DebugMenu {
         IsVisible = false
     };
 
-    internal static bool _drawActorOutlines = true;
+    internal static bool _drawActorOutlines = false;
 
     static DebugMenu() {
         Stage.Add(_DebugInfoHelp);
-
         Stage.Add(_DebugInfoKeyNames);
-
         Stage.Add(_DebugInfoKeyHeld);
         _DebugInfoKeyHeld.AddRoutine(InputLib._TrackInput);
     }
@@ -138,9 +136,11 @@ public static class DebugMenu {
         }
         if (InputLib.IsKeyJustPressed(Keys.F5)) Console.WriteLine(Stage.ToString());
 
-        if (InputLib.IsKeyJustPressed(Keys.F6)) Stage.Cleanup();
+        if (InputLib.IsKeyJustPressed(Keys.F6)) Stage._RecalcLayoutWidgets();
 
-        if (InputLib.IsKeyJustPressed(Keys.F7)) {
+        if (InputLib.IsKeyJustPressed(Keys.F7)) Stage.Cleanup();
+
+        if (InputLib.IsKeyJustPressed(Keys.F8)) {
             string str = string.Join('\n', LogLib._LogText);
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
@@ -151,11 +151,11 @@ public static class DebugMenu {
             Console.WriteLine(Regexes.RemoveFormattingCodes(str));
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F8)) {
+        if (InputLib.IsKeyJustPressed(Keys.F9)) {
             Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F9)) GC.Collect();
+        if (InputLib.IsKeyJustPressed(Keys.F10)) GC.Collect();
     }
 
     // todo cleanup

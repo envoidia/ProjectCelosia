@@ -48,10 +48,16 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
     public string GetCurrentGlyph() => this.Id switch {
         KeybindId.LeftRight or KeybindId.UpDown or KeybindId.LeftRightUpDown =>
             InputLib.LastInputSource.GetMergedGlyph(this.Id),
-        _ => InputLib.LastInputSource == InputDevice.Keyboard
-            ? this.Key.GetGlyph()
-            : this.Button.GetGlyph(InputLib.LastInputSource)
+        KeybindId.LeftUp => _GetCurrentGlyph(Keybinds.Left.Key, Keybinds.Left.Button),
+        KeybindId.RightDown => _GetCurrentGlyph(Keybinds.Right.Key, Keybinds.Right.Button),
+        _ => _GetCurrentGlyph(this.Key, this.Button)
     };
+
+    private static string _GetCurrentGlyph(Keys key, Buttons button) {
+        return InputLib.LastInputSource == InputDevice.Keyboard
+            ? key.GetGlyph()
+            : button.GetGlyph(InputLib.LastInputSource);
+    }
 
     public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
     public string GetName(GameMod? mod = null) => this.GetName(ColorCode.White, mod);
@@ -111,7 +117,7 @@ public static class Keybinds {
         [Confirm, Back, Menu1, Menu2, PageL, PageR, Left, Right, Up, Down, DebugInfo, Hotkey1, Hotkey2];
 
     // Merged
-    // Acceptable for InputLib.Check(), has no glyph:
+    // Acceptable for InputLib.Check(), has no glyph (defers to left/right):
     public static readonly Keybind LeftUp = new("", KeybindId.LeftUp, Keys.None, Buttons.None);
     public static readonly Keybind RightDown = new("", KeybindId.RightDown, Keys.None, Buttons.None);
 

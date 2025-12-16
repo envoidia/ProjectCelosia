@@ -70,7 +70,7 @@ public static class KeysExtensions {
             Keys.OemOpenBrackets => "[",
             Keys.OemCloseBrackets => "]",
             Keys.OemQuotes => "Quot",
-            _ => throw new ArgumentOutOfRangeException(nameof(@this)) // todo
+            _ => throw new ArgumentOutOfRangeException(nameof(@this), @this, "") // todo
         });
 
         public char? Type() {

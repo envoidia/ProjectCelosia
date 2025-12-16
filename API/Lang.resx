@@ -76,10 +76,11 @@ Loaded Mods: {7}</value>
         <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if input disabled)
 /i[KF4]: Toggle input view
 /i[KF5]: Write all actors on stage to console
-/i[KF6]: Force stage cleanup
-/i[KF7]: Write battle log to console. Hold {0} to preserve formatting codes
-/i[KF8]: Write loaded mod list to console
-/i[KF9]: Force GC collect</value>
+/i[KF6]: Recalculate all ILayoutWidgets
+/i[KF7]: Force stage cleanup
+/i[KF8]: Write battle log to console. Hold {0} to preserve formatting codes
+/i[KF9]: Write loaded mod list to console
+/i[KF10]: Force GC collect</value>
     </data>
     <!--#endregion-->
     <!--#region Basic-->
@@ -88,6 +89,9 @@ Loaded Mods: {7}</value>
     </data>
     <data name="No" xml:space="preserve">
         <value>No</value>
+    </data>
+    <data name="None" xml:space="preserve">
+        <value>None</value>
     </data>
     <data name="Up" xml:space="preserve">
         <value>Up</value>
@@ -298,6 +302,18 @@ Loaded Mods: {7}</value>
     </data>
     <data name="Immune" xml:space="preserve">
         <value>Immune</value>
+    </data>
+    <data name="Accessory" xml:space="preserve">
+        <value>Accessory</value>
+    </data>
+    <data name="Accessories" xml:space="preserve">
+        <value>Accessories</value>
+    </data>
+    <data name="Weapon" xml:space="preserve">
+        <value>Weapon</value>
+    </data>
+    <data name="Weapons" xml:space="preserve">
+        <value>Weapons</value>
     </data>
     <!--Built-in skills and buffs-->
     <data name="SkillNothing" xml:space="preserve">
@@ -880,12 +896,6 @@ Def = Target's Amr or Res, depending on the skill's type
 Damage = (Atk / Def) * (pow * 10) * damage modifier for user's affinity * damage modifier for target's affinity * user's Dmg Dealt * target's Dmg Taken * user's (Element) Dmg Dealt * target's (Element) Dmg Dealt * (if hitting a weakness) user's Weakness Dmg Dealt * target's Weakness Dmg Taken * (if the skill is a Follow-Up) user's Follow-Up Dmg Dealt * target's Follow-Up Dmg Taken</value>
     </data>
     <!--Info-->
-    <data name="Hp" xml:space="preserve">
-        <value>HP</value>
-    </data>
-    <data name="Sp" xml:space="preserve">
-        <value>SP</value>
-    </data>
     <data name="InfoStat" xml:space="preserve">
         <value>Stats</value>
     </data>
