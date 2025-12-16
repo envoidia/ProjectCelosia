@@ -132,7 +132,7 @@ internal sealed class _InspectLib {
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
             _StatBarWidth, RenderPriority.B2Med, "SP") {
-        ColorLayer0 = Colors.Pink,
+        ColorLayer0 = Colors.Overheal,
         ColorLayer1 = Colors.LightPurple,
         MaxVal = 1000
     };

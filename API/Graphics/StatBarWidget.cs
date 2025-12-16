@@ -13,7 +13,7 @@ namespace API.Graphics;
 public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
     : StatBarWidgetBase(pos, width, renderPriority, text) {
     public Color ColorLayer0 { get; init; } = Colors.Neg;
-    public Color ColorLayer1 { get; init; } = Colors.Num;
+    public Color ColorLayer1 { get; init; } = Colors.Stat;
 
     /// <summary>
     /// Colors for layers after the first 2

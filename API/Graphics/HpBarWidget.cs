@@ -36,7 +36,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
     }
 
     private float[] _barLens = [0, 0, 0];
-    private Color[] _layers = [Color.Lime, Color.Cyan, Colors.Pink];
+    private Color[] _layers = [];
 
     public override void Draw(GameTime gameTime) {
         // todo animate between stages whenever it changes
@@ -68,7 +68,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
     private void _Update() {
         float hpLen = this.Hp / (float) this.MaxHp;
         this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, Math.Max(hpLen - 1, 0)];
-        this._layers = [Color.Lime, Color.Cyan, Colors.Pink];
+        this._layers = [Colors.Hp, Colors.Shield, Colors.Overheal];
 
         Array.Sort(this._barLens, this._layers);
 

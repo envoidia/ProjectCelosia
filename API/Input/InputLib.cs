@@ -58,10 +58,10 @@ public static class InputLib {
             }
 
             bool check = _CheckKeybind(Keybinds.Hotkey1);
-            sb.Append(check ? ColorCode.Lime : ColorCode.Red).Append(check).Append('\n');
+            sb.Append(check ? ColorCode.Pos : ColorCode.Neg).Append(check).Append('\n');
 
             check = _CheckKeybind(Keybinds.Hotkey2);
-            sb.Append(check ? ColorCode.Lime : ColorCode.Red).Append(check);
+            sb.Append(check ? ColorCode.Pos : ColorCode.Neg).Append(check);
 
             l.Text = sb.ToString();
 

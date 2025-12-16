@@ -7,11 +7,15 @@ public static class Colors {
     public static readonly Color TransBlack = new(0f, 0f, 0f, 0.6f);
 
     public static readonly Color LightPurple = new(155, 45, 255);
-    public static readonly Color Pink = new(238, 130, 239);
 
     public static readonly Color Pos = Color.Lime;
     public static readonly Color Neg = new(255, 81, 81);
     public static readonly Color Num = Color.Yellow;
+
+    public static readonly Color Hp = new(26, 225, 50);
+    public static readonly Color Shield = Color.Cyan;
+    public static readonly Color Overheal = new(238, 130, 239);
+    public static readonly Color Stat = new(222, 255, 129);
 
     // todo pick better colors
     public static readonly Color Bg = new(0, 0, 0);
