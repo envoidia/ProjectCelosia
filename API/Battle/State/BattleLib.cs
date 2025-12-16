@@ -297,7 +297,7 @@ public static class BattleLib {
     }
 
     internal static Unit[] _GetUnitsSortedByAgi() {
-        Unit[] units = Battle.GetAllUnits();
+        Unit[] units = [.. Battle.GetAllUnits()];
         SortByAgi(units);
         return units;
     }

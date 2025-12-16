@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 public static class RenderLib {
+    public const int DefaultSlant = 6;
+
     public static Progress UpdateProg(Progress prog, float speed, GameTime gameTime, AnimDirs dir) =>
         prog + (float) (gameTime.ElapsedGameTime.TotalSeconds * (int) dir * speed *
             (1 + Convert.ToInt32((int) dir == -1)));

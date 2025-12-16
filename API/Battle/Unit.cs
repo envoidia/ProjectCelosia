@@ -181,7 +181,7 @@ public sealed class Unit {
     public string GetAffinitiesString(bool current) {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
-        StringBuilder sb = new($"{ColorCode.Stat}{Lang.Affinities}{ColorCode.White}: ");
+        StringBuilder sb = new($"{ColorCode.Stat}{Lang.Affinities}:{ColorCode.White} ");
         foreach (Element element in Core.Elements) {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
@@ -391,7 +391,7 @@ public sealed class Unit {
 
     // todo weapon
     public string GetEquipString() =>
-        $"{ColorCode.Stat}{Lang.Accessory}{ColorCode.White}: {(this.Equipped as INameable)?.GetName() ?? Lang.None}";
+        $"{ColorCode.Stat}{Lang.Accessory}:{ColorCode.White} {(this.Equipped as INameable)?.GetName() ?? Lang.None}";
 
     public void DecrementTurns() {
         // Stages

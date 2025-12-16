@@ -6,6 +6,10 @@ public static class Colors {
     public static readonly Color Trans = new(0f, 0f, 0f, 0f);
     public static readonly Color TransBlack = new(0f, 0f, 0f, 0.6f);
 
+    public static readonly Color LightRed = new(255, 50, 50);
+    public static readonly Color LightPurple = new(155, 45, 255);
+    public static readonly Color Pink = new(238, 130, 239);
+
     // todo pick better colors
     public static readonly Color Bg = new(0, 0, 0);
     public static readonly Color Fg = new(255, 255, 255);

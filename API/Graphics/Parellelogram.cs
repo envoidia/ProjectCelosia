@@ -19,15 +19,13 @@ public class Parellelogram : IActor, IAnimated {
     public float OutlineThickness { get; set; }
     public Color OutlineColor { get; set; } = Settings.ColorFg;
 
-    public const int DefaultSlant = 6;
-
     /// <summary>
     /// Move X by 1 for every slant Y
     /// </summary>
-    public int SlantL { get; set; } = DefaultSlant;
+    public int SlantL { get; set; } = RenderLib.DefaultSlant;
 
     /// <inheritdoc cref="SlantL" />
-    public int SlantR { get; set; } = DefaultSlant;
+    public int SlantR { get; set; } = RenderLib.DefaultSlant;
 
     public ActorData Data { get; }
 

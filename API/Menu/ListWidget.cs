@@ -19,14 +19,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
 
     public bool CheckInput { get; set; } = true;
 
-    public int Index {
-        get;
-        set {
-            this.OnSelect?.Invoke(value);
-            field = value;
-        }
-    } = 0;
-    
+    public int Index { get; set; } = 0;
+
     public int OptCount { get; private set; }
 
     public Action<int>? OnSelect { get; set; }
@@ -119,7 +113,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor, IAnimated 
                     new Point(this.Width + this.Padding.LR, this.Labels[i].Height +
                     this.Labels[i].Padding.TB + this.Padding.TB),
                     this.Origin, Settings.ColorAccent, Color.Red,
-                    0f, Parellelogram.DefaultSlant, Parellelogram.DefaultSlant,
+                    0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
                     Progress.Min(this.Prog, this.Progs[i]));
             }
 

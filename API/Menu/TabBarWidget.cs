@@ -39,13 +39,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
 
     public bool CheckInput { get; set; } = true;
 
-    public int Index {
-        get;
-        set {
-            this.OnSelect?.Invoke(value);
-            field = value;
-        }
-    } = 0;
+    public int Index { get; set; } = 0;
 
     public int OptCount { get; private set; }
 
@@ -169,7 +163,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor, IAnimate
                 (int) (this.Height + this.Padding.TB + yOff * 2));
 
             RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorBg,
-                Settings.ColorFg, _OutlineWidth, 6, 6, this.Prog);
+                Settings.ColorFg, _OutlineWidth, RenderLib.DefaultSlant,
+                RenderLib.DefaultSlant, this.Prog);
 
             if (this.Progs[i] != 0) {
                 // Cursor
