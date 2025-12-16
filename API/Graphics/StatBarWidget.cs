@@ -10,7 +10,8 @@ namespace API.Graphics;
 /// <summary>
 /// Layered bars representing a numerical amount, with text
 /// </summary>
-public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
+public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
+    : StatBarWidgetBase(pos, width, renderPriority, text) {
     public Color ColorLayer0 { get; init; } = Colors.LightRed;
     public Color ColorLayer1 { get; init; } = Color.Yellow;
 
@@ -18,11 +19,6 @@ public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
     /// Colors for layers after the first 2
     /// </summary>
     private static readonly Color[] _Layers = [Color.Lime, Color.Cyan, Colors.LightPurple, Color.White];
-
-    private const int _BarStartOffset = 90;
-
-    public Label Title { get; } = new() { Alignment = Alignment.Controlled };
-    public Label Text { get; } = new() { Alignment = Alignment.Controlled };
 
     /// <summary>
     /// The value being tracked
@@ -46,35 +42,7 @@ public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
         }
     }
 
-    public ActorData Data { get; set; }
-
-    public Progress Prog { get; set; }
-
-    public float Speed => IAnimated.DefaultSpeed;
-
-    public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string title = "") {
-        this.Data = new(this, renderPriority);
-        this.Position = pos;
-        this.Width = width;
-        this.Title.Text = title;
-
-        this.CalcLayout();
-    }
-
-    public void CalcLayout() {
-        this.Title.Position = this.Position;
-        this.Title.Origin = this.Origin;
-
-        this.Text.Position = new Vector2(this.X + this.Width, this.Y);
-        this.Text.Origin = new Point(this.Origin.X + this.Text.Width, this.Origin.Y);
-
-        this.Height = Math.Max(this.Title.Height, this.Text.Height);
-    }
-
-    public void Create() => this.AddRoutine(IAnimated.In);
-    public void Destroy() => this.AddRoutine(IAnimated.Out);
-
-    public void Draw(GameTime gameTime) {
+    public override void Draw(GameTime gameTime) {
         // todo animate between stages whenever it changes
 
         // Draw bars

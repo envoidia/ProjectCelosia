@@ -299,7 +299,7 @@ internal sealed class _InspectLib {
 
         if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q)) {
             foreach (Unit u in BattleLib.Battle.GetAllUnits()) {
-                u.SetStatMult(Stats.Agi, u.GetStatMult(Stats.Agi) + 80);
+                u.SetStatMult(Stats.Agi, u.GetStatMult(Stats.Agi) + 240);
                 u.Shield += 500;
             }
 
