@@ -85,7 +85,7 @@ public static class ActorExtensions {
             get => @this.Data.Padding;
             set => @this.Data.Padding = value;
         }
-
+        
         /// <inheritdoc cref="ActorData.AddRoutine" />
         public void AddRoutine(Routine routine) => @this.Data.AddRoutine(routine);
 
