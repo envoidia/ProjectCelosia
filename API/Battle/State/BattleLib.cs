@@ -42,10 +42,11 @@ public static class BattleLib {
     //private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     private static readonly string[] _UnitList = new string[UnitCount];
-    internal static readonly TabBarWidget _Queue = new(new Vector2(World.W2, 90), UnitCount) {
+    internal static readonly TabBarWidget _Queue = new(new(World.W2, 90), UnitCount) {
         CheckInput = false,
         Priority = RenderPriority.B2Med,
-        OnSelect = _InspectLib._UpdateInspectUnitPage
+        OnSelect = _InspectLib._UpdateInspectUnitPage,
+        AnimFromDir = Dir.Up
     };
 
     private static readonly Label[] _BloomLabels = new Label[TeamCount];
@@ -121,7 +122,7 @@ public static class BattleLib {
         for (int i = 0; i < TeamCount; i++) {
             // todo midgame translation
             _Actors.Add(_BloomLabels[i] = new Label() {
-                Position = new Vector2(i == 1 ? World.W - 105 : 105, 135),
+                Position = new(i == 1 ? World.W - 105 : 105, 135),
                 Alignment = i == 1 ? Alignment.TopRight : Alignment.TopLeft
             });
         }
@@ -131,6 +132,7 @@ public static class BattleLib {
             int x1 = 75;
             int x2 = 600;
             int y = 450 + (450 * i);
+            Dir dir = i > PosLib.HighestAlly ? Dir.Right : Dir.Left;
 
             if (i >= PosLib.LowestOpp) {
                 x1 = World.W - 500;
@@ -138,9 +140,18 @@ public static class BattleLib {
                 y = 450 + (450 * (i - PosLib.LowestOpp));
             }
 
-            _Actors.Add(_Stats[i] = new Label() { Position = new Vector2(x1, y) });
-            _Actors.Add(_Buffs[i] = new Label() { Position = new Vector2(x1, y + 150) });
-            _Actors.Add(_Moves[i] = new Label() { Position = new Vector2(x2, y + 50) });
+            _Actors.Add(_Stats[i] = new Label() {
+                Position = new(x1, y),
+                AnimFromDir = dir
+            });
+            _Actors.Add(_Buffs[i] = new Label() {
+                Position = new(x1, y + 150),
+                AnimFromDir = dir
+            });
+            _Actors.Add(_Moves[i] = new Label() {
+                Position = new(x2, y + 50),
+                AnimFromDir = dir
+            });
         }
 
         Assert.LenIs(_Actors, _ActorCount);
@@ -322,7 +333,7 @@ public static class BattleLib {
     private static void _SelectPlayerMove() {
         if (_selectingMove >= Battle.PlayerTeam.Units.Length) return;
 
-        _SkillsL.Position = new Vector2(600, 500 + (450 * _selectingMove));
+        _SkillsL.Position = new(600, 500 + (450 * _selectingMove));
         // todo support ExA
         // todo do not assign every frame
         _SkillsL.Text =

@@ -52,6 +52,17 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public ActorData Data { get; private set; } = null!;
 
+    /// <inheritdoc cref="ActorData.AnimFromDir" />
+    public Dir AnimFromDir {
+        get => this.Data.AnimFromDir;
+        set {
+            this.Data.AnimFromDir = value;
+            foreach (Label l in this.Labels) l.AnimFromDir = value;
+            this.PromptL.AnimFromDir = value;
+            this.PromptR.AnimFromDir = value;
+        }
+    }
+
     private const int _OutlineWidth = 10;
     private const int _YOffset = 9;
 
@@ -62,7 +73,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         for (int i = 0; i < optionText.Length; i++) this.Labels.Add(new Label() {
             Text = optionText[i],
-            Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB)
+            Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
         });
 
         this.CalcLayout();
@@ -113,8 +124,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             this.Width += l.Padding.L;
-            l.Position = new Vector2(this.X + this.Width, this.Y + l.Padding.T);
-            l.BasePos = new Vector2(l.X, Const.OffYDest);
+            l.Position = new(this.X + this.Width, this.Y + l.Padding.T);
+            l.AnimFrom = new(this.AnimFrom.X, l.Y);
             this.Width += l.Width + l.Padding.R;
 
             if (l.Height + l.Padding.TB > this.Height) this.Height = l.Height + l.Padding.TB;
@@ -127,19 +138,23 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
             this.PromptR.Origin = this.Origin;
         }
 
-        this.PromptL.Position = new Vector2(this.X - this.PromptL.Width - this.Padding.L, this.Y + this.PromptL.Padding.T);
-        this.PromptR.Position = new Vector2(this.X + this.Width + this.Padding.R, this.Y + this.PromptR.Padding.T);
+        this.PromptL.Position = new(this.X - this.PromptL.Width - this.Padding.L, this.Y + this.PromptL.Padding.T);
+        this.PromptR.Position = new(this.X + this.Width + this.Padding.R, this.Y + this.PromptR.Padding.T);
     }
 
     public void Input(GameTime gameTime) => this.Index = this.CheckInput();
 
     public void Create() {
         this.AddRoutine(IActor.In);
+        this.PromptL.AddRoutine(IActor.In);
+        this.PromptR.AddRoutine(IActor.In);
         foreach (Label l in this.Labels) l.AddRoutine(IActor.In);
     }
 
     public void Destroy() {
         this.AddRoutine(IActor.Out);
+        this.PromptL.AddRoutine(IActor.Out);
+        this.PromptR.AddRoutine(IActor.Out);
         foreach (Label l in this.Labels) l.AddRoutine(IActor.Out);
     }
 
@@ -161,16 +176,17 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
             float yOff = (float) this.Progs[i] * _YOffset;
 
-            Vector2 pos = new(this.Position.X + w, this.Position.Y - this.Padding.T - yOff);
+            Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.Position.X,
+                (float) this.Prog) + w, this.Position.Y - this.Padding.T - yOff);
 
             Point size = new(this.Labels[i].Width + this.Labels[i].Padding.LR - _OutlineWidth,
                 (int) (this.Height + this.Padding.TB + yOff * 2));
 
             RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorBg,
                 Settings.ColorFg, _OutlineWidth, RenderLib.DefaultSlant,
-                RenderLib.DefaultSlant, this.Prog);
-
+                RenderLib.DefaultSlant, Progress.One);
             if (this.Progs[i] != 0) {
+
                 // Cursor
                 RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorAccent,
                     Color.Red, 0f, 6, 6,
@@ -187,6 +203,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         this.PromptL.Data.Act(gameTime);
         this.PromptR.Data.Act(gameTime);
+
+        Console.WriteLine($"{PromptL.Prog}");
 
         if (DebugMenu._drawActorOutlines) {
             this.PromptL.Data.DrawDebug(false);

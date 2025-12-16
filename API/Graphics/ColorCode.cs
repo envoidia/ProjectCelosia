@@ -27,17 +27,17 @@ public readonly record struct ColorCode(Color Color) {
     /// <summary>
     /// Positive numbers
     /// </summary>
-    public static readonly ColorCode Pos = new(Color.Lime);
+    public static readonly ColorCode Pos = new(Colors.Pos);
 
     /// <summary>
     /// Negative numbers
     /// </summary>
-    public static readonly ColorCode Neg = new(255, 81, 81);
+    public static readonly ColorCode Neg = new(Colors.Neg);
 
     /// <summary>
     /// General numbers (turns, stacks)
     /// </summary>
-    public static readonly ColorCode Num = new(Color.Yellow);
+    public static readonly ColorCode Num = new(Colors.Num);
 
     public static readonly ColorCode White = new(Color.White);
     public static readonly ColorCode Black = new(Color.Black);

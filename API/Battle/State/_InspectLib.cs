@@ -65,12 +65,12 @@ internal sealed class _InspectLib {
     private static readonly Label[] _StatsPageNum = new Label[_StatTypeCount];
 
     // Page list
-    private static readonly TabBarWidget _PageTabs = new(new Vector2(1135, 600), 8) {
+    private static readonly TabBarWidget _PageTabs = new(new(1135, 600), 8) {
         Priority = RenderPriority.B2Med
     };
 
-    private static readonly LineActor _PageDivL = new(new Vector2(35, 590), new Point(635, 20));
-    private static readonly LineActor _PageDivR = new(new Vector2(1600, 590), new Point(635, 20));
+    private static readonly LineActor _PageDivL = new(new(35, 590), new(635, 20));
+    private static readonly LineActor _PageDivR = new(new(1600, 590), new(635, 20));
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Unit tabs
@@ -103,9 +103,8 @@ internal sealed class _InspectLib {
 
     // Current unit items
     private static readonly RectangleActor _UnitBounds = new() {
-        Position = new Vector2(30, 30),
-        BasePos = new Vector2(-500, 30),
-        Size = new Point(384),
+        Position = new(30, 30),
+        Size = new(384),
         Priority = RenderPriority.B2Med
     };
 
@@ -116,23 +115,22 @@ internal sealed class _InspectLib {
     private const int _StatGapY = 65;
 
     private static readonly Label _Lvl = new(RenderPriority.B2Med) {
-        BasePos = new Vector2(Const.OffXDest, _StatStartY),
-        Position = new Vector2(_StatStartX, _StatStartY)
+        Position = new(_StatStartX, _StatStartY)
     };
 
-    private static readonly HpBarWidget _Hp = new(new Vector2(_StatStartX, _StatStartY + _StatGapY),
+    private static readonly HpBarWidget _Hp = new(new(_StatStartX, _StatStartY + _StatGapY),
         _StatBarWidth, RenderPriority.B2Med);
     // private static readonly Label _Hp = new(RenderPriority.B2Med) {
     //     Text = "HP",
-    //     Position = new Vector2(_StatStartX, _StatStartY + _StatGapY)
+    //     Position = new(_StatStartX, _StatStartY + _StatGapY)
     // };
     // private static readonly Label _HpAmt = new(RenderPriority.B2Med) {
-    //     Position = new Vector2(900, _StatStartY + _StatGapY),
+    //     Position = new(900, _StatStartY + _StatGapY),
     //     Alignment = Alignment.TopRight
     // };
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
-    private static readonly StatBarWidget _Sp = new(new Vector2(_StatStartX, _StatStartY + (_StatGapY * 2)),
+    private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
             _StatBarWidth, RenderPriority.B2Med, "SP") {
         ColorLayer0 = Colors.Pink,
         ColorLayer1 = Colors.LightPurple,
@@ -140,20 +138,18 @@ internal sealed class _InspectLib {
     };
     // private static readonly Label _Sp = new(RenderPriority.B2Med) {
     //     Text = "SP",
-    //     Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 2))
+    //     Position = new(_StatStartX, _StatStartY + (_StatGapY * 2))
     // };
     // private static readonly Label _SpAmt = new(RenderPriority.B2Med) {
-    //     Position = new Vector2(900, _StatStartY + (_StatGapY * 2)),
+    //     Position = new(900, _StatStartY + (_StatGapY * 2)),
     //     Alignment = Alignment.TopRight
     // };
 
     private static readonly Label _Equip = new(RenderPriority.B2Med) {
-        BasePos = new Vector2(Const.OffXDest, _StatStartY + (_StatGapY * 3)),
-        Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 3))
+        Position = new(_StatStartX, _StatStartY + (_StatGapY * 3))
     };
     private static readonly Label _Affinities = new(RenderPriority.B2Med) {
-        BasePos = new Vector2(Const.OffXDest, _StatStartY + (_StatGapY * 4)),
-        Position = new Vector2(_StatStartX, _StatStartY + (_StatGapY * 4))
+        Position = new(_StatStartX, _StatStartY + (_StatGapY * 4))
     };
 
     /// <summary>
@@ -213,16 +209,15 @@ internal sealed class _InspectLib {
             int x = 75 + (i * 675);
 
             _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med) {
-                Position = new Vector2(x, 650),
-                BasePos = new Vector2(Const.OffXDest, 650)
+                Position = new(x, 650),
             });
 
             const int Y = 702;
 
-            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2Med) { Position = new Vector2(x, Y) });
+            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2Med) { Position = new(x, Y) });
 
             _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2Med) {
-                Position = new Vector2(x + 585, Y),
+                Position = new(x + 585, Y),
                 Alignment = Alignment.TopRight
             });
         }
@@ -232,14 +227,14 @@ internal sealed class _InspectLib {
             int x = _StatStartX + _StatGapX * (i > 2 ? 2 : 1);
             int y = _StatStartY + (_StatGapY * (i % 3));
 
-            _Actors.Add(_StatsBasic[i] = new StatBarWidget(new Vector2(x, y), _StatBarWidth, RenderPriority.B2Med));
+            _Actors.Add(_StatsBasic[i] = new StatBarWidget(new(x, y), _StatBarWidth, RenderPriority.B2Med));
             // _Actors.Add(_StatsBasic[i] = new Label(RenderPriority.B2Med) {
-            //     Position = new Vector2(x, y),
+            //     Position = new(x, y),
             //     Alignment = Alignment.TopLeft
             // });
 
             // _Actors.Add(_StatsBasicNum[i] = new Label(RenderPriority.B2Med) {
-            //     Position = new Vector2(x + 550, y),
+            //     Position = new(x + 550, y),
             //     Alignment = Alignment.TopRight
             // });
         }

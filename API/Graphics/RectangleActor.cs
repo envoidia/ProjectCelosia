@@ -5,9 +5,6 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 public class RectangleActor : IActor {
-    /// <inheritdoc cref="Label.BasePos" />
-    public Vector2 BasePos { get; set; }
-
     public ActorData Data { get; set; }
 
     public RectangleActor() => this.Data = new(this);
@@ -16,6 +13,6 @@ public class RectangleActor : IActor {
     public void Destroy() => this.AddRoutine(IActor.Out);
 
     public void Draw(GameTime gameTime) => Core.ShapeBatch.DrawRectangle(
-            MathUtil.SmoothStep(this.BasePos, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new Vector2(this.Width, this.Height), Colors.Trans, Color.White);
+            MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
+            new(this.Width, this.Height), Colors.Trans, Color.White);
 }

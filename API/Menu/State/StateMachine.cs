@@ -16,7 +16,8 @@ public static class StateMachine {
         Position = World.Vec - new Vector2(10),
         Padding = new(10),
         Alignment = Alignment.BottomRight,
-        HasBackground = true
+        HasBackground = true,
+        AnimFromDir = Dir.Down
     };
 
     static StateMachine() {

@@ -6,6 +6,8 @@ namespace API.Util;
 /// A float clamped from 0-1 representing progress of some action
 /// </summary>
 public readonly struct Progress(float p = 0) {
+    public static readonly Progress One = new(1);
+
     private readonly float _p = Math.Clamp(p, 0, 1);
 
     public static Progress operator +(Progress l, float r) => new(l._p + r);
@@ -27,6 +29,8 @@ public readonly struct Progress(float p = 0) {
         null => false,
         _ => base.Equals(obj)
     };
+
+    public override string ToString() => $"Progress: {this._p}";
 
     public override int GetHashCode() => this._p.GetHashCode();
 

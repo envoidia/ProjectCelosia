@@ -153,8 +153,8 @@ public class Core : Game {
         this.Content.RootDirectory = "Content";
 
         // Scaling
-        Resolution.Init(new ResolutionComponent(this, Graphics, new Point(World.W, World.H),
-            new Point(2560, 1440), true, false, false));
+        Resolution.Init(new ResolutionComponent(this, Graphics, new(World.W, World.H),
+            new(2560, 1440), true, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;

@@ -12,13 +12,13 @@ namespace API.Graphics;
 /// </summary>
 public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
     : StatBarWidgetBase(pos, width, renderPriority, text) {
-    public Color ColorLayer0 { get; init; } = Colors.LightRed;
-    public Color ColorLayer1 { get; init; } = Color.Yellow;
+    public Color ColorLayer0 { get; init; } = Colors.Neg;
+    public Color ColorLayer1 { get; init; } = Colors.Num;
 
     /// <summary>
     /// Colors for layers after the first 2
     /// </summary>
-    private static readonly Color[] _Layers = [Color.Lime, Color.Cyan, Colors.LightPurple, Color.White];
+    private static readonly Color[] _Layers = [Colors.Pos, Color.Cyan, Colors.LightPurple, Color.White];
 
     /// <summary>
     /// The value being tracked
@@ -67,12 +67,15 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
             this.Text.Data.DrawDebug(false);
         }
 
-        void drawBar(Color c, float start, float len) =>
+        void drawBar(Color c, float start, float len) {
+            Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X +
+                ((this.Width - _BarStartOffset) * start) + _BarStartOffset, (float) this.Prog), this.Y + 5);
+
             RenderLib.DrawParallelogram(
-                new Vector2(this.X + ((this.Width - _BarStartOffset) * start) + _BarStartOffset, this.Y + 5),
-                new Point((int) ((this.Width - _BarStartOffset) * len), this.Height - 10), this.Origin,
+                pos, new((int) ((this.Width - _BarStartOffset) * len), this.Height - 10), this.Origin,
                 c, Color.Red, 0f,
-                RenderLib.DefaultSlant, RenderLib.DefaultSlant, this.Prog);
+                RenderLib.DefaultSlant, RenderLib.DefaultSlant, Progress.One);
+        }
     }
 
     private void _UpdateText() {

@@ -20,14 +20,14 @@ public static class DebugMenu {
 
     private static readonly Label _DebugInfoL = new() {
         Text = _GetInfoLText(),
-        Position = new Vector2(10, 10),
+        Position = new(10, 10),
         Padding = new(10),
         HasBackground = true,
         Priority = RenderPriority.Highest
     };
 
     private static readonly Label _DebugInfoR = new() {
-        Position = new Vector2(World.W - 10, 10),
+        Position = new(World.W - 10, 10),
         Padding = new(10),
         HasBackground = true,
         Alignment = Alignment.TopRight,
@@ -36,7 +36,7 @@ public static class DebugMenu {
 
     private static readonly Label _DebugInfoHelp = new() {
         Text = _GetInfoHelpText(),
-        Position = new Vector2(10, World.H - 10),
+        Position = new(10, World.H - 10),
         Padding = new(10),
         HasBackground = true,
         Alignment = Alignment.BottomLeft,

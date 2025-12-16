@@ -25,8 +25,10 @@ public class LineActor : IActor {
     public void Destroy() => this.AddRoutine(IActor.Out);
 
     public void Draw(GameTime gameTime) {
-        RenderLib.DrawParallelogram(this.Position, this.Size, this.Origin, Settings.ColorFg,
-            Color.Red, 0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant, this.Prog);
+        Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X, (float) this.Prog), this.Y);
+
+        RenderLib.DrawParallelogram(pos, this.Size, this.Origin, Settings.ColorFg,
+            Color.Red, 0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant, Progress.One);
     }
 }
 

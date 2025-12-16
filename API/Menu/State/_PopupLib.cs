@@ -10,13 +10,13 @@ internal static class _PopupLib {
     };
 
     private static readonly Label _PopupTitle = new() {
-        Position = new Vector2(World.W2, World.H2 - 225),
+        Position = new(World.W2, World.H2 - 225),
         Alignment = Alignment.Center,
         Priority = RenderPriority.Highest
     };
 
     private static readonly Label _PopupText = new() {
-        Position = new Vector2(World.W2 - 630, World.H2 - 120),
+        Position = new(World.W2 - 630, World.H2 - 120),
         Priority = RenderPriority.Highest
     };
 

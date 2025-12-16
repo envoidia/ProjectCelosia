@@ -26,15 +26,24 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     private Vector2 _position = Vector2.Zero;
     public Vector2 Position {
         get => this._position;
-        set => this._position = value;
+        set {
+            this._position = value;
+            this.AnimFrom = this.CalcAnimFrom();
+        }
     }
     public float X {
         get => this._position.X;
-        set => this._position.X = value;
+        set {
+            this._position.X = value;
+            this.AnimFrom = this.CalcAnimFrom();
+        }
     }
     public float Y {
         get => this._position.Y;
-        set => this._position.Y = value;
+        set {
+            this._position.Y = value;
+            this.AnimFrom = this.CalcAnimFrom();
+        }
     }
 
     private Point _size = Point.Zero;
@@ -73,6 +82,28 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// Animation progress
     /// </summary>
     public Progress Prog { get; set; }
+
+    /// <summary>
+    /// Position to interpolate to/from during create/destroy animation
+    /// </summary>
+    public Vector2 AnimFrom { get; set; }
+
+    /// <summary>
+    /// Direction to interpolate to/from during create/destroy animation
+    /// </summary>
+    public Dir AnimFromDir {
+        get;
+        set {
+            field = value;
+            this.AnimFrom = this.CalcAnimFrom();
+        }
+    } = Dir.Left;
+
+    /// <summary>
+    /// Whether to automatically set LerpFrom when setting Position
+    /// </summary>
+    // unused todo impl or remove
+    public bool AutoLerpFrom { get; set; } = true;
 
     /// <summary>
     /// Speed multiplier. 1f = animation completes in 1s. 2f = 0.5s. Speed is doubled when closing
@@ -120,9 +151,9 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
 
     public void DrawBackground(Color c) => Core.ShapeBatch.FillRectangle(
-            new Vector2((int) (this.Position.X - this.Padding.L - this.Origin.X),
+            new((int) (this.Position.X - this.Padding.L - this.Origin.X),
             (int) (this.Position.Y - this.Padding.T - this.Origin.Y)),
-            new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
+            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
 
     public void DrawDebug(bool drawOrigin = true) {
         (Color, Color) colors = this.IsVisible
@@ -131,14 +162,14 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
 
         // Position
         Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
-            new Vector2(this.Width, this.Height),
+            new(this.Width, this.Height),
             Colors.Trans, colors.Item1);
 
         // Padding
         if (this.Padding != Padding.Zero) {
             Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
             new Vector2(this.Padding.L, this.Padding.T),
-            new Vector2(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
+            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
             colors.Item2);
         }
 
@@ -148,17 +179,17 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         // Origin
         if (drawOrigin) {
             Core.ShapeBatch.FillRectangle(this.Position - new Vector2(_OriginDebugSize),
-                new Vector2(_OriginDebugSize * 2),
+                new(_OriginDebugSize * 2),
                 Colors.ActorOrigin);
         }
     }
 
     public Point CalcOrigin() => this.Alignment switch {
         Alignment.TopLeft => Point.Zero,
-        Alignment.TopRight => new Point(this.Size.X, 0),
-        Alignment.BottomLeft => new Point(0, this.Size.Y),
-        Alignment.BottomRight => new Point(this.Size.X, this.Size.Y),
-        Alignment.Center => new Point((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f)),
+        Alignment.TopRight => new(this.Size.X, 0),
+        Alignment.BottomLeft => new(0, this.Size.Y),
+        Alignment.BottomRight => new(this.Size.X, this.Size.Y),
+        Alignment.Center => new((int) (this.Size.X * 0.5f), (int) (this.Size.Y * 0.5f)),
         Alignment.Controlled => this.Origin,
         _ => throw new ClosedEnumsWhenException()
     };
@@ -171,4 +202,15 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         this.Prog = RenderLib.UpdateProg(this.Prog, this.Speed, gameTime, dir);
         return this.Prog == 1 - Convert.ToInt32((int) dir == -1);
     }
+
+    /// <summary>
+    /// Automatically calculates the pos to anim in/out from
+    /// </summary>
+    public Vector2 CalcAnimFrom() => this.AnimFromDir switch {
+        Dir.Left => new(this.X - this.Width - World.W2 - 500, this.Y),
+        Dir.Right => new(this.X + this.Width + World.W2 + 500, this.Y),
+        Dir.Up => new(this.X, this.Y - this.Height - 500),
+        Dir.Down => new(this.X, this.Y + this.Height + 500),
+        _ => throw new ClosedEnumsWhenException()
+    };
 }

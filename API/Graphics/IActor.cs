@@ -116,12 +116,24 @@ public static class ActorExtensions {
             set => @this.Data.Prog = value;
         }
 
+        /// <inheritdoc cref="ActorData.AnimFrom" />
+        public Vector2 AnimFrom {
+            get => @this.Data.AnimFrom;
+            set => @this.Data.AnimFrom = value;
+        }
+
+        /// <inheritdoc cref="ActorData.AnimFromDir" />
+        public Dir AnimFromDir {
+            get => @this.Data.AnimFromDir;
+            set => @this.Data.AnimFromDir = value;
+        }
+
         /// <inheritdoc cref="ActorData.Speed" />
         public float Speed {
             get => @this.Data.Speed;
             set => @this.Data.Speed = value;
         }
-        
+
         /// <inheritdoc cref="ActorData.AddRoutine" />
         public void AddRoutine(Routine routine) => @this.Data.AddRoutine(routine);
 

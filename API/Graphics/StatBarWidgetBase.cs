@@ -16,6 +16,16 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
 
     public ActorData Data { get; set; }
 
+    /// <inheritdoc cref="ActorData.AnimFromDir" />
+    public Dir AnimFromDir {
+        get => this.Data.AnimFromDir;
+        set {
+            this.Data.AnimFromDir = value;
+            this.Title.AnimFromDir = value;
+            this.Text.AnimFromDir = value;
+        }
+    }
+
     public StatBarWidgetBase(Vector2 pos, int width, RenderPriority renderPriority, string text) {
         this.Data = new(this, renderPriority);
         this.Position = pos;
@@ -26,12 +36,10 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
 
     public void CalcLayout() {
         this.Title.Position = this.Position;
-        this.Title.BasePos = new Vector2(Const.OffXDest, this.Y);
         this.Title.Origin = this.Origin;
 
-        this.Text.Position = new Vector2(this.X + this.Width, this.Y);
-        this.Text.BasePos = new Vector2(Const.OffXDest, this.Y);
-        this.Text.Origin = new Point(this.Origin.X + this.Text.Width, this.Origin.Y);
+        this.Text.Position = new(this.X + this.Width, this.Y);
+        this.Text.Origin = new(this.Origin.X + this.Text.Width, this.Origin.Y);
 
         this.Height = Math.Max(this.Title.Height, this.Text.Height);
     }

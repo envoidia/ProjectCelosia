@@ -20,11 +20,6 @@ public sealed class Label : IActor {
         }
     }
 
-    /// <summary>
-    /// Position to interpolate to/from during create/destroy animation
-    /// </summary>
-    public Vector2 BasePos { get; set; }
-
     // Background
     public bool HasBackground { get; set; } = false;
     public Color BackgroundColor { get; set; } = Colors.TransBlack;
@@ -46,7 +41,7 @@ public sealed class Label : IActor {
         if (this.HasBackground) this.Data.DrawBackground(this.BackgroundColor);
 
         this._RichTextLayout.Draw(Core.SpriteBatch,
-            MathUtil.SmoothStep(this.BasePos, this.Position, (float) this.Prog),
+            MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog),
             Settings.ColorFg, 0f, this.Origin.ToVector2());
     }
 

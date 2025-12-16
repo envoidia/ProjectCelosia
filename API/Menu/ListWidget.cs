@@ -32,6 +32,15 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
     public ActorData Data { get; }
 
+    /// <inheritdoc cref="ActorData.AnimFromDir" />
+    public Dir AnimFromDir {
+        get => this.Data.AnimFromDir;
+        set {
+            this.Data.AnimFromDir = value;
+            foreach (Label l in this.Labels) l.AnimFromDir = value;
+        }
+    }
+
     public ListWidget(Vector2 pos, params string[] optionText) {
         this.Data = new ActorData(this, RenderPriority.B2Med);
 
@@ -82,7 +91,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor {
         foreach (Label l in this.Labels) {
             this.Height += l.Padding.T;
             l.Position = this.Position + new Vector2(l.Padding.L, this.Height);
-            l.BasePos = new Vector2(Const.OffXDest, l.Y);
+            l.AnimFrom = new(this.AnimFrom.X, l.Y);
             this.Height += l.Height + l.Padding.B;
             if (l.Width + l.Padding.LR > this.Width) this.Width = l.Width + l.Padding.LR;
         }
@@ -112,9 +121,10 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
             if (this.Progs[i] != 0) {
                 // Cursor
-                RenderLib.DrawParallelogram(new Vector2(this.Position.X - this.Padding.L,
+                RenderLib.DrawParallelogram(new(MathHelper.SmoothStep(this.AnimFrom.X,
+                    this.Position.X - this.Padding.L, (float) this.Prog),
                     this.Position.Y + h - this.Padding.T),
-                    new Point(this.Width + this.Padding.LR, this.Labels[i].Height +
+                    new(this.Width + this.Padding.LR, this.Labels[i].Height +
                     this.Labels[i].Padding.TB + this.Padding.TB),
                     this.Origin, Settings.ColorAccent, Color.Red,
                     0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
