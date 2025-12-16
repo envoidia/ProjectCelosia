@@ -2,47 +2,37 @@ using System;
 using API.Extensions;
 using API.Menu;
 using API.Util;
-using Cyotek.Drawing.BitmapFont;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-/// <summary>
-/// Layered bars representing a numerical amount, with text
-/// </summary>
-public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
-    public Color ColorLayer0 { get; init; } = Colors.LightRed;
-    public Color ColorLayer1 { get; init; } = Color.Yellow;
-
-    /// <summary>
-    /// Colors for layers after the first 2
-    /// </summary>
-    private static readonly Color[] _Layers = [Color.Lime, Color.Cyan, Colors.LightPurple, Color.White];
-
+public class HpBarWidget : ILayoutWidget, IActor, IAnimated {
     private const int _BarStartOffset = 90;
 
     public Label Title { get; } = new() { Alignment = Alignment.Controlled };
     public Label Text { get; } = new() { Alignment = Alignment.Controlled };
 
-    /// <summary>
-    /// The value being tracked
-    /// </summary>
-    public int Val {
+    public int Hp {
         get;
         set {
             field = value;
-            this._UpdateText();
+            this._Update();
         }
     }
 
-    /// <summary>
-    /// The amount to be considered 100%
-    /// </summary>
-    public int MaxVal {
+    public int Shield {
         get;
         set {
             field = value;
-            this._UpdateText();
+            this._Update();
+        }
+    }
+
+    public int MaxHp {
+        get;
+        set {
+            field = value;
+            this._Update();
         }
     }
 
@@ -52,11 +42,14 @@ public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
 
     public float Speed => IAnimated.DefaultSpeed;
 
-    public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string title = "") {
+    private float[] _barLens = [0, 0, 0];
+    private Color[] _layers = [Color.Lime, Color.Cyan, Colors.Pink];
+
+    public HpBarWidget(Vector2 pos, int width, RenderPriority renderPriority) {
         this.Data = new(this, renderPriority);
         this.Position = pos;
         this.Width = width;
-        this.Title.Text = title;
+        this.Title.Text = "HP";
 
         this.CalcLayout();
     }
@@ -71,25 +64,17 @@ public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
         this.Height = Math.Max(this.Title.Height, this.Text.Height);
     }
 
+
     public void Create() => this.AddRoutine(IAnimated.In);
     public void Destroy() => this.AddRoutine(IAnimated.Out);
 
     public void Draw(GameTime gameTime) {
         // todo animate between stages whenever it changes
 
-        // Draw bars
-        float barCount = this.Val / (float) this.MaxVal;
-
-        // Length 0-1 of upper bar
-        float upperBarLen = (float) (barCount - Math.Floor(barCount));
-
-        // Lower bar
-        drawBar(this._GetLayerColor((int) Math.Floor(barCount)), upperBarLen, 1 - upperBarLen);
-
-        // Upper bar
-        if (barCount != Math.Floor(barCount)) {
-            drawBar(this._GetLayerColor((int) Math.Ceiling(barCount)), 0, upperBarLen);
-        }
+        if (this._barLens[0] > 0) drawBar(this._layers[0], 0, this._barLens[0]);
+        if (this._barLens[1] > 0) drawBar(this._layers[1], this._barLens[0], this._barLens[1] - this._barLens[0]);
+        if (this._barLens[2] > 0) drawBar(this._layers[2], this._barLens[1], this._barLens[2] - this._barLens[1]);
+        if (this._barLens[2] != 1) drawBar(Colors.LightRed, this._barLens[2], 1 - this._barLens[2]);
 
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
@@ -107,14 +92,16 @@ public sealed class StatBarWidget : ILayoutWidget, IActor, IAnimated {
                 RenderLib.DefaultSlant, RenderLib.DefaultSlant, this.Prog);
     }
 
-    private void _UpdateText() {
-        this.Text.Text = $"{ColorCode.Black}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
+    private void _Update() {
+        float hpLen = this.Hp / (float) this.MaxHp;
+        this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, hpLen - 1];
+        this._layers = [Color.Lime, Color.Cyan, Colors.Pink];
+
+        Array.Sort(this._barLens, this._layers);
+
+        string shield = this.Shield > 0 ? $"+{this.Shield.FormatNoColor(false)}" : "";
+        this.Text.Text = $"{ColorCode.Black}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
+
         this.CalcLayout();
     }
-
-    private Color _GetLayerColor(int layer) => layer switch {
-        0 => this.ColorLayer0,
-        1 => this.ColorLayer1,
-        _ => _Layers[Math.Min(layer - 2, _Layers.Length - 1)]
-    };
 }

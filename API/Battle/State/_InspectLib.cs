@@ -10,6 +10,7 @@ using API.Util;
 
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
+using System.Text;
 
 namespace API.Battle.State;
 
@@ -114,8 +115,8 @@ internal sealed class _InspectLib {
         Position = new Vector2(_StatStartX, _StatStartY)
     };
 
-    private static readonly StatBarWidget _Hp = new(new Vector2(_StatStartX, _StatStartY + _StatGapY),
-        _StatBarWidth, RenderPriority.B2Med, "HP");
+    private static readonly HpBarWidget _Hp = new(new Vector2(_StatStartX, _StatStartY + _StatGapY),
+        _StatBarWidth, RenderPriority.B2Med);
     // private static readonly Label _Hp = new(RenderPriority.B2Med) {
     //     Text = "HP",
     //     Position = new Vector2(_StatStartX, _StatStartY + _StatGapY)
@@ -299,6 +300,15 @@ internal sealed class _InspectLib {
         if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q)) {
             foreach (Unit u in BattleLib.Battle.GetAllUnits()) {
                 u.SetStatMult(Stats.Agi, u.GetStatMult(Stats.Agi) + 80);
+                u.Shield += 500;
+            }
+
+            _UpdateInspectUnitPage(_Queue.Index);
+        }
+
+        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.W)) {
+            foreach (Unit u in BattleLib.Battle.GetAllUnits()) {
+                u.Hp += 500;
             }
 
             _UpdateInspectUnitPage(_Queue.Index);
@@ -318,9 +328,13 @@ internal sealed class _InspectLib {
 
         _Lvl.Text = $"Lvl {ColorCode.Num}{u.Lvl + 1}";
 
-        // HP and SP (todo: bars)
-        _Hp.Val = u.Hp;
-        _Hp.MaxVal = u.GetBaseStat(Stats.Hp);
+        // HP and SP
+        // todo hp bar
+        // todo account for infinite sp
+        _Hp.Hp = u.Hp;
+        _Hp.MaxHp = u.GetBaseStat(Stats.Hp);
+        _Hp.Shield = u.Shield;
+
         _Sp.Val = u.Sp;
         //_HpAmt.Text = $"{u.Hp.Format(ColorCode.White, false)}//{u.GetBaseStat(Stats.Hp)
         //    .Format(ColorCode.White, false)}";
@@ -330,7 +344,6 @@ internal sealed class _InspectLib {
         _Affinities.Text = u.GetAffinitiesString(true);
 
         // Basic stats
-        // todo bar
         for (int i = 0; i < StatCount; i++) {
             int curStat = u.GetStat(_StatList[i]);
             int baseStat = u.GetBaseStat(_StatList[i]);
