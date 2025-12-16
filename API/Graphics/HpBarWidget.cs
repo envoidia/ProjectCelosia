@@ -44,7 +44,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         if (this._barLens[0] > 0) drawBar(this._layers[0], 0, this._barLens[0]);
         if (this._barLens[1] > 0) drawBar(this._layers[1], this._barLens[0], this._barLens[1] - this._barLens[0]);
         if (this._barLens[2] > 0) drawBar(this._layers[2], this._barLens[1], this._barLens[2] - this._barLens[1]);
-        if (this._barLens[2] != 1) drawBar(Colors.LightRed, this._barLens[2], 1 - this._barLens[2]);
+        if (this._barLens[2] != 1) drawBar(Colors.Neg, this._barLens[2], 1 - this._barLens[2]);
 
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
