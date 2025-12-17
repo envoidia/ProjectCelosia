@@ -90,6 +90,7 @@ internal sealed class _InspectLib {
     //private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106) { Priority = RenderPriority.B2Med };
 
     // Input prompts
+    // todo remove
     private static readonly Label[] _Prompts = new Label[10];
     private static readonly InputPrompt[] _PromptTypes = [
             InspectStat, InspectAffinity,
@@ -176,10 +177,13 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar spBar = coolRectBars[CoolRectBars.SP_INSPECT.ordinal()];
 
     // Current page items
+    // todo remove
     private static readonly Label _PageItemList = new(RenderPriority.B2Med);
     private static readonly Label _PageItemRightList = new(RenderPriority.B2Med);
     private static readonly Label _DescHeader = new(RenderPriority.B2Med);
-    private static readonly Label _Desc = new(RenderPriority.B2Med);
+    private static readonly Label _Desc = new(RenderPriority.B2Med) {
+        Position = new(800, 740)
+    };
 
     #endregion
 
@@ -375,18 +379,34 @@ internal sealed class _InspectLib {
             case _InspectPage.Skills:
                 _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ColorCode.White))]);
                 _PageItems.SetRightText([.. u.SkillInstances.Select(s => s.GetCostCdFormatted())]);
+
+                if (_PageItems.OptCount != 0) {
+                    _Desc.Text = $"{u.SkillInstances[_PageItems.Index].Skill.GetName()}\n\n{u.SkillInstances[_PageItems.Index].Skill.GetFullDesc()}";
+                }
+
                 return;
             case _InspectPage.Passives:
                 _PageItems.SetRightText(); // todo
                 _PageItems.SetText([.. u.Passives.Select(s => s.GetName(ColorCode.White))]);
+
+                if (_PageItems.OptCount != 0) {
+                    _Desc.Text = $"{u.Passives[_PageItems.Index].GetName()}\n\n{u.Passives[_PageItems.Index].GetFullDesc()}";
+                }
+
                 return;
             case _InspectPage.Buffs:
                 _PageItems.SetText([.. u.BuffInstances.Select(b => b.Buff.GetName(ColorCode.White))]);
                 _PageItems.SetRightText([.. u.BuffInstances.Select(b => b.GetTurnsStacksFormatted())]);
+
+                if (_PageItems.OptCount != 0) {
+                    _Desc.Text = $"{u.BuffInstances[_PageItems.Index].Buff.GetName()}\n\n{u.BuffInstances[_PageItems.Index].Buff.GetFullDesc()}";
+                }
+
                 return;
             case _InspectPage.Stats:
                 _PageItems.SetText();
                 _PageItems.SetRightText();
+                _Desc.Text = "";
                 return;
         }
     }

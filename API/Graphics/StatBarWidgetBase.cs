@@ -10,6 +10,7 @@ namespace API.Graphics;
 /// </summary>
 public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
     protected const int _BarStartOffset = 90;
+    protected const int _HeightOffset = 5;
 
     public Label Title { get; } = new() { Alignment = Alignment.Controlled };
     public Label Text { get; } = new() { Alignment = Alignment.Controlled };

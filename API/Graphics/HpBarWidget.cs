@@ -55,12 +55,13 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         }
 
         void drawBar(Color c, float start, float len) {
-            Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X +
-                ((this.Width - _BarStartOffset) * start) + _BarStartOffset, (float) this.Prog), this.Y + 5);
+            Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X,
+                this.X + ((this.Width - _BarStartOffset) * start) + _BarStartOffset, (float) this.Prog),
+                this.Y + _HeightOffset);
 
             RenderLib.DrawParallelogram(
-                pos, new((int) ((this.Width - _BarStartOffset) * len), this.Height - 10), this.Origin,
-                c, Color.Red, 0f,
+                pos, new((int) ((this.Width - _BarStartOffset) * len), this.Height - (_HeightOffset * 2)),
+                this.Origin, c, Color.Red, 0f,
                 RenderLib.DefaultSlant, RenderLib.DefaultSlant, Progress.One);
         }
     }

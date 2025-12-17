@@ -15,6 +15,7 @@
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Update="Lang.resx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>Lang.Designer.cs</LastGenOutput>
         </EmbeddedResource>

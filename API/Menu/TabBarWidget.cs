@@ -133,7 +133,6 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
         foreach (Label l in this.Labels) {
             this.Width += l.Padding.L;
             l.Position = new(this.X + this.Width, this.Y + l.Padding.T);
-            l.AnimFrom = new(this.AnimFrom.X, l.Y);
             this.Width += l.Width + l.Padding.R;
 
             if (l.Height + l.Padding.TB > this.Height) this.Height = l.Height + l.Padding.TB;
@@ -154,6 +153,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public void Create() {
         this.AddRoutine(IActor.In);
+        // todo why dont prompts appear to animate
         this.PromptL.Create();
         this.PromptR.Create();
         foreach (Label l in this.Labels) l.Create();

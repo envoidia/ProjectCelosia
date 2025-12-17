@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace API.Graphics;
 
+// todo find a way to resize
 public sealed class TextureFragmentColored : IRenderable {
     public Texture2D Texture { get; }
     public Rectangle Region { get; }
@@ -21,5 +22,6 @@ public sealed class TextureFragmentColored : IRenderable {
         this.Region = region;
     }
 
-    public void Draw(FSRenderContext context, Vector2 position, Color color) => context.DrawImage(this.Texture, this.Region, position, this._Scale, color);
+    public void Draw(FSRenderContext context, Vector2 position, Color color) =>
+        context.DrawImage(this.Texture, this.Region, position, this._Scale, color);
 }
