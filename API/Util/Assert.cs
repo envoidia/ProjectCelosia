@@ -19,7 +19,7 @@ public static class Assert {
     /// </summary>
     [Conditional("DEBUG")]
     public static void One(object v) =>
-        Debug.Assert(v.Equals(1), $"{v} must be 0");
+        Debug.Assert(v.Equals(1), $"{v} must be 1");
 
     /// <summary>
     /// Asserts that a value is not 0

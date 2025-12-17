@@ -10,6 +10,8 @@ namespace API.Graphics;
 /// </summary>
 // todo use Position + deprecate
 public class Parellelogram : IActor {
+    private const float _DefaultOutlineThickness = 20f;
+
     public int L { get; set; }
     public int R { get; set; }
     public int T { get; set; }
@@ -36,7 +38,7 @@ public class Parellelogram : IActor {
         set => this.Data.Priority = value;
     }
 
-    public Parellelogram(int l, int r, int t, int b, float outlineThickness = 10,
+    public Parellelogram(int l, int r, int t, int b, float outlineThickness = _DefaultOutlineThickness,
         RenderPriority renderPriority = RenderPriority.B1Med) {
         this.L = l;
         this.R = r;

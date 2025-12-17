@@ -41,7 +41,7 @@ public static class NumberExtensions {
         /// <returns>
         /// The given <c>int</c> formatted based on the current locale
         /// </returns>
-        /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive</param>
+        /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive and color based off of that</param>
         public string Format(bool useSign = true) => @this.Format(useSign, 0);
 
         /// <returns>

@@ -73,7 +73,7 @@ Overworld Location: {6}
 Loaded Mods: {7}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
-        <value>/i[KF3]: Toggle actor outlines (pink pos, aqua padding, lime origin, red if marked, blue if input disabled)
+        <value>/i[KF3]: Toggle actor outlines (blue pos (yellow = prog 0, magneta = prog 1), aqua padding, lime origin, red if marked, blue if input disabled)
 /i[KF4]: Toggle input view
 /i[KF5]: Write all actors on stage to console
 /i[KF6]: Recalculate all ILayoutWidgets
@@ -314,6 +314,10 @@ Loaded Mods: {7}</value>
     </data>
     <data name="Weapons" xml:space="preserve">
         <value>Weapons</value>
+    </data>
+    <!-- Short for cooldown -->
+    <data name="CD" xml:space="preserve">
+        <value>CD</value>
     </data>
     <!--Built-in skills and buffs-->
     <data name="SkillNothing" xml:space="preserve">

@@ -11,6 +11,7 @@ using API.Util;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 using System.Text;
+using System.Linq;
 
 namespace API.Battle.State;
 
@@ -31,6 +32,8 @@ internal sealed class _InspectLib {
             // Set selected unit in queue to current
             _Queue.Index = _GetQueueIndex(_indexTarget);
             _UpdateInspectUnitPage(_Queue.Index);
+
+            _UpdateInspectPage(_PageTabs!.Index);
         },
 
         OnDestroy = static () => {
@@ -66,7 +69,14 @@ internal sealed class _InspectLib {
 
     // Page list
     private static readonly TabBarWidget _PageTabs = new(new(1135, 600), 8) {
-        Priority = RenderPriority.B2Med
+        Priority = RenderPriority.B2Med,
+        OnSelect = _UpdateInspectPage
+    };
+
+    // Items on current page
+    private static readonly ListRightWidget _PageItems = new(new(60, 740), 16) {
+        ItemPadding = new(40, 20, 10, 10),
+        FixedWidth = 800
     };
 
     private static readonly LineActor _PageDivL = new(new(35, 590), new(635, 20));
@@ -209,7 +219,7 @@ internal sealed class _InspectLib {
             int x = 75 + (i * 675);
 
             _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med) {
-                Position = new(x, 650),
+                Position = new(x, 720),
             });
 
             const int Y = 702;
@@ -281,7 +291,7 @@ internal sealed class _InspectLib {
         for (int i = 0; i < UnitCount; i++) _UnitList[i] = u[i].FormatName(false);
         // todo set their X here
 
-        _Menu.Setup([.. _AnimPrimActors, .. _Actors, _PageTabs]);
+        _Menu.Setup([.. _AnimPrimActors, .. _Actors, _PageTabs, _PageItems]);
     }
 
     // todo remove
@@ -334,16 +344,12 @@ internal sealed class _InspectLib {
         _Lvl.Text = $"Lvl {ColorCode.Num}{u.Lvl + 1}";
 
         // HP and SP
-        // todo hp bar
         // todo account for infinite sp
         _Hp.Hp = u.Hp;
         _Hp.MaxHp = u.GetBaseStat(Stats.Hp);
         _Hp.Shield = u.Shield;
 
         _Sp.Val = u.Sp;
-        //_HpAmt.Text = $"{u.Hp.Format(ColorCode.White, false)}//{u.GetBaseStat(Stats.Hp)
-        //    .Format(ColorCode.White, false)}";
-        //_SpAmt.Text = $"{u.Sp.Format(ColorCode.White, false)}/2,000";
 
         _Equip.Text = u.GetEquipString();
         _Affinities.Text = u.GetAffinitiesString(true);
@@ -352,17 +358,44 @@ internal sealed class _InspectLib {
         for (int i = 0; i < StatCount; i++) {
             int curStat = u.GetStat(_StatList[i]);
             int baseStat = u.GetBaseStat(_StatList[i]);
-            // _StatsBasicNum[i].Text = $"{u.GetStat(_StatList[i]).Format(false)}//{baseStat
-            //     .Format(false)}";
 
             _StatsBasic[i].Val = curStat;
             _StatsBasic[i].MaxVal = baseStat;
+        }
+
+        _UpdateInspectPage(_PageTabs.Index);
+    }
+
+    private static void _UpdateInspectPage(int index) {
+        Unit u = _GetUnitsSortedByAgi()[_Queue.Index];
+
+        _SetStatVisibility((_InspectPage) index == _InspectPage.Stats);
+
+        switch ((_InspectPage) index) {
+            case _InspectPage.Skills:
+                _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ColorCode.White))]);
+                _PageItems.SetRightText([.. u.SkillInstances.Select(s => s.GetCostCdFormatted())]);
+                return;
+            case _InspectPage.Passives:
+                _PageItems.SetRightText(); // todo
+                _PageItems.SetText([.. u.Passives.Select(s => s.GetName(ColorCode.White))]);
+                return;
+            case _InspectPage.Buffs:
+                _PageItems.SetText([.. u.BuffInstances.Select(b => b.Buff.GetName(ColorCode.White))]);
+                _PageItems.SetRightText([.. u.BuffInstances.Select(b => b.GetTurnsStacksFormatted())]);
+                return;
+            case _InspectPage.Stats:
+                _PageItems.SetText();
+                _PageItems.SetRightText();
+                return;
         }
     }
 
     private static void _HandleInspectPage() { }
 
-    private static void _SetStatVisibility(bool isStatsPage) { }
+    private static void _SetStatVisibility(bool visible) {
+        foreach (Label l in _StatCategoryHeaders) l.IsVisible = visible;
+    }
 
     private static void _SetPageItemVisibility(bool visible) { }
 

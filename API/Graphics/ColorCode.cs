@@ -32,7 +32,7 @@ public readonly record struct ColorCode(Color Color) {
 
     public static readonly ColorCode White = new(Color.White);
     public static readonly ColorCode Black = new(Color.Black);
-    public static readonly ColorCode Ally = new(131, 170, 240);
+    public static readonly ColorCode Ally = new(131, 170, 240); // todo not readable enough
     public static readonly ColorCode Opp = new(255, 116, 116);
     public static readonly ColorCode Turn = new(160, 52, 255);
     public static readonly ColorCode Hp = new(Colors.Hp);

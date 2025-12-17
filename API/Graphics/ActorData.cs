@@ -110,7 +110,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// </summary>
     public float Speed { get; set; } = IActor.DefaultSpeed;
 
-    private readonly List<Routine> _routines = [];
+    internal readonly List<Routine> _routines = [];
 
     /// <summary>
     /// Whether this is marked to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
@@ -140,12 +140,12 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// Draws this if it is visible and performs its <c>Routine</c>s
     /// </summary>
     public void Act(GameTime gameTime) {
-        if (!this.IsVisible) return;
-
         // Execute routines
         for (int i = 0; i < this._routines.Count; i++) {
             if (this._routines[i].OnUpdate(actor, gameTime)) this._routines.SwapRemove(i);
         }
+
+        if (!this.IsVisible) return;
 
         actor.Draw(gameTime);
     }
@@ -156,22 +156,15 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
             new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
 
     public void DrawDebug(bool drawOrigin = true) {
+        Color outlineColor = this.Prog == 0
+            ? Colors.ActorOutlineProg0
+            : this.Prog == 1
+                ? Colors.ActorOutlineProg1
+                : Colors.ActorOutline;
+
         (Color, Color) colors = this.IsVisible
-            ? (Colors.ActorOutline, Colors.ActorPadding)
-            : (Colors.ActorOutlineInvis, Colors.ActorPaddingInvis);
-
-        // Position
-        Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
-            new(this.Width, this.Height),
-            Colors.Trans, colors.Item1);
-
-        // Padding
-        if (this.Padding != Padding.Zero) {
-            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
-            new Vector2(this.Padding.L, this.Padding.T),
-            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
-            colors.Item2);
-        }
+            ? (outlineColor, Colors.ActorPadding)
+            : (new(outlineColor, 0.25f), new(Colors.ActorPadding, 0.25f));
 
         // Marked
         if (this._marked) this.DrawBackground(Colors.ActorMarked);
@@ -182,6 +175,19 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
                 new(_OriginDebugSize * 2),
                 Colors.ActorOrigin);
         }
+
+        // Padding
+        if (this.Padding != Padding.Zero) {
+            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
+            new Vector2(this.Padding.L, this.Padding.T),
+            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
+            colors.Item2);
+        }
+
+        // Position
+        Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
+            new(this.Width, this.Height),
+            Colors.Trans, colors.Item1);
     }
 
     public Point CalcOrigin() => this.Alignment switch {

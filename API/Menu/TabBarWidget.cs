@@ -12,7 +12,6 @@ namespace API.Menu;
 /// <summary>
 /// A set of tabs
 /// </summary>
-// todo display inputs
 public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     public List<Label> Labels { get; private set; } = null!;
 
@@ -41,7 +40,13 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public int Index { get; set; } = 0;
 
-    public int OptCount { get; private set; }
+    public int OptCount {
+        get;
+        private set {
+            field = value;
+            this.Index = Math.Clamp(this.Index, 0, Math.Max(value - 1, 0));
+        }
+    }
 
     public Action<int>? OnSelect { get; set; }
 
@@ -95,11 +100,14 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public void SetText(params string[] optionText) {
         int i = 0;
-        for (; i < optionText.Length && i < this.Labels.Count; i++) this.Labels[i].Text = optionText[i];
+        for (; i < optionText.Length && i < this.Labels.Count; i++) {
+            this.Labels[i].IsVisible = true;
+            this.Labels[i].Text = optionText[i];
+        }
 
         // New list shorter, blank out remaining Labels and progs
         for (; i < this.Labels.Count; i++) {
-            this.Labels[i].Text = "";
+            this.Labels[i].IsVisible = false;
             this.Progs[i] = new();
         }
 
@@ -146,54 +154,56 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public void Create() {
         this.AddRoutine(IActor.In);
-        this.PromptL.AddRoutine(IActor.In);
-        this.PromptR.AddRoutine(IActor.In);
-        foreach (Label l in this.Labels) l.AddRoutine(IActor.In);
+        this.PromptL.Create();
+        this.PromptR.Create();
+        foreach (Label l in this.Labels) l.Create();
     }
 
     public void Destroy() {
         this.AddRoutine(IActor.Out);
-        this.PromptL.AddRoutine(IActor.Out);
-        this.PromptR.AddRoutine(IActor.Out);
-        foreach (Label l in this.Labels) l.AddRoutine(IActor.Out);
+        this.PromptL.Destroy();
+        this.PromptR.Destroy();
+        foreach (Label l in this.Labels) l.Destroy();
     }
 
     public void Draw(GameTime gameTime) {
-        this.PromptL.IsVisible = this.CheckInput;
-        this.PromptR.IsVisible = this.CheckInput;
+        if (this.OptCount != 0) {
+            this.PromptL.IsVisible = this.CheckInput;
+            this.PromptR.IsVisible = this.CheckInput;
 
-        this.Input(gameTime);
+            this.Input(gameTime);
 
-        if (InputLib.InputDeviceChanged) {
-            this._UpdateInputPrompt();
-            this.CalcLayout();
-        }
-
-        int w = 0;
-        for (int i = 0; i < this.OptCount; i++) {
-            this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], this.Speed, gameTime,
-                i == this.Index ? AnimDirs.In : AnimDirs.Out);
-
-            float yOff = (float) this.Progs[i] * _YOffset;
-
-            Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.Position.X,
-                (float) this.Prog) + w, this.Position.Y - this.Padding.T - yOff);
-
-            Point size = new(this.Labels[i].Width + this.Labels[i].Padding.LR - _OutlineWidth,
-                (int) (this.Height + this.Padding.TB + yOff * 2));
-
-            RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorBg,
-                Settings.ColorFg, _OutlineWidth, RenderLib.DefaultSlant,
-                RenderLib.DefaultSlant, Progress.One);
-            if (this.Progs[i] != 0) {
-
-                // Cursor
-                RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorAccent,
-                    Color.Red, 0f, 6, 6,
-                    Progress.Min(this.Prog, this.Progs[i]));
+            if (InputLib.InputDeviceChanged) {
+                this._UpdateInputPrompt();
+                this.CalcLayout();
             }
 
-            w += this.Labels[i].Width + this.Labels[i].Padding.LR;
+            int w = 0;
+            for (int i = 0; i < this.OptCount; i++) {
+                this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], this.Speed, gameTime,
+                    i == this.Index ? AnimDirs.In : AnimDirs.Out);
+
+                float yOff = (float) this.Progs[i] * _YOffset;
+
+                Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.Position.X,
+                    (float) this.Prog) + w, this.Position.Y - this.Padding.T - yOff);
+
+                Point size = new(this.Labels[i].Width + this.Labels[i].Padding.LR - _OutlineWidth,
+                    (int) (this.Height + this.Padding.TB + yOff * 2));
+
+                RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorBg,
+                    Settings.ColorFg, _OutlineWidth, RenderLib.DefaultSlant,
+                    RenderLib.DefaultSlant, Progress.One);
+                if (this.Progs[i] != 0) {
+
+                    // Cursor
+                    RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorAccent,
+                        Color.Red, 0f, 6, 6,
+                        Progress.Min(this.Prog, this.Progs[i]));
+                }
+
+                w += this.Labels[i].Width + this.Labels[i].Padding.LR;
+            }
         }
 
         foreach (Label l in this.Labels) {
@@ -203,8 +213,6 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         this.PromptL.Data.Act(gameTime);
         this.PromptR.Data.Act(gameTime);
-
-        Console.WriteLine($"{PromptL.Prog}");
 
         if (DebugMenu._drawActorOutlines) {
             this.PromptL.Data.DrawDebug(false);

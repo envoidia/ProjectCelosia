@@ -33,7 +33,7 @@ public sealed class Skill : ComplexDescribable, _IModItem {
     }
 
     public string GetCostFormatted() =>
-        string.Format(this.IsBloom ? Lang.SkillCostBloom : Lang.SkillCostSP, this.Cost.Format());
+        string.Format(this.IsBloom ? Lang.SkillCostBloom : Lang.SkillCostSP, this.Cost.FormatNoColor(false));
 
     public bool IsRangeSelf() => (this.Range == Ranges.Self) || (this.Range == Ranges.SelfUpDown);
 
