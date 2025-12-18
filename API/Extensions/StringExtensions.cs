@@ -120,5 +120,13 @@ public static class StringExtensions {
 
             return _Formatter.FormatMessage(@this, dict);
         }
+
+        /// <returns>
+        /// The given string with the first character lowercased
+        /// </returns>
+        public string FirstToLower() {
+            if (string.IsNullOrEmpty(@this)) return @this;
+            return char.ToLower(@this[0]) + @this[1..];
+        }
     }
 }

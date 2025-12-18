@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 using API.Extensions;
 using API.Modding;
 using API.Name;
@@ -725,104 +727,26 @@ public class Theme : IDescribable {
     /// <summary>
     /// Add custom color aliases to FSS's text processing for the given palette
     /// </summary>
-    // todo decide which colors should be part of this
     internal static void _ChangeFSSColors(Theme @new) {
-        Dictionary<string, Color> colorMap = new() {
-            ["white"] = @new.White,
-            ["black"] = @new.Black,
-            ["transBlack"] = @new.TransBlack,
+        Dictionary<string, Color> colorMap = [];
 
-            ["fg"] = @new.Fg,
-            ["bg"] = @new.Bg,
-            ["accent"] = @new.Accent,
-
-            ["pos"] = @new.Pos,
-            ["neg"] = @new.Neg,
-            ["imp"] = @new.Imp,
-            ["ally"] = @new.Ally,
-            ["opp"] = @new.Opp,
-            ["turn"] = @new.Turn,
-            ["hp"] = @new.Hp,
-            ["sp"] = @new.Sp,
-            ["shield"] = @new.Shield,
-            ["bloom"] = @new.Bloom,
-            ["buff"] = @new.Buff,
-            ["skill"] = @new.Skill,
-            ["element"] = @new.Element,
-            ["passive"] = @new.Passive,
-            ["stat"] = @new.Stat,
-            ["cooldown"] = @new.Cooldown,
-
-            ["spBack"] = @new.SpBack,
-            ["overheal"] = @new.Overheal,
-            ["statBarLayer4"] = @new.StatBarLayer4,
-            ["statBarLayer5"] = @new.StatBarLayer5,
-
-            ["atk"] = @new.Atk,
-            ["def"] = @new.Def,
-            ["fth"] = @new.Fth,
-            ["agi"] = @new.Agi,
-
-            ["vis"] = @new.Vis,
-            ["ignis"] = @new.Ignis,
-            ["glacies"] = @new.Glacies,
-            ["fulgur"] = @new.Fulgur,
-            ["ventus"] = @new.Ventus,
-            ["terra"] = @new.Terra,
-            ["lux"] = @new.Lux,
-            ["malum"] = @new.Malum,
-        };
-
+        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>()) {
+            colorMap[tc.ToString().FirstToLower()] = @new.Get(tc);
+        }
         foreach (KeyValuePair<string, Color> kvp in colorMap) {
             ColorStorage.Colors[kvp.Key] = new() { Color = kvp.Value };
         }
     }
 
-    public override string ToString() => $"""
-        {ThemeColor.White}: {this.White.ToRgbaStr()}
-        {ThemeColor.Black}: {this.Black.ToRgbaStr()}
-        {ThemeColor.TransBlack}: {this.TransBlack.ToRgbaStr()}
+    public override string ToString() {
+        StringBuilder sb = new();
 
-        {ThemeColor.Fg}: {this.Fg.ToRgbaStr()}
-        {ThemeColor.Bg}: {this.Bg.ToRgbaStr()}
-        {ThemeColor.Accent}: {this.Accent.ToRgbaStr()}
+        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>()) {
+            sb.Append($"{tc}: {this.Get(tc).ToRgbaStr()}");
+        }
 
-        {ThemeColor.Pos}: {this.Pos.ToRgbaStr()}
-        {ThemeColor.Neg}: {this.Neg.ToRgbaStr()}
-        {ThemeColor.Imp}: {this.Imp.ToRgbaStr()}
-        {ThemeColor.Ally}: {this.Ally.ToRgbaStr()}
-        {ThemeColor.Opp}: {this.Opp.ToRgbaStr()}
-        {ThemeColor.Turn}: {this.Turn.ToRgbaStr()}
-        {ThemeColor.Hp}: {this.Hp.ToRgbaStr()}
-        {ThemeColor.Sp}: {this.Sp.ToRgbaStr()}
-        {ThemeColor.Shield}: {this.Shield.ToRgbaStr()}
-        {ThemeColor.Bloom}: {this.Bloom.ToRgbaStr()}
-        {ThemeColor.Buff}: {this.Buff.ToRgbaStr()}
-        {ThemeColor.Skill}: {this.Skill.ToRgbaStr()}
-        {ThemeColor.Element}: {this.Element.ToRgbaStr()}
-        {ThemeColor.Passive}: {this.Passive.ToRgbaStr()}
-        {ThemeColor.Stat}: {this.Stat.ToRgbaStr()}
-        {ThemeColor.Cooldown}: {this.Cooldown.ToRgbaStr()}
-
-        {ThemeColor.SpBack}: {this.SpBack.ToRgbaStr()}
-        {ThemeColor.Overheal}: {this.Overheal.ToRgbaStr()}
-        {ThemeColor.StatBarLayer4}: {this.StatBarLayer4.ToRgbaStr()}
-        {ThemeColor.StatBarLayer5}: {this.StatBarLayer5.ToRgbaStr()}
-
-        {ThemeColor.Atk}: {this.Atk.ToRgbaStr()}
-        {ThemeColor.Def}: {this.Def.ToRgbaStr()}
-        {ThemeColor.Fth}: {this.Fth.ToRgbaStr()}
-        {ThemeColor.Agi}: {this.Agi.ToRgbaStr()}
-
-        {ThemeColor.Vis}: {this.Vis.ToRgbaStr()}
-        {ThemeColor.Ignis}: {this.Ignis.ToRgbaStr()}
-        {ThemeColor.Glacies}: {this.Glacies.ToRgbaStr()}
-        {ThemeColor.Fulgur}: {this.Fulgur.ToRgbaStr()}
-        {ThemeColor.Ventus}: {this.Ventus.ToRgbaStr()}
-        {ThemeColor.Terra}: {this.Terra.ToRgbaStr()}
-        {ThemeColor.Lux}: {this.Lux.ToRgbaStr()}
-        {ThemeColor.Malum}: {this.Malum.ToRgbaStr()}
-        """;
+        return sb.ToString();
+    }
 
     public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
     public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
