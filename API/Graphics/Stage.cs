@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using API.Battle.State;
 using API.Menu;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,11 +33,11 @@ public static class Stage {
         end();
         begin();
         for (; i >= 0; i--) _Actors[i].Data.Act(gameTime);
-        _DebugMenu._DrawPalette();
+        if (DebugUtil._drawPalette) Settings.Theme._DrawPalette();
         end();
 
         // Debug overlay (F3)
-        if (_DebugMenu._drawActorOutlines) {
+        if (DebugUtil._drawActorOutlines) {
             begin();
             foreach (IActor a in _Actors) a.Data.DrawDebug();
             end();

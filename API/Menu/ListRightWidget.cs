@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using API.Graphics;
 using API.Util;
@@ -93,7 +92,7 @@ public sealed class ListRightWidget : ListWidget {
 
         foreach (Label l in this.LabelsRight) {
             l.Data.Act(gameTime);
-            if (_DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
+            if (DebugUtil._drawActorOutlines) l.Data.DrawDebug(false);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using API.Graphics;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -52,16 +53,16 @@ public static class InputLib {
                 double s = held.TotalSeconds;
 
                 ColorCode c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
-                    ? ColorCode.Cooldown : ColorCode.White;
+                    ? Settings.Theme.Cooldown : Settings.Theme.White;
 
                 sb.Append(c).Append(s.ToString("0.##")).Append('\n');
             }
 
             bool check = _CheckKeybind(Keybinds.Hotkey1);
-            sb.Append(check ? ColorCode.Pos : ColorCode.Neg).Append(check).Append('\n');
+            sb.Append(check ? ThemeColor.Pos.Str() : ThemeColor.Neg.Str()).Append(check).Append('\n');
 
             check = _CheckKeybind(Keybinds.Hotkey2);
-            sb.Append(check ? ColorCode.Pos : ColorCode.Neg).Append(check);
+            sb.Append(check ? ThemeColor.Pos.Str() : ThemeColor.Neg.Str()).Append(check);
 
             l.Text = sb.ToString();
 

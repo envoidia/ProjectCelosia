@@ -1,25 +1,36 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using API.Battle.State;
+using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using API.Modding;
-using API.Util;
+using API.Save;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace API.Menu;
+namespace API.Util;
 
-internal static class _DebugMenu {
+public static class DebugUtil {
+    // todo show size of all lists (IModItems, etc)
     private const int _Mb = 1024 * 1024;
+    private const string _ClassName = "DebugUtil";
+
+    private const int _LogLimit = 8;
+    private static readonly List<string> _LogText = new(8);
 
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
-
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
+    internal static bool _drawActorOutlines = false;
+    internal static bool _drawPalette = false;
+
+    #region Labels
+
     private static readonly Label _DebugInfoL = new() {
-        Text = _GetInfoLText(),
+        Text = "_GetInfoLText()",
         Position = new(10, 10),
         Padding = new(10),
         HasBackground = true,
@@ -39,7 +50,17 @@ internal static class _DebugMenu {
     };
 
     private static readonly Label _DebugInfoHelp = new() {
-        Text = _GetInfoHelpText(),
+        Text = "_GetInfoHelpText()",
+        Position = new(10, World.H - 10),
+        Padding = new(10),
+        HasBackground = true,
+        Alignment = Alignment.BottomLeft,
+        Priority = RenderPriority.Highest,
+        AnimType = AnimType.None,
+        IsVisible = false
+    };
+
+    private static readonly Label _DebugLog = new() {
         Position = new(10, World.H - 10),
         Padding = new(10),
         HasBackground = true,
@@ -52,7 +73,7 @@ internal static class _DebugMenu {
     private const int _KeyYOff = 927;
 
     private static readonly Label _DebugInfoKeyNames = new() {
-        Text = _GetKeyNameText(),
+        Text = "_GetKeyNameText()",
         Position = World.Vec - new Vector2(412, _KeyYOff),
         Padding = new(10),
         HasBackground = true,
@@ -62,7 +83,6 @@ internal static class _DebugMenu {
     };
 
     private static readonly Label _DebugInfoKeyHeld = new() {
-        Text = _GetKeyNameText(),
         Position = World.Vec - new Vector2(112, _KeyYOff),
         Padding = new(10, 120, 10, 10),
         HasBackground = true,
@@ -71,16 +91,40 @@ internal static class _DebugMenu {
         IsVisible = false
     };
 
-    internal static bool _drawActorOutlines = false;
-    private static bool _drawPalette = false;
+    #endregion
 
-    static _DebugMenu() {
+    static DebugUtil() {
         Stage.Add(_DebugInfoL);
         Stage.Add(_DebugInfoR);
         Stage.Add(_DebugInfoHelp);
+        Stage.Add(_DebugLog);
+
         Stage.Add(_DebugInfoKeyNames);
         Stage.Add(_DebugInfoKeyHeld);
         _DebugInfoKeyHeld.AddRoutine(InputLib._TrackInput);
+    }
+
+    // todo for some reason, setting this in the static ctor started to throw a nullreference exception wrt FSS text size
+    private static void _Test() {
+        _DebugInfoL.Text = _GetInfoLText();
+        _DebugInfoHelp.Text = _GetInfoHelpText();
+        _DebugInfoKeyNames.Text = _GetKeyNameText();
+    }
+
+    /// <summary>
+    /// Write a message to the ingame debug log and the attached OS console
+    /// </summary>
+    /// <param name="msg">Message</param>
+    /// <param name="source">Origin to display for the message</param>
+    public static void Log(string msg, string source) {
+        string str = $"{ThemeColor.Imp.Str()}[{source}]{ThemeColor.White.Str()} {msg}";
+
+        if (_LogText.Count == _LogLimit) _LogText.RemoveFirst();
+
+        _LogText.Add(str);
+        _DebugLog.Text = string.Join('\n', _LogText);
+
+        Console.WriteLine(str);
     }
 
     internal static void _Create() {
@@ -125,53 +169,77 @@ internal static class _DebugMenu {
     }
 
     internal static void _CheckDebugHotkeys() {
+        // temp
+        if (InputLib.IsKeyJustPressed(Keys.F1)) {
+            _Test();
+        }
+
         _DebugInfoHelp.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
 
-        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
+        _DebugLog.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F3);
 
-        if (InputLib.IsKeyJustPressed(Keys.F4)) {
+        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F4);
+
+        if (InputLib.IsKeyJustPressed(Keys.F5)) {
             _DebugInfoKeyNames.IsVisible ^= true;
             _DebugInfoKeyHeld.IsVisible ^= true;
-
         }
-        if (InputLib.IsKeyJustPressed(Keys.F5)) Console.WriteLine(Stage.ToString());
 
         if (InputLib.IsKeyJustPressed(Keys.F6)) {
+            Console.WriteLine(Stage.ToString());
+            Log("Output Stage to console", _ClassName);
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.F7)) {
             string str = string.Join('\n', LogLib._LogText);
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
                 Console.WriteLine(str);
+                Log("Output raw battle log to console", _ClassName);
                 return;
             }
 
             Console.WriteLine(Regexes.RemoveFormattingCodes(str));
+            Log("Output battle log to console", _ClassName);
         }
 
-        _drawPalette ^= InputLib.IsKeyJustPressed(Keys.F7);
+        if (InputLib.IsKeyJustPressed(Keys.F8)) {
+            if (InputLib.Check(Keybinds.Hotkey1)) {
+                _CyclePalette();
+                return;
+            }
 
-        if (InputLib.IsKeyJustPressed(Keys.F8)) Stage._RecalcLayoutWidgets();
+            _drawPalette ^= true;
+        }
 
-        if (InputLib.IsKeyJustPressed(Keys.F9)) Stage.Cleanup();
+        if (InputLib.IsKeyJustPressed(Keys.F9)) {
+            Stage._RecalcLayoutWidgets();
+            Log("Recalculated ILayoutWidgets", _ClassName);
+        }
 
         if (InputLib.IsKeyJustPressed(Keys.F10)) {
-            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+            Stage.Cleanup();
+            Log("Cleaned up Stage", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F11)) GC.Collect();
+        if (InputLib.IsKeyJustPressed(Keys.F11)) {
+            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+            Log("Output LoadedMods to console", _ClassName);
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.F12)) {
+            GC.Collect();
+            Log("Forced GC collect", _ClassName);
+        }
     }
 
-    internal static void _DrawPalette() {
-        if (!_drawPalette) return;
-
-        const int Size = 64;
-
-        int y = World.H - (Size * 9);
-        for (int i = 0; i < Colors.All.Length; i++) {
-            int iMod = i % 6;
-            int x = iMod * Size;
-            if (iMod == 0) y += Size;
-            Core.ShapeBatch.FillRectangle(new(x, y), new(Size, Size), Colors.All[i]);
-        }
+    /// <summary>
+    /// Increase current palette index by 1 or loop around
+    /// </summary>
+    private static void _CyclePalette() {
+        int i = Core.Themes.IndexOf(Settings.Theme);
+        Settings.Theme = Core.Themes[i == Core.Themes.Count - 1 ? 0 : i + 1];
+        Log($"Theme changed to {Settings.Theme.GetName()}", _ClassName);
     }
 
     // todo cleanup

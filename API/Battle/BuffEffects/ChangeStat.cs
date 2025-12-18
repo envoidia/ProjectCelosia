@@ -19,6 +19,6 @@ public sealed class ChangeStat(Stat stat, int change) : IBuffEffect {
 
         LogLib.Add(string.Format(Lang.LogChangeStat, self.FormatName(), stat.GetName(),
             TextLib.FormatStat(statOldWithStage, statDefault), TextLib.FormatStat(statNewWithStage, statDefault),
-            self.GetBaseStat(stat).Format(ColorCode.Num, false), (statNewWithStage - statOldWithStage).Format()));
+            self.GetBaseStat(stat).Format(ThemeColor.Imp, false), (statNewWithStage - statOldWithStage).Format()));
     }
 }

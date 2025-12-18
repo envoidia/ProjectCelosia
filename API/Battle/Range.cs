@@ -53,8 +53,8 @@ public sealed class Range : _IModItem, INameable {
         return [.. pos];
     }
 
-    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.White, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
 
 }
 

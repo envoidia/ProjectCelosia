@@ -1,4 +1,3 @@
-using System.Numerics;
 using API.Battle.BuffEffects;
 using API.Graphics;
 using API.Modding;
@@ -24,12 +23,12 @@ public sealed class Buff : ComplexDescribable, _IModItem {
         Core.Buffs.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(ColorCode.Buff, mod);
+    public override string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Buff, mod);
 
     // Todo use stack amount to show multiplied values
     public override string GetFullDesc(GameMod? mod = null) =>
         string.Format(Lang.BuffDesc, this.BuffType.GetName(),
-            this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, ColorCode.Num + this.MaxStacks),
+            this.MaxStacks == 1 ? "" : string.Format(Lang.BuffDescStacksTo, ThemeColor.Imp.Str() + this.MaxStacks),
             this._GetFormattedDescInclusions(mod));
 }
 

@@ -2,15 +2,11 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using API.Menu;
-using API.Extensions;
-using API.Util;
 
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
-using System.Text;
 using System.Linq;
 
 namespace API.Battle.State;
@@ -142,9 +138,9 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, $"{ColorCode.Stat}SP") {
-        ColorLayer0 = Colors.SpBack,
-        ColorLayer1 = Colors.Sp,
+            _StatBarWidth, RenderPriority.B2Med, $"{ThemeColor.Stat.Str()}SP") {
+        ColorLayer0 = ThemeColor.SpBack, // todo hotswap color
+        ColorLayer1 = ThemeColor.Sp,
         MaxVal = 1000
     };
     // private static readonly Label _Sp = new(RenderPriority.B2Med) {
@@ -345,7 +341,7 @@ internal sealed class _InspectLib {
     internal static void _UpdateInspectUnitPage(int index) {
         Unit u = _GetUnitsSortedByAgi()[index];
 
-        _Lvl.Text = $"Lvl {ColorCode.Num}{u.Lvl + 1}";
+        _Lvl.Text = $"Lvl {ThemeColor.Imp.Str()}{u.Lvl + 1}";
 
         // HP and SP
         // todo account for infinite sp
@@ -377,7 +373,7 @@ internal sealed class _InspectLib {
 
         switch ((_InspectPage) index) {
             case _InspectPage.Skills:
-                _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ColorCode.White))]);
+                _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ThemeColor.White))]);
                 _PageItems.SetRightText([.. u.SkillInstances.Select(s => s.GetCostCdFormatted())]);
 
                 if (_PageItems.OptCount != 0) {
@@ -387,7 +383,7 @@ internal sealed class _InspectLib {
                 return;
             case _InspectPage.Passives:
                 _PageItems.SetRightText(); // todo
-                _PageItems.SetText([.. u.Passives.Select(s => s.GetName(ColorCode.White))]);
+                _PageItems.SetText([.. u.Passives.Select(s => s.GetName(ThemeColor.White))]);
 
                 if (_PageItems.OptCount != 0) {
                     _Desc.Text = $"{u.Passives[_PageItems.Index].GetName()}\n\n{u.Passives[_PageItems.Index].GetFullDesc()}";
@@ -395,7 +391,7 @@ internal sealed class _InspectLib {
 
                 return;
             case _InspectPage.Buffs:
-                _PageItems.SetText([.. u.BuffInstances.Select(b => b.Buff.GetName(ColorCode.White))]);
+                _PageItems.SetText([.. u.BuffInstances.Select(b => b.Buff.GetName(ThemeColor.White))]);
                 _PageItems.SetRightText([.. u.BuffInstances.Select(b => b.GetTurnsStacksFormatted())]);
 
                 if (_PageItems.OptCount != 0) {

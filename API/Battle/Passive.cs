@@ -11,14 +11,14 @@ public sealed class Passive : ComplexDescribable, _IModItem {
     public GameMod? Source { get; }
 
     public Passive(GameMod? source, string keyName, string keyDescription, string icon,
-        params IBuffEffect[] buffEffects) :
-        base(keyName, keyDescription, icon) {
+        params IBuffEffect[] buffEffects)
+        : base(keyName, keyDescription, icon) {
         this.Source = source;
         this.BuffEffects = buffEffects;
         Core.Passives.Add(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(ColorCode.Passive, mod);
+    public override string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Passive, mod);
 
     public override string GetFullDesc(GameMod? mod = null) => "todo";
 }

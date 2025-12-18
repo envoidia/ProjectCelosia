@@ -148,7 +148,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
                         this.Position.Y + h - this.Padding.T),
                         new(this.Width + this.Padding.LR, this.Labels[i].Height +
                         this.Labels[i].Padding.TB + this.Padding.TB),
-                        this.Origin, Settings.ColorAccent, Color.Red,
+                        this.Origin, Settings.Theme.Accent, Color.Red,
                         0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
                         Progress.Min(this.Prog, this.Progs[i]));
                 }
@@ -159,11 +159,11 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             l.Data.Act(gameTime);
-            if (_DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
+            if (DebugUtil._drawActorOutlines) l.Data.DrawDebug(false);
         }
 
         // Disabled input overlay
-        if (_DebugMenu._drawActorOutlines) {
+        if (DebugUtil._drawActorOutlines) {
             if (!this.CheckInput) this.Data.DrawBackground(Colors.ActorDisabledInput);
         }
     }

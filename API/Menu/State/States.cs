@@ -1,5 +1,4 @@
 using API.Battle.State;
-using API.Graphics;
 using API.Input;
 
 namespace API.Menu.State;

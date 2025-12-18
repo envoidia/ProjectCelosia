@@ -1,10 +1,11 @@
 using System;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-// todo rename
+// todo remove
 public sealed class GuiBoxBar(int l, int r, int t, int b, RenderPriority priority = RenderPriority.B1Med,
     params Color[] colors) : Parellelogram(l, r, t, b, renderPriority: priority) {
     public Progress[] BarProgs { get; set; } = new Progress[colors.Length];
@@ -13,7 +14,7 @@ public sealed class GuiBoxBar(int l, int r, int t, int b, RenderPriority priorit
     public override void Draw(GameTime gameTime) {
         if (this.Prog == 0) return;
 
-        draw(this.L, this.R, this.T, this.B, this.Color);
+        draw(this.L, this.R, this.T, this.B, Settings.Theme.Fg);
 
         // Draw overlay bars from longest to shortest so they're all visible
         Array.Sort(this.BarProgs, this.BarColors);
@@ -25,7 +26,7 @@ public sealed class GuiBoxBar(int l, int r, int t, int b, RenderPriority priorit
         }
 
         void draw(int l, int r, int t, int b, Color color) =>
-            RenderLib.DrawParallelogram(l, r, t, b, color, this.OutlineColor,
+            RenderLib.DrawParallelogram(l, r, t, b, color, Settings.Theme.Bg,
                 this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using API.Save;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -17,10 +15,7 @@ public class Parellelogram : IActor {
     public int T { get; set; }
     public int B { get; set; }
 
-    public Color Color { get; set; } = Settings.ColorBg;
-
     public float OutlineThickness { get; set; }
-    public Color OutlineColor { get; set; } = Settings.ColorFg;
 
     /// <summary>
     /// Move X by 1 for every slant Y
@@ -51,7 +46,7 @@ public class Parellelogram : IActor {
     public virtual void Draw(GameTime gameTime) {
         if (this.Prog == 0) return;
 
-        RenderLib.DrawParallelogram(this.L, this.R, this.T, this.B, this.Color, this.OutlineColor,
+        RenderLib.DrawParallelogram(this.L, this.R, this.T, this.B, Settings.Theme.Bg, Settings.Theme.Fg,
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
 

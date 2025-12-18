@@ -189,13 +189,13 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
                 Point size = new(this.Labels[i].Width + this.Labels[i].Padding.LR - _OutlineWidth,
                     (int) (this.Height + this.Padding.TB + yOff * 2));
 
-                RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorBg,
-                    Settings.ColorFg, _OutlineWidth, RenderLib.DefaultSlant,
+                RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.Theme.Bg,
+                    Settings.Theme.Fg, _OutlineWidth, RenderLib.DefaultSlant,
                     RenderLib.DefaultSlant, Progress.One);
                 if (this.Progs[i] != 0) {
 
                     // Cursor
-                    RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.ColorAccent,
+                    RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.Theme.Accent,
                         Color.Red, 0f, 6, 6,
                         Progress.Min(this.Prog, this.Progs[i]));
                 }
@@ -206,13 +206,13 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             l.Data.Act(gameTime);
-            if (_DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
+            if (DebugUtil._drawActorOutlines) l.Data.DrawDebug(false);
         }
 
         this.PromptL.Data.Act(gameTime);
         this.PromptR.Data.Act(gameTime);
 
-        if (_DebugMenu._drawActorOutlines) {
+        if (DebugUtil._drawActorOutlines) {
             this.PromptL.Data.DrawDebug(false);
             this.PromptR.Data.DrawDebug(false);
 

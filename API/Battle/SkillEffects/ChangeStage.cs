@@ -43,11 +43,11 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
         if (((stageOld >= 0) && (stacksMod >= 0)) || ((stageOld <= 0) && (stacksMod <= 0) && (turnsMod > turnsOld))) {
             unit.SetStageTurns(stageType, turnsMod);
             if (stageNew != stageOld) {
-                msg.Add(str + string.Format(Lang.LogTurnsNameless, ColorCode.Num + turnsOld, ColorCode.Num + turnsMod) +
+                msg.Add(str + string.Format(Lang.LogTurnsNameless, ThemeColor.Imp.Str() + turnsOld, ThemeColor.Imp.Str() + turnsMod) +
                         str2);
             } else {
-                msg.Add(string.Format(Lang.LogChangeStageTurns, unit.FormatName(), stageName, ColorCode.Num + turnsOld,
-                    ColorCode.Num + turnsMod));
+                msg.Add(string.Format(Lang.LogChangeStageTurns, unit.FormatName(), stageName, ThemeColor.Imp.Str() + turnsOld,
+                    ThemeColor.Imp.Str() + turnsMod));
             }
         } else if (stageNew != stageOld) {
             msg.Add(str + str2);

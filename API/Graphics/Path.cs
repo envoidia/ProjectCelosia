@@ -1,6 +1,4 @@
-using System;
 using API.Save;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -13,7 +11,6 @@ public sealed class Path : IActor {
     public Vector2 Start { get; set; }
     public Vector2 End { get; set; }
     public float Thickness { get; set; }
-    public Color Color { get; set; } = Settings.ColorFg;
 
     public ActorData Data { get; }
 
@@ -30,8 +27,8 @@ public sealed class Path : IActor {
     }
 
     public void Draw(GameTime gameTime) =>
-        Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, this.Color, this.Color, 0);
+        Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, Settings.Theme.Fg, Color.Red, 0);
 
-    public void OnCreate() => this.AddRoutine(IActor.In);
-    public void OnDestroy() => this.AddRoutine(IActor.Out);
+    public void OnCreate() { }
+    public void OnDestroy() { }
 }

@@ -25,12 +25,13 @@ public sealed class Element : _IModItem, INameable {
         Core.Elements.Add(this);
     }
 
-    public string GetName(ColorCode color, GameMod? mod = null) =>
-        $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Element, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) =>
+        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod)}";
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Element, mod);
 }
 
 public static class Elements {
+    // todo hotswap
     public static readonly Element Vis = new(null, "ElementVis",
-        $"{new ColorCode(Colors.Whites[1])}/i[rolling-energy]");
+        $"{ThemeColor.Vis.Str()}/i[rolling-energy]");
 }

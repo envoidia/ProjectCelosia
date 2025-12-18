@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
@@ -53,7 +54,8 @@ public static class ModLoader {
                 return prop.GetValue(null) is not null;
             })
             .Select(prop => {
-                Console.WriteLine(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath));
+                DebugUtil.Log(string.Format(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath)),
+                "ModLoader");
                 return prop.GetValue(null);
             })
             .Cast<GameMod>());

@@ -5,12 +5,15 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Weapon : ComplexDescribable, IEquippable {
+public sealed class Weapon : ComplexDescribable, _IModItem, IEquippable {
     public Dictionary<Element, int> Affinities { get; init; }
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-    public Weapon(string keyName, string keyDesc, string icon, Dictionary<Element, int> affinities) : base(keyName, icon, keyDesc) {
+    public GameMod? Source { get; }
+
+    public Weapon(GameMod source, string keyName, string keyDesc, string icon, Dictionary<Element, int> affinities) : base(keyName, icon, keyDesc) {
+        this.Source = source;
         this.Affinities = affinities;
         Core.Weapons.Add(this);
     }

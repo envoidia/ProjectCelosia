@@ -22,8 +22,8 @@ public sealed class Skill : ComplexDescribable, _IModItem {
 
     public GameMod? Source { get; }
 
-    public Skill(GameMod? source, string keyName, string keyDesc, Range range, int cost) :
-        base(keyName, "", keyDesc) {
+    public Skill(GameMod? source, string keyName, string keyDesc, Range range, int cost)
+        : base(keyName, "", keyDesc) {
         this.Range = range;
         this.Cost = cost;
 
@@ -58,9 +58,9 @@ public sealed class Skill : ComplexDescribable, _IModItem {
     // todo more complex logic
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
 
-    public override string GetName(ColorCode color, GameMod? mod = null) =>
-        $"{this.GetElement().Icon} {color}{this.KeyName.GetLang(mod)}";
-    public override string GetName(GameMod? mod = null) => this.GetName(ColorCode.Skill, mod);
+    public override string GetName(ThemeColor color, GameMod? mod = null) =>
+        $"{this.GetElement().Icon} {color.Str()}{this.KeyName.GetLang(mod)}";
+    public override string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Skill, mod);
 
     // todo stat skills
     public override string GetFullDesc(GameMod? mod = null) {
@@ -76,18 +76,18 @@ public sealed class Skill : ComplexDescribable, _IModItem {
 
             if (effectType is null) continue;
 
-            skillTypes.Add(effectType.GetName(mod) + ColorCode.White);
+            skillTypes.Add(effectType.GetName(mod) + ThemeColor.White.Str());
         }
 
         string skillTypesStr = skillTypes.Count != 0
             ? string.Join(", ", skillTypes)
-            : SkillTypes.Stat.GetName(mod) + ColorCode.White;
+            : SkillTypes.Stat.GetName(mod) + ThemeColor.White.Str();
 
         return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(mod),
-            this.Range.GetName(mod), pow == 0 ? "" : $", {ColorCode.Num}{pow} {ColorCode.White}{Lang.Pow}",
+            this.Range.GetName(mod), pow == 0 ? "" : $", {ThemeColor.Imp.Str()}{pow} {ThemeColor.White.Str()}{Lang.Pow}",
             this.Prio == 0
                 ? ""
-                : $", {((int) this.Prio).Format()} {ColorCode.White}{Lang.Prio}",
+                : $", {((int) this.Prio).Format()} {ThemeColor.White.Str()}{Lang.Prio}",
             this._GetFormattedDescInclusions(mod));
     }
 

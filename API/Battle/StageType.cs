@@ -24,10 +24,10 @@ public sealed class StageType : _IModItem, IDescribable {
         Core.StageTypes.Add(this);
     }
 
-    public string GetName(ColorCode color, GameMod? mod = null) =>
-        $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
+    public string GetName(ThemeColor color, GameMod? mod = null) =>
+        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod)}";
 
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Buff, mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Buff, mod);
 
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 
@@ -35,21 +35,22 @@ public sealed class StageType : _IModItem, IDescribable {
 }
 
 public static class StageTypes {
-    public static readonly StageType None = new(null, "", "", "");
+    public static readonly StageType None = new(null, "blank", "", "");
 
+    // todo hotswapping??
     public static readonly StageType Atk =
         new(null, "StageAtk", "todo",
-            $"{new ColorCode(Colors.RedOranges[3])}/i[energy-sword]", Stats.Str, Stats.Mag);
+            $"{ThemeColor.Atk.Str()}/i[energy-sword]", Stats.Str, Stats.Mag);
 
     public static readonly StageType Def =
         new(null, "StageDef", "todo",
-            $"{new ColorCode(Colors.Blues[3])}/i[rosa-shield]", Stats.Amr, Stats.Res);
+            $"{ThemeColor.Def.Str()}/i[rosa-shield]", Stats.Amr, Stats.Res);
 
     public static readonly StageType Fth =
         new(null, "StatFth", "todo",
-            $"{new ColorCode(Colors.Pinks[1])}/i[star-altar]", Stats.Fth);
+            $"{ThemeColor.Fth.Str()}/i[star-altar]", Stats.Fth);
 
     public static readonly StageType Agi =
         new(null, "StatAgi", "todo",
-            $"{new ColorCode(Colors.Greens[2])}/i[walking-boot]", Stats.Agi);
+            $"{ThemeColor.Agi.Str()}/i[walking-boot]", Stats.Agi);
 }

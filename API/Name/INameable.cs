@@ -9,6 +9,6 @@ namespace API.Name;
 public interface INameable {
     string KeyName { get; }
 
-    string GetName(ColorCode color, GameMod? mod = null);
+    string GetName(ThemeColor color, GameMod? mod = null);
     string GetName(GameMod? mod = null);
 }

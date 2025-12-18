@@ -1,4 +1,3 @@
-using System;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
@@ -27,7 +26,7 @@ public class LineActor : IActor {
     public void Draw(GameTime gameTime) {
         Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X, (float) this.Prog), this.Y);
 
-        RenderLib.DrawParallelogram(pos, this.Size, this.Origin, Settings.ColorFg,
+        RenderLib.DrawParallelogram(pos, this.Size, this.Origin, Settings.Theme.Fg,
             Color.Red, 0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant, Progress.One);
     }
 }

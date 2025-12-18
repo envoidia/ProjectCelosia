@@ -1,4 +1,4 @@
-using System;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
@@ -14,5 +14,5 @@ public class RectangleActor : IActor {
 
     public void Draw(GameTime gameTime) => Core.ShapeBatch.DrawRectangle(
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new(this.Width, this.Height), Colors.Trans, Colors.White);
+            new(this.Width, this.Height), Colors.Trans, Settings.Theme.White);
 }

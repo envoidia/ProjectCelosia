@@ -8,4 +8,4 @@ namespace API.Modding;
 /// All contained properties of type <c>GameMod</c> will be added to <c>ModLoader.LoadedMods</c>
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public sealed class ModEntryPointAttribute : Attribute { }
+public sealed class ModEntryPointAttribute : Attribute;

@@ -1,6 +1,6 @@
 using System;
 using API.Extensions;
-using API.Menu;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
@@ -10,12 +10,12 @@ namespace API.Graphics;
 /// Layered bars representing HP, Shield, and HP over max
 /// </summary>
 public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPriority)
-    : StatBarWidgetBase(pos, width, renderPriority, $"{ColorCode.Stat}HP") {
+    : StatBarWidgetBase(pos, width, renderPriority, $"{ThemeColor.Stat.Str()}HP") {
     public int Hp {
         get;
         set {
             field = value;
-            this._Update();
+            this._Update(Settings.Theme);
         }
     }
 
@@ -23,7 +23,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         get;
         set {
             field = value;
-            this._Update();
+            this._Update(Settings.Theme);
         }
     }
 
@@ -31,7 +31,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         get;
         set {
             field = value;
-            this._Update();
+            this._Update(Settings.Theme);
         }
     }
 
@@ -44,12 +44,12 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         if (this._barLens[0] > 0) drawBar(this._layers[0], 0, this._barLens[0]);
         if (this._barLens[1] > 0) drawBar(this._layers[1], this._barLens[0], this._barLens[1] - this._barLens[0]);
         if (this._barLens[2] > 0) drawBar(this._layers[2], this._barLens[1], this._barLens[2] - this._barLens[1]);
-        if (this._barLens[2] != 1) drawBar(Colors.Neg, this._barLens[2], 1 - this._barLens[2]);
+        if (this._barLens[2] != 1) drawBar(Settings.Theme.Neg, this._barLens[2], 1 - this._barLens[2]);
 
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
 
-        if (_DebugMenu._drawActorOutlines) {
+        if (DebugUtil._drawActorOutlines) {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
@@ -66,15 +66,18 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         }
     }
 
-    private void _Update() {
+    public override void ThemeChange(Theme prevTheme, Theme newTheme) => this._Update(newTheme);
+
+    // todo the colors seem to default wrong and only get corrected when you swap theme????
+    private void _Update(Theme t) {
         float hpLen = this.Hp / (float) this.MaxHp;
         this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, Math.Max(hpLen - 1, 0)];
-        this._layers = [Colors.Hp, Colors.Shield, Colors.Overheal];
+        this._layers = [t.Hp, t.Shield, t.Overheal];
 
         Array.Sort(this._barLens, this._layers);
 
         string shield = this.Shield > 0 ? $"+{this.Shield.FormatNoColor(false)}" : "";
-        this.Text.Text = $"{ColorCode.Black}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
+        this.Text.Text = $"{ThemeColor.Black.Str()}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
 
         this.CalcLayout();
     }

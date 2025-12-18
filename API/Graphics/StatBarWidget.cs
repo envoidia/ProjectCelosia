@@ -1,8 +1,7 @@
 using System;
 using API.Extensions;
-using API.Menu;
+using API.Save;
 using API.Util;
-using Cyotek.Drawing.BitmapFont;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -10,15 +9,14 @@ namespace API.Graphics;
 /// <summary>
 /// Layered bars representing a numerical amount, with text
 /// </summary>
-public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
-    : StatBarWidgetBase(pos, width, renderPriority, text) {
-    public Color ColorLayer0 { get; init; } = Colors.Neg;
-    public Color ColorLayer1 { get; init; } = Colors.Stat;
+public sealed class StatBarWidget : StatBarWidgetBase {
+    public ThemeColor ColorLayer0 { get; init; } = ThemeColor.Neg;
+    public ThemeColor ColorLayer1 { get; init; } = ThemeColor.Stat;
 
     /// <summary>
     /// Colors for layers after the first 2
     /// </summary>
-    private static readonly Color[] _Layers = [Colors.Pos, Colors.Blues[5], Colors.Pinks[5], Colors.White];
+    private static Color[] _layers = [];
 
     /// <summary>
     /// The value being tracked
@@ -42,6 +40,14 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
         }
     }
 
+    private Color _c0;
+    private Color _c1;
+
+    static StatBarWidget() => Theme.Change += ThemeChangeStatic;
+
+    public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
+        : base(pos, width, renderPriority, text) => this.ThemeChange(null, Settings.Theme);
+
     public override void Draw(GameTime gameTime) {
         // todo animate between stages whenever it changes
 
@@ -62,7 +68,7 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
 
-        if (_DebugMenu._drawActorOutlines) {
+        if (DebugUtil._drawActorOutlines) {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
@@ -79,14 +85,22 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
         }
     }
 
+    public override void ThemeChange(Theme? prevTheme, Theme newTheme) {
+        this._c0 = newTheme.Get(this.ColorLayer0);
+        this._c1 = newTheme.Get(this.ColorLayer1);
+    }
+
+    private static void ThemeChangeStatic(Theme prevTheme, Theme newTheme) =>
+        _layers = [newTheme.Pos, newTheme.StatBarLayer4, newTheme.StatBarLayer5, newTheme.White];
+
     private void _UpdateText() {
-        this.Text.Text = $"{ColorCode.Black}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
+        this.Text.Text = $"{ThemeColor.Black.Str()}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
         this.CalcLayout();
     }
 
     private Color _GetLayerColor(int layer) => layer switch {
-        0 => this.ColorLayer0,
-        1 => this.ColorLayer1,
-        _ => _Layers[Math.Min(layer - 2, _Layers.Length - 1)]
+        0 => this._c0,
+        1 => this._c1,
+        _ => _layers[Math.Min(layer - 2, _layers.Length - 1)]
     };
 }

@@ -73,15 +73,16 @@ Overworld Location: {6}
 Loaded Mods: {7}</value>
     </data>
     <data name="DebugInfoHelp" xml:space="preserve">
-        <value>/i[KF3]: Toggle actor outlines (blue pos (yellow = prog 0, magneta = prog 1), aqua padding, lime origin, red if marked, blue if input disabled)
-/i[KF4]: Toggle input view
-/i[KF5]: Write all actors on stage to console
-/i[KF6]: Write battle log to console. Hold {0} to preserve formatting codes
-/i[KF7]: Toggle palette
-/i[KF8]: Recalculate all ILayoutWidgets
-/i[KF9]: Force stage cleanup
-/i[KF10]: Write loaded mod list to console
-/i[KF11]: Force GC collect</value>
+        <value>/i[KF3] Toggle debug log
+/i[KF4]: Toggle actor outlines (blue pos (yellow = prog 0, magneta = prog 1), aqua padding, lime origin, red if marked, blue if input disabled)
+/i[KF5]: Toggle input view
+/i[KF6]: Write all actors on stage to console
+/i[KF7]: Write battle log to console. Hold {0} to preserve formatting codes
+/i[KF8]: Toggle palette view. Hold {0} to swap between palettes
+/i[KF9]: Recalculate all ILayoutWidgets
+/i[KF10]: Force stage cleanup
+/i[KF11]: Write loaded mod list to console
+/i[KF12]: Force GC collect</value>
     </data>
     <!--#endregion-->
     <!--#region Basic-->
@@ -141,6 +142,25 @@ Loaded Mods: {7}</value>
     </data>
     <data name="KeyDebugInfo" xml:space="preserve">
         <value>Debug Info</value>
+    </data>
+    <!-- Themes -->
+    <data name="Apollo" xml:space="preserve">
+        <value>Apollo</value>
+    </data>
+    <data name="Void" xml:space="preserve">
+        <value>Void</value>
+    </data>
+    <data name="MikuMikuTheme" xml:space="preserve">
+        <value>MikuMikuTheme</value>
+    </data>
+    <data name="VSCode" xml:space="preserve">
+        <value>VSCode</value>
+    </data>
+    <data name="HighContrast" xml:space="preserve">
+        <value>High-Contrast</value>
+    </data>
+    <data name="RedMode" xml:space="preserve">
+        <value>RED MODE!!!</value>
     </data>
     <!--Buttons
     todo remove if these arent used-->
@@ -823,17 +843,17 @@ Loaded Mods: {7}</value>
     <!--0 = stacks, 1 = buff, 2 = turns
     Gives +a Buff (b turns)-->
     <data name="SkillDescBuff" xml:space="preserve">
-        <value>Gives {0} {1} /c[white](/c[num]{2} /c[white]turns)</value>
+        <value>Gives {0} {1} /c[white](/c[imp]{2} /c[white]turns)</value>
     </data>
     <!--0 = stacks1, 1 = buff1, 2 = stacks2, 3 = buff2, 4 = turns
     Gives +a Buff1 and +b Buff2 (c turns)-->
     <data name="SkillDescBuff2SameTurns" xml:space="preserve">
-        <value>Gives {0}{1} /c[white]and {2}{3} /c[white](/c[num]{4} /c[white]turns)</value>
+        <value>Gives {0}{1} /c[white]and {2}{3} /c[white](/c[imp]{4} /c[white]turns)</value>
     </data>
     <!--0 = hits, 1 = stacks, 2 = buff, 3 = turns
     Hits a times. Each hit gives +b Buff (c turns)-->
     <data name="SkillDescMultihitBuff" xml:space="preserve">
-        <value>Hits /c[num]{0} /c[white]times. Each hit gives {1} {2} /c[white](/c[num]{3} /c[white]turns)</value>
+        <value>Hits /c[imp]{0} /c[white]times. Each hit gives {1} {2} /c[white](/c[imp]{3} /c[white]turns)</value>
     </data>
     <!--Fulgur
     Ventus

@@ -25,9 +25,9 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
         return args;
     }
 
-    public virtual string GetName(ColorCode color, GameMod? mod = null) =>
-        $"{this.Icon} {color}{this.KeyName.GetLang(mod)}";
-    public virtual string GetName(GameMod? mod = null) => this.GetName(ColorCode.White, mod);
+    public virtual string GetName(ThemeColor color, GameMod? mod = null) =>
+        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod)}";
+    public virtual string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
 
     public virtual string GetDesc(GameMod? mod = null) =>
         this.KeyDesc.FormatLang(mod, this._GetDescArgs(mod));
@@ -44,9 +44,9 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
         if (this.DescInclusions.Count > 0) formattedInclusions.Append('\n');
 
         foreach (IDescribable inclusion in this._GetDescInclusions()) {
-            formattedInclusions.Append('\n').Append(ColorCode.White).Append('(')
-                .Append(inclusion.GetName(mod)).Append(ColorCode.White).Append(": ")
-                .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ColorCode.White).Append(')');
+            formattedInclusions.Append('\n').Append(ThemeColor.White.Str()).Append('(')
+                .Append(inclusion.GetName(mod)).Append(ThemeColor.White.Str()).Append(": ")
+                .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str()).Append(')');
         }
 
         return formattedInclusions.ToString();

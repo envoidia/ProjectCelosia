@@ -1,10 +1,12 @@
 using System;
 using API.Extensions;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
+// todo remove
 public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = RenderPriority.B1Med,
     params int[] divisions) : Parellelogram(l, -1, t, b, renderPriority: priority) {
     /// <summary>
@@ -30,8 +32,7 @@ public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = R
     // todo settable prop?
     private const int _SelectedOffset = 10;
 
-    // todo settable prop?
-    private Color _selectedColor = Colors.Accent;
+    private Color _selectedColor = Settings.Theme.Accent;
 
     // todo is it really uninitialized tho
     private Progress[] _selectedProg = new Progress[divisions.Length];
@@ -62,10 +63,10 @@ public sealed class GuiBoxChain(int l, int t, int b, RenderPriority priority = R
             if (cursorProg != 0) drawP(l, r, t, b, this._selectedColor, cursorProg);
 
             void drawP(int l, int r, int t, int b, Color color, Progress prog) =>
-                RenderLib.DrawParallelogram(l, r, t, b, color, this.OutlineColor,
+                RenderLib.DrawParallelogram(l, r, t, b, color, Settings.Theme.Fg,
                     this.OutlineThickness, this.SlantL, this.SlantR, prog);
 
-            void draw(int l, int r, int t, int b) => drawP(l, r, t, b, this.Color, this.Prog);
+            void draw(int l, int r, int t, int b) => drawP(l, r, t, b, Settings.Theme.Bg, this.Prog);
         }
     }
 }

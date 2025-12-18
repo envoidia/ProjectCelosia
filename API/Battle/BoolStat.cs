@@ -27,8 +27,8 @@ public sealed class BoolStat : _IModItem, INameable {
         Core.BoolStats.Add(this);
     }
 
-    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
 
     // todo format?
 }

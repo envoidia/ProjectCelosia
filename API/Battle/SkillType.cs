@@ -16,8 +16,8 @@ public sealed class SkillType : _IModItem, INameable {
         Core.SkillTypes.Add(this);
     }
 
-    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
 }
 
 public static class SkillTypes {

@@ -30,8 +30,8 @@ public sealed class UnitType : _IModItem, IDescribable {
         Core.UnitTypes.Add(this);
     }
 
-    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.White, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
     public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
 
 }

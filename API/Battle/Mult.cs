@@ -27,8 +27,8 @@ public sealed class Mult : _IModItem, INameable {
     public string FormatChange(float val) =>
         Math.Max(val, this.MinValue).FormatPerc(true, isPositive: this.IsPositive);
 
-    public string GetName(ColorCode color, GameMod? mod = null) => color + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ColorCode.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
 
 }
 

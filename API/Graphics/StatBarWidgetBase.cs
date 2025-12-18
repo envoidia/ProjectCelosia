@@ -1,12 +1,12 @@
 using System;
 using API.Menu;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
 /// <summary>
-/// Base class for StatBarWidget and HpBarWidget
+/// Base class for StatBarWidget and HpBarWidget.
+/// Expected to have static lifetime -- otherwise, make sure to manually unsubscribe from <c>Theme.Change</c>
 /// </summary>
 public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
     protected const int _BarStartOffset = 100;
@@ -32,6 +32,9 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
         this.Position = pos;
         this.Width = width;
         this.Title.Text = text;
+
+        Theme.Change += this.ThemeChange;
+
         this.CalcLayout();
     }
 
@@ -57,4 +60,6 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
     }
 
     public abstract void Draw(GameTime gameTime);
+
+    public abstract void ThemeChange(Theme prevTheme, Theme newTheme);
 }

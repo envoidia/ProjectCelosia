@@ -16,9 +16,9 @@ public static class NumberExtensions {
         /// <param name="suffix">Added after the formatted <c>int</c></param>
         /// <param name="divisor"><c>float</c> to divide the <c>int</c> by before displaying it</param>
         /// todo a lot of things need to be redone to account for how this auto appends white now
-        public string Format(ColorCode color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
-            color + (useSign && @this > 0 ? '+' : null) + ((int) (@this / divisor)).ToString(IntegerFormat) +
-            suffix + ColorCode.White;
+        public string Format(ThemeColor color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
+            color.Str() + (useSign && @this > 0 ? '+' : null) + ((int) (@this / divisor)).ToString(IntegerFormat) +
+            suffix + ThemeColor.White.Str();
 
         /// <returns>
         /// The given <c>int</c> formatted based on the current locale, with no color
@@ -34,7 +34,7 @@ public static class NumberExtensions {
         /// <param name="isPositive">Whether to use green for > threshold</param>
         /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive and use <c>isPositive</c> to pick the color</param>
         public string Format(bool useSign, int threshold = 0, bool isPositive = true) {
-            if (!useSign) return @this.Format(ColorCode.White, false);
+            if (!useSign) return @this.Format(ThemeColor.White, false);
             return @this.Format(TextLib.GetColor(@this, threshold, isPositive));
         }
 
@@ -61,8 +61,8 @@ public static class NumberExtensions {
         /// <param name="suffix">Added after the formatted <c>float</c></param>
         /// <param name="divisor"><c>float</c> to divide the <c>float</c> by before displaying it</param>
         public string Format(int threshold, bool isPositive = true, bool useSign = true, char? suffix = null, float divisor = 1f) =>
-            TextLib.GetColor(@this, threshold, isPositive) + (useSign && @this > 0 ? '+' : null) + (@this / divisor)
-            .ToString(NumberFormat) + suffix + ColorCode.White;
+            TextLib.GetColor(@this, threshold, isPositive).Str() + (useSign && @this > 0 ? '+' : null) + (@this / divisor)
+            .ToString(NumberFormat) + suffix + ThemeColor.White.Str();
 
         /// <returns>
         /// The given <c>float</c> formatted as a percentage. Expects 1 = 100% with default params

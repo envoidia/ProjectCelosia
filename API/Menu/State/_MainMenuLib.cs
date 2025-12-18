@@ -1,4 +1,3 @@
-using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
@@ -30,8 +29,8 @@ internal static class _MainMenuLib {
         StateMachine.Add(States.Battle);
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
-        //             Point.Zero, Settings.ColorBg,
-        //             Settings.ColorFg, 15f, 6, 6, new Progress(Math.Min(1f, i / 2000f)));
+        //             Point.Zero, Colors.Bg,
+        //             Colors.Fg, 15f, 6, 6, new Progress(Math.Min(1f, i / 2000f)));
         /*_index = MenuLib.CheckMovement1D(_index, _OptCount);
         // todo update cursor
 

@@ -4,7 +4,6 @@ using System.IO;
 using API.Battle;
 using API.Graphics;
 using API.Input;
-using API.Menu;
 using API.Menu.State;
 using API.Modding;
 using Apos.Shapes;
@@ -42,6 +41,8 @@ public class Core : Game {
 
     #region _IModItem Lists
     // todo add custom IModItem categories?
+    // todo move to respective classes and use Add methods?
+    // todo document that these are expected to have static lifetimes
     public static readonly List<Accessory> Accessories = [];
     public static readonly List<BoolStat> BoolStats = [];
     public static readonly List<Buff> Buffs = [];
@@ -56,6 +57,8 @@ public class Core : Game {
     public static readonly List<Stat> Stats = [];
     public static readonly List<UnitType> UnitTypes = [];
     public static readonly List<Weapon> Weapons = [];
+
+    public static readonly List<Theme> Themes = [];
 
     #endregion
 
@@ -183,16 +186,16 @@ public class Core : Game {
         if (InputLib.Check(Keybinds.DebugInfo)) {
             if (!_isDebugInfoEnabled) {
                 _isDebugInfoEnabled = true;
-                _DebugMenu._Create();
+                Util.DebugUtil._Create();
             } else {
                 _isDebugInfoEnabled = false;
-                _DebugMenu._Destroy();
+                Util.DebugUtil._Destroy();
             }
         }
 
-        if (_isDebugInfoEnabled) _DebugMenu._Update(gameTime);
+        if (_isDebugInfoEnabled) Util.DebugUtil._Update(gameTime);
 
-        _DebugMenu._CheckDebugHotkeys();
+        Util.DebugUtil._CheckDebugHotkeys();
 
         // Switch input prompt between kb/controller
         if (InputLib.InputDeviceChanged) StateMachine.UpdateInputPrompt();
