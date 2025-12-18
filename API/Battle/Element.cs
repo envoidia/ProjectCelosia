@@ -31,7 +31,7 @@ public sealed class Element : _IModItem, INameable {
 }
 
 public static class Elements {
-    // todo hotswap
+    // todo move to element
     public static readonly Element Vis = new(null, "ElementVis",
         $"{ThemeColor.Vis.Str()}/i[rolling-energy]");
 }

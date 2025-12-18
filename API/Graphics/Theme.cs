@@ -14,6 +14,9 @@ namespace API.Graphics;
 public class Theme : _IModItem, INameable {
     public delegate void ThemeChange(Theme prevTheme, Theme newTheme);
 
+    /// <summary>
+    /// Notified when the current <c>Theme</c> changes
+    /// </summary>
     public static event ThemeChange? Change;
 
     public GameMod? Source { get; }
@@ -165,7 +168,7 @@ public class Theme : _IModItem, INameable {
                 Ignis = salmon,
                 Glacies = electricBlue,
                 Fulgur = lightPink,
-                Ventus = paleBlueGreen,
+                Ventus = green,
                 Terra = darkPink,
                 Lux = palePurple,
                 Malum = lightPurple
@@ -206,22 +209,22 @@ public class Theme : _IModItem, INameable {
 
                 Fg = white,
                 Bg = black,
-                Accent = dirtyBlue,
+                Accent = darkElectricBlue,
 
                 Pos = blueGreen,
                 Neg = red,
                 Imp = paleYellow,
-                Ally = darkElectricBlue,
+                Ally = paleBlue,
                 Opp = red,
                 Turn = darkPink,
                 Hp = paleGreen,
                 Sp = darkPink,
                 Shield = paleBlue,
                 Bloom = magenta,
-                Buff = darkElectricBlue,
+                Buff = dirtyBlue,
                 Skill = blueGreen,
                 Element = blueGreen,
-                Passive = darkElectricBlue,
+                Passive = dirtyBlue,
                 Stat = paleYellow,
                 Cooldown = electricBlue,
 

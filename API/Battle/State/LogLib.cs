@@ -4,7 +4,7 @@ using API.Graphics;
 namespace API.Battle.State;
 
 public static class LogLib {
-    internal static readonly Label _BattleLog = new() { Position = new(World.W2 - 300 + 800, 405) };
+    internal static readonly Label _BattleLog = new() { Position = new(World.W2 - 300, 405) };
 
     internal static readonly List<string> _LogText = new(1024); // todo decide capacity
 

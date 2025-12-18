@@ -182,7 +182,7 @@ public sealed class Unit {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
         StringBuilder sb = new($"{ThemeColor.Stat.Str()}{Lang.Affinities}:{ThemeColor.White.Str()} ");
-        foreach (Element element in Core.Elements) {
+        foreach (Element element in Core.Elements.Where(e => e != Elements.Vis)) {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
 
