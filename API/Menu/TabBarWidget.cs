@@ -85,7 +85,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
         this.OptCount = capacity;
 
-        InputLib.DeviceChange += this._UpdateInputPrompt;
+        InputLib.OnDeviceChange += this._UpdateInputPrompt;
     }
 
     public TabBarWidget(Vector2 pos, params string[] optionText) : this(pos, optionText.Length) {

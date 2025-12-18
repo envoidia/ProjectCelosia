@@ -24,7 +24,7 @@ public static class StateMachine {
     static StateMachine() {
         Stage.Add(_InputPrompt);
 
-        InputLib.DeviceChange += UpdateInputPrompt;
+        InputLib.OnDeviceChange += UpdateInputPrompt;
     }
 
     /// <returns>

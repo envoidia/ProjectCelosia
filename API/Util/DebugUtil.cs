@@ -107,7 +107,7 @@ public static class DebugUtil {
         // todo this should only tick when its visible
         _DebugInfoKeyHeld.AddRoutine(InputLib._TrackInput);
 
-        InputLib.DeviceChange += static () => {
+        InputLib.OnDeviceChange += static () => {
             _DebugInfoL.Text = _GetInfoLText();
             _DebugInfoHelp.Text = _GetInfoHelpText();
             _DebugInfoKeyNames.Text = _GetKeyNameText();

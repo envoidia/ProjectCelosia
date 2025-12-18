@@ -263,15 +263,15 @@ internal sealed class _InspectLib {
         // Assert.LenIs(_Actors, _ActorCount);
         // Assert.LenIs(_AnimPrimActors, _AnimPrimActorCount);
 
+        // Initial translate and subscribe to event
         _Translate();
+        Language.Language.OnChange += _Translate;
     }
 
     /// <summary>
     /// Sets the text of menu elements
     /// </summary>
-    // todo how often should this be called? currently just once, should also be re-called
-    // on lang change and if unit names can change that part must be re-called on open
-    // ontranslate event sent out to listeners?
+    // todo if unit names can change that part must be re-called on open
     internal static void _Translate() {
         // Stat types
         string[] names = [Lang.InfoMult, Lang.InfoMod, Lang.InfoOther];

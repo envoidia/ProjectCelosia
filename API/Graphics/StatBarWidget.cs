@@ -14,7 +14,7 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         get;
         init {
             field = value;
-            this.ThemeChange(null, Settings.Theme);
+            this.ThemeChange();
         }
     } = ThemeColor.Neg;
 
@@ -22,7 +22,7 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         get;
         init {
             field = value;
-            this.ThemeChange(null, Settings.Theme);
+            this.ThemeChange();
         }
     } = ThemeColor.Stat;
 
@@ -56,10 +56,10 @@ public sealed class StatBarWidget : StatBarWidgetBase {
     private Color _c0;
     private Color _c1;
 
-    static StatBarWidget() => Theme.Change += ThemeChangeStatic;
+    static StatBarWidget() => Theme.OnChange += ThemeChangeStatic;
 
     public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
-        : base(pos, width, renderPriority, text) => this.ThemeChange(null, Settings.Theme);
+        : base(pos, width, renderPriority, text) => this.ThemeChange();
 
     public override void Draw(GameTime gameTime) {
         // todo animate between stages whenever it changes
@@ -98,13 +98,13 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         }
     }
 
-    public override void ThemeChange(Theme? prevTheme, Theme newTheme) {
-        this._c0 = newTheme.Get(this.ColorLayer0);
-        this._c1 = newTheme.Get(this.ColorLayer1);
+    public override void ThemeChange() {
+        this._c0 = Settings.Theme.Get(this.ColorLayer0);
+        this._c1 = Settings.Theme.Get(this.ColorLayer1);
     }
 
-    private static void ThemeChangeStatic(Theme prevTheme, Theme newTheme) =>
-        _layers = [newTheme.Pos, newTheme.StatBarLayer4, newTheme.StatBarLayer5, newTheme.White];
+    private static void ThemeChangeStatic() =>
+        _layers = [Settings.Theme.Pos, Settings.Theme.StatBarLayer4, Settings.Theme.StatBarLayer5, Settings.Theme.White];
 
     private void _UpdateText() {
         this.Text.Text = $"{ThemeColor.Black.Str()}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";

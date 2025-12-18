@@ -15,7 +15,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         get;
         set {
             field = value;
-            this._Update(Settings.Theme);
+            this._Update();
         }
     }
 
@@ -23,7 +23,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         get;
         set {
             field = value;
-            this._Update(Settings.Theme);
+            this._Update();
         }
     }
 
@@ -31,7 +31,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         get;
         set {
             field = value;
-            this._Update(Settings.Theme);
+            this._Update();
         }
     }
 
@@ -66,13 +66,12 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         }
     }
 
-    public override void ThemeChange(Theme prevTheme, Theme newTheme) => this._Update(newTheme);
+    public override void ThemeChange() => this._Update();
 
-    // todo the colors seem to default wrong and only get corrected when you swap theme????
-    private void _Update(Theme t) {
+    private void _Update() {
         float hpLen = this.Hp / (float) this.MaxHp;
         this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, Math.Max(hpLen - 1, 0)];
-        this._layers = [t.Hp, t.Shield, t.Overheal];
+        this._layers = [Settings.Theme.Hp, Settings.Theme.Shield, Settings.Theme.Overheal];
 
         Array.Sort(this._barLens, this._layers);
 

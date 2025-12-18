@@ -33,7 +33,7 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
         this.Width = width;
         this.Title.Text = text;
 
-        Theme.Change += this.ThemeChange;
+        Theme.OnChange += this.ThemeChange;
 
         this.CalcLayout();
     }
@@ -61,5 +61,5 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
 
     public abstract void Draw(GameTime gameTime);
 
-    public abstract void ThemeChange(Theme prevTheme, Theme newTheme);
+    public abstract void ThemeChange();
 }

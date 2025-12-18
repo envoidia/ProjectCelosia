@@ -35,14 +35,14 @@ public sealed class Label : IActor {
 
         this._bgC = Settings.Theme.Get(this.BackgroundColor);
 
-        Theme.Change += new Theme.ThemeChange((prevTheme, newTheme) => {
-            this._bgC = newTheme.Get(this.BackgroundColor);
+        Theme.OnChange += () => {
+            this._bgC = Settings.Theme.Get(this.BackgroundColor);
 
             // Force text to re-render
             string t = this.Text;
             this.Text = "";
             this.Text = t;
-        });
+        };
     }
 
     public override string ToString() => $"Label: {this._RichTextLayout.Text}";

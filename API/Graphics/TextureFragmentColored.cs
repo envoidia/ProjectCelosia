@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace API.Graphics;
 
-// todo find a way to resize
+// todo find a way to resize icons / scale font size
 public sealed class TextureFragmentColored : IRenderable {
     public Texture2D Texture { get; }
     public Rectangle Region { get; }

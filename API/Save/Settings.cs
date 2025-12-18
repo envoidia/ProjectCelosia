@@ -3,20 +3,27 @@ using API.Graphics;
 namespace API.Save;
 
 public static class Settings {
+    #region General
+
+    public static Language.Language Language {
+        get;
+        set {
+            field = value;
+            API.Language.Language._Change();
+        }
+    } = API.Language.Language.English;
+
+    #endregion
+
     #region Visual
 
     public static Theme Theme {
         get;
         set {
-            Theme._Change(field, value);
             field = value;
+            Theme._Change();
         }
     } = Theme.Apollo;
-
-    static Settings() {
-        // Set up default theme
-        Theme._ChangeFSSColors(Theme);
-    }
 
     #endregion
 
@@ -40,4 +47,9 @@ public static class Settings {
     public static bool SelectOpponentMoves { get; } = false;
 
     #endregion
+
+    static Settings() {
+        // Set up default theme
+        Theme._ChangeFSSColors();
+    }
 }

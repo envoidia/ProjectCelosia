@@ -4,6 +4,7 @@ using System.Text;
 using API.Extensions;
 using API.Modding;
 using API.Name;
+using API.Save;
 using API.Util;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
@@ -14,12 +15,10 @@ namespace API.Graphics;
 /// Color theme
 /// </summary>
 public class Theme : IDescribable {
-    public delegate void ThemeChange(Theme old, Theme @new);
-
     /// <summary>
     /// Notified when the current <c>Theme</c> changes
     /// </summary>
-    public static event ThemeChange? Change;
+    public static event Action? OnChange;
 
     public GameMod? Source { get; }
 
@@ -115,6 +114,8 @@ public class Theme : IDescribable {
             Color gray = Colors.FromRgb(0x545454);
             Color black = Colors.FromRgb(0x1f1f1f);
 
+            Color paleYellow = Colors.FromRgb(0xDCDCAA);
+
             Color green = Colors.FromRgb(0x76b668);
             Color paleBlueGreen = Colors.FromRgb(0x66c8cc);
             Color blueGreen = Colors.FromRgb(0x32bb99);
@@ -143,7 +144,7 @@ public class Theme : IDescribable {
 
                 Pos = blueGreen,
                 Neg = salmon,
-                Imp = blue,
+                Imp = paleYellow,
                 Ally = electricBlue,
                 Opp = darkPink,
                 Turn = bluePurple,
@@ -174,7 +175,7 @@ public class Theme : IDescribable {
                 Fulgur = lightPink,
                 Ventus = green,
                 Terra = darkPink,
-                Lux = palePurple,
+                Lux = paleYellow,
                 Malum = lightPurple
             };
         }
@@ -719,19 +720,19 @@ public class Theme : IDescribable {
         }
     }
 
-    internal static void _Change(Theme old, Theme @new) {
-        _ChangeFSSColors(@new);
-        Change?.Invoke(old, @new);
+    internal static void _Change() {
+        _ChangeFSSColors();
+        OnChange?.Invoke();
     }
 
     /// <summary>
     /// Add custom color aliases to FSS's text processing for the given palette
     /// </summary>
-    internal static void _ChangeFSSColors(Theme @new) {
+    internal static void _ChangeFSSColors() {
         Dictionary<string, Color> colorMap = [];
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>()) {
-            colorMap[tc.ToString().FirstToLower()] = @new.Get(tc);
+            colorMap[tc.ToString().FirstToLower()] = Settings.Theme.Get(tc);
         }
         foreach (KeyValuePair<string, Color> kvp in colorMap) {
             ColorStorage.Colors[kvp.Key] = new() { Color = kvp.Value };

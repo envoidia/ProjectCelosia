@@ -14,7 +14,7 @@
         <ProjectReference Include="..\API\API.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Update="Lang.resx">
+        <EmbeddedResource Update="Language/Lang.resx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>Lang.Designer.cs</LastGenOutput>
