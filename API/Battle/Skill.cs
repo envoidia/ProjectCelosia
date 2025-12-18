@@ -46,10 +46,10 @@ public sealed class Skill : ComplexDescribable, _IModItem {
     // todo multiple elements
     public Element GetElement() {
         foreach (SkillEffect skillEffect in this.SkillEffects) {
-            if (skillEffect.Element != Elements.Vis) return skillEffect.Element;
+            if (skillEffect.Element != Element.Vis) return skillEffect.Element;
         }
 
-        return Elements.Vis;
+        return Element.Vis;
     }
 
     /// <returns>
