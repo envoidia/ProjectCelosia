@@ -6,7 +6,7 @@ using API.Util;
 
 namespace API.Battle;
 
-public sealed class StatMod : _IModItem, INameable {
+public sealed class StatMod : INameable {
     public bool IsPositive { get; }
 
     public GameMod? Source { get; }
@@ -27,8 +27,8 @@ public sealed class StatMod : _IModItem, INameable {
         _ => val.Format(ThemeColor.Imp)
     };
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
 }
 
 public static class StatMods {

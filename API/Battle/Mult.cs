@@ -6,7 +6,11 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Mult : _IModItem, INameable {
+/// <summary>
+/// A multiplier stat
+/// </summary>
+// todo IDescribable?
+public sealed class Mult : INameable {
     public bool IsPositive { get; }
     public int MinValue { get; init; } = 100;
 
@@ -27,8 +31,8 @@ public sealed class Mult : _IModItem, INameable {
     public string FormatChange(float val) =>
         Math.Max(val, this.MinValue).FormatPerc(true, isPositive: this.IsPositive);
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
 
 }
 

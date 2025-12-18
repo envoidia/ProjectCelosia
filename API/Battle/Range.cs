@@ -11,7 +11,7 @@ namespace API.Battle;
 /// <summary>
 /// The reach that a skill can have
 /// </summary>
-public sealed class Range : _IModItem, IDescribable {
+public sealed class Range : IDescribable {
     public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] _Targets { get; }
@@ -57,9 +57,9 @@ public sealed class Range : _IModItem, IDescribable {
         return [.. pos];
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
 
 }
 

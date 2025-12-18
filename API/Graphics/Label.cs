@@ -53,7 +53,7 @@ public sealed class Label : IActor {
         // todo is this return good
         if (string.IsNullOrWhiteSpace(this.Text)) return;
 
-        if (this.HasBackground) this.Data.DrawBackground(_bgC);
+        if (this.HasBackground) this.Data.DrawBackground(this._bgC);
 
         this._RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,
             (float) this.Prog), Settings.Theme.Fg, 0f, this.Origin.ToVector2());

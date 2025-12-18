@@ -5,7 +5,7 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class BoolStat : _IModItem, INameable {
+public sealed class BoolStat : INameable {
     public string LogMsgKey { get; }
     public bool IsPositive { get; }
     public bool PossessiveNameInLogMsg { get; }
@@ -27,8 +27,8 @@ public sealed class BoolStat : _IModItem, INameable {
         Core.BoolStats.Add(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
 
     // todo format?
 }

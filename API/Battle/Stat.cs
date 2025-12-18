@@ -5,12 +5,11 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Stat : _IModItem, INameable {
+public sealed class Stat : INameable {
     public StageType? StageType { get; }
 
     public GameMod? Source { get; }
     public string KeyName { get; }
-
 
     public Stat(GameMod? source, string keyName, StageType? stageType) {
         this.Source = source;
@@ -21,8 +20,8 @@ public sealed class Stat : _IModItem, INameable {
         Core.Stats.Add(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
 }
 
 public static class Stats {

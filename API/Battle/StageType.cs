@@ -5,7 +5,7 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class StageType : _IModItem, IDescribable {
+public sealed class StageType : IDescribable {
     public Stat[] Stats { get; }
 
     public GameMod? Source { get; }
@@ -25,13 +25,13 @@ public sealed class StageType : _IModItem, IDescribable {
     }
 
     public string GetName(ThemeColor color, GameMod? mod = null) =>
-        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod)}";
+        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod ?? this.Source)}";
 
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Buff, mod);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Buff, mod ?? this.Source);
 
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
 
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
 }
 
 public static class StageTypes {

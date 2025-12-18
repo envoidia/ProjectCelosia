@@ -8,7 +8,7 @@ namespace API.Battle;
 /// <summary>
 /// An elemental type that can be used for <c>Skill</c>s
 /// </summary>
-public sealed class Element : _IModItem, INameable {
+public sealed class Element : INameable {
     /// <summary>
     /// Base/no element
     /// </summary>
@@ -47,6 +47,6 @@ public sealed class Element : _IModItem, INameable {
     }
 
     public string GetName(ThemeColor color, GameMod? mod = null) =>
-        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod)}";
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Element, mod);
+        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(mod ?? this.Source)}";
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Element, mod ?? this.Source);
 }

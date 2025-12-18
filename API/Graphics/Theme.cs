@@ -11,7 +11,7 @@ namespace API.Graphics;
 /// <summary>
 /// Color theme
 /// </summary>
-public class Theme : _IModItem, IDescribable {
+public class Theme : IDescribable {
     public delegate void ThemeChange(Theme prevTheme, Theme newTheme);
 
     /// <summary>
@@ -776,9 +776,9 @@ public class Theme : _IModItem, IDescribable {
         }
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
 
     #endregion
 }

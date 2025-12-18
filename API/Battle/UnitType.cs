@@ -7,7 +7,7 @@ using API.Name;
 namespace API.Battle;
 
 // todo represent available and equipped skills and equipped item
-public sealed class UnitType : _IModItem, IDescribable {
+public sealed class UnitType : IDescribable {
 
     public Dictionary<Stat, int> Stats { get; }
     internal readonly Dictionary<Element, int> _Affinities; // todo change naming rule
@@ -30,9 +30,9 @@ public sealed class UnitType : _IModItem, IDescribable {
         Core.UnitTypes.Add(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
 
 }
 

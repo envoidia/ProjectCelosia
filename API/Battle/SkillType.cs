@@ -5,7 +5,7 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class SkillType : _IModItem, INameable {
+public sealed class SkillType : INameable {
     public GameMod? Source { get; }
     public string KeyName { get; }
 
@@ -16,8 +16,8 @@ public sealed class SkillType : _IModItem, INameable {
         Core.SkillTypes.Add(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod);
+    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
+    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
 }
 
 public static class SkillTypes {
