@@ -17,11 +17,11 @@ public sealed class UnitType : _IModItem, IDescribable {
     public string KeyName { get; }
     public string KeyDesc { get; }
 
-    public UnitType(GameMod? source, string keyName, string keyDesc, Dictionary<Stat, int> stats,
+    public UnitType(GameMod? source, string keyName, Dictionary<Stat, int> stats,
         Dictionary<Element, int> affinities, params Passive[] passives) {
         this.Source = source;
         this.KeyName = keyName;
-        this.KeyDesc = keyDesc;
+        this.KeyDesc = $"{keyName}Desc";
 
         this.Stats = stats;
         this._Affinities = affinities;
@@ -37,7 +37,7 @@ public sealed class UnitType : _IModItem, IDescribable {
 }
 
 public static class UnitTypes {
-    public static readonly UnitType TestUnitType = new(null, "TestUnitType", "Todo", new Dictionary<Stat, int>() {
+    public static readonly UnitType TestUnitType = new(null, "TestUnitType", new Dictionary<Stat, int>() {
         [Stats.Hp] = 100, [Stats.Str] = 100, [Stats.Mag] = 100, [Stats.Fth] = 100,
         [Stats.Amr] = 100, [Stats.Res] = 100, [Stats.Agi] = 100
     }, []);

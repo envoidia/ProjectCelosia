@@ -4,9 +4,9 @@ using API.Name;
 namespace API.Battle;
 
 /// <summary>
-/// An equippable item. Must also be IDescribable
+/// An equippable item
 /// </summary>
-public interface IEquippable {
+public interface IEquippable : IDescribable {
     void Apply(Unit unit, bool giving);
 
     void Equip(Unit unit) => this.Apply(unit, true);
@@ -21,5 +21,5 @@ public interface IEquippable {
 
         return inclusionsCopy;
     }
-    
+
 }

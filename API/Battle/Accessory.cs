@@ -10,8 +10,8 @@ public sealed class Accessory : ComplexDescribable, _IModItem, IEquippable {
 
     public GameMod? Source { get; }
 
-    public Accessory(GameMod? source, string keyName, string icon, string keyDesc) :
-        base(keyName, icon, keyDesc) {
+    public Accessory(GameMod? source, string keyName, string icon) :
+        base(keyName, icon, $"{keyName}Desc") {
         this.Source = source;
         Core.Accessories.Add(this);
     }

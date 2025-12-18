@@ -14,11 +14,11 @@ public sealed class StageType : _IModItem, IDescribable {
     public string Icon { get; }
     public string KeyDesc { get; }
 
-    public StageType(GameMod? source, string keyName, string keyDesc, string icon, params Stat[] stats) {
+    public StageType(GameMod? source, string keyName, string icon, params Stat[] stats) {
         this.Source = source;
         this.KeyName = keyName;
+        this.KeyDesc = $"{keyName}Desc";
         this.Icon = icon;
-        this.KeyDesc = keyDesc;
 
         this.Stats = stats;
         Core.StageTypes.Add(this);
@@ -35,22 +35,19 @@ public sealed class StageType : _IModItem, IDescribable {
 }
 
 public static class StageTypes {
-    public static readonly StageType None = new(null, "blank", "", "");
-
-    // todo hotswapping??
     public static readonly StageType Atk =
-        new(null, "StageAtk", "todo",
+        new(null, "StageAtk",
             $"{ThemeColor.Atk.Str()}/i[energy-sword]", Stats.Str, Stats.Mag);
 
     public static readonly StageType Def =
-        new(null, "StageDef", "todo",
+        new(null, "StageDef",
             $"{ThemeColor.Def.Str()}/i[rosa-shield]", Stats.Amr, Stats.Res);
 
     public static readonly StageType Fth =
-        new(null, "StatFth", "todo",
+        new(null, "StatFth",
             $"{ThemeColor.Fth.Str()}/i[star-altar]", Stats.Fth);
 
     public static readonly StageType Agi =
-        new(null, "StatAgi", "todo",
+        new(null, "StatAgi",
             $"{ThemeColor.Agi.Str()}/i[walking-boot]", Stats.Agi);
 }

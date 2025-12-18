@@ -55,7 +55,7 @@ public static class ModLoader {
             })
             .Select(prop => {
                 DebugUtil.Log(string.Format(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath)),
-                "ModLoader");
+                nameof(ModLoader));
                 return prop.GetValue(null);
             })
             .Cast<GameMod>());

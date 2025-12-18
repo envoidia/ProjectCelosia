@@ -62,7 +62,7 @@ public enum DescArgType {
 // todo must take IDescribable
 
 /// <summary>
-/// A formatting argument for the description. Can be an <c>INameable</c> or a <c>string</c>
+/// A formatting argument for the description. Can be an <c>IDescribable</c> or a <c>string</c>
 /// </summary>
 public sealed class DescArg(OneOf<string, ComplexDescribable> value, DescArgType descriptionArgType = DescArgType.PlainText) {
     public string GetString(GameMod? mod) => value.Match(

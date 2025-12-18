@@ -16,7 +16,7 @@ namespace API.Util;
 public static class DebugUtil {
     // todo show size of all lists (IModItems, etc)
     private const int _Mb = 1024 * 1024;
-    private const string _ClassName = "DebugUtil";
+    private const string _ClassName = nameof(DebugUtil);
 
     private const int _LogLimit = 8;
     private static readonly List<string> _LogText = new(8);

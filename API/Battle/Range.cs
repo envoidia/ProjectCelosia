@@ -8,7 +8,10 @@ using static API.Battle.Target;
 
 namespace API.Battle;
 
-public sealed class Range : _IModItem, INameable {
+/// <summary>
+/// The reach that a skill can have
+/// </summary>
+public sealed class Range : _IModItem, IDescribable {
     public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] _Targets { get; }
@@ -18,11 +21,12 @@ public sealed class Range : _IModItem, INameable {
 
     public GameMod? Source { get; }
     public string KeyName { get; }
-
+    public string KeyDesc { get; }
 
     public Range(GameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) {
         this.Source = source;
         this.KeyName = keyName;
+        this.KeyDesc = $"{keyName}Desc";
 
         this.RangeVertical = rangeVertical;
         this.Side = side;
@@ -55,6 +59,7 @@ public sealed class Range : _IModItem, INameable {
 
     public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
     public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
 
 }
 

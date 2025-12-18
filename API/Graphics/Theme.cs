@@ -11,7 +11,7 @@ namespace API.Graphics;
 /// <summary>
 /// Color theme
 /// </summary>
-public class Theme : _IModItem, INameable {
+public class Theme : _IModItem, IDescribable {
     public delegate void ThemeChange(Theme prevTheme, Theme newTheme);
 
     /// <summary>
@@ -22,10 +22,12 @@ public class Theme : _IModItem, INameable {
     public GameMod? Source { get; }
 
     public string KeyName { get; }
+    public string KeyDesc { get; }
 
     public Theme(GameMod? source, string keyName) {
         this.Source = source;
         this.KeyName = keyName;
+        this.KeyDesc = $"{keyName}Desc";
 
         Core.Themes.Add(this);
     }
@@ -55,7 +57,7 @@ public class Theme : _IModItem, INameable {
             Color[] grayBlues = Colors.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
             Color[] whites = Colors.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
 
-            Apollo = new(null, "Apollo") {
+            Apollo = new(null, "ThemeApollo") {
                 White = whites[3],
                 Black = grayBlues[0],
                 TransBlack = new(grayBlues[0], TransAmt),
@@ -128,7 +130,7 @@ public class Theme : _IModItem, INameable {
             Color lightPink = Colors.FromRgb(0xe9aee4);
             Color darkPink = Colors.FromRgb(0xda86d1);
 
-            Void = new(null, "Void") {
+            Void = new(null, "ThemeVoid") {
                 White = white,
                 Black = black,
                 TransBlack = new(black, TransAmt),
@@ -202,7 +204,7 @@ public class Theme : _IModItem, INameable {
             Color darkPink = Colors.FromRgb(0xC586C0);
             Color magenta = Colors.FromRgb(0xd96fd5);
 
-            VSCode = new(null, "VSCode") {
+            VSCode = new(null, "ThemeVSCode") {
                 White = white,
                 Black = black,
                 TransBlack = new(black, TransAmt),
@@ -258,7 +260,7 @@ public class Theme : _IModItem, INameable {
             ColorCode lightRed = new(255, 81, 81);
             ColorCode elecBlue = new(24, 152, 255);
 
-            HighContrast = new(null, "HighContrast") {
+            HighContrast = new(null, "ThemeHighContrast") {
                 White = Color.White,
                 Black = Color.Black,
                 TransBlack = new(Color.Black, TransAmt),
@@ -327,7 +329,7 @@ public class Theme : _IModItem, INameable {
             Color hotPink = Colors.FromRgb(0xe8418f);
             Color redPink = Colors.FromRgb(0xe3004f);
 
-            MikuMikuTheme = new(null, "MikuMikuTheme") {
+            MikuMikuTheme = new(null, "ThemeMikuMikuTheme") {
                 White = white,
                 Black = black,
                 TransBlack = new(black, TransAmt),
@@ -383,7 +385,7 @@ public class Theme : _IModItem, INameable {
             for (int i = 0; i < r.Length; i++) r[i] = new((i * 23) + 26, 0, 0);
 
 
-            RedMode = new(null, "RedMode") {
+            RedMode = new(null, "ThemeRedMode") {
                 White = r[9],
                 Black = r[0],
                 TransBlack = new(r[0], TransAmt),
@@ -651,6 +653,8 @@ public class Theme : _IModItem, INameable {
 
     #endregion
 
+    #region Methods
+
     public ColorCode Get(ThemeColor tc) => tc switch {
         ThemeColor.White => this.White,
         ThemeColor.Black => this.Black,
@@ -774,4 +778,7 @@ public class Theme : _IModItem, INameable {
 
     public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod);
     public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod);
+    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod);
+
+    #endregion
 }

@@ -144,23 +144,41 @@ Loaded Mods: {7}</value>
         <value>Debug Info</value>
     </data>
     <!-- Themes -->
-    <data name="Apollo" xml:space="preserve">
+    <data name="ThemeApollo" xml:space="preserve">
         <value>Apollo</value>
     </data>
-    <data name="Void" xml:space="preserve">
+    <data name="ThemeApolloDesc" xml:space="preserve">
+        <value>todo</value>
+    </data>
+    <data name="ThemeVoid" xml:space="preserve">
         <value>Void</value>
     </data>
-    <data name="MikuMikuTheme" xml:space="preserve">
+    <data name="ThemeVoidDesc" xml:space="preserve">
+        <value>todo</value>
+    </data>
+    <data name="ThemeMikuMikuTheme" xml:space="preserve">
         <value>MikuMikuTheme</value>
     </data>
-    <data name="VSCode" xml:space="preserve">
+    <data name="ThemeMikuMikuThemeDesc" xml:space="preserve">
+        <value>todo</value>
+    </data>
+    <data name="ThemeVSCode" xml:space="preserve">
         <value>VSCode</value>
     </data>
-    <data name="HighContrast" xml:space="preserve">
+    <data name="ThemeVSCodeDesc" xml:space="preserve">
+        <value>todo</value>
+    </data>
+    <data name="ThemeHighContrast" xml:space="preserve">
         <value>High-Contrast</value>
     </data>
-    <data name="RedMode" xml:space="preserve">
+    <data name="ThemeHighContrastDesc" xml:space="preserve">
+        <value>todo</value>
+    </data>
+    <data name="ThemeRedMode" xml:space="preserve">
         <value>RED MODE!!!</value>
+    </data>
+    <data name="ThemeRedModeDesc" xml:space="preserve">
+        <value>todo</value>
     </data>
     <!--Buttons
     todo remove if these arent used-->

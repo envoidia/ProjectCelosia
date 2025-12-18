@@ -12,7 +12,8 @@ public sealed class Weapon : ComplexDescribable, _IModItem, IEquippable {
 
     public GameMod? Source { get; }
 
-    public Weapon(GameMod source, string keyName, string keyDesc, string icon, Dictionary<Element, int> affinities) : base(keyName, icon, keyDesc) {
+    public Weapon(GameMod source, string keyName, string icon, Dictionary<Element, int> affinities)
+        : base(keyName, icon, $"{keyName}Desc") {
         this.Source = source;
         this.Affinities = affinities;
         Core.Weapons.Add(this);

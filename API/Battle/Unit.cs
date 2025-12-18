@@ -70,7 +70,6 @@ public sealed class Unit {
     public IEquippable? Equipped {
         get;
         set {
-            if (value is not null) Assert.Is<IDescribable>(value);
             field?.Unequip(this);
             field = value;
             field?.Equip(this);
