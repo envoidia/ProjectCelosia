@@ -148,6 +148,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// <summary>
     /// Draws this if it is visible and performs its <c>Routine</c>s
     /// </summary>
+    // todo only act if not visible if possible
     public void Act(GameTime gameTime) {
         // Execute routines
         for (int i = 0; i < this._routines.Count; i++) {

@@ -5,7 +5,7 @@ namespace API.Input;
 
 public enum InputDevice {
     Keyboard,
-    NintendoController,
+    SwitchController,
     PlaystationController,
     XboxController
 }
@@ -14,7 +14,7 @@ public static class InputDeviceExtensions {
     // todo support controller remapping
     extension(InputDevice @this) {
         private string GetGlyphIdentifier() => @this switch {
-            InputDevice.NintendoController => "N",
+            InputDevice.SwitchController => "S",
             InputDevice.PlaystationController => "P",
             InputDevice.XboxController => "X",
             _ => throw new ClosedEnumsWhenException()
@@ -31,7 +31,7 @@ public static class InputDeviceExtensions {
                     }
 
                     return $"{Keybinds.Left.Button.GetGlyph(@this)}//{Keybinds.Right.Button.GetGlyph(@this)}"
-                        .Replace($"/i[{@this.GetGlyphIdentifier()}DL]//i[{@this.GetGlyphIdentifier()}DR]",
+                        .Replace($"/i[{@this.GetGlyphIdentifier()}DL]///i[{@this.GetGlyphIdentifier()}DR]",
                             $"/i[{@this.GetGlyphIdentifier()}DX]");
                 case KeybindId.UpDown:
                     if (@this == InputDevice.Keyboard) {
@@ -39,7 +39,7 @@ public static class InputDeviceExtensions {
                     }
 
                     return $"{Keybinds.Up.Button.GetGlyph(@this)}//{Keybinds.Down.Button.GetGlyph(@this)}"
-                        .Replace($"/i[{@this.GetGlyphIdentifier()}DU]//i[{@this.GetGlyphIdentifier()}DD]",
+                        .Replace($"/i[{@this.GetGlyphIdentifier()}DU]///i[{@this.GetGlyphIdentifier()}DD]",
                             $"/i[{@this.GetGlyphIdentifier()}DY]");
                 case KeybindId.LeftRightUpDown:
                     if (@this == InputDevice.Keyboard) {
@@ -48,7 +48,7 @@ public static class InputDeviceExtensions {
 
                     return $"{Keybinds.Left.Button.GetGlyph(@this)}//{Keybinds.Right.Button.GetGlyph(@this)}//{Keybinds.Up.Button.GetGlyph(@this)}//{Keybinds.Down.Button.GetGlyph(@this)}"
                         .Replace(
-                            $"/i[{@this.GetGlyphIdentifier()}DL]//i[{@this.GetGlyphIdentifier()}DR]//i[{@this.GetGlyphIdentifier()}DU]//i[{@this.GetGlyphIdentifier()}DD]",
+                            $"/i[{@this.GetGlyphIdentifier()}DL]///i[{@this.GetGlyphIdentifier()}DR]///i[{@this.GetGlyphIdentifier()}DU]///i[{@this.GetGlyphIdentifier()}DD]",
                             $"/i[{@this.GetGlyphIdentifier()}D]");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(id), id, Lang.ErrGetMergedGlyphKeybindId);

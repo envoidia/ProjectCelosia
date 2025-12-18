@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using API.Extensions;
 using API.Graphics;
+using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
@@ -22,6 +23,8 @@ public static class StateMachine {
 
     static StateMachine() {
         Stage.Add(_InputPrompt);
+
+        InputLib.DeviceChange += UpdateInputPrompt;
     }
 
     /// <returns>

@@ -20,7 +20,11 @@ public static class InputLib {
 
     private static InputDevice _PreviousInputSource { get; set; } = InputDevice.Keyboard;
     public static InputDevice LastInputSource { get; private set; } = InputDevice.Keyboard;
-    public static bool InputDeviceChanged { get; private set; } = true;
+
+    /// <summary>
+    /// Notified when the current <c>InputDevice</c> changes
+    /// </summary>
+    public static event Action? DeviceChange;
 
     /// <summary>
     /// How long each standard <c>Keybind</c> has been held down for
@@ -94,12 +98,10 @@ public static class InputLib {
         _elapsedTime = gameTime.ElapsedGameTime;
 
         if (_PreviousInputSource != LastInputSource) {
+            DeviceChange?.Invoke();
             _PreviousInputSource = LastInputSource;
-            InputDeviceChanged = true;
             return;
         }
-
-        InputDeviceChanged = false;
 
     }
 

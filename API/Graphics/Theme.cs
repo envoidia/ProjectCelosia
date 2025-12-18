@@ -12,7 +12,7 @@ namespace API.Graphics;
 /// Color theme
 /// </summary>
 public class Theme : IDescribable {
-    public delegate void ThemeChange(Theme prevTheme, Theme newTheme);
+    public delegate void ThemeChange(Theme old, Theme @new);
 
     /// <summary>
     /// Notified when the current <c>Theme</c> changes
@@ -44,10 +44,10 @@ public class Theme : IDescribable {
     static Theme() {
         const int TransAmt = 150;
 
+        // https://lospec.com/palette-list/apollo
         #region Apollo
 
         {
-            // https://lospec.com/palette-list/apollo
             Color[] blues = Colors.FromRgbs(0x172038, 0x253a5e, 0x3c5e8b, 0x4f8fba, 0x73bed3, 0xa4dddb);
             Color[] greens = Colors.FromRgbs(0x19332d, 0x25562e, 0x468232, 0x75a743, 0xa8ca58, 0xd0da91);
             Color[] beiges = Colors.FromRgbs(0x4d2b32, 0x7a4841, 0xad7757, 0xc09473, 0xd7b594, 0xe7d5b3);
@@ -146,7 +146,7 @@ public class Theme : IDescribable {
                 Opp = darkPink,
                 Turn = bluePurple,
                 Hp = green,
-                Sp = lightPurple,
+                Sp = bluePurple,
                 Shield = electricBlue,
                 Bloom = lightPink,
                 Buff = lightPurple,
@@ -158,7 +158,7 @@ public class Theme : IDescribable {
 
                 SpBack = palePurple,
                 Overheal = paleBlue,
-                StatBarLayer4 = paleBlue,
+                StatBarLayer4 = bluePurple,
                 StatBarLayer5 = palePurple,
 
                 Atk = darkPink,
@@ -220,7 +220,7 @@ public class Theme : IDescribable {
                 Opp = red,
                 Turn = darkPink,
                 Hp = paleGreen,
-                Sp = darkPink,
+                Sp = paleBlue,
                 Shield = paleBlue,
                 Bloom = magenta,
                 Buff = dirtyBlue,
@@ -256,6 +256,7 @@ public class Theme : IDescribable {
 
         #region HighContrast
 
+        // todo rework
         {
             ColorCode lightRed = new(255, 81, 81);
             ColorCode elecBlue = new(24, 152, 255);
@@ -286,7 +287,7 @@ public class Theme : IDescribable {
                 Stat = new(222, 255, 129),
                 Cooldown = elecBlue,
 
-                SpBack = new(155, 45, 255),
+                SpBack = Colors.FromRgb(0xd78bff),
                 Overheal = new(238, 130, 239),
                 StatBarLayer4 = Color.Cyan,
                 StatBarLayer5 = Color.Pink,
@@ -384,51 +385,52 @@ public class Theme : IDescribable {
             Color[] r = new Color[10];
             for (int i = 0; i < r.Length; i++) r[i] = new((i * 23) + 26, 0, 0);
 
+            Color white = new(255, 100, 100);
 
             RedMode = new(null, "ThemeRedMode") {
-                White = r[9],
+                White = white,
                 Black = r[0],
                 TransBlack = new(r[0], TransAmt),
 
-                Fg = r[9],
+                Fg = white,
                 Bg = r[0],
                 Accent = r[2],
 
-                Pos = r[4],
-                Neg = r[2],
-                Imp = r[3],
-                Ally = r[4],
-                Opp = r[5],
-                Turn = r[6],
-                Hp = r[4],
-                Sp = r[5],
-                Shield = r[6],
-                Bloom = r[6],
-                Buff = r[3],
-                Skill = r[4],
-                Element = r[4],
-                Passive = r[3],
-                Stat = r[7],
-                Cooldown = r[4],
+                Pos = r[9],
+                Neg = r[7],
+                Imp = r[8],
+                Ally = r[9],
+                Opp = r[7],
+                Turn = r[8],
+                Hp = r[9],
+                Sp = r[6],
+                Shield = r[7],
+                Bloom = r[8],
+                Buff = r[7],
+                Skill = r[7],
+                Element = r[7],
+                Passive = r[7],
+                Stat = r[8],
+                Cooldown = r[8],
 
-                SpBack = r[4],
+                SpBack = r[9],
                 Overheal = r[5],
-                StatBarLayer4 = r[5],
-                StatBarLayer5 = r[7],
+                StatBarLayer4 = r[8],
+                StatBarLayer5 = r[6],
 
-                Atk = r[8],
-                Def = r[4],
-                Fth = r[5],
-                Agi = r[3],
+                Atk = r[7],
+                Def = r[7],
+                Fth = r[7],
+                Agi = r[7],
 
-                Vis = r[7],
+                Vis = r[9],
                 Ignis = r[6],
-                Glacies = r[5],
-                Fulgur = r[4],
-                Ventus = r[4],
-                Terra = r[3],
+                Glacies = r[7],
+                Fulgur = r[7],
+                Ventus = r[7],
+                Terra = r[5],
                 Lux = r[8],
-                Malum = r[7]
+                Malum = r[6]
             };
         }
 
@@ -715,66 +717,112 @@ public class Theme : IDescribable {
         }
     }
 
-    internal static void _Change(Theme prevTheme, Theme newTheme) {
-        _ChangeFSSColors(newTheme);
-        Change?.Invoke(prevTheme, newTheme);
+    internal static void _Change(Theme old, Theme @new) {
+        _ChangeFSSColors(@new);
+        Change?.Invoke(old, @new);
     }
 
     /// <summary>
     /// Add custom color aliases to FSS's text processing for the given palette
     /// </summary>
     // todo decide which colors should be part of this
-    internal static void _ChangeFSSColors(Theme newTheme) {
+    internal static void _ChangeFSSColors(Theme @new) {
         Dictionary<string, Color> colorMap = new() {
-            ["white"] = newTheme.White,
-            ["black"] = newTheme.Black,
-            ["transBlack"] = newTheme.TransBlack,
+            ["white"] = @new.White,
+            ["black"] = @new.Black,
+            ["transBlack"] = @new.TransBlack,
 
-            ["fg"] = newTheme.Fg,
-            ["bg"] = newTheme.Bg,
-            ["accent"] = newTheme.Accent,
+            ["fg"] = @new.Fg,
+            ["bg"] = @new.Bg,
+            ["accent"] = @new.Accent,
 
-            ["pos"] = newTheme.Pos,
-            ["neg"] = newTheme.Neg,
-            ["imp"] = newTheme.Imp,
-            ["ally"] = newTheme.Ally,
-            ["opp"] = newTheme.Opp,
-            ["turn"] = newTheme.Turn,
-            ["hp"] = newTheme.Hp,
-            ["sp"] = newTheme.Sp,
-            ["shield"] = newTheme.Shield,
-            ["bloom"] = newTheme.Bloom,
-            ["buff"] = newTheme.Buff,
-            ["skill"] = newTheme.Skill,
-            ["element"] = newTheme.Element,
-            ["passive"] = newTheme.Passive,
-            ["stat"] = newTheme.Stat,
-            ["cooldown"] = newTheme.Cooldown,
+            ["pos"] = @new.Pos,
+            ["neg"] = @new.Neg,
+            ["imp"] = @new.Imp,
+            ["ally"] = @new.Ally,
+            ["opp"] = @new.Opp,
+            ["turn"] = @new.Turn,
+            ["hp"] = @new.Hp,
+            ["sp"] = @new.Sp,
+            ["shield"] = @new.Shield,
+            ["bloom"] = @new.Bloom,
+            ["buff"] = @new.Buff,
+            ["skill"] = @new.Skill,
+            ["element"] = @new.Element,
+            ["passive"] = @new.Passive,
+            ["stat"] = @new.Stat,
+            ["cooldown"] = @new.Cooldown,
 
-            ["spBack"] = newTheme.SpBack,
-            ["overheal"] = newTheme.Overheal,
-            ["statBarLayer4"] = newTheme.StatBarLayer4,
-            ["statBarLayer5"] = newTheme.StatBarLayer5,
+            ["spBack"] = @new.SpBack,
+            ["overheal"] = @new.Overheal,
+            ["statBarLayer4"] = @new.StatBarLayer4,
+            ["statBarLayer5"] = @new.StatBarLayer5,
 
-            ["atk"] = newTheme.Atk,
-            ["def"] = newTheme.Def,
-            ["fth"] = newTheme.Fth,
-            ["agi"] = newTheme.Agi,
+            ["atk"] = @new.Atk,
+            ["def"] = @new.Def,
+            ["fth"] = @new.Fth,
+            ["agi"] = @new.Agi,
 
-            ["vis"] = newTheme.Vis,
-            ["ignis"] = newTheme.Ignis,
-            ["glacies"] = newTheme.Glacies,
-            ["fulgur"] = newTheme.Fulgur,
-            ["ventus"] = newTheme.Ventus,
-            ["terra"] = newTheme.Terra,
-            ["lux"] = newTheme.Lux,
-            ["malum"] = newTheme.Malum,
+            ["vis"] = @new.Vis,
+            ["ignis"] = @new.Ignis,
+            ["glacies"] = @new.Glacies,
+            ["fulgur"] = @new.Fulgur,
+            ["ventus"] = @new.Ventus,
+            ["terra"] = @new.Terra,
+            ["lux"] = @new.Lux,
+            ["malum"] = @new.Malum,
         };
 
         foreach (KeyValuePair<string, Color> kvp in colorMap) {
             ColorStorage.Colors[kvp.Key] = new() { Color = kvp.Value };
         }
     }
+
+    public override string ToString() => $"""
+        {ThemeColor.White}: {this.White.ToRgbaStr()}
+        {ThemeColor.Black}: {this.Black.ToRgbaStr()}
+        {ThemeColor.TransBlack}: {this.TransBlack.ToRgbaStr()}
+
+        {ThemeColor.Fg}: {this.Fg.ToRgbaStr()}
+        {ThemeColor.Bg}: {this.Bg.ToRgbaStr()}
+        {ThemeColor.Accent}: {this.Accent.ToRgbaStr()}
+
+        {ThemeColor.Pos}: {this.Pos.ToRgbaStr()}
+        {ThemeColor.Neg}: {this.Neg.ToRgbaStr()}
+        {ThemeColor.Imp}: {this.Imp.ToRgbaStr()}
+        {ThemeColor.Ally}: {this.Ally.ToRgbaStr()}
+        {ThemeColor.Opp}: {this.Opp.ToRgbaStr()}
+        {ThemeColor.Turn}: {this.Turn.ToRgbaStr()}
+        {ThemeColor.Hp}: {this.Hp.ToRgbaStr()}
+        {ThemeColor.Sp}: {this.Sp.ToRgbaStr()}
+        {ThemeColor.Shield}: {this.Shield.ToRgbaStr()}
+        {ThemeColor.Bloom}: {this.Bloom.ToRgbaStr()}
+        {ThemeColor.Buff}: {this.Buff.ToRgbaStr()}
+        {ThemeColor.Skill}: {this.Skill.ToRgbaStr()}
+        {ThemeColor.Element}: {this.Element.ToRgbaStr()}
+        {ThemeColor.Passive}: {this.Passive.ToRgbaStr()}
+        {ThemeColor.Stat}: {this.Stat.ToRgbaStr()}
+        {ThemeColor.Cooldown}: {this.Cooldown.ToRgbaStr()}
+
+        {ThemeColor.SpBack}: {this.SpBack.ToRgbaStr()}
+        {ThemeColor.Overheal}: {this.Overheal.ToRgbaStr()}
+        {ThemeColor.StatBarLayer4}: {this.StatBarLayer4.ToRgbaStr()}
+        {ThemeColor.StatBarLayer5}: {this.StatBarLayer5.ToRgbaStr()}
+
+        {ThemeColor.Atk}: {this.Atk.ToRgbaStr()}
+        {ThemeColor.Def}: {this.Def.ToRgbaStr()}
+        {ThemeColor.Fth}: {this.Fth.ToRgbaStr()}
+        {ThemeColor.Agi}: {this.Agi.ToRgbaStr()}
+
+        {ThemeColor.Vis}: {this.Vis.ToRgbaStr()}
+        {ThemeColor.Ignis}: {this.Ignis.ToRgbaStr()}
+        {ThemeColor.Glacies}: {this.Glacies.ToRgbaStr()}
+        {ThemeColor.Fulgur}: {this.Fulgur.ToRgbaStr()}
+        {ThemeColor.Ventus}: {this.Ventus.ToRgbaStr()}
+        {ThemeColor.Terra}: {this.Terra.ToRgbaStr()}
+        {ThemeColor.Lux}: {this.Lux.ToRgbaStr()}
+        {ThemeColor.Malum}: {this.Malum.ToRgbaStr()}
+        """;
 
     public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
     public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);

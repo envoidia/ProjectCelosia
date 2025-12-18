@@ -14,16 +14,17 @@ public static class ButtonsExtensions {
             Buttons.DPadDown => "DD",
             Buttons.DPadLeft => "DL",
             Buttons.DPadRight => "DR",
-            Buttons.Start => "RM",
-            Buttons.LeftShoulder => "LB",
-            Buttons.RightShoulder => "RB",
             Buttons.A => "A",
             Buttons.B => "B",
             Buttons.X => "X",
             Buttons.Y => "Y",
+            Buttons.LeftShoulder => "LB",
+            Buttons.RightShoulder => "RB",
             Buttons.RightTrigger => "RT",
             Buttons.LeftTrigger => "LT",
-            _ => throw new ArgumentOutOfRangeException(nameof(@this))
+            Buttons.Back => "LM",
+            Buttons.Start => "RM",
+            _ => throw new ArgumentOutOfRangeException(nameof(@this), @this, "Invalid button")
         };
     }
 

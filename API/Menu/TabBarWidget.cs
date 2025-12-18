@@ -11,9 +11,10 @@ namespace API.Menu;
 
 /// <summary>
 /// A set of tabs
+/// Expected to have static lifetime -- otherwise, make sure to manually unsubscribe from <c>InputLib.DeviceChange</c>
 /// </summary>
 public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
-    public List<Label> Labels { get; private set; } = null!;
+    public List<Label> Labels { get; private set; }
 
     public SelectionType PrefDir => SelectionType.Horiz;
     public SelectionType CurDir {
@@ -53,9 +54,9 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     /// <summary>
     /// Animation progress per-item
     /// </summary>
-    public List<Progress> Progs { get; private set; } = null!;
+    public List<Progress> Progs { get; private set; }
 
-    public ActorData Data { get; private set; } = null!;
+    public ActorData Data { get; private set; }
 
     /// <inheritdoc cref="ActorData.AnimFromDir" />
     public Dir AnimFromDir {
@@ -71,20 +72,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     private const int _OutlineWidth = 10;
     private const int _YOffset = 9;
 
-    public TabBarWidget(Vector2 pos, int capacity) => this._Setup(pos, capacity);
-
-    public TabBarWidget(Vector2 pos, params string[] optionText) {
-        this._Setup(pos, optionText.Length);
-
-        for (int i = 0; i < optionText.Length; i++) this.Labels.Add(new Label() {
-            Text = optionText[i],
-            Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
-        });
-
-        this.CalcLayout();
-    }
-
-    private void _Setup(Vector2 pos, int capacity) {
+    public TabBarWidget(Vector2 pos, int capacity) {
         this.Data = new ActorData(this, RenderPriority.B2Med);
 
         this.Position = pos;
@@ -96,6 +84,17 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
         this.OptCount = capacity;
+
+        InputLib.DeviceChange += this._UpdateInputPrompt;
+    }
+
+    public TabBarWidget(Vector2 pos, params string[] optionText) : this(pos, optionText.Length) {
+        for (int i = 0; i < optionText.Length; i++) this.Labels.Add(new Label() {
+            Text = optionText[i],
+            Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
+        });
+
+        this.CalcLayout();
     }
 
     public void SetText(params string[] optionText) {
@@ -170,11 +169,6 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
             this.PromptR.IsVisible = this.CheckInput;
 
             this.Input(gameTime);
-
-            if (InputLib.InputDeviceChanged) {
-                this._UpdateInputPrompt();
-                this.CalcLayout();
-            }
 
             int w = 0;
             for (int i = 0; i < this.OptCount; i++) {

@@ -139,7 +139,7 @@ internal sealed class _InspectLib {
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
             _StatBarWidth, RenderPriority.B2Med, $"{ThemeColor.Stat.Str()}SP") {
-        ColorLayer0 = ThemeColor.SpBack, // todo hotswap color
+        ColorLayer0 = ThemeColor.SpBack,
         ColorLayer1 = ThemeColor.Sp,
         MaxVal = 1000
     };

@@ -10,8 +10,21 @@ namespace API.Graphics;
 /// Layered bars representing a numerical amount, with text
 /// </summary>
 public sealed class StatBarWidget : StatBarWidgetBase {
-    public ThemeColor ColorLayer0 { get; init; } = ThemeColor.Neg;
-    public ThemeColor ColorLayer1 { get; init; } = ThemeColor.Stat;
+    public ThemeColor ColorLayer0 {
+        get;
+        init {
+            field = value;
+            this.ThemeChange(null, Settings.Theme);
+        }
+    } = ThemeColor.Neg;
+
+    public ThemeColor ColorLayer1 {
+        get;
+        init {
+            field = value;
+            this.ThemeChange(null, Settings.Theme);
+        }
+    } = ThemeColor.Stat;
 
     /// <summary>
     /// Colors for layers after the first 2

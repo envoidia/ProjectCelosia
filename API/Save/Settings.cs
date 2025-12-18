@@ -29,6 +29,14 @@ public static class Settings {
 
     #region Debug
 
+    public static bool EnableDebugFeatures { get; set; } =
+#if DEBUG
+        true
+#else 
+        false
+#endif
+        ;
+
     public static bool SelectOpponentMoves { get; } = false;
 
     #endregion

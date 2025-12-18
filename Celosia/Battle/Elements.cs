@@ -4,7 +4,6 @@ using API.Graphics;
 namespace Celosia.Battle;
 
 public static class Elements {
-    // todo hotswapping
     public static readonly Element Ignis = new(Main.Mod, "ElementIgnis",
         $"{ThemeColor.Ignis.Str()}/i[fire]", Mults.IgnisDmgDealt, Mults.IgnisDmgTaken);
 

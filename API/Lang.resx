@@ -56,10 +56,10 @@
         <value>Successfully loaded {0} from {1}</value>
     </data>
     <!--Debug info menu
-    0 = Close button glpyh, 1 = version-->
+    0 = debug info glpyh, 1 = hotkey 1 glyph, 2 = version-->
     <data name="DebugInfoL" xml:space="preserve">
-        <value>{0}: Close, /i[KF2]: Help 
-Version: {1}</value>
+        <value>{0}: Close, {1}+{0}: Help 
+Version: {2}</value>
     </data>
     <!-- 0 = FPS, 1 = RAM usage, 2 = Resolution, 3 = Path taken through menus, 4 = OW location (Area, X, Y), 5 = Amount of mods loaded-->
     <data name="DebugInfoR" xml:space="preserve">
@@ -72,17 +72,18 @@ Actors on Stage: {5}
 Overworld Location: {6}
 Loaded Mods: {7}</value>
     </data>
+    <!-- 0 = hotkey 1 glyph, 1 = hotkey 2 glpyh -->
     <data name="DebugInfoHelp" xml:space="preserve">
-        <value>/i[KF3] Toggle debug log
-/i[KF4]: Toggle actor outlines (blue pos (yellow = prog 0, magneta = prog 1), aqua padding, lime origin, red if marked, blue if input disabled)
-/i[KF5]: Toggle input view
-/i[KF6]: Write all actors on stage to console
-/i[KF7]: Write battle log to console. Hold {0} to preserve formatting codes
-/i[KF8]: Toggle palette view. Hold {0} to swap between palettes
+        <value>/i[KF2] Toggle debug log. {0} to write to console
+/i[KF3]: Toggle actor outlines (blue pos (yellow = prog 0, magneta = prog 1), aqua padding, lime origin, red if marked, blue if input disabled)
+/i[KF4]: Toggle input view
+/i[KF5]: Write all actors on stage to console
+/i[KF6]: Write battle log to console. {0} to preserve formatting codes
+/i[KF7]: Toggle theme view. {0} to swap between themes, {1} to write current theme to console
+/i[KF8]: Write loaded mod list to console
 /i[KF9]: Recalculate all ILayoutWidgets
 /i[KF10]: Force stage cleanup
-/i[KF11]: Write loaded mod list to console
-/i[KF12]: Force GC collect</value>
+/i[KF11]: Force GC collect</value>
     </data>
     <!--#endregion-->
     <!--#region Basic-->

@@ -33,7 +33,7 @@ public static class Stage {
         end();
         begin();
         for (; i >= 0; i--) _Actors[i].Data.Act(gameTime);
-        if (DebugUtil._drawPalette) Settings.Theme._DrawPalette();
+        if (DebugUtil._drawPalette) Settings.Theme._DrawPalette(); // todo how is it possible that this draws between f1 and its text
         end();
 
         // Debug overlay (F3)

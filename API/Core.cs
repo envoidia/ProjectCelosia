@@ -6,6 +6,7 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using API.Modding;
+using API.Util;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
@@ -64,9 +65,6 @@ public class Core : Game {
 
     // temp debug
     public static Battle.Battle battle = null!;
-
-    // Debug
-    private static bool _isDebugInfoEnabled;
 
     static Core() {
         // Setup font
@@ -179,26 +177,8 @@ public class Core : Game {
 
     // Update is called before Draw
     protected override void Update(GameTime gameTime) {
-        // Update the input manager.
         InputLib.Update(gameTime);
-
-        // Toggle debug info overlay
-        if (InputLib.Check(Keybinds.DebugInfo)) {
-            if (!_isDebugInfoEnabled) {
-                _isDebugInfoEnabled = true;
-                Util.DebugUtil._Create();
-            } else {
-                _isDebugInfoEnabled = false;
-                Util.DebugUtil._Destroy();
-            }
-        }
-
-        if (_isDebugInfoEnabled) Util.DebugUtil._Update(gameTime);
-
-        Util.DebugUtil._CheckDebugHotkeys();
-
-        // Switch input prompt between kb/controller
-        if (InputLib.InputDeviceChanged) StateMachine.UpdateInputPrompt();
+        DebugUtil._Update(gameTime);
 
         // Update the current State
         StateMachine.GetState().Update(gameTime);

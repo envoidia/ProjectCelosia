@@ -15,8 +15,9 @@ namespace API.Util;
 
 public static class DebugUtil {
     // todo show size of all lists (IModItems, etc)
-    private const int _Mb = 1024 * 1024;
     private const string _ClassName = nameof(DebugUtil);
+
+    private const int _Mb = 1024 * 1024;
 
     private const int _LogLimit = 8;
     private static readonly List<string> _LogText = new(8);
@@ -24,6 +25,7 @@ public static class DebugUtil {
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
+    internal static bool _drawDebugInfo = false;
     internal static bool _drawActorOutlines = false;
     internal static bool _drawPalette = false;
 
@@ -101,7 +103,15 @@ public static class DebugUtil {
 
         Stage.Add(_DebugInfoKeyNames);
         Stage.Add(_DebugInfoKeyHeld);
+
+        // todo this should only tick when its visible
         _DebugInfoKeyHeld.AddRoutine(InputLib._TrackInput);
+
+        InputLib.DeviceChange += static () => {
+            _DebugInfoL.Text = _GetInfoLText();
+            _DebugInfoHelp.Text = _GetInfoHelpText();
+            _DebugInfoKeyNames.Text = _GetKeyNameText();
+        };
     }
 
     // todo for some reason, setting this in the static ctor started to throw a nullreference exception wrt FSS text size
@@ -127,22 +137,10 @@ public static class DebugUtil {
         Console.WriteLine(str);
     }
 
-    internal static void _Create() {
-        _DebugInfoL.IsVisible = true;
-        _DebugInfoR.IsVisible = true;
-    }
-
-    internal static void _Destroy() {
-        _DebugInfoL.IsVisible = false;
-        _DebugInfoR.IsVisible = false;
-    }
-
     internal static void _Update(GameTime gameTime) {
-        if (InputLib.InputDeviceChanged) {
-            _DebugInfoL.Text = _GetInfoLText();
-            _DebugInfoHelp.Text = _GetInfoHelpText();
-            _DebugInfoKeyNames.Text = _GetKeyNameText();
-        }
+        if (!Settings.EnableDebugFeatures) return;
+
+        _CheckInputs();
 
         // todo update text if lang changed
 
@@ -168,49 +166,64 @@ public static class DebugUtil {
         _timeSinceUpdate = TimeSpan.Zero;
     }
 
-    internal static void _CheckDebugHotkeys() {
-        // temp
-        if (InputLib.IsKeyJustPressed(Keys.F1)) {
+    private static void _CheckInputs() {
+        if (InputLib.Check(Keybinds.DebugInfo)) {
+            // temp
             _Test();
+
+            if (InputLib.Check(Keybinds.Hotkey1)) {
+                _DebugInfoHelp.IsVisible ^= true;
+            } else {
+                _DebugInfoL.IsVisible ^= true;
+                _DebugInfoR.IsVisible ^= true;
+            }
         }
 
-        _DebugInfoHelp.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F2);
+        if (InputLib.IsKeyJustPressed(Keys.F2)) {
+            if (InputLib.Check(Keybinds.Hotkey1)) {
+                Console.WriteLine(_DebugLog.Text);
+                Log("Output debug log to console", _ClassName);
+            } else _DebugLog.IsVisible ^= true;
+        }
 
-        _DebugLog.IsVisible ^= InputLib.IsKeyJustPressed(Keys.F3);
+        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
 
-        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F4);
-
-        if (InputLib.IsKeyJustPressed(Keys.F5)) {
+        if (InputLib.IsKeyJustPressed(Keys.F4)) {
             _DebugInfoKeyNames.IsVisible ^= true;
             _DebugInfoKeyHeld.IsVisible ^= true;
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F6)) {
+        if (InputLib.IsKeyJustPressed(Keys.F5)) {
             Console.WriteLine(Stage.ToString());
             Log("Output Stage to console", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F7)) {
+        if (InputLib.IsKeyJustPressed(Keys.F6)) {
             string str = string.Join('\n', LogLib._LogText);
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
                 Console.WriteLine(str);
                 Log("Output raw battle log to console", _ClassName);
-                return;
+            } else {
+                Console.WriteLine(Regexes.RemoveFormattingCodes(str));
+                Log("Output battle log to console", _ClassName);
             }
+        }
 
-            Console.WriteLine(Regexes.RemoveFormattingCodes(str));
-            Log("Output battle log to console", _ClassName);
+        if (InputLib.IsKeyJustPressed(Keys.F7)) {
+            if (InputLib.Check(Keybinds.Hotkey1)) _CyclePalette();
+            else if (InputLib.Check(Keybinds.Hotkey2)) {
+                Console.WriteLine(Settings.Theme.ToString());
+                Log("Output Theme to console", _ClassName);
+            } else _drawPalette ^= true;
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F8)) {
-            if (InputLib.Check(Keybinds.Hotkey1)) {
-                _CyclePalette();
-                return;
-            }
-
-            _drawPalette ^= true;
+            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+            Log("Output LoadedMods to console", _ClassName);
         }
+
+        // todo remove functions after this? theyre not rly used
 
         if (InputLib.IsKeyJustPressed(Keys.F9)) {
             Stage._RecalcLayoutWidgets();
@@ -223,11 +236,6 @@ public static class DebugUtil {
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F11)) {
-            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
-            Log("Output LoadedMods to console", _ClassName);
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F12)) {
             GC.Collect();
             Log("Forced GC collect", _ClassName);
         }
@@ -244,10 +252,11 @@ public static class DebugUtil {
 
     // todo cleanup
     private static string _GetInfoLText() =>
-        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(), BuildInfo.BuildDate);
+        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(),
+            Keybinds.Hotkey1.GetCurrentGlyph(), BuildInfo.BuildDate);
 
     private static string _GetInfoHelpText() =>
-        string.Format(Lang.DebugInfoHelp, Keybinds.Hotkey1.GetCurrentGlyph());
+        string.Format(Lang.DebugInfoHelp, Keybinds.Hotkey1.GetCurrentGlyph(), Keybinds.Hotkey2.GetCurrentGlyph());
 
     private static string _GetKeyNameText() {
         StringBuilder sb = new();
