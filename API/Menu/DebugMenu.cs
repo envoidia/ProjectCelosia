@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Menu;
 
-public static class DebugMenu {
+internal static class _DebugMenu {
     private const int _Mb = 1024 * 1024;
 
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
@@ -23,7 +23,9 @@ public static class DebugMenu {
         Position = new(10, 10),
         Padding = new(10),
         HasBackground = true,
-        Priority = RenderPriority.Highest
+        Priority = RenderPriority.Highest,
+        AnimType = AnimType.None,
+        IsVisible = false
     };
 
     private static readonly Label _DebugInfoR = new() {
@@ -31,7 +33,9 @@ public static class DebugMenu {
         Padding = new(10),
         HasBackground = true,
         Alignment = Alignment.TopRight,
-        Priority = RenderPriority.Highest
+        Priority = RenderPriority.Highest,
+        AnimType = AnimType.None,
+        IsVisible = false
     };
 
     private static readonly Label _DebugInfoHelp = new() {
@@ -41,6 +45,7 @@ public static class DebugMenu {
         HasBackground = true,
         Alignment = Alignment.BottomLeft,
         Priority = RenderPriority.Highest,
+        AnimType = AnimType.None,
         IsVisible = false
     };
 
@@ -52,6 +57,7 @@ public static class DebugMenu {
         Padding = new(10),
         HasBackground = true,
         Priority = RenderPriority.Highest,
+        AnimType = AnimType.None,
         IsVisible = false
     };
 
@@ -61,39 +67,33 @@ public static class DebugMenu {
         Padding = new(10, 120, 10, 10),
         HasBackground = true,
         Priority = RenderPriority.Highest,
+        AnimType = AnimType.None,
         IsVisible = false
     };
 
     internal static bool _drawActorOutlines = false;
+    private static bool _drawPalette = false;
 
-    static DebugMenu() {
+    static _DebugMenu() {
+        Stage.Add(_DebugInfoL);
+        Stage.Add(_DebugInfoR);
         Stage.Add(_DebugInfoHelp);
         Stage.Add(_DebugInfoKeyNames);
         Stage.Add(_DebugInfoKeyHeld);
         _DebugInfoKeyHeld.AddRoutine(InputLib._TrackInput);
     }
 
-    /// <summary>
-    /// Adds the relevant <c>Actor</c>s to the <c>Stage</c>.
-    /// </summary>
-    public static void Create() {
-        Stage.Add(_DebugInfoL);
-        Stage.Add(_DebugInfoR);
-
-        Stage.Cleanup();
+    internal static void _Create() {
+        _DebugInfoL.IsVisible = true;
+        _DebugInfoR.IsVisible = true;
     }
 
-    /// <summary>
-    /// Removes the relevant <c>Actor</c>s from the <c>Stage</c>.
-    /// </summary>
-    public static void Destroy() {
-        _DebugInfoL.MarkForRemoval();
-        _DebugInfoR.MarkForRemoval();
-
-        Stage.Cleanup();
+    internal static void _Destroy() {
+        _DebugInfoL.IsVisible = false;
+        _DebugInfoR.IsVisible = false;
     }
 
-    public static void Update(GameTime gameTime) {
+    internal static void _Update(GameTime gameTime) {
         if (InputLib.InputDeviceChanged) {
             _DebugInfoL.Text = _GetInfoLText();
             _DebugInfoHelp.Text = _GetInfoHelpText();
@@ -136,11 +136,7 @@ public static class DebugMenu {
         }
         if (InputLib.IsKeyJustPressed(Keys.F5)) Console.WriteLine(Stage.ToString());
 
-        if (InputLib.IsKeyJustPressed(Keys.F6)) Stage._RecalcLayoutWidgets();
-
-        if (InputLib.IsKeyJustPressed(Keys.F7)) Stage.Cleanup();
-
-        if (InputLib.IsKeyJustPressed(Keys.F8)) {
+        if (InputLib.IsKeyJustPressed(Keys.F6)) {
             string str = string.Join('\n', LogLib._LogText);
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
@@ -151,11 +147,31 @@ public static class DebugMenu {
             Console.WriteLine(Regexes.RemoveFormattingCodes(str));
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F9)) {
+        _drawPalette ^= InputLib.IsKeyJustPressed(Keys.F7);
+
+        if (InputLib.IsKeyJustPressed(Keys.F8)) Stage._RecalcLayoutWidgets();
+
+        if (InputLib.IsKeyJustPressed(Keys.F9)) Stage.Cleanup();
+
+        if (InputLib.IsKeyJustPressed(Keys.F10)) {
             Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F10)) GC.Collect();
+        if (InputLib.IsKeyJustPressed(Keys.F11)) GC.Collect();
+    }
+
+    internal static void _DrawPalette() {
+        if (!_drawPalette) return;
+
+        const int Size = 64;
+
+        int y = World.H - (Size * 9);
+        for (int i = 0; i < Colors.All.Length; i++) {
+            int iMod = i % 6;
+            int x = iMod * Size;
+            if (iMod == 0) y += Size;
+            Core.ShapeBatch.FillRectangle(new(x, y), new(Size, Size), Colors.All[i]);
+        }
     }
 
     // todo cleanup

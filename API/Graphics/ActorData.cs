@@ -84,12 +84,12 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     public Progress Prog { get; set; }
 
     /// <summary>
-    /// Position to interpolate to/from during create/destroy animation
+    /// Position to interpolate to/from during create/destroy animation if <c>AnimType</c> is <c>Move</c>
     /// </summary>
     public Vector2 AnimFrom { get; set; }
 
     /// <summary>
-    /// Direction to interpolate to/from during create/destroy animation
+    /// Direction to interpolate to/from during create/destroy animation if <c>AnimType</c> is <c>Move</c>
     /// </summary>
     public Dir AnimFromDir {
         get;
@@ -100,10 +100,9 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     } = Dir.Left;
 
     /// <summary>
-    /// Whether to automatically set LerpFrom when setting Position
+    /// Type of animation to use during create/destroy animation
     /// </summary>
-    // unused todo impl or remove
-    public bool AutoLerpFrom { get; set; } = true;
+    public AnimType AnimType { get; set; } = AnimType.Move;
 
     /// <summary>
     /// Speed multiplier. 1f = animation completes in 1s. 2f = 0.5s. Speed is doubled when closing
@@ -113,9 +112,27 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     internal readonly List<Routine> _routines = [];
 
     /// <summary>
-    /// Whether this is marked to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
+    /// Called when this is added to the stage. Does not add it to the stage
     /// </summary>
-    internal bool _marked = false;
+    public void Create() {
+        actor.OnCreate();
+
+        if (this.AnimType != AnimType.None) this.AddRoutine(IActor.In);
+        else this.Prog = Progress.One;
+    }
+
+    /// <summary>
+    /// Called when this should be removed from the stage
+    /// </summary>
+    public void Destroy() {
+        actor.OnDestroy();
+
+        if (this.AnimType != AnimType.None) this.AddRoutine(IActor.Out);
+        else {
+            this.Prog = Progress.Zero;
+            Stage.Remove(actor);
+        }
+    }
 
     /// <summary>
     /// Add a <c>Routine</c> to execute when drawn
@@ -124,14 +141,6 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     public void AddRoutine(Routine routine) {
         routine.OnStart?.Invoke(actor);
         this._routines.Add(routine);
-    }
-
-    /// <summary>
-    /// Mark this to be removed from the <c>Stage</c> on next <c>Stage.Cleanup()</c>
-    /// </summary>
-    public void MarkForRemoval() {
-        this._marked = true;
-        Stage._needsRemoval = true;
     }
 
     private const int _OriginDebugSize = 10;
@@ -165,9 +174,6 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         (Color, Color) colors = this.IsVisible
             ? (outlineColor, Colors.ActorPadding)
             : (new(outlineColor, 0.25f), new(Colors.ActorPadding, 0.25f));
-
-        // Marked
-        if (this._marked) this.DrawBackground(Colors.ActorMarked);
 
         // Origin
         if (drawOrigin) {

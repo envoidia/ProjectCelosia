@@ -180,10 +180,9 @@ public static class BattleLib {
         Stage.Cleanup();
     }
 
+    // todo remove?
     internal static void _Destroy() {
-        foreach (IActor a in _Actors) a.MarkForRemoval();
-
-        Stage.Cleanup();
+        foreach (IActor a in _Actors) a.Destroy();
     }
 
     #endregion

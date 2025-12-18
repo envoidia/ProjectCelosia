@@ -55,8 +55,8 @@ public class Parellelogram : IActor {
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
 
-    public void Create() => this.AddRoutine(IActor.In);
-    public void Destroy() => this.AddRoutine(IActor.Out);
+    public void OnCreate() { }
+    public void OnDestroy() { }
 }
 
 public static class Parellelograms {

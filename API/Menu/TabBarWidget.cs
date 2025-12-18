@@ -94,7 +94,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         this.Labels = new List<Label>(capacity);
 
-        this.Progs = [.. Enumerable.Repeat(new Progress(), capacity)];
+        this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
         this.OptCount = capacity;
     }
 
@@ -119,7 +119,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
                 Alignment = Alignment.Controlled
             });
 
-            this.Progs.Add(new Progress());
+            this.Progs.Add(Progress.Zero);
         }
 
         this.OptCount = optionText.Length;
@@ -151,16 +151,14 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public void Input(GameTime gameTime) => this.Index = this.CheckInput();
 
-    public void Create() {
-        this.AddRoutine(IActor.In);
+    public void OnCreate() {
         // todo why dont prompts appear to animate
         this.PromptL.Create();
         this.PromptR.Create();
         foreach (Label l in this.Labels) l.Create();
     }
 
-    public void Destroy() {
-        this.AddRoutine(IActor.Out);
+    public void OnDestroy() {
         this.PromptL.Destroy();
         this.PromptR.Destroy();
         foreach (Label l in this.Labels) l.Destroy();
@@ -208,13 +206,13 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             l.Data.Act(gameTime);
-            if (DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
+            if (_DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
         }
 
         this.PromptL.Data.Act(gameTime);
         this.PromptR.Data.Act(gameTime);
 
-        if (DebugMenu._drawActorOutlines) {
+        if (_DebugMenu._drawActorOutlines) {
             this.PromptL.Data.DrawDebug(false);
             this.PromptR.Data.DrawDebug(false);
 

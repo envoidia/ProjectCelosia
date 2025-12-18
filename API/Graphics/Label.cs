@@ -14,7 +14,7 @@ public sealed class Label : IActor {
     public string Text {
         get => this._RichTextLayout.Text;
         set {
-            this._RichTextLayout.Text = value;
+            this._RichTextLayout.Text = $"{ColorCode.White}{value}";
             this.Size = this._RichTextLayout.Size;
             this.Origin = this.Data.CalcOrigin();
         }
@@ -34,6 +34,9 @@ public sealed class Label : IActor {
 
     public override string ToString() => $"Label: {this._RichTextLayout.Text}";
 
+    public void OnCreate() { }
+    public void OnDestroy() { }
+
     public void Draw(GameTime gameTime) {
         // todo is this return good
         if (string.IsNullOrWhiteSpace(this.Text)) return;
@@ -44,7 +47,4 @@ public sealed class Label : IActor {
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog),
             Settings.ColorFg, 0f, this.Origin.ToVector2());
     }
-
-    public void Create() => this.AddRoutine(IActor.In);
-    public void Destroy() => this.AddRoutine(IActor.Out);
 }

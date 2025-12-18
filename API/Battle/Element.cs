@@ -31,5 +31,6 @@ public sealed class Element : _IModItem, INameable {
 }
 
 public static class Elements {
-    public static readonly Element Vis = new(null, "ElementVis", "/c[lightGray]/i[rolling-energy]");
+    public static readonly Element Vis = new(null, "ElementVis",
+        $"{new ColorCode(Colors.Whites[1])}/i[rolling-energy]");
 }

@@ -142,9 +142,9 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, "SP") {
-        ColorLayer0 = Colors.OverhealSp,
-        ColorLayer1 = Colors.SpBack,
+            _StatBarWidth, RenderPriority.B2Med, $"{ColorCode.Stat}SP") {
+        ColorLayer0 = Colors.SpBack,
+        ColorLayer1 = Colors.Sp,
         MaxVal = 1000
     };
     // private static readonly Label _Sp = new(RenderPriority.B2Med) {
@@ -182,7 +182,7 @@ internal sealed class _InspectLib {
     private static readonly Label _PageItemRightList = new(RenderPriority.B2Med);
     private static readonly Label _DescHeader = new(RenderPriority.B2Med);
     private static readonly Label _Desc = new(RenderPriority.B2Med) {
-        Position = new(800, 740)
+        Position = new(950, 740)
     };
 
     #endregion

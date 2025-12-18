@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -5,45 +7,68 @@ namespace API.Graphics;
 /// <summary>
 /// A color code for formatting strings
 /// </summary>
-public readonly record struct ColorCode(Color Color) {
-    public ColorCode(byte r, byte g, byte b) : this(new Color(r, g, b)) { }
+public readonly record struct ColorCode {
+    public static ColorCode White => new(Colors.White);
+    public static ColorCode Black => new(Colors.Black);
 
-    public static implicit operator string(ColorCode c) =>
-        $"/c[#{c.Color.R:x2}{c.Color.G:x2}{c.Color.B:x2}]";
+    /// <inheritdoc cref="Colors.Pos" />
+    public static ColorCode Pos => new(Colors.Pos);
+
+    /// <inheritdoc cref="Colors.Neg" />
+    public static ColorCode Neg => new(Colors.Neg);
+
+    /// <inheritdoc cref="Colors.Num" />
+    public static ColorCode Num => new(Colors.Num);
+
+    public static ColorCode Ally => new(Colors.Ally);
+    public static ColorCode Opp => new(Colors.Opp);
+    public static ColorCode Turn => new(Colors.Turn);
+    public static ColorCode Hp => new(Colors.Hp);
+    public static ColorCode Sp => new(Colors.Sp);
+    public static ColorCode Shield => new(Colors.Shield);
+    public static ColorCode Bloom => new(Colors.Bloom);
+    public static ColorCode Buff => new(Colors.Buff);
+    public static ColorCode Skill => new(Colors.Skill);
+    public static ColorCode Element => new(Colors.Element);
+    public static ColorCode Passive => new(Colors.Passive);
+    public static ColorCode Stat => new(Colors.Stat);
+    public static ColorCode Cooldown => new(Colors.Cooldown);
+
+    private readonly Color _c;
+
+    /// <summary>
+    /// Add custom color aliases
+    /// </summary>
+    static ColorCode() {
+        Dictionary<string, Color> colorMap = new() {
+            ["white"] = Colors.White,
+            ["black"] = Colors.Black,
+            ["pos"] = Colors.Pos,
+            ["neg"] = Colors.Neg,
+            ["num"] = Colors.Num,
+            ["ally"] = Colors.Ally,
+            ["opp"] = Colors.Opp,
+            ["turn"] = Colors.Turn,
+            ["hp"] = Colors.Hp,
+            ["sp"] = Colors.Sp,
+            ["shield"] = Colors.Shield,
+            ["bloom"] = Colors.Bloom,
+            ["buff"] = Colors.Buff,
+            ["skill"] = Colors.Skill,
+            ["element"] = Colors.Element,
+            ["passive"] = Colors.Passive,
+            ["stat"] = Colors.Stat,
+            ["cooldown"] = Colors.Cooldown
+        };
+
+        foreach (KeyValuePair<string, Color> kvp in colorMap) {
+            ColorStorage.Colors[kvp.Key] = new() { Color = kvp.Value };
+        }
+    }
+
+    public ColorCode(Color c) => this._c = c;
+
+    public static implicit operator string(ColorCode c) => $"/c[#{c._c.R:x2}{c._c.G:x2}{c._c.B:x2}]";
 
     public override string ToString() => this;
-
-    public static readonly ColorCode ElectricBlue = new(74, 176, 231);
-
-    /// <summary>
-    /// Positive numbers
-    /// </summary>
-    public static readonly ColorCode Pos = new(Colors.Pos);
-
-    /// <summary>
-    /// Negative numbers
-    /// </summary>
-    public static readonly ColorCode Neg = new(Colors.Neg);
-
-    /// <summary>
-    /// General numbers (turns, stacks)
-    /// </summary>
-    public static readonly ColorCode Num = new(Colors.Num);
-
-    public static readonly ColorCode White = new(Color.White);
-    public static readonly ColorCode Black = new(Color.Black);
-    public static readonly ColorCode Ally = new(131, 170, 240); // todo not readable enough
-    public static readonly ColorCode Opp = new(255, 116, 116);
-    public static readonly ColorCode Turn = new(160, 52, 255);
-    public static readonly ColorCode Hp = new(Colors.Hp);
-    public static readonly ColorCode Sp = new(187, 0, 255);
-    public static readonly ColorCode Shield = new(Colors.Shield);
-    public static readonly ColorCode Bloom = new(Color.Fuchsia);
-    public static readonly ColorCode Buff = new(198, 161, 255);
-    public static readonly ColorCode Skill = new(149, 201, 255);
-    public static readonly ColorCode Element = new(Skill.Color);
-    public static readonly ColorCode Passive = new(198, 161, 255);
-    public static readonly ColorCode Stat = new(Colors.Stat);
-    public static readonly ColorCode Cooldown = new(24, 152, 255);
-    public static readonly ColorCode Lux = new(255, 251, 183);
 }

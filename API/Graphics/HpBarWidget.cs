@@ -10,7 +10,7 @@ namespace API.Graphics;
 /// Layered bars representing HP, Shield, and HP over max
 /// </summary>
 public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPriority)
-    : StatBarWidgetBase(pos, width, renderPriority, "HP") {
+    : StatBarWidgetBase(pos, width, renderPriority, $"{ColorCode.Stat}HP") {
     public int Hp {
         get;
         set {
@@ -49,7 +49,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
 
-        if (DebugMenu._drawActorOutlines) {
+        if (_DebugMenu._drawActorOutlines) {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
@@ -69,7 +69,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
     private void _Update() {
         float hpLen = this.Hp / (float) this.MaxHp;
         this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, Math.Max(hpLen - 1, 0)];
-        this._layers = [Colors.Hp, Colors.Shield, Colors.OverhealSp];
+        this._layers = [Colors.Hp, Colors.Shield, Colors.Overheal];
 
         Array.Sort(this._barLens, this._layers);
 

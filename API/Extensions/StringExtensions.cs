@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using API.Graphics;
 using API.Modding;
 using API.Util;
 using Jeffijoe.MessageFormat;
@@ -70,10 +71,13 @@ public static class StringExtensions {
         public string FormatLang(params object[] args) => @this.FormatLang(null, args);
 
         /// <returns>
-        /// An ICU MessageFormat-formatted string from a lang key. Checks <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
+        /// An ICU MessageFormat-formatted string from a lang key.
+        /// Checks the specified mod's <c>ResourceManager</c> (if provided),
+        /// then <c>API.Lang.ResourceManager</c>, then all mod <c>ResourceManager</c>s
         /// </returns>
         /// <summary>
-        /// <para>Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible, to avoid writing strings in code</para>  
+        /// <para>Prefer calling <c>FormatIcu()</c> on the properties of <c>Lang</c> when possible,
+        /// to avoid writing strings in code</para>  
         /// <para>Throws <c>ArgumentException</c> if key is invalid. Asserts > 0 args passed</para>
         /// </summary>
         /// <exception cref="ArgumentException">If key is invalid</exception>

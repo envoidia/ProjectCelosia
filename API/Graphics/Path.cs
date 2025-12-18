@@ -32,6 +32,6 @@ public sealed class Path : IActor {
     public void Draw(GameTime gameTime) =>
         Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, this.Color, this.Color, 0);
 
-    public void Create() => this.AddRoutine(IActor.In);
-    public void Destroy() => this.AddRoutine(IActor.Out);
+    public void OnCreate() => this.AddRoutine(IActor.In);
+    public void OnDestroy() => this.AddRoutine(IActor.Out);
 }

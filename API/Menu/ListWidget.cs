@@ -75,7 +75,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
         this.Labels = new List<Label>(capacity);
         for (int i = 0; i < capacity; i++) this.Labels.Add(new Label());
 
-        this.Progs = [.. Enumerable.Repeat(new Progress(), capacity)];
+        this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
         this.OptCount = capacity;
     }
 
@@ -101,7 +101,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
                 Padding = this.ItemPadding
             });
 
-            this.Progs.Add(new Progress());
+            this.Progs.Add(Progress.Zero);
         }
 
         this.OptCount = optionText.Length;
@@ -124,13 +124,11 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
     public void Input(GameTime gameTime) => this.Index = this.CheckInput();
 
-    public virtual void Create() {
-        this.AddRoutine(IActor.In);
+    public virtual void OnCreate() {
         foreach (Label l in this.Labels) l.Create();
     }
 
-    public virtual void Destroy() {
-        this.AddRoutine(IActor.Out);
+    public virtual void OnDestroy() {
         foreach (Label l in this.Labels) l.Destroy();
     }
 
@@ -161,11 +159,11 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             l.Data.Act(gameTime);
-            if (DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
+            if (_DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
         }
 
         // Disabled input overlay
-        if (DebugMenu._drawActorOutlines) {
+        if (_DebugMenu._drawActorOutlines) {
             if (!this.CheckInput) this.Data.DrawBackground(Colors.ActorDisabledInput);
         }
     }

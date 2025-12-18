@@ -14,16 +14,16 @@ public interface IActor {
     ActorData Data { get; }
 
     /// <summary>
-    /// Called when this is added to the stage.
+    /// Called when this is added to the stage. Should only be called from <c>ActorData.Create()</c>
     /// In most cases, will be blank
     /// </summary>
-    void Create();
+    void OnCreate();
 
     /// <summary>
-    /// Called when this should be removed from the stage.
-    /// In most cases, should be implemented as <c>this.MarkForRemoval()</c>
+    /// Called when this should be removed from the stage. Should only be called from <c>ActorData.Create()</c>
+    /// In most cases, will be blank
     /// </summary>
-    void Destroy();
+    void OnDestroy();
 
     /// <summary>
     /// Draws this
@@ -45,7 +45,7 @@ public interface IActor {
 
         static (actor, gameTime) => {
             if (actor.UpdateProg(gameTime, AnimDirs.Out)) {
-                Stage.ImmediateRemove(actor);
+                Stage.Remove(actor);
                 return true;
             }
 
@@ -128,17 +128,26 @@ public static class ActorExtensions {
             set => @this.Data.AnimFromDir = value;
         }
 
+        /// <inheritdoc cref="ActorData.AnimType" />
+        public AnimType AnimType {
+            get => @this.Data.AnimType;
+            set => @this.Data.AnimType = value;
+        }
+
         /// <inheritdoc cref="ActorData.Speed" />
         public float Speed {
             get => @this.Data.Speed;
             set => @this.Data.Speed = value;
         }
 
+        /// <inheritdoc cref="ActorData.Create" />
+        public void Create() => @this.Data.Create();
+
+        /// <inheritdoc cref="ActorData.Destroy" />
+        public void Destroy() => @this.Data.Destroy();
+
         /// <inheritdoc cref="ActorData.AddRoutine" />
         public void AddRoutine(Routine routine) => @this.Data.AddRoutine(routine);
-
-        /// <inheritdoc cref="ActorData.MarkForRemoval" />
-        public void MarkForRemoval() => @this.Data.MarkForRemoval();
 
         public bool UpdateProg(GameTime gameTime, AnimDirs dir) => @this.Data.UpdateProg(gameTime, dir);
 

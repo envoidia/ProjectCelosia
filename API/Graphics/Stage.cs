@@ -18,7 +18,6 @@ public static class Stage {
     private static readonly List<IActor> _Actors = new(250);
 
     internal static bool _needsSorting = false;
-    internal static bool _needsRemoval = false;
 
     /// <summary>
     /// Draws all visible <c>IActor</c>s and performs their <c>Routine</c>s
@@ -35,10 +34,11 @@ public static class Stage {
         end();
         begin();
         for (; i >= 0; i--) _Actors[i].Data.Act(gameTime);
+        _DebugMenu._DrawPalette();
         end();
 
         // Debug overlay (F3)
-        if (DebugMenu._drawActorOutlines) {
+        if (_DebugMenu._drawActorOutlines) {
             begin();
             foreach (IActor a in _Actors) a.Data.DrawDebug();
             end();
@@ -46,9 +46,10 @@ public static class Stage {
 
         static void begin() {
             Core.ShapeBatch.Begin(Resolution.TransformationMatrix());
+
             Core.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
-            SamplerState.PointClamp, null, null, null,
-            Resolution.TransformationMatrix());
+                SamplerState.PointClamp, null, null, null,
+                Resolution.TransformationMatrix());
         }
 
         static void end() {
@@ -83,27 +84,14 @@ public static class Stage {
     }
 
     /// <summary>
-    /// Immediately removes an <c>IActor</c>. Prefer <c>IActor.MarkForRemoval()</c> when able
+    /// Removes an <c>IActor</c>. Should be called from <c>ActorData.Destroy</c> -- Do not call directly
     /// </summary>
-    public static void ImmediateRemove(IActor actor) => _Actors.Remove(actor);
+    public static void Remove(IActor actor) => _Actors.Remove(actor);
 
     /// <summary>
-    /// Applies sorting and removal
+    /// Applies sorting
     /// </summary>
     public static void Cleanup() {
-        if (_needsRemoval) {
-            _Actors.RemoveAll(static a => {
-                if (a.Data._marked) {
-                    a.Data._marked = false;
-                    return true;
-                }
-
-                return false;
-            });
-
-            _needsRemoval = false;
-        }
-
         if (!_needsSorting) return;
 
         _Actors.Sort(static (a, b) =>

@@ -18,6 +18,7 @@ using ResolutionBuddy;
 
 namespace API;
 
+// todo internalify
 public class Core : Game {
     public static Core Instance { get; private set; } = null!;
 
@@ -27,7 +28,6 @@ public class Core : Game {
     public new static GraphicsDevice GraphicsDevice { get; private set; } = null!;
     public static SpriteBatch SpriteBatch { get; private set; } = null!;
     public static ShapeBatch ShapeBatch { get; private set; } = null!;
-    public static Texture2D WhitePixel { get; private set; } = null!;
     public static readonly Dictionary<string, Texture2DRegion> TextureCache = [];
 
     public static Texture2DAtlas IconsAtlas { get; set; } = null!;
@@ -154,7 +154,7 @@ public class Core : Game {
 
         // Scaling
         Resolution.Init(new ResolutionComponent(this, Graphics, new(World.W, World.H),
-            new(2560, 1440), true, false, false));
+            new(1920, 1080), false, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;
@@ -171,9 +171,6 @@ public class Core : Game {
         SpriteBatch = new SpriteBatch(GraphicsDevice);
         ShapeBatch = new ShapeBatch(GraphicsDevice, this.Content);
 
-        WhitePixel = new Texture2D(GraphicsDevice, 1, 1);
-        WhitePixel.SetData([Color.White]);
-
         StateMachine.Add(States.MainMenu);
     }
 
@@ -186,16 +183,16 @@ public class Core : Game {
         if (InputLib.Check(Keybinds.DebugInfo)) {
             if (!_isDebugInfoEnabled) {
                 _isDebugInfoEnabled = true;
-                DebugMenu.Create();
+                _DebugMenu._Create();
             } else {
                 _isDebugInfoEnabled = false;
-                DebugMenu.Destroy();
+                _DebugMenu._Destroy();
             }
         }
 
-        if (_isDebugInfoEnabled) DebugMenu.Update(gameTime);
+        if (_isDebugInfoEnabled) _DebugMenu._Update(gameTime);
 
-        DebugMenu._CheckDebugHotkeys();
+        _DebugMenu._CheckDebugHotkeys();
 
         // Switch input prompt between kb/controller
         if (InputLib.InputDeviceChanged) StateMachine.UpdateInputPrompt();

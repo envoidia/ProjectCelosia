@@ -78,13 +78,13 @@ public sealed class ListRightWidget : ListWidget {
         this.Origin = this.Data.CalcOrigin();
     }
 
-    public override void Create() {
-        base.Create();
+    public override void OnCreate() {
+        base.OnCreate();
         foreach (Label l in this.LabelsRight) l.Create();
     }
 
-    public override void Destroy() {
-        base.Destroy();
+    public override void OnDestroy() {
+        base.OnDestroy();
         foreach (Label l in this.LabelsRight) l.Destroy();
     }
 
@@ -93,7 +93,7 @@ public sealed class ListRightWidget : ListWidget {
 
         foreach (Label l in this.LabelsRight) {
             l.Data.Act(gameTime);
-            if (DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
+            if (_DebugMenu._drawActorOutlines) l.Data.DrawDebug(false);
         }
     }
 }

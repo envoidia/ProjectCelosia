@@ -21,8 +21,8 @@ public class LineActor : IActor {
         //this.LineDir = pos.Y == size.Y ? LineDir.Horiz : LineDir.Vert;
     }
 
-    public void Create() => this.AddRoutine(IActor.In);
-    public void Destroy() => this.AddRoutine(IActor.Out);
+    public void OnCreate() { }
+    public void OnDestroy() { }
 
     public void Draw(GameTime gameTime) {
         Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X, (float) this.Prog), this.Y);

@@ -52,7 +52,7 @@ public static class InputLib {
                 double s = held.TotalSeconds;
 
                 ColorCode c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
-                    ? ColorCode.ElectricBlue : ColorCode.White;
+                    ? ColorCode.Cooldown : ColorCode.White;
 
                 sb.Append(c).Append(s.ToString("0.##")).Append('\n');
             }

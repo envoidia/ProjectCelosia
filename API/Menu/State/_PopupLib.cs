@@ -39,8 +39,8 @@ internal static class _PopupLib {
     /// Doesn't resort because these should always be on top
     /// </summary>
     internal static void _Destroy() {
-        _PopupTitle.MarkForRemoval();
-        _PopupText.MarkForRemoval();
+        Stage.Remove(_PopupTitle);
+        Stage.Remove(_PopupText);
 
         _PopupBg.AddRoutine(IActor.Out);
 

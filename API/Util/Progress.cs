@@ -7,6 +7,7 @@ namespace API.Util;
 /// </summary>
 public readonly struct Progress(float p = 0) {
     public static readonly Progress One = new(1);
+    public static readonly Progress Zero = new(0);
 
     private readonly float _p = Math.Clamp(p, 0, 1);
 

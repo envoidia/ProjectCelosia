@@ -9,7 +9,7 @@ namespace API.Graphics;
 /// Base class for StatBarWidget and HpBarWidget
 /// </summary>
 public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
-    protected const int _BarStartOffset = 90;
+    protected const int _BarStartOffset = 100;
     protected const int _HeightOffset = 5;
 
     public Label Title { get; } = new() { Alignment = Alignment.Controlled };
@@ -45,16 +45,15 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
         this.Height = Math.Max(this.Title.Height, this.Text.Height);
     }
 
-    public void Create() {
-        this.AddRoutine(IActor.In);
-        this.Title.AddRoutine(IActor.In);
-        this.Text.AddRoutine(IActor.In);
+    // todo respect anim type
+    public void OnCreate() {
+        this.Title.Create();
+        this.Text.Create();
     }
 
-    public void Destroy() {
-        this.AddRoutine(IActor.Out);
-        this.Title.AddRoutine(IActor.Out);
-        this.Text.AddRoutine(IActor.Out);
+    public void OnDestroy() {
+        this.Title.Destroy();
+        this.Text.Destroy();
     }
 
     public abstract void Draw(GameTime gameTime);

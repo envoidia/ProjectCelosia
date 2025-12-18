@@ -18,7 +18,7 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
     /// <summary>
     /// Colors for layers after the first 2
     /// </summary>
-    private static readonly Color[] _Layers = [Colors.Pos, Color.Cyan, Colors.SpBack, Color.White];
+    private static readonly Color[] _Layers = [Colors.Pos, Colors.Blues[5], Colors.Pinks[5], Colors.White];
 
     /// <summary>
     /// The value being tracked
@@ -62,7 +62,7 @@ public sealed class StatBarWidget(Vector2 pos, int width, RenderPriority renderP
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
 
-        if (DebugMenu._drawActorOutlines) {
+        if (_DebugMenu._drawActorOutlines) {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }

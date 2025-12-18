@@ -1,16 +1,17 @@
 # Lang Editing Guide
-[Lang.resx](API/Lang.resx) is the default (English) language file. To add a new language, copy-paste it into a new file named `Lang.language_COUNTRY.resx` (eg `Lang.ja_JP.resx`) and change the content in the `<value>` tags (and nothing outside of them)
+[API/Lang.resx](API/Lang.resx) and [Celosia/Lang.resx](Celosia/Lang.resx) are the default (English) language files. To add a new language, copy- these into new files named `Lang.language_COUNTRY.resx` (eg `Lang.ja_JP.resx`) and change the content in the `<value>` tags (and nothing outside of them)
 
-You can edit the `.resx` file in any editor you want, but it's recommended to use one that has syntax highlighting to make it easier to read (it's actually an XML file, so use XML syntax highlighting). A basic editor like [Kate](https://kate-editor.org/) or [Notepad++](https://notepad-plus-plus.org/) is sufficient, but more advanced editors like [VSCodium](https://vscodium.com/) (or any other version of VSCode) and [JetBrains IDEs](https://www.jetbrains.com/) can provide additional functionality like spellcheck, coloring pairs of brackets (For JetBrains, requires a plugin like [Color Brackets](https://plugins.jetbrains.com/plugin/24560-color-brackets)), and a Localization Mananager UI
+You can edit the `.resx` file in any editor you want, but it's recommended to use one that has syntax highlighting to make it easier to read, such as [VSCode](https://code.visualstudio.com/)
 
 `<!--Text-->` is a comment that does nothing, but may contain helpful information
 
 ## Formatting guide
 
 - `/c[color]` changes the color of the text (eg `/c[white]` or `/c[#ffffff]`)
-- `/i[image]` embeds an image (eg `/i[fire-ring]` or `/i[]`)
+  - Any color can be used. Some colors have special names, (TODO clarify)
+- `/i[image]` embeds an image from [icons.json](Game/Content/img/icons.json) (eg `/i[fire-ring]`)
 - `{number}` embeds an externally-provided parameter (eg `{0}`). The identity of these parameters is typically enumerated in a comment above entries that use them
-- `{number,plural,args}` uses an externally-provided parameter to choose text using the [ICu MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) standard
+- `{number,plural,args}` uses an externally-provided parameter to choose text using the [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) standard
   - For example, `{0,plural,=0{It's exactly zero}=1{It's exactly one}other{It's #}}` checks parameter 0, checks if it's equal to 0 and prints "It's exactly zero" if so, otherwise checks if it's equal to 1 and prints "It's exactly one" if so, otherwise prints the parameter itself with `#`
   - ICU MessageFormat can do a lot more than just this, but this is the only part that I use
 

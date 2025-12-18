@@ -9,10 +9,10 @@ public class RectangleActor : IActor {
 
     public RectangleActor() => this.Data = new(this);
 
-    public void Create() => this.AddRoutine(IActor.In);
-    public void Destroy() => this.AddRoutine(IActor.Out);
+    public void OnCreate() { }
+    public void OnDestroy() { }
 
     public void Draw(GameTime gameTime) => Core.ShapeBatch.DrawRectangle(
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new(this.Width, this.Height), Colors.Trans, Color.White);
+            new(this.Width, this.Height), Colors.Trans, Colors.White);
 }

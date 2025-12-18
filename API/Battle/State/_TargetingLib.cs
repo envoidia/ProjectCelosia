@@ -26,7 +26,7 @@ internal static class _TargetingLib {
         _CheckOpenLogInspect();
 
         if (InputLib.Check(Keybinds.Back)) {
-            //foreach (Label stat in stats) stat.Color = ColorCode.White;
+            //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";
 
             //StateMachine.Remove();
@@ -50,7 +50,7 @@ internal static class _TargetingLib {
         _Moves[_selectingMove].Text = $"{_Moves[_selectingMove].Text} /c[white]→ {target.FormatName(false)}";
 
         foreach (Label stat in _Stats) {
-            //stat.Color = ColorCode.White;
+            //stat.Color = Colors.White;
         }
 
         // Move on to next Unit unless this one has extra actions
