@@ -16,15 +16,34 @@ namespace API.Modding;
 
 // todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
 public static class ModLoader {
-    /// <summary>
-    /// List of all loaded mods. Do not externally modify
-    /// </summary>
-    internal static readonly List<GameMod> _LoadedMods = [];
+
+    #region API
 
     /// <summary>
     /// Lang key that should be used for a mod's display name
     /// </summary>
     public const string NameKey = "ModName";
+
+    /// <param name="modId">The ID of the mod to look for</param>
+    /// <returns>
+    /// Whether the given <c>IGameMod</c> is loaded
+    /// </returns>
+    public static bool IsModLoaded(string modId) => _LoadedMods.Any(m => m.Id == modId);
+
+    /// <param name="modId">The ID of the mod to look for</param>
+    /// <returns>
+    /// The first <c>GameMod</c> with the given ID, or null if none
+    /// </returns>
+    public static GameMod? GetFromId(string modId) => _LoadedMods.FirstOrDefault(m => m.Id == modId);
+
+    #endregion
+
+    #region Internals
+
+    /// <summary>
+    /// List of all loaded mods. Do not externally modify
+    /// </summary>
+    internal static readonly List<GameMod> _LoadedMods = [];
 
     private static readonly string _ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
 
@@ -42,6 +61,7 @@ public static class ModLoader {
         }
 
         // Find entry point
+        // todo skip + error msg instead of throwing
         Type? entryPoint = asm.GetTypes()
             .FirstOrDefault(static t => _IsStatic(t) && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
             ?? throw new _ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
@@ -65,14 +85,10 @@ public static class ModLoader {
         foreach (GameMod mod in _LoadedMods) mod.OnUpdate?.Invoke(gameTime);
     }
 
-    /// <param name="mod">The <c>IGameMod</c> to look for</param>
-    /// <returns>
-    /// Whether the given <c>IGameMod</c> is loaded
-    /// </returns>
-    public static bool IsModLoaded(GameMod mod) => _LoadedMods.Any(m => m == mod);
-
     private static bool _IsStatic(Type t) => t.IsAbstract && t.IsSealed;
 
     private sealed class _ModLoadException(string msg) : Exception(msg);
+
+    #endregion
 }
 #endif

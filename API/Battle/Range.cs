@@ -11,7 +11,7 @@ namespace API.Battle;
 /// <summary>
 /// The reach that a skill can have
 /// </summary>
-public sealed class Range : IDescribable {
+public sealed class Range : IDescribable, IRegistrable {
     public int RangeVertical { get; }
     public Side Side { get; }
     private Target[] _Targets { get; }
@@ -19,20 +19,24 @@ public sealed class Range : IDescribable {
     public bool CanTargetSelf { get; init; } = false;
     public int TargetCount { get; init; } = 1;
 
-    public GameMod? Source { get; }
     public string KeyName { get; }
     public string KeyDesc { get; }
 
-    public Range(GameMod? source, string keyName, int rangeVertical, Side side, params Target[] targets) {
-        this.Source = source;
-        this.KeyName = keyName;
-        this.KeyDesc = $"{keyName}Desc";
+    public string ModId { get; }
+    public string ItemId { get; init; }
 
+    public Range(string modId, string keyName, int rangeVertical, Side side, params Target[] targets) {
         this.RangeVertical = rangeVertical;
         this.Side = side;
         this._Targets = targets;
+        
+        this.KeyName = keyName;
+        this.KeyDesc = $"{keyName}Desc";
 
-        Core.Ranges.Add(this);
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
     public int[] GetTargetPositions(int posSelf, int posTarget) {
@@ -57,97 +61,97 @@ public sealed class Range : IDescribable {
         return [.. pos];
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
+    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName() => this.GetName(ThemeColor.White);
+    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
 
 }
 
 public static class Ranges {
-    public static readonly Range Self = new(null, "RangeSelf", 3, Side.Ally, Target.Self) {
+    public static readonly Range Self = new(Core.Id, "RangeSelf", 3, Side.Ally, Target.Self) {
         CanTargetSelf = true
     };
 
-    public static readonly Range Other1R = new(null, "RangeOther1R", 1, Side.Both, Target.Target);
-    public static readonly Range Other2R = new(null, "RangeOther2R", 2, Side.Both, Target.Target);
-    public static readonly Range Other3R = new(null, "RangeOther3R", 3, Side.Both, Target.Target);
+    public static readonly Range Other1R = new(Core.Id, "RangeOther1R", 1, Side.Both, Target.Target);
+    public static readonly Range Other2R = new(Core.Id, "RangeOther2R", 2, Side.Both, Target.Target);
+    public static readonly Range Other3R = new(Core.Id, "RangeOther3R", 3, Side.Both, Target.Target);
 
-    public static readonly Range Other1ROrSelf = new(null, "RangeOther1ROrSelf", 1, Side.Both, Target.Target) {
+    public static readonly Range Other1ROrSelf = new(Core.Id, "RangeOther1ROrSelf", 1, Side.Both, Target.Target) {
         CanTargetSelf = true
     };
 
-    public static readonly Range Other2ROrSelf = new(null, "RangeOther2ROrSelf", 2, Side.Both, Target.Target) {
+    public static readonly Range Other2ROrSelf = new(Core.Id, "RangeOther2ROrSelf", 2, Side.Both, Target.Target) {
         CanTargetSelf = true
     };
 
-    public static readonly Range Other3ROrSelf = new(null, "RangeOther3ROrSelf", 3, Side.Both, Target.Target) {
+    public static readonly Range Other3ROrSelf = new(Core.Id, "RangeOther3ROrSelf", 3, Side.Both, Target.Target) {
         CanTargetSelf = true
     };
 
-    public static readonly Range Others21R = new(null, "RangeOthers21R", 1, Side.Both, Target.Target) {
+    public static readonly Range Others21R = new(Core.Id, "RangeOthers21R", 1, Side.Both, Target.Target) {
         TargetCount = 2
     };
 
-    public static readonly Range Others22R = new(null, "RangeOthers22R", 2, Side.Both, Target.Target) {
+    public static readonly Range Others22R = new(Core.Id, "RangeOthers22R", 2, Side.Both, Target.Target) {
         TargetCount = 2
     };
 
-    public static readonly Range Others23R = new(null, "RangeOthers23R", 3, Side.Both, Target.Target) {
+    public static readonly Range Others23R = new(Core.Id, "RangeOthers23R", 3, Side.Both, Target.Target) {
         TargetCount = 2
     };
 
-    public static readonly Range Ally1R = new(null, "RangeAlly1R", 1, Side.Ally, Target.Target);
-    public static readonly Range Ally2R = new(null, "RangeAlly2R", 2, Side.Ally, Target.Target);
-    public static readonly Range Ally3R = new(null, "RangeAlly3R", 3, Side.Ally, Target.Target);
+    public static readonly Range Ally1R = new(Core.Id, "RangeAlly1R", 1, Side.Ally, Target.Target);
+    public static readonly Range Ally2R = new(Core.Id, "RangeAlly2R", 2, Side.Ally, Target.Target);
+    public static readonly Range Ally3R = new(Core.Id, "RangeAlly3R", 3, Side.Ally, Target.Target);
 
-    public static readonly Range Allies21R = new(null, "RangeAllies21R", 1, Side.Ally, Target.Target) {
+    public static readonly Range Allies21R = new(Core.Id, "RangeAllies21R", 1, Side.Ally, Target.Target) {
         TargetCount = 2
     };
 
-    public static readonly Range Allies22R = new(null, "RangeAllies22R", 2, Side.Ally, Target.Target) {
+    public static readonly Range Allies22R = new(Core.Id, "RangeAllies22R", 2, Side.Ally, Target.Target) {
         TargetCount = 2
     };
 
-    public static readonly Range Allies23R = new(null, "RangeAllies23R", 3, Side.Ally, Target.Target) {
+    public static readonly Range Allies23R = new(Core.Id, "RangeAllies23R", 3, Side.Ally, Target.Target) {
         TargetCount = 2
     };
 
-    public static readonly Range Opponent1R = new(null, "RangeOpponent1R", 1, Side.Opponent, Target.Target);
-    public static readonly Range Opponent2R = new(null, "RangeOpponent2R", 2, Side.Opponent, Target.Target);
-    public static readonly Range Opponent3R = new(null, "RangeOpponent3R", 3, Side.Opponent, Target.Target);
+    public static readonly Range Opponent1R = new(Core.Id, "RangeOpponent1R", 1, Side.Opponent, Target.Target);
+    public static readonly Range Opponent2R = new(Core.Id, "RangeOpponent2R", 2, Side.Opponent, Target.Target);
+    public static readonly Range Opponent3R = new(Core.Id, "RangeOpponent3R", 3, Side.Opponent, Target.Target);
 
-    public static readonly Range Team = new(null, "RangeTeam", 3, Side.Both, Target.Target, TargetTeam) {
+    public static readonly Range Team = new(Core.Id, "RangeTeam", 3, Side.Both, Target.Target, TargetTeam) {
         CanTargetSelf = true
     };
 
     public static readonly Range All =
-        new(null, "RangeAll", 3, Side.Both, Target.Self, SelfTeam, Target.Target, TargetTeam) {
+        new(Core.Id, "RangeAll", 3, Side.Both, Target.Self, SelfTeam, Target.Target, TargetTeam) {
             CanTargetSelf = true
         };
 
-    public static readonly Range AllOthers = new(null, "RangeAllOthers", 3, Side.Both, SelfTeam, Target.Target,
+    public static readonly Range AllOthers = new(Core.Id, "RangeAllOthers", 3, Side.Both, SelfTeam, Target.Target,
         TargetTeam);
 
-    public static readonly Range Adjacent = new(null, "RangeAdjacent", 1, Side.Both, SelfUp, SelfDown,
+    public static readonly Range Adjacent = new(Core.Id, "RangeAdjacent", 1, Side.Both, SelfUp, SelfDown,
         SelfAcross, SelfAcrossUp, SelfAcrossDown);
 
     public static readonly Range SelfUpDown =
-        new(null, "RangeSelfUpDown", 3, Side.Ally, Target.Self, SelfUp, SelfDown) {
+        new(Core.Id, "RangeSelfUpDown", 3, Side.Ally, Target.Self, SelfUp, SelfDown) {
             CanTargetSelf = true
         };
 
-    public static readonly Range Across = new(null, "RangeAcross", 1, Side.Opponent, SelfAcross);
+    public static readonly Range Across = new(Core.Id, "RangeAcross", 1, Side.Opponent, SelfAcross);
 
-    public static readonly Range AcrossUpDown = new(null, "RangeAcrossUpDown", 0, Side.Opponent, SelfAcross,
+    public static readonly Range AcrossUpDown = new(Core.Id, "RangeAcrossUpDown", 0, Side.Opponent, SelfAcross,
         SelfAcrossUp, SelfAcrossDown);
 
     public static readonly Range ColumnOf31R =
-        new(null, "RangeColumnOf31R", 1, Side.Both, Target.Target, TargetUp, TargetDown) {
+        new(Core.Id, "RangeColumnOf31R", 1, Side.Both, Target.Target, TargetUp, TargetDown) {
             CanTargetSelf = true
         };
 
     public static readonly Range ColumnOf32R =
-        new(null, "RangeColumnOf32R", 2, Side.Both, Target.Target, TargetUp, TargetDown) {
+        new(Core.Id, "RangeColumnOf32R", 2, Side.Both, Target.Target, TargetUp, TargetDown) {
             CanTargetSelf = true
         };
 }

@@ -7,12 +7,12 @@ namespace API.Modding;
 /// <summary>
 /// A dynamically loaded mod that can freely add and modify game content
 /// </summary>
-/// <param name="id">Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters</param>
+/// <param name="id">Unique string ID for this mod</param>
 /// <param name="version">Mod version</param>
 /// <param name="resourceManager">Mod's <c>Lang.ResourceManager</c></param>
 public sealed class GameMod(string id, Version version, ResourceManager resourceManager) {
     /// <summary>
-    /// Unique string ID for this mod. Recommended to use the mod's display name followed by some random characters
+    /// Unique string ID for this mod
     /// </summary>
     public string Id { get; } = id;
 

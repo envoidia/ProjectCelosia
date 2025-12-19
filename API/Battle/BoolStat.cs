@@ -5,50 +5,54 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class BoolStat : INameable {
+public sealed class BoolStat : INameable, IRegistrable {
     public string LogMsgKey { get; }
     public bool IsPositive { get; }
     public bool PossessiveNameInLogMsg { get; }
     public bool IsVisible { get; }
 
-    public GameMod? Source { get; }
     public string KeyName { get; }
+    
+    public string ModId { get; }
+    public string ItemId { get; init; }
 
-    public BoolStat(GameMod? source, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
+    public BoolStat(string modId, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
         bool isVisible) {
-        this.Source = source;
-        this.KeyName = keyName;
-
         this.LogMsgKey = logMsgKey;
         this.IsPositive = isPositive;
         this.PossessiveNameInLogMsg = possessiveNameInLogMsg;
         this.IsVisible = isVisible;
 
-        Core.BoolStats.Add(this);
+        this.KeyName = keyName;
+
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
+    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName() => this.GetName(ThemeColor.Stat);
 
     // todo format?
 }
 
 public static class BoolStats {
-    public static readonly BoolStat EffectBlock = new(null, "BoolEffectBlock",
+    public static readonly BoolStat EffectBlock = new(Core.Id, "BoolEffectBlock",
         "LogChangeBooleanStatEffectBlock", true, false, true);
 
-    public static readonly BoolStat InfiniteSp = new(null, "BoolInfiniteSp",
+    public static readonly BoolStat InfiniteSp = new(Core.Id, "BoolInfiniteSp",
         "LogChangeBooleanStatInfiniteSp", true, true, true);
 
-    public static readonly BoolStat UnableToAct = new(null, "BoolUnableToAct",
+    public static readonly BoolStat UnableToAct = new(Core.Id, "BoolUnableToAct",
         "LogChangeBooleanStatUnableToAct", false, false, true);
 
-    public static readonly BoolStat UnableToActImmunity = new(null, "BoolUnableToActImmunity",
+    public static readonly BoolStat UnableToActImmunity = new(Core.Id, "BoolUnableToActImmunity",
         "LogChangeBooleanStatUnableToActImmune", true, false, false);
 
-    public static readonly BoolStat EquipDisabled = new(null, "BoolEquipDisabled",
+    public static readonly BoolStat EquipDisabled = new(Core.Id, "BoolEquipDisabled",
         "LogChangeBooleanStatEquipDisabled", false, true, true);
 
-    public static readonly BoolStat EquipDisabledImmunity = new(null, "BoolEquipDisabledImmunity",
+    public static readonly BoolStat EquipDisabledImmunity = new(Core.Id, "BoolEquipDisabledImmunity",
         "LogChangeBooleanStatEquipDisabledImmune", true, false, false);
 }

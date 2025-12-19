@@ -1,5 +1,3 @@
-using API.Modding;
-
 namespace API.Name;
 
 /// <summary>
@@ -12,7 +10,7 @@ public interface IDescribable : INameable {
     string KeyDesc { get; }
 
     /// <returns>
-    /// This' description. Typical impl: <c>=> this.KeyDesc.GetLang(mod ?? this.Source)</c>
+    /// This' description
     /// </returns>
-    string GetDesc(GameMod? mod = null);
+    string GetDesc();
 }

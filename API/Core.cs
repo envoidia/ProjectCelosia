@@ -18,9 +18,20 @@ using ResolutionBuddy;
 
 namespace API;
 
+/// <summary>
+/// Core of the game
+/// </summary>
 // todo internalify
 public class Core : Game {
+    /// <summary>
+    /// Global instance of Core
+    /// </summary>
     public static Core Instance { get; private set; } = null!;
+
+    /// <summary>
+    /// ModId of Core
+    /// </summary>
+    public const string Id = "API";
 
     #region Rendering
 
@@ -37,29 +48,6 @@ public class Core : Game {
     public static DynamicSpriteFont Koruri60 { get; private set; } = null!;
 
     public static bool ExitOnEscape { get; set; } = false;
-
-    #endregion
-
-    #region _IModItem Lists
-    // todo add custom IModItem categories?
-    // todo move to respective classes and use Add methods?
-    // todo document that these are expected to have static lifetimes
-    public static readonly List<Accessory> Accessories = [];
-    public static readonly List<BoolStat> BoolStats = [];
-    public static readonly List<Buff> Buffs = [];
-    public static readonly List<Element> Elements = [];
-    public static readonly List<Mult> Mults = [];
-    public static readonly List<Passive> Passives = [];
-    public static readonly List<Range> Ranges = [];
-    public static readonly List<Skill> Skills = [];
-    public static readonly List<SkillType> SkillTypes = [];
-    public static readonly List<StageType> StageTypes = [];
-    public static readonly List<StatMod> StatMods = [];
-    public static readonly List<Stat> Stats = [];
-    public static readonly List<UnitType> UnitTypes = [];
-    public static readonly List<Weapon> Weapons = [];
-
-    public static readonly List<Theme> Themes = [];
 
     #endregion
 

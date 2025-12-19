@@ -15,6 +15,7 @@ namespace API.Menu.State;
 /// <param name="OnUpdate">Called every frame when this is active, during the logic phase</param>
 /// <param name="OnGetInputPrompt">Called when this is first reached to update the input prompt <c>Label</c>
 /// in the bottom-right corner. Menus can override this</param>
+// todo should states store List<IActor> and automatically add/remove them
 public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>? OnGetInputPrompt) {
     /// <summary>
     /// Called on <c>StateMachine.Add</c>. Do not call elsewhere

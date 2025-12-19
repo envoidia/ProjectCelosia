@@ -31,8 +31,19 @@ public sealed class Menu {
     /// </summary>
     public IInputWidget[] InputWidgets { get; init; } = [];
 
+    /// <summary>
+    /// Called by <c>this.Create</c>. Do not call directly
+    /// </summary>
     public Action? OnCreate { get; init; }
+
+    /// <summary>
+    /// Called by <c>this.Destroy</c>. Do not call directly
+    /// </summary>
     public Action? OnDestroy { get; init; }
+
+    /// <summary>
+    /// Called by <c>this.Update</c>. Do not call directly
+    /// </summary>
     public Action<GameTime>? OnUpdate { get; init; }
 
     /// <summary>
@@ -53,6 +64,9 @@ public sealed class Menu {
         this.SetupWidgets();
     }
 
+    /// <summary>
+    /// Called by <c>StateMachine.AddMenu</c>. Do not call directly
+    /// </summary>
     public void Create() {
         Stage.AddRange(this.Actors);
         this.OnCreate?.Invoke();
@@ -60,6 +74,9 @@ public sealed class Menu {
         Stage.Cleanup();
     }
 
+    /// <summary>
+    /// Called by <c>StateMachine.RemoveMenu</c>. Do not call directly
+    /// </summary>
     public void Destroy() {
         foreach (IActor a in this.Actors) a.Destroy();
         this.OnDestroy?.Invoke();
@@ -67,6 +84,10 @@ public sealed class Menu {
         Stage.Cleanup();
     }
 
+    /// <summary>
+    /// Called by <c>State.Update</c>. Do not call directly
+    /// </summary>
+    // todo do i need this? will there be extra behavior?
     public void Update(GameTime gameTime) => this.OnUpdate?.Invoke(gameTime);
 
     /// <returns>

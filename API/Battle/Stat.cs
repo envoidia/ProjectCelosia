@@ -5,31 +5,35 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Stat : INameable {
+public sealed class Stat : INameable, IRegistrable {
     public StageType? StageType { get; }
 
-    public GameMod? Source { get; }
     public string KeyName { get; }
 
-    public Stat(GameMod? source, string keyName, StageType? stageType) {
-        this.Source = source;
-        this.KeyName = keyName;
+    public string ModId { get; }
+    public string ItemId { get; init; }
 
+    public Stat(string modId, string keyName, StageType? stageType) {
         this.StageType = stageType;
 
-        Core.Stats.Add(this);
+        this.KeyName = keyName;
+
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
+    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName() => this.GetName(ThemeColor.Stat);
 }
 
 public static class Stats {
-    public static readonly Stat Hp = new(null, "Hp", null);
-    public static readonly Stat Str = new(null, "StatStr", StageTypes.Atk);
-    public static readonly Stat Mag = new(null, "StatMag", StageTypes.Atk);
-    public static readonly Stat Fth = new(null, "StatFth", StageTypes.Fth);
-    public static readonly Stat Amr = new(null, "StatAmr", StageTypes.Def);
-    public static readonly Stat Res = new(null, "StatRes", StageTypes.Def);
-    public static readonly Stat Agi = new(null, "StatAgi", StageTypes.Agi);
+    public static readonly Stat Hp = new(Core.Id, "Hp", null);
+    public static readonly Stat Str = new(Core.Id, "StatStr", StageTypes.Atk);
+    public static readonly Stat Mag = new(Core.Id, "StatMag", StageTypes.Atk);
+    public static readonly Stat Fth = new(Core.Id, "StatFth", StageTypes.Fth);
+    public static readonly Stat Amr = new(Core.Id, "StatAmr", StageTypes.Def);
+    public static readonly Stat Res = new(Core.Id, "StatRes", StageTypes.Def);
+    public static readonly Stat Agi = new(Core.Id, "StatAgi", StageTypes.Agi);
 }

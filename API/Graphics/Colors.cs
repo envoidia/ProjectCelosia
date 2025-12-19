@@ -29,7 +29,7 @@ public static class Colors {
     /// <returns>
     /// A <c>Color</c> made from the given hex (<c>0xRRGGBB</c>)
     /// </returns>
-    // Xna.Framework.Color is stored as AGBR
+    // Xna.Framework.Color is stored as AGBR, so we need to reverse the bit order
     public static Color FromRgb(uint rgb) =>
         new(0xff000000     // A
             | ((rgb & 0xff) << 16)       // R

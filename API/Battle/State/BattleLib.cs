@@ -9,6 +9,7 @@ using API.Graphics;
 using API.Input;
 using API.Menu;
 using API.Menu.State;
+using API.Modding;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
@@ -254,7 +255,7 @@ public static class BattleLib {
             int buffCount = 0;
 
             // List stage changes
-            foreach (StageType stageType in Core.StageTypes) {
+            foreach (StageType stageType in Registry.OfType<StageType>()) {
                 int stage = units[i].GetStage(stageType);
                 if (stage != 0) {
                     if (buffCount > 0 && buffCount % 4 == 0) sb.Append('\n');

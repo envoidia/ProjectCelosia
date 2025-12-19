@@ -9,7 +9,10 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Skill : ComplexDescribable {
+/// <summary>
+/// todo docs
+/// </summary>
+public sealed class Skill : ComplexDescribable, IRegistrable {
     public Range Range { get; }
     public int Cost { get; }
 
@@ -20,12 +23,16 @@ public sealed class Skill : ComplexDescribable {
     public SkillRole[] SkillRoles { get; init; } = [];
     public SkillEffect[] SkillEffects { get; init; } = [];
 
-    public Skill(GameMod? source, string keyName, string keyDesc, Range range, int cost)
-        : base(source, keyName, "", keyDesc) {
+    public string ItemId { get; init; }
+
+    public Skill(string modId, string keyName, string keyDesc, Range range, int cost) : base(keyName, "", keyDesc) {
         this.Range = range;
         this.Cost = cost;
 
-        Core.Skills.Add(this);
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
     public string GetCostFormatted() =>
@@ -54,12 +61,12 @@ public sealed class Skill : ComplexDescribable {
     // todo more complex logic
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
 
-    public override string GetName(ThemeColor color, GameMod? mod = null) =>
-        $"{this.GetElement().Icon} {color.Str()}{this.KeyName.GetLang(mod ?? this.Source)}";
-    public override string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Skill, mod ?? this.Source);
+    public override string GetName(ThemeColor color) =>
+        $"{this.GetElement().Icon} {color.Str()}{this.GetLang()}";
+    public override string GetName() => this.GetName(ThemeColor.Skill);
 
     // todo stat skills
-    public override string GetFullDesc(GameMod? mod = null) {
+    public override string GetFullDesc() {
         int pow = 0;
         HashSet<string> skillTypes = [];
         foreach (SkillEffect skillEffect in this.SkillEffects) {
@@ -72,19 +79,19 @@ public sealed class Skill : ComplexDescribable {
 
             if (effectType is null) continue;
 
-            skillTypes.Add(effectType.GetName(mod ?? this.Source) + ThemeColor.White.Str());
+            skillTypes.Add(effectType.GetName() + ThemeColor.White.Str());
         }
 
         string skillTypesStr = skillTypes.Count != 0
             ? string.Join(", ", skillTypes)
-            : SkillTypes.Stat.GetName(mod ?? this.Source) + ThemeColor.White.Str();
+            : SkillTypes.Stat.GetName() + ThemeColor.White.Str();
 
-        return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(mod ?? this.Source),
-            this.Range.GetName(mod ?? this.Source), pow == 0 ? "" : $", {ThemeColor.Imp.Str()}{pow} {ThemeColor.White.Str()}{Lang.Pow}",
+        return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(),
+            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str()}{pow} {ThemeColor.White.Str()}{Lang.Pow}",
             this.Prio == 0
                 ? ""
                 : $", {((int) this.Prio).Format()} {ThemeColor.White.Str()}{Lang.Prio}",
-            this._GetFormattedDescInclusions(mod ?? this.Source));
+            this._GetFormattedDescInclusions());
     }
 
     protected override HashSet<IDescribable> _GetDescInclusions() {
@@ -100,6 +107,6 @@ public sealed class Skill : ComplexDescribable {
 }
 
 public static class Skills {
-    public static readonly Skill Nothing = new(null, "SkillNothing", "Blank", Ranges.Other3ROrSelf, 0);
-    public static readonly Skill Defend = new(null, "SkillDefend", "Todo", Ranges.Self, 0);
+    public static readonly Skill Nothing = new(Core.Id, "SkillNothing", "Blank", Ranges.Other3ROrSelf, 0);
+    public static readonly Skill Defend = new(Core.Id, "SkillDefend", "Todo", Ranges.Self, 0);
 }

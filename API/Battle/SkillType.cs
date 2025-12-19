@@ -5,24 +5,28 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class SkillType : INameable {
-    public GameMod? Source { get; }
+public sealed class SkillType : INameable, IRegistrable {
     public string KeyName { get; }
 
-    public SkillType(GameMod? source, string keyName) {
-        this.Source = source;
+    public string ModId { get; }
+    public string ItemId { get; init; }
+
+    public SkillType(string modId, string keyName) {
         this.KeyName = keyName;
 
-        Core.SkillTypes.Add(this);
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Stat, mod ?? this.Source);
+    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName() => this.GetName(ThemeColor.Stat);
 }
 
 public static class SkillTypes {
-    public static readonly SkillType Str = new(null, "StatStr");
-    public static readonly SkillType Mag = new(null, "StatMag");
-    public static readonly SkillType Fth = new(null, "StatFth");
-    public static readonly SkillType Stat = new(null, "SkillTypeStat");
+    public static readonly SkillType Str = new(Core.Id, "StatStr");
+    public static readonly SkillType Mag = new(Core.Id, "StatMag");
+    public static readonly SkillType Fth = new(Core.Id, "StatFth");
+    public static readonly SkillType Stat = new(Core.Id, "SkillTypeStat");
 }

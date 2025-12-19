@@ -7,37 +7,41 @@ using API.Name;
 namespace API.Battle;
 
 // todo represent available and equipped skills and equipped item
-public sealed class UnitType : IDescribable {
+public sealed class UnitType : IDescribable, IRegistrable {
 
     public Dictionary<Stat, int> Stats { get; }
-    internal readonly Dictionary<Element, int> _Affinities; // todo change naming rule
+    internal readonly Dictionary<Element, int> _Affinities;
     public Passive[] Passives { get; }
 
-    public GameMod? Source { get; }
     public string KeyName { get; }
     public string KeyDesc { get; }
 
-    public UnitType(GameMod? source, string keyName, Dictionary<Stat, int> stats,
-        Dictionary<Element, int> affinities, params Passive[] passives) {
-        this.Source = source;
-        this.KeyName = keyName;
-        this.KeyDesc = $"{keyName}Desc";
+    public string ModId { get; }
+    public string ItemId { get; init; }
 
+    public UnitType(string modId, string keyName, Dictionary<Stat, int> stats,
+        Dictionary<Element, int> affinities, params Passive[] passives) {
         this.Stats = stats;
         this._Affinities = affinities;
         this.Passives = passives;
 
-        Core.UnitTypes.Add(this);
+        this.KeyName = keyName;
+        this.KeyDesc = $"{keyName}Desc";
+
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
+    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName() => this.GetName(ThemeColor.White);
+    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
 
 }
 
 public static class UnitTypes {
-    public static readonly UnitType TestUnitType = new(null, "TestUnitType", new Dictionary<Stat, int>() {
+    public static readonly UnitType TestUnitType = new(Core.Id, "TestUnitType", new Dictionary<Stat, int>() {
         [Stats.Hp] = 100, [Stats.Str] = 100, [Stats.Mag] = 100, [Stats.Fth] = 100,
         [Stats.Amr] = 100, [Stats.Res] = 100, [Stats.Agi] = 100
     }, []);

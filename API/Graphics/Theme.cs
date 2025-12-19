@@ -14,23 +14,26 @@ namespace API.Graphics;
 /// <summary>
 /// Color theme
 /// </summary>
-public class Theme : IDescribable {
+public class Theme : IDescribable, IRegistrable {
     /// <summary>
     /// Notified when the current <c>Theme</c> changes
     /// </summary>
     public static event Action? OnChange;
 
-    public GameMod? Source { get; }
-
     public string KeyName { get; }
     public string KeyDesc { get; }
 
-    public Theme(GameMod? source, string keyName) {
-        this.Source = source;
+    public string ModId { get; }
+    public string ItemId { get; init; }
+
+    public Theme(string modId, string keyName) {
         this.KeyName = keyName;
         this.KeyDesc = $"{keyName}Desc";
 
-        Core.Themes.Add(this);
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
     #region Default Themes
@@ -58,8 +61,9 @@ public class Theme : IDescribable {
             Color[] grayBlues = Colors.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
             Color[] whites = Colors.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
 
-            Apollo = new(null, "ThemeApollo") {
+            Apollo = new(Core.Id, "ThemeApollo") {
                 White = whites[3],
+                Gray = whites[0],
                 Black = grayBlues[0],
                 TransBlack = new(grayBlues[0], TransAmt),
 
@@ -133,8 +137,9 @@ public class Theme : IDescribable {
             Color lightPink = Colors.FromRgb(0xe9aee4);
             Color darkPink = Colors.FromRgb(0xda86d1);
 
-            Void = new(null, "ThemeVoid") {
+            Void = new(Core.Id, "ThemeVoid") {
                 White = white,
+                Gray = gray,
                 Black = black,
                 TransBlack = new(black, TransAmt),
 
@@ -172,7 +177,7 @@ public class Theme : IDescribable {
                 Vis = white,
                 Ignis = salmon,
                 Glacies = electricBlue,
-                Fulgur = lightPink,
+                Fulgur = paleYellow,
                 Ventus = green,
                 Terra = darkPink,
                 Lux = paleYellow,
@@ -207,8 +212,9 @@ public class Theme : IDescribable {
             Color darkPink = Colors.FromRgb(0xC586C0);
             Color magenta = Colors.FromRgb(0xd96fd5);
 
-            VSCode = new(null, "ThemeVSCode") {
+            VSCode = new(Core.Id, "ThemeVSCode") {
                 White = white,
+                Gray = gray,
                 Black = black,
                 TransBlack = new(black, TransAmt),
 
@@ -264,8 +270,9 @@ public class Theme : IDescribable {
             ColorCode lightRed = new(255, 81, 81);
             ColorCode elecBlue = new(24, 152, 255);
 
-            HighContrast = new(null, "ThemeHighContrast") {
+            HighContrast = new(Core.Id, "ThemeHighContrast") {
                 White = Color.White,
+                Gray = Color.Gray,
                 Black = Color.Black,
                 TransBlack = new(Color.Black, TransAmt),
 
@@ -333,8 +340,9 @@ public class Theme : IDescribable {
             Color hotPink = Colors.FromRgb(0xe8418f);
             Color redPink = Colors.FromRgb(0xe3004f);
 
-            MikuMikuTheme = new(null, "ThemeMikuMikuTheme") {
+            MikuMikuTheme = new(Core.Id, "ThemeMikuMikuTheme") {
                 White = white,
+                Gray = gray,
                 Black = black,
                 TransBlack = new(black, TransAmt),
 
@@ -390,8 +398,9 @@ public class Theme : IDescribable {
 
             Color white = new(255, 100, 100);
 
-            RedMode = new(null, "ThemeRedMode") {
+            RedMode = new(Core.Id, "ThemeRedMode") {
                 White = white,
+                Gray = r[9],
                 Black = r[0],
                 TransBlack = new(r[0], TransAmt),
 
@@ -446,7 +455,7 @@ public class Theme : IDescribable {
 
     #region General
 
-    public ColorCode[] AllColors => [this.White, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
+    public ColorCode[] AllColors => [this.White, this.Gray, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
         this.Pos, this.Neg, this.Imp, this.Ally, this.Opp, this.Turn, this.Hp, this.Sp, this.Shield, this.Bloom,
         this.Buff, this.Skill, this.Element, this.Passive, this.Stat, this.Cooldown, this.SpBack, this.Overheal,
         this.StatBarLayer4, this.StatBarLayer5, this.Atk, this.Def, this.Fth, this.Agi, this.Vis, this.Ignis,
@@ -456,6 +465,11 @@ public class Theme : IDescribable {
     /// Not necessarily actually white, but (probably) close
     /// </summary>
     public required ColorCode White { get; init; }
+
+    /// <summary>
+    /// Not necessarily actually gray, but (probably) close
+    /// </summary>
+    public required ColorCode Gray { get; init; }
 
     /// <summary>
     /// Not necessarily actually black, but (probably) close
@@ -662,6 +676,7 @@ public class Theme : IDescribable {
 
     public ColorCode Get(ThemeColor tc) => tc switch {
         ThemeColor.White => this.White,
+        ThemeColor.Gray => this.Gray,
         ThemeColor.Black => this.Black,
         ThemeColor.TransBlack => this.TransBlack,
 
@@ -749,9 +764,9 @@ public class Theme : IDescribable {
         return sb.ToString();
     }
 
-    public string GetName(ThemeColor color, GameMod? mod = null) => color.Str() + this.KeyName.GetLang(mod ?? this.Source);
-    public string GetName(GameMod? mod = null) => this.GetName(ThemeColor.White, mod ?? this.Source);
-    public string GetDesc(GameMod? mod = null) => this.KeyDesc.GetLang(mod ?? this.Source);
+    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName() => this.GetName(ThemeColor.White);
+    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
 
     #endregion
 }

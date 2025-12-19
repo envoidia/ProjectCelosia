@@ -328,7 +328,6 @@ internal sealed class _InspectLib {
 
             _UpdateInspectUnitPage(_Queue.Index);
         }
-
         // todo
 
         // UpdateInputPrompt on page change

@@ -8,6 +8,7 @@ namespace API.Graphics;
 /// </summary>
 public enum ThemeColor {
     White,
+    Gray,
     Black,
     TransBlack,
 

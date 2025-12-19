@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using API.Battle.State;
 using API.Extensions;
@@ -125,9 +126,16 @@ public static class DebugUtil {
     /// Write a message to the ingame debug log and the attached OS console
     /// </summary>
     /// <param name="msg">Message</param>
-    /// <param name="source">Origin to display for the message</param>
-    public static void Log(string msg, string source) {
-        string str = $"{ThemeColor.Imp.Str()}[{source}]{ThemeColor.White.Str()} {msg}";
+    /// <param name="source">Origin to display for the message. API uses the name of the current class, but mods should
+    /// use more specific names so it's clear exactly what mod it's coming from</param>
+    /// <param name="logLevel">Color to use to indicate message severity</param>
+    public static void Log(string msg, string source, LogLevel logLevel = LogLevel.Info) {
+        string str = $"{logLevel switch {
+            LogLevel.Info => ThemeColor.White.Str(),
+            LogLevel.Warning => ThemeColor.Imp.Str(),
+            LogLevel.Error => ThemeColor.Neg.Str(),
+            _ => throw new ClosedEnumsWhenException()
+        }}[{source}]{ThemeColor.White.Str()} {msg}";
 
         if (_LogText.Count == _LogLimit) _LogText.RemoveFirst();
 
@@ -135,6 +143,15 @@ public static class DebugUtil {
         _DebugLog.Text = string.Join('\n', _LogText);
 
         Console.WriteLine(str);
+    }
+
+    /// <summary>
+    /// Determines the color of log messages
+    /// </summary>
+    public enum LogLevel {
+        Info,
+        Warning,
+        Error
     }
 
     internal static void _Update(GameTime gameTime) {
@@ -245,8 +262,9 @@ public static class DebugUtil {
     /// Increase current palette index by 1 or loop around
     /// </summary>
     private static void _CyclePalette() {
-        int i = Core.Themes.IndexOf(Settings.Theme);
-        Settings.Theme = Core.Themes[i == Core.Themes.Count - 1 ? 0 : i + 1];
+        Theme[] themes = [.. Registry.OfType<Theme>()];
+        int i = themes.IndexOf(Settings.Theme);
+        Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
         Log($"Theme changed to {Settings.Theme.GetName()}", _ClassName);
     }
 

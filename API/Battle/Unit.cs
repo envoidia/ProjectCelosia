@@ -6,6 +6,7 @@ using API.Battle.BuffEffects;
 using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
+using API.Modding;
 using API.Name;
 using API.Util;
 using MonoGame.Extended.Collections;
@@ -181,7 +182,7 @@ public sealed class Unit {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
         StringBuilder sb = new($"{ThemeColor.Stat.Str()}{Lang.Affinities}:{ThemeColor.White.Str()} ");
-        foreach (Element element in Core.Elements.Where(e => e.IsVisible)) {
+        foreach (Element element in Registry.OfType<Element>().Where(e => e.IsVisible)) {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
 
@@ -244,7 +245,7 @@ public sealed class Unit {
 
     public string GetMultsString() {
         StringBuilder str = new();
-        foreach (Mult mult in Core.Mults) {
+        foreach (Mult mult in Registry.OfType<Mult>()) {
             int curMult = this._Mults[mult];
             str.Append(mult.Format(curMult)).Append('\n');
         }
@@ -281,7 +282,7 @@ public sealed class Unit {
 
     public string GetOtherStatsString() {
         StringBuilder str = new();
-        foreach (BoolStat stat in Core.BoolStats) {
+        foreach (BoolStat stat in Registry.OfType<BoolStat>()) {
             if (stat.IsVisible) str.Append(this.GetBoolStatString(stat)).Append('\n');
         }
 
@@ -321,7 +322,10 @@ public sealed class Unit {
 
     public string GetStatModsString() {
         StringBuilder str = new();
-        foreach (StatMod mod in Core.StatMods) str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
+        foreach (StatMod mod in Registry.OfType<StatMod>()) {
+            str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
+        }
+        
         return str.ToString();
     }
 
@@ -397,7 +401,7 @@ public sealed class Unit {
 
     public void DecrementTurns() {
         // Stages
-        foreach (StageType stageType in Core.StageTypes) {
+        foreach (StageType stageType in Registry.OfType<StageType>()) {
             int stage = this.GetStage(stageType);
             if (stage != 0 && --this._StageTurns[stageType] == 0) {
                 LogLib.Add(Lang.LogLoseStage.FormatIcu(this.FormatName(false),

@@ -10,9 +10,14 @@ namespace Celosia;
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
 public static class Main {
     /// <summary>
+    /// ModId of this
+    /// </summary>
+    public const string Id = "Celosia";
+
+    /// <summary>
     /// <c>GameMod</c> instance
     /// </summary>
-    public static GameMod Mod { get; } = new("Celosia", new Version(0, 1), Lang.ResourceManager);
+    public static GameMod Mod { get; } = new(Id, new Version(0, 1), Lang.ResourceManager);
 
     static Main() {
         Console.WriteLine("running Celosia.Main static constructor");

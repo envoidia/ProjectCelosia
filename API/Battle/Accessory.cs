@@ -4,17 +4,22 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Accessory : ComplexDescribable, IEquippable {
+public sealed class Accessory : ComplexDescribable, IRegistrable, IEquippable {
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-    public Accessory(GameMod? source, string keyName, string icon) :
-        base(source, keyName, icon, $"{keyName}Desc") {
-        Core.Accessories.Add(this);
+public string ItemId { get; init; }
+
+    public Accessory(string modId, string keyName, string icon) :
+        base(keyName, icon, $"{keyName}Desc") {
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
-    public override string GetFullDesc(GameMod? mod = null) =>
-        string.Format(Lang.AccessoryDesc, this._GetFormattedDescInclusions(mod ?? this.Source));
+    public override string GetFullDesc() =>
+        string.Format(Lang.AccessoryDesc, this._GetFormattedDescInclusions());
 
     protected override HashSet<IDescribable> _GetDescInclusions() =>
        IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);

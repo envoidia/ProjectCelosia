@@ -5,16 +5,22 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Passive : ComplexDescribable{
+public sealed class Passive : ComplexDescribable, IRegistrable {
     public IBuffEffect[] BuffEffects { get; init; }
 
-    public Passive(GameMod? source, string keyName, string keyDesc, string icon, params IBuffEffect[] buffEffects)
-        : base(source, keyName, icon, keyDesc) {
+    public string ItemId { get; init; }
+
+    public Passive(string modId, string keyName, string keyDesc, string icon, params IBuffEffect[] buffEffects)
+        : base(keyName, icon, keyDesc) {
         this.BuffEffects = buffEffects;
-        Core.Passives.Add(this);
+
+        this.ModId = modId;
+        this.ItemId = keyName;
+
+        Registry.Register(this);
     }
 
-    public override string GetName(GameMod? mod = null) => this.GetName(ThemeColor.Passive, mod ?? this.Source);
+    public override string GetName() => this.GetName(ThemeColor.Passive);
 
-    public override string GetFullDesc(GameMod? mod = null) => "todo";
+    public override string GetFullDesc() => "todo";
 }
