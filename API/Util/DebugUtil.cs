@@ -20,7 +20,7 @@ public static class DebugUtil {
 
     private const int _Mb = 1024 * 1024;
 
-    private const int _LogLimit = 8;
+    private const int _LogLimit = 12;
     private static readonly List<string> _LogText = new(8);
 
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
@@ -130,19 +130,23 @@ public static class DebugUtil {
     /// use more specific names so it's clear exactly what mod it's coming from</param>
     /// <param name="logLevel">Color to use to indicate message severity</param>
     public static void Log(string msg, string source, LogLevel logLevel = LogLevel.Info) {
-        string str = $"{logLevel switch {
+        if (_LogText.Count == _LogLimit) _LogText.RemoveFirst();
+
+        _LogText.Add($"{logLevel switch {
             LogLevel.Info => ThemeColor.White.Str(),
             LogLevel.Warning => ThemeColor.Imp.Str(),
             LogLevel.Error => ThemeColor.Neg.Str(),
             _ => throw new ClosedEnumsWhenException()
-        }}[{source}]{ThemeColor.White.Str()} {msg}";
+        }}[{source}] {msg}");
 
-        if (_LogText.Count == _LogLimit) _LogText.RemoveFirst();
-
-        _LogText.Add(str);
         _DebugLog.Text = string.Join('\n', _LogText);
 
-        Console.WriteLine(str);
+        Console.WriteLine($"{logLevel switch {
+            LogLevel.Info => "",
+            LogLevel.Warning => "\e[0;33m",
+            LogLevel.Error => "\e[0;31m",
+            _ => throw new ClosedEnumsWhenException()
+        }}[{source}] {msg}");
     }
 
     /// <summary>
@@ -211,23 +215,34 @@ public static class DebugUtil {
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F5)) {
+            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+            Log("Output LoadedMods to console", _ClassName);
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.F6)) {
+            Console.WriteLine(Registry.ToString());
+            Log("Output Registry to console", _ClassName);
+
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.F7)) {
             Console.WriteLine(Stage.ToString());
             Log("Output Stage to console", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F6)) {
+        if (InputLib.IsKeyJustPressed(Keys.F8)) {
             string str = string.Join('\n', LogLib._LogText);
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
                 Console.WriteLine(str);
                 Log("Output raw battle log to console", _ClassName);
             } else {
-                Console.WriteLine(Regexes.RemoveFormattingCodes(str));
+                Console.WriteLine(str.RemoveFormattingCodes());
                 Log("Output battle log to console", _ClassName);
             }
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F7)) {
+        if (InputLib.IsKeyJustPressed(Keys.F9)) {
             if (InputLib.Check(Keybinds.Hotkey1)) _CyclePalette();
             else if (InputLib.Check(Keybinds.Hotkey2)) {
                 Console.WriteLine(Settings.Theme.ToString());
@@ -235,24 +250,19 @@ public static class DebugUtil {
             } else _drawPalette ^= true;
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F8)) {
-            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
-            Log("Output LoadedMods to console", _ClassName);
-        }
-
         // todo remove functions after this? theyre not rly used
 
-        if (InputLib.IsKeyJustPressed(Keys.F9)) {
+        if (InputLib.IsKeyJustPressed(Keys.F10)) {
             Stage._RecalcLayoutWidgets();
             Log("Recalculated ILayoutWidgets", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F10)) {
+        if (InputLib.IsKeyJustPressed(Keys.F11)) {
             Stage.Cleanup();
             Log("Cleaned up Stage", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F11)) {
+        if (InputLib.IsKeyJustPressed(Keys.F12)) {
             GC.Collect();
             Log("Forced GC collect", _ClassName);
         }
@@ -265,7 +275,7 @@ public static class DebugUtil {
         Theme[] themes = [.. Registry.OfType<Theme>()];
         int i = themes.IndexOf(Settings.Theme);
         Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
-        Log($"Theme changed to {Settings.Theme.GetName()}", _ClassName);
+        Log($"Theme changed to {Settings.Theme.GetName().RemoveFormattingCodes()}", _ClassName);
     }
 
     // todo cleanup

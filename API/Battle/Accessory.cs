@@ -4,16 +4,19 @@ using API.Name;
 
 namespace API.Battle;
 
+/// <summary>
+/// todo docs
+/// </summary>
 public sealed class Accessory : ComplexDescribable, IRegistrable, IEquippable {
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
 
-public string ItemId { get; init; }
+    public string ItemId { get; init; }
 
-    public Accessory(string modId, string keyName, string icon) :
+    public Accessory(string modId, string keyName, string icon, string? itemId = null) :
         base(keyName, icon, $"{keyName}Desc") {
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

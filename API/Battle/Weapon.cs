@@ -5,6 +5,9 @@ using API.Name;
 
 namespace API.Battle;
 
+/// <summary>
+/// todo docs
+/// </summary>
 public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable {
     public Dictionary<Element, int> Affinities { get; init; }
     public Skill[] Skills { get; init; } = [];
@@ -12,12 +15,12 @@ public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable {
 
     public string ItemId { get; init; }
 
-    public Weapon(string modId, string keyName, string icon, Dictionary<Element, int> affinities)
+    public Weapon(string modId, string keyName, string icon, Dictionary<Element, int> affinities, string? itemId = null)
         : base(keyName, icon, $"{keyName}Desc") {
         this.Affinities = affinities;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

@@ -10,12 +10,12 @@ public sealed class Passive : ComplexDescribable, IRegistrable {
 
     public string ItemId { get; init; }
 
-    public Passive(string modId, string keyName, string keyDesc, string icon, params IBuffEffect[] buffEffects)
-        : base(keyName, icon, keyDesc) {
+    public Passive(string modId, string keyName, string keyDesc, string icon, IBuffEffect[] buffEffects,
+        string? itemId = null) : base(keyName, icon, keyDesc) {
         this.BuffEffects = buffEffects;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

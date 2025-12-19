@@ -12,12 +12,12 @@ public sealed class BoolStat : INameable, IRegistrable {
     public bool IsVisible { get; }
 
     public string KeyName { get; }
-    
+
     public string ModId { get; }
     public string ItemId { get; init; }
 
     public BoolStat(string modId, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
-        bool isVisible) {
+        bool isVisible, string? itemId = null) {
         this.LogMsgKey = logMsgKey;
         this.IsPositive = isPositive;
         this.PossessiveNameInLogMsg = possessiveNameInLogMsg;
@@ -26,7 +26,7 @@ public sealed class BoolStat : INameable, IRegistrable {
         this.KeyName = keyName;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

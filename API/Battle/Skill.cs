@@ -25,12 +25,12 @@ public sealed class Skill : ComplexDescribable, IRegistrable {
 
     public string ItemId { get; init; }
 
-    public Skill(string modId, string keyName, string keyDesc, Range range, int cost) : base(keyName, "", keyDesc) {
+    public Skill(string modId, string keyName, string keyDesc, Range range, int cost, string? itemId = null) : base(keyName, "", keyDesc) {
         this.Range = range;
         this.Cost = cost;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

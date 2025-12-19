@@ -11,7 +11,7 @@ public sealed class UnitType : IDescribable, IRegistrable {
 
     public Dictionary<Stat, int> Stats { get; }
     internal readonly Dictionary<Element, int> _Affinities;
-    public Passive[] Passives { get; }
+    public Passive[] Passives { get; init; }
 
     public string KeyName { get; }
     public string KeyDesc { get; }
@@ -20,7 +20,7 @@ public sealed class UnitType : IDescribable, IRegistrable {
     public string ItemId { get; init; }
 
     public UnitType(string modId, string keyName, Dictionary<Stat, int> stats,
-        Dictionary<Element, int> affinities, params Passive[] passives) {
+        Dictionary<Element, int> affinities, Passive[] passives, string? itemId = null) {
         this.Stats = stats;
         this._Affinities = affinities;
         this.Passives = passives;
@@ -29,7 +29,7 @@ public sealed class UnitType : IDescribable, IRegistrable {
         this.KeyDesc = $"{keyName}Desc";
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }
@@ -44,5 +44,5 @@ public static class UnitTypes {
     public static readonly UnitType TestUnitType = new(Core.Id, "TestUnitType", new Dictionary<Stat, int>() {
         [Stats.Hp] = 100, [Stats.Str] = 100, [Stats.Mag] = 100, [Stats.Fth] = 100,
         [Stats.Amr] = 100, [Stats.Res] = 100, [Stats.Agi] = 100
-    }, []);
+    }, [], []);
 }

@@ -26,13 +26,13 @@ public sealed class Mult : INameable, IRegistrable {
     public string ModId { get; }
     public string ItemId { get; init; }
 
-    public Mult(string modId, string keyName, bool isPositive) {
+    public Mult(string modId, string keyName, bool isPositive, string? itemId = null) {
         this.IsPositive = isPositive;
 
         this.KeyName = keyName;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

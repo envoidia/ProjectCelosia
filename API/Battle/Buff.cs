@@ -16,13 +16,13 @@ public sealed class Buff : ComplexDescribable, IRegistrable {
     public string ItemId { get; init; }
 
     public Buff(string modId, string keyName, string icon, string keyDesc, BuffType buffType,
-        int maxStacks, params IBuffEffect[] buffEffects) : base(keyName, icon, keyDesc) {
+        int maxStacks, IBuffEffect[] buffEffects, string? itemId = null) : base(keyName, icon, keyDesc) {
         this.BuffType = buffType;
         this.MaxStacks = maxStacks;
         this.BuffEffects = buffEffects;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

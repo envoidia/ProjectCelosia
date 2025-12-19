@@ -26,12 +26,12 @@ public class Theme : IDescribable, IRegistrable {
     public string ModId { get; }
     public string ItemId { get; init; }
 
-    public Theme(string modId, string keyName) {
+    public Theme(string modId, string keyName, string? itemId = null) {
         this.KeyName = keyName;
         this.KeyDesc = $"{keyName}Desc";
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

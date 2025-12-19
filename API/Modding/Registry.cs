@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using API.Name;
 using API.Util;
 
 namespace API.Modding;
@@ -45,4 +46,6 @@ public static class Registry {
     /// If you need to modify an existing registry entry, it's better to access it directly and modify its fields when able
     /// </summary>
     public static void UnsafeOverwrite(string key, IRegistrable val) => _Reg[key] = val;
+
+    public static new string ToString() => string.Join('\n', _Reg.Select(kvp => $"{kvp.Key}: {kvp.Value.GetLang()}"));
 }

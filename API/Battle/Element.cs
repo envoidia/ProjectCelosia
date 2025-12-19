@@ -37,7 +37,7 @@ public sealed class Element : INameable, IRegistrable {
     public string ItemId { get; init; }
 
     public Element(string modId, string keyName, string icon,
-        Mult? multDmgDealt = null, Mult? multDmgTaken = null) {
+        Mult? multDmgDealt = null, Mult? multDmgTaken = null, string? itemId = null) {
         this.MultDmgDealt = multDmgDealt;
         this.MultDmgTaken = multDmgTaken;
 
@@ -45,7 +45,7 @@ public sealed class Element : INameable, IRegistrable {
         this.Icon = icon;
 
         this.ModId = modId;
-        this.ItemId = keyName;
+        this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }

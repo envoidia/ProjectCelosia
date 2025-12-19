@@ -5,7 +5,5 @@ namespace Celosia.Battle;
 
 public static class Passives {
     public static readonly Passive IgnisAffUp = new(Main.Id, "PassiveIgnisAffUp",
-        "PassiveIgnisAffUpDesc", "todo") {
-        BuffEffects = [new ChangeAffinity(Elements.Ignis, 1)]
-    };
+        "PassiveIgnisAffUpDesc", "todo", [new ChangeAffinity(Elements.Ignis, 1)]);
 }
