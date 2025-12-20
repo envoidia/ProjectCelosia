@@ -35,13 +35,13 @@
         <value>todo</value>
     </data>
     <!--Modloader info
-    0 = mod name -->
-    <data name="ErrModCantFindEntryPoint" xml:space="preserve">
-        <value>Failed to load {0}: Could not find a class marked with ModEntryPointAttribute</value>
-    </data>
-    <!-- 0 = mod property name, 1 = containing file name -->
+    0 = mod property name, 1 = containing file name -->
     <data name="ModLoaded" xml:space="preserve">
         <value>Successfully loaded {0} from {1}</value>
+    </data>
+    <!-- 0 = loaded mod count, 1 = mod assembly count -->
+    <data name="AllModsLoaded" xml:space="preserve">
+        <value>Successfully loaded {0} {0,plural,=1{mod}other{mods}} from {1} {0,plural,=1{assembly}other{assemblies}}</value>
     </data>
     <!--Debug info menu
     0 = debug info glpyh, 1 = hotkey 1 glyph, 2 = version-->

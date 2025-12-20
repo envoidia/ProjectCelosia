@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using API.Extensions;
 using API.Util;
 using Microsoft.Xna.Framework;
 
@@ -16,7 +17,6 @@ namespace API.Modding;
 
 // todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
 public static class ModLoader {
-
     #region API
 
     /// <summary>
@@ -40,6 +40,8 @@ public static class ModLoader {
 
     #region Internals
 
+    private const string _ClassName = nameof(ModLoader);
+
     /// <summary>
     /// List of all loaded mods. Do not externally modify
     /// </summary>
@@ -50,6 +52,7 @@ public static class ModLoader {
     internal static void _LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder, "*.dll", SearchOption.AllDirectories);
         foreach (string dllPath in dllFiles) _LoadSingleModAssembly(dllPath);
+        DebugUtil.Log(Lang.AllModsLoaded.FormatIcu(_LoadedMods.Count, dllFiles.Count()), _ClassName);
     }
 
     private static void _LoadSingleModAssembly(string dllPath) {
@@ -66,6 +69,7 @@ public static class ModLoader {
             ?? throw new _ModLoadException(dllPath,
             $"Could not find a static class marked with ModEntryPointAttribute");
 
+        // Find all mods in the entry point class
         GameMod[] mods = [.. entryPoint
             .GetProperties(BindingFlags.Static | BindingFlags.Public)
             .Where(prop => {
@@ -78,14 +82,15 @@ public static class ModLoader {
 
                 // Make sure it doesn't use Core's ID
                 if (((GameMod) val).Id == Core.Id) {
-                    throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be {Core.Id}");
+                    throw new _ModLoadException(dllPath,
+                        $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be {Core.Id}");
                 }
 
                 return true;
             })
             .Select(prop => {
-                DebugUtil.Log(string.Format(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath)),
-                nameof(ModLoader));
+                DebugUtil.Log(string.Format(Lang.ModLoaded, $"{entryPoint.FullName}.{prop.Name}",
+                    Path.GetFileName(dllPath)), _ClassName);
 
                 return prop.GetValue(null);
             })

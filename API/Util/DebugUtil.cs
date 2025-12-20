@@ -15,7 +15,6 @@ using Microsoft.Xna.Framework.Input;
 namespace API.Util;
 
 public static class DebugUtil {
-    // todo show size of all lists (IModItems, etc)
     private const string _ClassName = nameof(DebugUtil);
 
     private const int _Mb = 1024 * 1024;
