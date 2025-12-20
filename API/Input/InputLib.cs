@@ -56,10 +56,11 @@ public static class InputLib {
                 TimeSpan held = _Held[i];
                 double s = held.TotalSeconds;
 
-                ColorCode c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
+                Color c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
                     ? Settings.Theme.Cooldown : Settings.Theme.White;
 
-                sb.Append(c).Append(s.ToString("0.##")).Append('\n');
+                sb.Append(_CheckKeybind(Keybinds.UniqueKeybinds[i]) ? ThemeColor.Cooldown.Str() : ThemeColor.White.Str())
+                    .Append(s.ToString("0.##")).Append('\n');
             }
 
             bool check = _CheckKeybind(Keybinds.Hotkey1);

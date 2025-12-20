@@ -11,6 +11,7 @@ namespace API.Battle;
 /// <summary>
 /// The reach that a skill can have
 /// </summary>
+// todo add descs or only inameable?
 public sealed class Range : IDescribable, IRegistrable {
     public int RangeVertical { get; }
     public Side Side { get; }

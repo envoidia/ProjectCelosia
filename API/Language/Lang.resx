@@ -523,19 +523,19 @@ Loaded Mods: {7}</value>
         <value>Atk</value>
     </data>
     <data name="StageAtkDesc" xml:space="preserve">
-        <value/>
+        <value>todo</value>
     </data>
     <data name="StageDef" xml:space="preserve">
         <value>Def</value>
     </data>
     <data name="StageDefDesc" xml:space="preserve">
-        <value/>
+        <value>todo</value>
     </data>
     <data name="StageFthDesc" xml:space="preserve">
-        <value/>
+        <value>todo</value>
     </data>
     <data name="StageAgiDesc" xml:space="preserve">
-        <value/>
+        <value>todo</value>
     </data>
     <!--Skill types
     The other skill types use the same lang as stats-->
@@ -546,7 +546,8 @@ Loaded Mods: {7}</value>
         <value>Status</value>
     </data>
     <!--Range
-    R stands for Range-->
+    R stands for Range
+    todo add descs?-->
     <data name="RangeSelf" xml:space="preserve">
         <value>Self</value>
     </data>

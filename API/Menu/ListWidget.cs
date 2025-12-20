@@ -164,7 +164,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
         // Disabled input overlay
         if (DebugUtil._drawActorOutlines) {
-            if (!this.CheckInput) this.Data.DrawBackground(Colors.ActorDisabledInput);
+            if (!this.CheckInput) this.Data.DrawBackground(Color.ActorDisabledInput);
         }
     }
 }

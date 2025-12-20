@@ -14,5 +14,5 @@ public class RectangleActor : IActor {
 
     public void Draw(GameTime gameTime) => Core.ShapeBatch.DrawRectangle(
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new(this.Width, this.Height), Colors.Trans, Settings.Theme.White);
+            new(this.Width, this.Height), Color.Trans, Settings.Theme.White);
 }

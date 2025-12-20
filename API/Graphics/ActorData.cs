@@ -167,34 +167,34 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
 
     public void DrawDebug(bool drawOrigin = true) {
         Color outlineColor = this.Prog == 0
-            ? Colors.ActorOutlineProg0
+            ? Color.ActorOutlineProg0
             : this.Prog == 1
-                ? Colors.ActorOutlineProg1
-                : Colors.ActorOutline;
+                ? Color.ActorOutlineProg1
+                : Color.ActorOutline;
 
         (Color, Color) colors = this.IsVisible
-            ? (outlineColor, Colors.ActorPadding)
-            : (new(outlineColor, 0.25f), new(Colors.ActorPadding, 0.25f));
+            ? (outlineColor, Color.ActorPadding)
+            : (new(outlineColor, 0.25f), new(Color.ActorPadding, 0.25f));
 
         // Origin
         if (drawOrigin) {
             Core.ShapeBatch.FillRectangle(this.Position - new Vector2(_OriginDebugSize),
                 new(_OriginDebugSize * 2),
-                Colors.ActorOrigin);
+                Color.ActorOrigin);
         }
 
         // Padding
         if (this.Padding != Padding.Zero) {
             Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
             new Vector2(this.Padding.L, this.Padding.T),
-            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Colors.Trans,
+            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Color.Trans,
             colors.Item2);
         }
 
         // Position
         Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
             new(this.Width, this.Height),
-            Colors.Trans, colors.Item1);
+            Color.Trans, colors.Item1);
     }
 
     public Point CalcOrigin() => this.Alignment switch {

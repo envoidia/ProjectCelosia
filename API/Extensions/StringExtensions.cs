@@ -39,7 +39,7 @@ public static class StringExtensions {
             }
 
             // Default to ID
-            return $"{ThemeColor.Neg.Str()}{modId}:{@this}";
+            return $"{ThemeColor.Neg.Str()}MISSING LANG ENTRY: {modId}:{@this}";
         }
 
         /// <returns>

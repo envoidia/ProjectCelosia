@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.Resources;
-using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;

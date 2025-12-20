@@ -52,14 +52,14 @@ public class Theme : IDescribable, IRegistrable {
         #region Apollo
 
         {
-            Color[] blues = Colors.FromRgbs(0x172038, 0x253a5e, 0x3c5e8b, 0x4f8fba, 0x73bed3, 0xa4dddb);
-            Color[] greens = Colors.FromRgbs(0x19332d, 0x25562e, 0x468232, 0x75a743, 0xa8ca58, 0xd0da91);
-            Color[] beiges = Colors.FromRgbs(0x4d2b32, 0x7a4841, 0xad7757, 0xc09473, 0xd7b594, 0xe7d5b3);
-            Color[] oranges = Colors.FromRgbs(0x341c27, 0x602c2c, 0x884b2b, 0xbe772b, 0xde9e41, 0xe8c170);
-            Color[] redOranges = Colors.FromRgbs(0x241627, 0x411d31, 0x752438, 0xa53030, 0xcf573c, 0xda863e);
-            Color[] pinks = Colors.FromRgbs(0x1e1d39, 0x402751, 0x7a367b, 0xa23e8c, 0xc65197, 0xdf84a5);
-            Color[] grayBlues = Colors.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
-            Color[] whites = Colors.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
+            Color[] blues = Color.FromRgbs(0x172038, 0x253a5e, 0x3c5e8b, 0x4f8fba, 0x73bed3, 0xa4dddb);
+            Color[] greens = Color.FromRgbs(0x19332d, 0x25562e, 0x468232, 0x75a743, 0xa8ca58, 0xd0da91);
+            Color[] beiges = Color.FromRgbs(0x4d2b32, 0x7a4841, 0xad7757, 0xc09473, 0xd7b594, 0xe7d5b3);
+            Color[] oranges = Color.FromRgbs(0x341c27, 0x602c2c, 0x884b2b, 0xbe772b, 0xde9e41, 0xe8c170);
+            Color[] redOranges = Color.FromRgbs(0x241627, 0x411d31, 0x752438, 0xa53030, 0xcf573c, 0xda863e);
+            Color[] pinks = Color.FromRgbs(0x1e1d39, 0x402751, 0x7a367b, 0xa23e8c, 0xc65197, 0xdf84a5);
+            Color[] grayBlues = Color.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
+            Color[] whites = Color.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
 
             Apollo = new(Core.Id, "ThemeApollo") {
                 White = whites[3],
@@ -114,28 +114,28 @@ public class Theme : IDescribable, IRegistrable {
         #region Void
 
         {
-            Color white = Colors.FromRgb(0xc0c0c0);
-            Color gray = Colors.FromRgb(0x545454);
-            Color black = Colors.FromRgb(0x1f1f1f);
+            Color white = Color.FromRgb(0xc0c0c0);
+            Color gray = Color.FromRgb(0x545454);
+            Color black = Color.FromRgb(0x1f1f1f);
 
-            Color paleYellow = Colors.FromRgb(0xDCDCAA);
+            Color paleYellow = Color.FromRgb(0xDCDCAA);
 
-            Color green = Colors.FromRgb(0x76b668);
-            Color paleBlueGreen = Colors.FromRgb(0x66c8cc);
-            Color blueGreen = Colors.FromRgb(0x32bb99);
+            Color green = Color.FromRgb(0x76b668);
+            Color paleBlueGreen = Color.FromRgb(0x66c8cc);
+            Color blueGreen = Color.FromRgb(0x32bb99);
 
-            Color paleBlue = Colors.FromRgb(0xb5c0ff);
-            Color electricBlue = Colors.FromRgb(0x4ab0e7);
-            Color blue = Colors.FromRgb(0x6798ff);
-            Color bluePurple = Colors.FromRgb(0x8189eb);
+            Color paleBlue = Color.FromRgb(0xb5c0ff);
+            Color electricBlue = Color.FromRgb(0x4ab0e7);
+            Color blue = Color.FromRgb(0x6798ff);
+            Color bluePurple = Color.FromRgb(0x8189eb);
 
-            Color palePurple = Colors.FromRgb(0xdac9ff);
-            Color lightPurple = Colors.FromRgb(0xbe8ff9);
-            //Color brightPurple = Colors.FromRgb(0xb747ff);
+            Color palePurple = Color.FromRgb(0xdac9ff);
+            Color lightPurple = Color.FromRgb(0xbe8ff9);
+            //Color brightPurple = Color.FromRgb(0xb747ff);
 
-            Color salmon = Colors.FromRgb(0xed94bb);
-            Color lightPink = Colors.FromRgb(0xe9aee4);
-            Color darkPink = Colors.FromRgb(0xda86d1);
+            Color salmon = Color.FromRgb(0xed94bb);
+            Color lightPink = Color.FromRgb(0xe9aee4);
+            Color darkPink = Color.FromRgb(0xda86d1);
 
             Void = new(Core.Id, "ThemeVoid") {
                 White = white,
@@ -190,27 +190,27 @@ public class Theme : IDescribable, IRegistrable {
         #region VSCode
 
         {
-            Color white = Colors.FromRgb(0xfef5f7);
-            Color gray = Colors.FromRgb(0xa0a0a0);
-            Color black = Colors.FromRgb(0x1f1f1f);
+            Color white = Color.FromRgb(0xfef5f7);
+            Color gray = Color.FromRgb(0xa0a0a0);
+            Color black = Color.FromRgb(0x1f1f1f);
 
-            Color red = Colors.FromRgb(0xd16969);
-            Color orange = Colors.FromRgb(0xCE9178);
+            Color red = Color.FromRgb(0xd16969);
+            Color orange = Color.FromRgb(0xCE9178);
 
-            Color paleYellow = Colors.FromRgb(0xDCDCAA);
-            Color yellow = Colors.FromRgb(0xffd606);
+            Color paleYellow = Color.FromRgb(0xDCDCAA);
+            Color yellow = Color.FromRgb(0xffd606);
 
-            Color paleGreen = Colors.FromRgb(0xb5cea8);
-            Color blueGreen = Colors.FromRgb(0x4EC9B0);
+            Color paleGreen = Color.FromRgb(0xb5cea8);
+            Color blueGreen = Color.FromRgb(0x4EC9B0);
 
-            Color paleBlue = Colors.FromRgb(0x9CDCFE);
-            Color lightBlue = Colors.FromRgb(0x4FC1FF);
-            Color electricBlue = Colors.FromRgb(0x1e99f5);
-            Color darkElectricBlue = Colors.FromRgb(0x0877d3);
-            Color dirtyBlue = Colors.FromRgb(0x5798d2);
+            Color paleBlue = Color.FromRgb(0x9CDCFE);
+            Color lightBlue = Color.FromRgb(0x4FC1FF);
+            Color electricBlue = Color.FromRgb(0x1e99f5);
+            Color darkElectricBlue = Color.FromRgb(0x0877d3);
+            Color dirtyBlue = Color.FromRgb(0x5798d2);
 
-            Color darkPink = Colors.FromRgb(0xC586C0);
-            Color magenta = Colors.FromRgb(0xd96fd5);
+            Color darkPink = Color.FromRgb(0xC586C0);
+            Color magenta = Color.FromRgb(0xd96fd5);
 
             VSCode = new(Core.Id, "ThemeVSCode") {
                 White = white,
@@ -267,8 +267,8 @@ public class Theme : IDescribable, IRegistrable {
 
         // todo rework
         {
-            ColorCode lightRed = new(255, 81, 81);
-            ColorCode elecBlue = new(24, 152, 255);
+            Color lightRed = new(255, 81, 81);
+            Color elecBlue = new(24, 152, 255);
 
             HighContrast = new(Core.Id, "ThemeHighContrast") {
                 White = Color.White,
@@ -297,7 +297,7 @@ public class Theme : IDescribable, IRegistrable {
                 Stat = new(222, 255, 129),
                 Cooldown = elecBlue,
 
-                SpBack = Colors.FromRgb(0xd78bff),
+                SpBack = Color.FromRgb(0xd78bff),
                 Overheal = new(238, 130, 239),
                 StatBarLayer4 = Color.Cyan,
                 StatBarLayer5 = Color.Pink,
@@ -323,22 +323,22 @@ public class Theme : IDescribable, IRegistrable {
         #region MikuMikuTheme
 
         {
-            Color white = Colors.FromRgb(0xfef5f7);
-            Color gray = Colors.FromRgb(0xa0a0a0);
-            Color black = Colors.FromRgb(0x1f1f1f);
+            Color white = Color.FromRgb(0xfef5f7);
+            Color gray = Color.FromRgb(0xa0a0a0);
+            Color black = Color.FromRgb(0x1f1f1f);
 
-            Color paleBeige = Colors.FromRgb(0xd3d3cc);
-            Color darkBeige = Colors.FromRgb(0x9f9294);
+            Color paleBeige = Color.FromRgb(0xd3d3cc);
+            Color darkBeige = Color.FromRgb(0x9f9294);
 
-            Color paleGreen = Colors.FromRgb(0xb6dbca);
-            Color[] hair = Colors.FromRgbs(0x89cdc6, 0x51acb6, 0x338397);
+            Color paleGreen = Color.FromRgb(0xb6dbca);
+            Color[] hair = Color.FromRgbs(0x89cdc6, 0x51acb6, 0x338397);
 
-            Color paleBlue = Colors.FromRgb(0xd6ecf9);
-            Color darkBlue = Colors.FromRgb(0x336699);
+            Color paleBlue = Color.FromRgb(0xd6ecf9);
+            Color darkBlue = Color.FromRgb(0x336699);
 
-            Color pink = Colors.FromRgb(0xec83a8);
-            Color hotPink = Colors.FromRgb(0xe8418f);
-            Color redPink = Colors.FromRgb(0xe3004f);
+            Color pink = Color.FromRgb(0xec83a8);
+            Color hotPink = Color.FromRgb(0xe8418f);
+            Color redPink = Color.FromRgb(0xe3004f);
 
             MikuMikuTheme = new(Core.Id, "ThemeMikuMikuTheme") {
                 White = white,
@@ -455,7 +455,7 @@ public class Theme : IDescribable, IRegistrable {
 
     #region General
 
-    public ColorCode[] AllColors => [this.White, this.Gray, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
+    public Color[] AllColors => [this.White, this.Gray, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
         this.Pos, this.Neg, this.Imp, this.Ally, this.Opp, this.Turn, this.Hp, this.Sp, this.Shield, this.Bloom,
         this.Buff, this.Skill, this.Element, this.Passive, this.Stat, this.Cooldown, this.SpBack, this.Overheal,
         this.StatBarLayer4, this.StatBarLayer5, this.Atk, this.Def, this.Fth, this.Agi, this.Vis, this.Ignis,
@@ -464,52 +464,52 @@ public class Theme : IDescribable, IRegistrable {
     /// <summary>
     /// Not necessarily actually white, but (probably) close
     /// </summary>
-    public required ColorCode White { get; init; }
+    public required Color White { get; init; }
 
     /// <summary>
     /// Not necessarily actually gray, but (probably) close
     /// </summary>
-    public required ColorCode Gray { get; init; }
+    public required Color Gray { get; init; }
 
     /// <summary>
     /// Not necessarily actually black, but (probably) close
     /// </summary>
-    public required ColorCode Black { get; init; }
+    public required Color Black { get; init; }
 
     /// <summary>
     /// Partially transparent version of black
     /// </summary>
-    public required ColorCode TransBlack { get; init; }
+    public required Color TransBlack { get; init; }
 
     /// <summary>
     /// Main foreground
     /// </summary>
-    public required ColorCode Fg { get; init; }
+    public required Color Fg { get; init; }
 
     /// <summary>
     /// Main background
     /// </summary>
-    public required ColorCode Bg { get; init; }
+    public required Color Bg { get; init; }
 
     /// <summary>
     /// Main accent
     /// </summary>
-    public required ColorCode Accent { get; init; }
+    public required Color Accent { get; init; }
 
     /// <summary>
     /// Positive/good stuff
     /// </summary>
-    public required ColorCode Pos { get; init; }
+    public required Color Pos { get; init; }
 
     /// <summary>
     /// Negative/bad stuff
     /// </summary>
-    public required ColorCode Neg { get; init; }
+    public required Color Neg { get; init; }
 
     /// <summary>
     /// General important stuff that isn't neccessarily positive or negative
     /// </summary>
-    public required ColorCode Imp { get; init; }
+    public required Color Imp { get; init; }
 
     #endregion
 
@@ -518,109 +518,109 @@ public class Theme : IDescribable, IRegistrable {
     /// <summary>
     /// Ally names
     /// </summary>
-    public required ColorCode Ally { get; init; }
+    public required Color Ally { get; init; }
 
     /// <summary>
     /// Opponent names
     /// </summary>
-    public required ColorCode Opp { get; init; }
+    public required Color Opp { get; init; }
 
     /// <summary>
     /// Current turn text
     /// </summary>
-    public required ColorCode Turn { get; init; }
+    public required Color Turn { get; init; }
 
     /// <summary>
     /// HP text and bar
     /// </summary>
-    public required ColorCode Hp { get; init; }
+    public required Color Hp { get; init; }
 
     /// <summary>
     /// SP text and bar
     /// </summary>
-    public required ColorCode Sp { get; init; }
+    public required Color Sp { get; init; }
 
     /// <summary>
     /// Shield text and bar
     /// </summary>
-    public required ColorCode Shield { get; init; }
+    public required Color Shield { get; init; }
 
     /// <summary>
     /// Bloom text and bar
     /// </summary>
-    public required ColorCode Bloom { get; init; }
+    public required Color Bloom { get; init; }
 
     /// <summary>
     /// Buff names
     /// </summary>
-    public required ColorCode Buff { get; init; }
+    public required Color Buff { get; init; }
 
     /// <summary>
     /// Skill names
     /// </summary>
-    public required ColorCode Skill { get; init; }
+    public required Color Skill { get; init; }
 
     /// <summary>
     /// Element names
     /// </summary>
-    public required ColorCode Element { get; init; }
+    public required Color Element { get; init; }
 
     /// <summary>
     /// Passive names
     /// </summary>
-    public required ColorCode Passive { get; init; }
+    public required Color Passive { get; init; }
 
     /// <summary>
     /// Stat names
     /// </summary>
-    public required ColorCode Stat { get; init; }
+    public required Color Stat { get; init; }
 
     /// <summary>
     /// Cooldown text
     /// </summary>
-    public required ColorCode Cooldown { get; init; }
+    public required Color Cooldown { get; init; }
 
     /// <summary>
     /// Back layer of SP bar
     /// </summary>
-    public required ColorCode SpBack { get; init; }
+    public required Color SpBack { get; init; }
 
     /// <summary>
     /// Overheal bar
     /// </summary>
-    public required ColorCode Overheal { get; init; }
+    public required Color Overheal { get; init; }
 
     /// <summary>
     /// 4th layer of stat bars (201-300%)
     /// </summary>
-    public required ColorCode StatBarLayer4 { get; init; }
+    public required Color StatBarLayer4 { get; init; }
 
     /// <summary>
     /// 5th layer of stat bars (301-400%)
     /// </summary>
-    public required ColorCode StatBarLayer5 { get; init; }
+    public required Color StatBarLayer5 { get; init; }
 
     #region StageTypes
 
     /// <summary>
     /// Atk stage
     /// </summary>
-    public required ColorCode Atk { get; init; }
+    public required Color Atk { get; init; }
 
     /// <summary>
     /// Def stage
     /// </summary>
-    public required ColorCode Def { get; init; }
+    public required Color Def { get; init; }
 
     /// <summary>
     /// Fth stage
     /// </summary>
-    public required ColorCode Fth { get; init; }
+    public required Color Fth { get; init; }
 
     /// <summary>
     /// Agi stage
     /// </summary>
-    public required ColorCode Agi { get; init; }
+    public required Color Agi { get; init; }
 
     #endregion
 
@@ -629,42 +629,42 @@ public class Theme : IDescribable, IRegistrable {
     /// <summary>
     /// Vis (neutral) element
     /// </summary>
-    public required ColorCode Vis { get; init; }
+    public required Color Vis { get; init; }
 
     /// <summary>
     /// Ignis (fire) element
     /// </summary>
-    public required ColorCode Ignis { get; init; }
+    public required Color Ignis { get; init; }
 
     /// <summary>
     /// Glacies (ice) element
     /// </summary>
-    public required ColorCode Glacies { get; init; }
+    public required Color Glacies { get; init; }
 
     /// <summary>
     /// Fulgur (electric) element
     /// </summary>
-    public required ColorCode Fulgur { get; init; }
+    public required Color Fulgur { get; init; }
 
     /// <summary>
     /// Ventus (wind) element
     /// </summary>
-    public required ColorCode Ventus { get; init; }
+    public required Color Ventus { get; init; }
 
     /// <summary>
     /// Terra (earth) element
     /// </summary>
-    public required ColorCode Terra { get; init; }
+    public required Color Terra { get; init; }
 
     /// <summary>
     /// Lux (light) element
     /// </summary>
-    public required ColorCode Lux { get; init; }
+    public required Color Lux { get; init; }
 
     /// <summary>
     /// Malum (evil) element
     /// </summary>
-    public required ColorCode Malum { get; init; }
+    public required Color Malum { get; init; }
 
     #endregion
 
@@ -674,7 +674,7 @@ public class Theme : IDescribable, IRegistrable {
 
     #region Methods
 
-    public ColorCode Get(ThemeColor tc) => tc switch {
+    public Color Get(ThemeColor tc) => tc switch {
         ThemeColor.White => this.White,
         ThemeColor.Gray => this.Gray,
         ThemeColor.Black => this.Black,

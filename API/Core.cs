@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using API.Battle;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;

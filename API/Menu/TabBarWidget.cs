@@ -211,7 +211,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
             this.PromptR.Data.DrawDebug(false);
 
             // Disabled input overlay
-            if (!this.CheckInput) this.Data.DrawBackground(Colors.ActorDisabledInput);
+            if (!this.CheckInput) this.Data.DrawBackground(Color.ActorDisabledInput);
         }
     }
 
