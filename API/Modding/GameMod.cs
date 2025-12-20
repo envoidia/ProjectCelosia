@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Resources;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
@@ -17,7 +19,7 @@ public sealed class GameMod(string id, Version version, ResourceManager resource
     public string Id { get; } = id;
 
     /// <summary>
-    /// IDs of all mods that this mod depends on
+    /// todo nyi IDs of all mods that this mod depends on
     /// </summary>
     public string[] DependencyIds { get; init; } = [];
 

@@ -7,11 +7,15 @@ using API.Util;
 namespace API.Modding;
 
 /// <summary>
-/// Contains all registered items. Keys ignore case
+/// Contains all registered <c>IRegisterable</c>s. Keys are formatted as <c>ModId:ItemId</c>.
+/// <c>IRegisterable</c>s that are also <c>INameable</c>s are set up to use their <c>KeyName</c> as their <c>ItemId</c> by default
 /// </summary>
 public static class Registry {
     private static readonly Dictionary<string, IRegistrable> _Reg = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// Registers an item. Call in ctor
+    /// </summary>
     public static void Register(IRegistrable val) {
         string key = val.GetId();
 

@@ -53,32 +53,53 @@ public static class ModLoader {
     }
 
     private static void _LoadSingleModAssembly(string dllPath) {
-        AssemblyLoadContext alc = new(Path.GetFileNameWithoutExtension(dllPath));//, true); todo should be collectible/unloadable?
-
+        AssemblyLoadContext alc = new(Path.GetFileNameWithoutExtension(dllPath));
         Assembly asm;
         using (FileStream fs = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
             asm = alc.LoadFromStream(fs);
         }
 
         // Find entry point
-        // todo skip + error msg instead of throwing
         Type? entryPoint = asm.GetTypes()
-            .FirstOrDefault(static t => _IsStatic(t) && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
-            ?? throw new _ModLoadException(string.Format(Lang.ErrModCantFindEntryPoint, Path.GetFileName(dllPath)));
+            .FirstOrDefault(static t => _IsStatic(t) &&
+                t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
+            ?? throw new _ModLoadException(dllPath,
+            $"Could not find a static class marked with ModEntryPointAttribute");
 
-        // Find all GameMods in the entryPoint class and add them to LoadedMods
-        _LoadedMods.AddRange(entryPoint
+        GameMod[] mods = [.. entryPoint
             .GetProperties(BindingFlags.Static | BindingFlags.Public)
-            .Where(static prop => {
+            .Where(prop => {
+                // Make sure it's a GameMod
                 if (prop.PropertyType != typeof(GameMod)) return false;
-                return prop.GetValue(null) is not null;
+
+                // Make sure it's not null
+                object? val = prop.GetValue(null);
+                if (val is null) return false;
+
+                // Make sure it doesn't use Core's ID
+                if (((GameMod) val).Id == Core.Id) {
+                    throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be {Core.Id}");
+                }
+
+                return true;
             })
             .Select(prop => {
                 DebugUtil.Log(string.Format(Lang.ModLoaded, prop.Name, Path.GetFileName(dllPath)),
                 nameof(ModLoader));
+
                 return prop.GetValue(null);
             })
-            .Cast<GameMod>());
+            .Cast<GameMod>()];
+
+        // No mods were found
+        if (mods.Length == 0) {
+            throw new _ModLoadException(dllPath, $"""
+                {entryPoint.FullName} does not contain any non-null properties of type GameMod.
+                Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one
+                """);
+        }
+
+        _LoadedMods.AddRange(mods);
     }
 
     internal static void _UpdateAllMods(GameTime gameTime) {
@@ -87,7 +108,8 @@ public static class ModLoader {
 
     private static bool _IsStatic(Type t) => t.IsAbstract && t.IsSealed;
 
-    private sealed class _ModLoadException(string msg) : Exception(msg);
+    private sealed class _ModLoadException(string dllPath, string msg)
+        : Exception($"[ModLoader] Failed to load {Path.GetFileName(dllPath)}: {msg}");
 
     #endregion
 }

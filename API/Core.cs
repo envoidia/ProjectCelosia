@@ -31,7 +31,7 @@ public class Core : Game {
     /// <summary>
     /// ModId of Core
     /// </summary>
-    public const string Id = "API";
+    public const string Id = "__API";
 
     #region Rendering
 
