@@ -42,6 +42,8 @@ public sealed class Mult : INameable, IRegistrable {
     public string FormatChange(float val) =>
         Math.Max(val, this.MinValue).FormatPerc(true, isPositive: this.IsPositive);
 
+    public override string ToString() => $"{base.ToString()}: {this.GetName()}";
+
     public string GetName(ThemeColor color) => color.Str() + this.GetLang();
     public string GetName() => this.GetName(ThemeColor.Stat);
 

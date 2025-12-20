@@ -71,7 +71,7 @@ public sealed class Menu {
         Stage.AddRange(this.Actors);
         this.OnCreate?.Invoke();
 
-        Stage.Cleanup();
+        Stage.Sort();
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public sealed class Menu {
         foreach (IActor a in this.Actors) a.Destroy();
         this.OnDestroy?.Invoke();
 
-        Stage.Cleanup();
+        Stage.Sort();
     }
 
     /// <summary>

@@ -51,7 +51,8 @@ public static class InputDeviceExtensions {
                             $"/i[{@this.GetGlyphIdentifier()}DL]///i[{@this.GetGlyphIdentifier()}DR]///i[{@this.GetGlyphIdentifier()}DU]///i[{@this.GetGlyphIdentifier()}DD]",
                             $"/i[{@this.GetGlyphIdentifier()}D]");
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(id), id, Lang.ErrGetMergedGlyphKeybindId);
+                    throw new ArgumentOutOfRangeException(nameof(id), id,
+                        $"The only KeybindIds with merged glyphs are LeftRight, UpDown, and LeftRightUpDown");
             }
         }
     }

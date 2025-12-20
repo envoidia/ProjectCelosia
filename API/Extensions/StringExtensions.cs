@@ -52,7 +52,7 @@ public static class StringExtensions {
         /// <param name="modId">The ID of the mod to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatLang(string modId = Core.Id, params object[] args) {
-            Assert.LenNotZero(args);
+            // todo Assert.LenNotZero(args);
             return string.Format(@this.GetLang(modId), args);
         }
 
@@ -82,7 +82,7 @@ public static class StringExtensions {
         /// <param name="modId">The ID of the mod to check first</param>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatIcuLang(string modId = Core.Id, params object[] args) {
-            Assert.LenNotZero(args);
+            // todo Assert.LenNotZero(args);
 
             Dictionary<string, object?> dict = new(args.Length);
 

@@ -45,7 +45,7 @@ public sealed class Label : IActor {
         };
     }
 
-    public override string ToString() => $"Label: {this._RichTextLayout.Text}";
+    public override string ToString() => $"{base.ToString()}: {this._RichTextLayout.Text}";
 
     public void OnCreate() { }
     public void OnDestroy() { }

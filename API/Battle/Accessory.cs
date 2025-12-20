@@ -20,7 +20,7 @@ public sealed class Accessory : ComplexDescribable, IRegistrable, IEquippable {
 
         Registry.Register(this);
     }
-
+    
     public override string GetFullDesc() =>
         string.Format(Lang.AccessoryDesc, this._GetFormattedDescInclusions());
 

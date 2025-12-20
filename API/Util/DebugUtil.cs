@@ -245,7 +245,7 @@ public static class DebugUtil {
         if (InputLib.IsKeyJustPressed(Keys.F9)) {
             if (InputLib.Check(Keybinds.Hotkey1)) _CyclePalette();
             else if (InputLib.Check(Keybinds.Hotkey2)) {
-                Console.WriteLine(Settings.Theme.ToString());
+                Console.WriteLine(Settings.Theme.ToDetailedString());
                 Log("Output Theme to console", _ClassName);
             } else _drawPalette ^= true;
         }
@@ -258,7 +258,7 @@ public static class DebugUtil {
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F11)) {
-            Stage.Cleanup();
+            Stage.Sort();
             Log("Cleaned up Stage", _ClassName);
         }
 

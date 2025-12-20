@@ -31,7 +31,7 @@ public readonly struct Progress(float p = 0) {
         _ => base.Equals(obj)
     };
 
-    public override string ToString() => $"Progress: {this._p}";
+    public override string ToString() => $"{base.ToString()}: {this._p}";
 
     public override int GetHashCode() => this._p.GetHashCode();
 

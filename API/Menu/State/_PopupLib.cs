@@ -45,6 +45,6 @@ internal static class _PopupLib {
 
         Stage._needsSorting = false;
 
-        Stage.Cleanup();
+        Stage.Sort();
     }
 }

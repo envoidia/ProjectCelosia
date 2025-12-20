@@ -754,8 +754,10 @@ public class Theme : IDescribable, IRegistrable {
         }
     }
 
-    public override string ToString() {
-        StringBuilder sb = new();
+    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+
+    public string ToDetailedString() {
+        StringBuilder sb = new(this.ToString());
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>()) {
             sb.Append($"{tc}: {this.Get(tc).ToRgbaStr()}");

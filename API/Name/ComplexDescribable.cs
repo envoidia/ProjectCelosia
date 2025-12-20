@@ -30,9 +30,12 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
         return args;
     }
 
+    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+
     public virtual string GetName(ThemeColor color) =>
         $"{this.Icon} {color.Str()}{this.KeyName.GetLang(this.ModId)}";
     public virtual string GetName() => this.GetName(ThemeColor.White);
+
     public virtual string GetDesc() => this.KeyDesc.FormatLang(this.ModId, this._GetDescArgs());
 
     /// <returns>

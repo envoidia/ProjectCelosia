@@ -90,7 +90,7 @@ public static class Stage {
     /// <summary>
     /// Applies sorting
     /// </summary>
-    public static void Cleanup() {
+    public static void Sort() {
         if (!_needsSorting) return;
 
         _Actors.Sort(static (a, b) =>

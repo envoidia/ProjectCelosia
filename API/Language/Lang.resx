@@ -34,10 +34,6 @@
     <data name="Todo" xml:space="preserve">
         <value>todo</value>
     </data>
-    <!--Errors-->
-    <data name="ErrGetMergedGlyphKeybindId" xml:space="preserve">
-        <value>KeybindId must be LeftRight, UpDown, or LeftRightUpDown</value>
-    </data>
     <!--Modloader info
     0 = mod name -->
     <data name="ErrModCantFindEntryPoint" xml:space="preserve">
@@ -70,7 +66,7 @@ Loaded Mods: {7}</value>
 /i[KF3]: Toggle actor outlines (blue pos (yellow = prog 0, magneta = prog 1), aqua padding, lime origin, red if marked, blue if input disabled)
 /i[KF4]: Toggle input view
 /i[KF5]: Write loaded mod list to console
-/i[KF6]: Write registry to console
+/i[KF6]: Write registry to console. {0} to preserve formatting codes
 /i[KF7]: Write all actors on stage to console
 /i[KF8]: Write battle log to console. {0} to preserve formatting codes
 /i[KF9]: Toggle theme view. {0} to swap between themes, {1} to write current theme to console

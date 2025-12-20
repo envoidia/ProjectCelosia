@@ -178,7 +178,7 @@ public static class BattleLib {
 
         // setup stage
         Stage.AddRange(_Actors);
-        Stage.Cleanup();
+        Stage.Sort();
     }
 
     // todo remove?

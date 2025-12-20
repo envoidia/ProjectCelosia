@@ -31,6 +31,8 @@ public sealed class BoolStat : INameable, IRegistrable {
         Registry.Register(this);
     }
 
+    public override string ToString() => $"{base.ToString()}: {this.GetName()}";
+
     public string GetName(ThemeColor color) => color.Str() + this.GetLang();
     public string GetName() => this.GetName(ThemeColor.Stat);
 

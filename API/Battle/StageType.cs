@@ -37,6 +37,8 @@ public sealed class StageType : IDescribable, IRegistrable {
         Registry.Register(this);
     }
 
+    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+
     public string GetName(ThemeColor color) =>
         $"{this.Icon} {color.Str()}{this.GetLang()}";
     public string GetName() => this.GetName(ThemeColor.Buff);

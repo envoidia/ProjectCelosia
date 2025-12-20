@@ -47,5 +47,6 @@ public static class Registry {
     /// </summary>
     public static void UnsafeOverwrite(string key, IRegistrable val) => _Reg[key] = val;
 
-    public static new string ToString() => string.Join('\n', _Reg.Select(kvp => $"{kvp.Key}: {kvp.Value.GetLang()}"));
+    public new static string ToString() => $"Registry:\n{string.Join('\n', _Reg.OrderBy(kvp => kvp.Key)
+        .Select(kvp => $"{kvp.Key} = {kvp.Value}"))}";
 }

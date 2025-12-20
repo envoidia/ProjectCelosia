@@ -60,6 +60,8 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
             : button.GetGlyph(InputLib.LastInputSource);
     }
 
+    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+
     public string GetName(ThemeColor color) => color.Str() + this.KeyName.GetLang();
     public string GetName() => this.GetName(ThemeColor.White);
     public string GetDesc() => this.KeyDesc.GetLang();
