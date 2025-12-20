@@ -63,7 +63,7 @@ public static class ModLoader {
         }
 
         // Find entry point
-        Type? entryPoint = asm.GetTypes()
+        Type entryPoint = asm.GetTypes()
             .FirstOrDefault(static t => _IsStatic(t) &&
                 t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
             ?? throw new _ModLoadException(dllPath,
@@ -80,10 +80,12 @@ public static class ModLoader {
                 object? val = prop.GetValue(null);
                 if (val is null) return false;
 
-                // Make sure it doesn't use Core's ID
-                if (((GameMod) val).Id == Core.Id) {
-                    throw new _ModLoadException(dllPath,
-                        $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be {Core.Id}");
+                // Make sure it doesn't use _ prefix (unless it's the base mod)
+                string id = ((GameMod) val).Id;
+
+                if (id != Core.BaseModId && id.StartsWith('_')) {
+                    throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be" +
+                        $" {id} because the _ prefix is reserved for the base mod");
                 }
 
                 return true;
@@ -98,10 +100,8 @@ public static class ModLoader {
 
         // No mods were found
         if (mods.Length == 0) {
-            throw new _ModLoadException(dllPath, $"""
-                {entryPoint.FullName} does not contain any non-null properties of type GameMod.
-                Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one
-                """);
+            throw new _ModLoadException(dllPath, $"{entryPoint.FullName} does not contain any non-null public static" +
+                " properties of type GameMod. Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one");
         }
 
         _LoadedMods.AddRange(mods);

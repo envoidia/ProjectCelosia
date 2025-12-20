@@ -19,12 +19,13 @@ public static class Registry {
     public static void Register(IRegistrable val) {
         string key = val.GetId();
 
+        // todo should this refuse to overwrite instead?
         if (_Reg.ContainsKey(key)) {
             DebugUtil.Log($"Key {key} already contains {Get(key)}. Overwriting with {val}",
             nameof(Registry), DebugUtil.LogLevel.Warning);
         }
 
-        UnsafeOverwrite(key, val);
+        _Reg[key] = val;
     }
 
     /// <returns>
@@ -44,12 +45,6 @@ public static class Registry {
     /// All registered items of the given type
     /// </returns>
     public static IEnumerable<T> OfType<T>() where T : IRegistrable => _Reg.Values.OfType<T>();
-
-    /// <summary>
-    /// Adds the value to the registry, overwriting existing values. Avoid.
-    /// If you need to modify an existing registry entry, it's better to access it directly and modify its fields when able
-    /// </summary>
-    public static void UnsafeOverwrite(string key, IRegistrable val) => _Reg[key] = val;
 
     public new static string ToString() => $"Registry:\n{string.Join('\n', _Reg.OrderBy(kvp => kvp.Key)
         .Select(kvp => $"{kvp.Key} = {kvp.Value}"))}";

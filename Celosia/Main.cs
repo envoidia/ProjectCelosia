@@ -10,17 +10,9 @@ namespace Celosia;
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
 public static class Main {
     /// <summary>
-    /// ModId of this
-    /// </summary>
-    public const string Id = "Celosia";
-
-    public static int Foo { get; set; } = 15;
-    public static int Bar { get; set; } = 15;
-
-    /// <summary>
     /// <c>GameMod</c> instance
     /// </summary>
-    public static GameMod Mod { get; } = new(Id, new Version(0, 1), Lang.ResourceManager);
+    public static GameMod Mod { get; } = new(Core.BaseModId, new Version(0, 1), Lang.ResourceManager);
 
     static Main() {
         // Really gross temporary initialize for testing battles

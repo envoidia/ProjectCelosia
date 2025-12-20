@@ -29,9 +29,14 @@ public class Core : Game {
     public static Core Instance { get; private set; } = null!;
 
     /// <summary>
-    /// ModId of Core
+    /// "Mod ID" of Core
     /// </summary>
     public const string Id = "__API";
+
+    /// <summary>
+    /// Mod ID of the base mod
+    /// </summary>
+    public const string BaseModId = "__Celosia";
 
     #region Rendering
 
