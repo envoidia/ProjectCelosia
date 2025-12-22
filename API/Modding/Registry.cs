@@ -43,7 +43,7 @@ public static class Registry {
     /// <returns>
     /// All registered items of the given type
     /// </returns>
-    public static IEnumerable<T> OfType<T>() where T : IRegistrable => _Reg.Values.OfType<T>();
+    public static IEnumerable<T> Of<T>() where T : IRegistrable => _Reg.Values.OfType<T>();
 
     public new static string ToString() => $"Registry:\n{string.Join('\n', _Reg.OrderBy(kvp => kvp.Key)
         .Select(kvp => $"{kvp.Key} = {kvp.Value}"))}";

@@ -80,12 +80,20 @@ public static class ModLoader {
                 object? val = prop.GetValue(null);
                 if (val is null) return false;
 
-                // Make sure it doesn't use _ prefix (unless it's the base mod)
                 string id = ((GameMod) val).Id;
 
+                // Make sure it doesn't use _ ID prefix (unless it's the base mod)
                 if (id != Core.BaseModId && id.StartsWith('_')) {
                     throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be" +
                         $" {id} because the _ prefix is reserved for the base mod");
+                }
+
+                // Make sure its ID doesn't match base mod ID other than _
+                foreach(string str in Core.ReservedIds) {
+                    if(string.Equals(id, str.Replace("_", ""), StringComparison.OrdinalIgnoreCase)) {
+                        throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be" +
+                            $" {id} because {id} is a reserved name");
+                    }
                 }
 
                 return true;
@@ -100,8 +108,9 @@ public static class ModLoader {
 
         // No mods were found
         if (mods.Length == 0) {
-            throw new _ModLoadException(dllPath, $"{entryPoint.FullName} does not contain any non-null public static" +
-                " properties of type GameMod. Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one");
+            throw new _ModLoadException(dllPath,
+                $"{entryPoint.FullName} does not contain any non-null public static properties of type GameMod." +
+                    " Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one");
         }
 
         _LoadedMods.AddRange(mods);

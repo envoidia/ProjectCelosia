@@ -1,5 +1,6 @@
 using API.Save;
 using API.Util;
+using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 
@@ -12,10 +13,10 @@ namespace API.Graphics;
 // todo color
 public sealed class Label : IActor {
     public string Text {
-        get => this._RichTextLayout.Text;
+        get => this.RichTextLayout.Text;
         set {
-            this._RichTextLayout.Text = value; //$"{ThemeColor.White.Str()}{value}"; // todo idt this is needed
-            this.Size = this._RichTextLayout.Size;
+            this.RichTextLayout.Text = value; //$"{ThemeColor.White.Str()}{value}"; // todo idt this is needed
+            this.Size = this.RichTextLayout.Size;
             this.Origin = this.Data.CalcOrigin();
         }
     }
@@ -26,12 +27,14 @@ public sealed class Label : IActor {
     private Color _bgC;
     public ThemeColor BackgroundColor { get; set; } = ThemeColor.TransBlack;
 
-    private RichTextLayout _RichTextLayout { get; set; } = new() { Font = Core.Koruri60 };
+    public RichTextLayout RichTextLayout { get; set; }
 
     public ActorData Data { get; }
 
-    public Label(RenderPriority priority = RenderPriority.B1Med) {
+    public Label(RenderPriority priority = RenderPriority.B1Med, DynamicSpriteFont? font = null) {
         this.Data = new ActorData(this, priority);
+
+        this.RichTextLayout = new() { Font = font ?? Core.Koruri60 };
 
         this._bgC = Settings.Theme.Get(this.BackgroundColor);
 
@@ -45,7 +48,7 @@ public sealed class Label : IActor {
         };
     }
 
-    public override string ToString() => $"{base.ToString()}: {this._RichTextLayout.Text}";
+    public override string ToString() => $"{base.ToString()}: {this.RichTextLayout.Text}";
 
     public void OnCreate() { }
     public void OnDestroy() { }
@@ -56,7 +59,7 @@ public sealed class Label : IActor {
 
         if (this.HasBackground) this.Data.DrawBackground(this._bgC);
 
-        this._RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,
+        this.RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,
             (float) this.Prog), Settings.Theme.Fg, 0f, this.Origin.ToVector2());
     }
 }

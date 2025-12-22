@@ -55,6 +55,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Use `is`/`is not` over `==`/`!=` when checking for types or `null`
 - In switch statements, prefer `return` over `break` when able
 - All classes that are not intended to be inherited from should be `sealed`
+- Only preincrement when it's actually meaningful -- otherwise postincrement for clarity
 
 # Numbers
 - Only use `float` if floating-point values are needed

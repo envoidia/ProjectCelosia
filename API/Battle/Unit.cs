@@ -182,7 +182,7 @@ public sealed class Unit {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
         StringBuilder sb = new($"{ThemeColor.Stat.Str()}{Lang.Affinities}:{ThemeColor.White.Str()} ");
-        foreach (Element element in Registry.OfType<Element>().Where(e => e.IsVisible)) {
+        foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible)) {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
 
@@ -245,7 +245,7 @@ public sealed class Unit {
 
     public string GetMultsString() {
         StringBuilder str = new();
-        foreach (Mult mult in Registry.OfType<Mult>()) {
+        foreach (Mult mult in Registry.Of<Mult>()) {
             int curMult = this._Mults[mult];
             str.Append(mult.Format(curMult)).Append('\n');
         }
@@ -282,7 +282,7 @@ public sealed class Unit {
 
     public string GetOtherStatsString() {
         StringBuilder str = new();
-        foreach (BoolStat stat in Registry.OfType<BoolStat>()) {
+        foreach (BoolStat stat in Registry.Of<BoolStat>()) {
             if (stat.IsVisible) str.Append(this.GetBoolStatString(stat)).Append('\n');
         }
 
@@ -322,10 +322,10 @@ public sealed class Unit {
 
     public string GetStatModsString() {
         StringBuilder str = new();
-        foreach (StatMod mod in Registry.OfType<StatMod>()) {
+        foreach (StatMod mod in Registry.Of<StatMod>()) {
             str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
         }
-        
+
         return str.ToString();
     }
 
@@ -401,7 +401,7 @@ public sealed class Unit {
 
     public void DecrementTurns() {
         // Stages
-        foreach (StageType stageType in Registry.OfType<StageType>()) {
+        foreach (StageType stageType in Registry.Of<StageType>()) {
             int stage = this.GetStage(stageType);
             if (stage != 0 && --this._StageTurns[stageType] == 0) {
                 LogLib.Add(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
@@ -433,7 +433,7 @@ public sealed class Unit {
 
         // Skill cooldowns
         foreach (SkillInstance skillInstance in this.SkillInstances) {
-            if (skillInstance.Cooldown > 0) --skillInstance.Cooldown;
+            if (skillInstance.Cooldown > 0) skillInstance.Cooldown--;
         }
     }
 

@@ -13,18 +13,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Util;
 
+// todo dont even init any of this stuff until its used
 public static class DebugUtil {
     private const string _ClassName = nameof(DebugUtil);
 
     private const int _Mb = 1024 * 1024;
 
-    private const int _LogLimit = 12;
+    private const int _LogLimit = 24;
     private static readonly List<string> _LogText = new(8);
 
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
     internal static bool _drawDebugInfo = false;
+    private static bool _drawDebugInfoHelp = false;
     internal static bool _drawActorOutlines = false;
     internal static bool _drawPalette = false;
 
@@ -50,18 +52,7 @@ public static class DebugUtil {
         IsVisible = false
     };
 
-    private static readonly Label _DebugInfoHelp = new() {
-        Text = "_GetInfoHelpText()",
-        Position = new(10, World.H - 10),
-        Padding = new(10),
-        HasBackground = true,
-        Alignment = Alignment.BottomLeft,
-        Priority = RenderPriority.Highest,
-        AnimType = AnimType.None,
-        IsVisible = false
-    };
-
-    private static readonly Label _DebugLog = new() {
+    private static readonly Label _DebugLog = new(font: Core.Koruri40) {
         Position = new(10, World.H - 10),
         Padding = new(10),
         HasBackground = true,
@@ -97,7 +88,6 @@ public static class DebugUtil {
     static DebugUtil() {
         Stage.Add(_DebugInfoL);
         Stage.Add(_DebugInfoR);
-        Stage.Add(_DebugInfoHelp);
         Stage.Add(_DebugLog);
 
         Stage.Add(_DebugInfoKeyNames);
@@ -108,7 +98,6 @@ public static class DebugUtil {
 
         InputLib.OnDeviceChange += static () => {
             _DebugInfoL.Text = _GetInfoLText();
-            _DebugInfoHelp.Text = _GetInfoHelpText();
             _DebugInfoKeyNames.Text = _GetKeyNameText();
         };
     }
@@ -116,7 +105,6 @@ public static class DebugUtil {
     // todo for some reason, setting this in the static ctor started to throw a nullreference exception wrt FSS text size
     private static void _Test() {
         _DebugInfoL.Text = _GetInfoLText();
-        _DebugInfoHelp.Text = _GetInfoHelpText();
         _DebugInfoKeyNames.Text = _GetKeyNameText();
     }
 
@@ -191,7 +179,8 @@ public static class DebugUtil {
             _Test();
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
-                _DebugInfoHelp.IsVisible ^= true;
+                _drawDebugInfoHelp ^= true;
+                _DebugInfoL.Text = _GetInfoLText();
             } else {
                 _DebugInfoL.IsVisible ^= true;
                 _DebugInfoR.IsVisible ^= true;
@@ -270,7 +259,7 @@ public static class DebugUtil {
     /// Increase current palette index by 1 or loop around
     /// </summary>
     private static void _CyclePalette() {
-        Theme[] themes = [.. Registry.OfType<Theme>()];
+        Theme[] themes = [.. Registry.Of<Theme>()];
         int i = themes.IndexOf(Settings.Theme);
         Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
         Log($"Theme changed to {Settings.Theme.GetName().RemoveFormattingCodes()}", _ClassName);
@@ -279,7 +268,8 @@ public static class DebugUtil {
     // todo cleanup
     private static string _GetInfoLText() =>
         string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(),
-            Keybinds.Hotkey1.GetCurrentGlyph(), BuildInfo.BuildDate);
+            Keybinds.Hotkey1.GetCurrentGlyph(), BuildInfo.BuildDate) +
+            (_drawDebugInfoHelp ? $"\n{_GetInfoHelpText()}" : "");
 
     private static string _GetInfoHelpText() =>
         string.Format(Lang.DebugInfoHelp, Keybinds.Hotkey1.GetCurrentGlyph(), Keybinds.Hotkey2.GetCurrentGlyph());

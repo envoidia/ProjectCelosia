@@ -26,6 +26,12 @@ public class Theme : IDescribable, IRegistrable {
     public string ModId { get; }
     public string ItemId { get; init; }
 
+    // todo determine a good level
+    /// <summary>
+    /// Alpha to use for trans colors
+    /// </summary>
+    public const int TransOpacity = 120;
+
     public Theme(string modId, string keyName, string? itemId = null) {
         this.KeyName = keyName;
         this.KeyDesc = $"{keyName}Desc";
@@ -46,8 +52,6 @@ public class Theme : IDescribable, IRegistrable {
     public static Theme RedMode { get; }
 
     static Theme() {
-        const int TransAmt = 150;
-
         // https://lospec.com/palette-list/apollo
         #region Apollo
 
@@ -65,7 +69,7 @@ public class Theme : IDescribable, IRegistrable {
                 White = whites[3],
                 Gray = whites[0],
                 Black = grayBlues[0],
-                TransBlack = new(grayBlues[0], TransAmt),
+                TransBlack = new(grayBlues[0], TransOpacity),
 
                 Fg = whites[3],
                 Bg = grayBlues[1],
@@ -141,7 +145,7 @@ public class Theme : IDescribable, IRegistrable {
                 White = white,
                 Gray = gray,
                 Black = black,
-                TransBlack = new(black, TransAmt),
+                TransBlack = new(black, TransOpacity),
 
                 Fg = white,
                 Bg = black,
@@ -216,7 +220,7 @@ public class Theme : IDescribable, IRegistrable {
                 White = white,
                 Gray = gray,
                 Black = black,
-                TransBlack = new(black, TransAmt),
+                TransBlack = new(black, TransOpacity),
 
                 Fg = white,
                 Bg = black,
@@ -274,7 +278,7 @@ public class Theme : IDescribable, IRegistrable {
                 White = Color.White,
                 Gray = Color.Gray,
                 Black = Color.Black,
-                TransBlack = new(Color.Black, TransAmt),
+                TransBlack = new(Color.Black, TransOpacity),
 
                 Fg = Color.White,
                 Bg = Color.Black,
@@ -344,7 +348,7 @@ public class Theme : IDescribable, IRegistrable {
                 White = white,
                 Gray = gray,
                 Black = black,
-                TransBlack = new(black, TransAmt),
+                TransBlack = new(black, TransOpacity),
 
                 Fg = paleBlue,
                 Bg = black,
@@ -402,7 +406,7 @@ public class Theme : IDescribable, IRegistrable {
                 White = white,
                 Gray = r[9],
                 Black = r[0],
-                TransBlack = new(r[0], TransAmt),
+                TransBlack = new(r[0], TransOpacity),
 
                 Fg = white,
                 Bg = r[0],

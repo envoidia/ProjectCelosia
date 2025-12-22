@@ -249,13 +249,13 @@ public static class BattleLib {
         // Update nameplates
         for (int i = 0; i < units.Length; i++) {
             // Stat display
-            _Stats[i].Text = $"{units[i].FormatName(false)}\nHP: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str()}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\nSP: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
+            _Stats[i].Text = $"{units[i].FormatName(false)}\n{Lang.StatHp}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str()}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{Lang.StatSp}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
 
             // Buff display
             int buffCount = 0;
 
             // List stage changes
-            foreach (StageType stageType in Registry.OfType<StageType>()) {
+            foreach (StageType stageType in Registry.Of<StageType>()) {
                 int stage = units[i].GetStage(stageType);
                 if (stage != 0) {
                     if (buffCount > 0 && buffCount % 4 == 0) sb.Append('\n');

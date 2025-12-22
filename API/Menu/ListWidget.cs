@@ -133,6 +133,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
     }
 
     public virtual void Draw(GameTime gameTime) {
+        // todo cleanup
         if (this.OptCount != 0) {
             this.Input(gameTime);
 

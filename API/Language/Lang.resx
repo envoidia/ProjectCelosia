@@ -374,14 +374,17 @@ Loaded Mods: {7}</value>
         <value>Stats</value>
     </data>
     <!--todo all .full and .desc keys are currently unused. Make sure to remove everything that's not used by the end-->
+    <data name="StatHp" xml:space="preserve">
+        <value>HP</value>
+    </data>
     <data name="HpFull" xml:space="preserve">
         <value>Health Points</value>
     </data>
+    <data name="StatSp" xml:space="preserve">
+        <value>SP</value>
+    </data>
     <data name="SpFull" xml:space="preserve">
         <value>Skill Points</value>
-    </data>
-    <data name="StatHp" xml:space="preserve">
-        <value>Hp</value>
     </data>
     <data name="StatStr" xml:space="preserve">
         <value>Str</value>

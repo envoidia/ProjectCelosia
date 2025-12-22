@@ -37,6 +37,11 @@ public class Core : Game {
     /// </summary>
     public const string BaseModId = "__Celosia";
 
+    /// <summary>
+    /// Mod ID of Core and the base mod
+    /// </summary>
+    public static readonly string[] ReservedIds = [Id, BaseModId];
+
     #region Rendering
 
     public static GraphicsDeviceManager Graphics { get; private set; } = null!;
@@ -50,6 +55,7 @@ public class Core : Game {
     // Fonts
     public static FontSystem KoruriSystem { get; set; } = null!;
     public static DynamicSpriteFont Koruri60 { get; private set; } = null!;
+    public static DynamicSpriteFont Koruri40 { get; private set; } = null!;
 
     public static bool ExitOnEscape { get; set; } = false;
 
@@ -64,6 +70,7 @@ public class Core : Game {
         //FontSystemDefaults.TextureWidth = 4096;
         //FontSystemDefaults.TextureHeight = 4096;
 
+        // todo try bold font? diff font entirely?
         KoruriSystem = new FontSystem();
         FontSystemDefaults.FontResolutionFactor = 2f;
         FontSystemDefaults.KernelWidth = 2;
@@ -72,6 +79,7 @@ public class Core : Game {
         KoruriSystem = new FontSystem();
         KoruriSystem.AddFont(File.ReadAllBytes("Font/koruri.ttf"));
         Koruri60 = KoruriSystem.GetFont(60);
+        Koruri40 = KoruriSystem.GetFont(40);
 
         // Images in text
         RichTextDefaults.ImageResolver = static str => {
@@ -199,6 +207,7 @@ public class Core : Game {
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
         // Act Actors
+        // todo: avoid logic in draw by moving routines out of draw and also moving widget input out of draw?
         Stage.Act(gameTime);
 
         base.Draw(gameTime);

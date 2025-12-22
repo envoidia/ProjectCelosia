@@ -39,6 +39,8 @@ public static class StringExtensions {
             }
 
             // Default to ID
+            DebugUtil.Log($"Lang entry {modId}:{@this} not found", nameof(StringExtensions),
+                DebugUtil.LogLevel.Warning);
             return $"{ThemeColor.Neg.Str()}MISSING LANG ENTRY: {modId}:{@this}";
         }
 

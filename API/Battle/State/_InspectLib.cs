@@ -138,7 +138,7 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, $"{ThemeColor.Stat.Str()}SP") {
+            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str() + Lang.StatSp) {
         ColorLayer0 = ThemeColor.SpBack,
         ColorLayer1 = ThemeColor.Sp,
         MaxVal = 1000
