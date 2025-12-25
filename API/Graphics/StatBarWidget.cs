@@ -56,7 +56,10 @@ public sealed class StatBarWidget : StatBarWidgetBase {
     private Color _c0;
     private Color _c1;
 
-    static StatBarWidget() => Theme.OnChange += ThemeChangeStatic;
+    static StatBarWidget() {
+        ThemeChangeStatic();
+        Theme.OnChange += ThemeChangeStatic;
+    }
 
     public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
         : base(pos, width, renderPriority, text) => this.ThemeChange();

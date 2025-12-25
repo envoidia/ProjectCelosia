@@ -5,13 +5,13 @@ namespace API.Save;
 public static class Settings {
     #region General
 
-    public static Language.Language Language {
+    public static Lang.Language Language {
         get;
         set {
             field = value;
-            API.Language.Language._Change();
+            Lang.Language._Change();
         }
-    } = API.Language.Language.English;
+    } = Lang.Language.English;
 
     #endregion
 

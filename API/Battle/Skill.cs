@@ -25,7 +25,8 @@ public sealed class Skill : ComplexDescribable, IRegistrable {
 
     public string ItemId { get; init; }
 
-    public Skill(string modId, string keyName, string keyDesc, Range range, int cost, string? itemId = null) : base(keyName, "", keyDesc) {
+    public Skill(string modId, string keyName, string keyDesc, Range range, int cost, string? itemId = null)
+        : base(keyName, "", keyDesc) {
         this.Range = range;
         this.Cost = cost;
 
@@ -36,7 +37,7 @@ public sealed class Skill : ComplexDescribable, IRegistrable {
     }
 
     public string GetCostFormatted() =>
-        string.Format(this.IsBloom ? Lang.SkillCostBloom : Lang.SkillCostSP, this.Cost.FormatNoColor(false));
+        (this.IsBloom ? "SkillCostBloom" : "SkillCostSP").FormatLang(args: this.Cost.FormatNoColor(false));
 
     public bool IsRangeSelf() => (this.Range == Ranges.Self) || (this.Range == Ranges.SelfUpDown);
 
@@ -86,12 +87,12 @@ public sealed class Skill : ComplexDescribable, IRegistrable {
             ? string.Join(", ", skillTypes)
             : SkillTypes.Stat.GetName() + ThemeColor.White.Str();
 
-        return string.Format(Lang.SkillDesc, skillTypesStr, this.GetElement().GetName(),
-            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str()}{pow} {ThemeColor.White.Str()}{Lang.Pow}",
+        return "SkillDesc".FormatLang([skillTypesStr, this.GetElement().GetName(),
+            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str()}{pow} {ThemeColor.White.Str()}{"Pow".GetLang()}",
             this.Prio == 0
                 ? ""
-                : $", {((int) this.Prio).Format()} {ThemeColor.White.Str()}{Lang.Prio}",
-            this._GetFormattedDescInclusions());
+                : $", {((int) this.Prio).Format()} {ThemeColor.White.Str()}{"Prio".GetLang()}",
+            this._GetFormattedDescInclusions()]);
     }
 
     protected override HashSet<IDescribable> _GetDescInclusions() {

@@ -181,7 +181,7 @@ public sealed class Unit {
     public string GetAffinitiesString(bool current) {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
-        StringBuilder sb = new($"{ThemeColor.Stat.Str()}{Lang.Affinities}:{ThemeColor.White.Str()} ");
+        StringBuilder sb = new($"{ThemeColor.Stat.Str()}{"Affinities".GetLang()}:{ThemeColor.White.Str()} ");
         foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible)) {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
@@ -225,7 +225,7 @@ public sealed class Unit {
             int statNew = this.GetStatWithStage(stat, stageNew);
             int change = statNew - statOld;
 
-            builder.Append(string.Format(Lang.LogStageStat, this.FormatName(), stat.GetName(),
+            builder.Append("LogStageStat".FormatLang(this.FormatName(), stat.GetName(),
                 TextLib.FormatStat(statOld, statDefault), TextLib.FormatStat(statNew, statDefault),
                 statDefault.Format(ThemeColor.Imp), change.Format()));
 
@@ -290,9 +290,10 @@ public sealed class Unit {
     }
 
     public string GetBoolStatString(BoolStat stat) {
-        if (this.IsImmuneToBoolStat(stat)) return ThemeColor.Pos + Lang.Immune;
+        if (this.IsImmuneToBoolStat(stat)) return ThemeColor.Pos + "Immune".GetLang();
 
-        return (stat.IsPositive ? ThemeColor.Pos : ThemeColor.Neg) + (this.IsBoolStat(stat) ? Lang.Yes : Lang.No);
+        return (stat.IsPositive ? ThemeColor.Pos : ThemeColor.Neg) +
+            (this.IsBoolStat(stat) ? "Yes".GetLang() : "No".GetLang());
     }
 
     #endregion
@@ -397,14 +398,15 @@ public sealed class Unit {
 
     // todo weapon
     public string GetEquipString() =>
-        $"{ThemeColor.Stat.Str()}{Lang.Accessory}:{ThemeColor.White.Str()} {(this.Equipped as INameable)?.GetName() ?? Lang.None}";
+        $"{ThemeColor.Stat.Str()}{"Accessory".GetLang()}:{ThemeColor.White.Str()} {(this.Equipped as INameable)?.GetName() ??
+            "None".GetLang()}";
 
     public void DecrementTurns() {
         // Stages
         foreach (StageType stageType in Registry.Of<StageType>()) {
             int stage = this.GetStage(stageType);
             if (stage != 0 && --this._StageTurns[stageType] == 0) {
-                LogLib.Add(Lang.LogLoseStage.FormatIcu(this.FormatName(false),
+                LogLib.Add("LogLoseStage".IcuFormatLang(this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)));
                 this.SetStage(stageType, 0);
@@ -419,7 +421,7 @@ public sealed class Unit {
             if (turns is >= 2 and < BuffInstance.InfiniteTurns) {
                 buffInstance.Turns = turns - 1;
             } else {
-                LogLib.Add(Lang.LogLoseBuff.FormatIcu(this.FormatName(false),
+                LogLib.Add("LogLoseBuff".IcuFormatLang(this.FormatName(false),
                     buffInstance.Buff.MaxStacks, ThemeColor.Imp + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks));
 
@@ -456,7 +458,7 @@ public sealed class Unit {
                 // Only hit Defend
                 if (this.Defend > dmg) {
                     this.Defend -= dmg;
-                    return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield, nameS,
+                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang(nameS,
                         (defendOld + this.Shield).Format(ThemeColor.Shield),
                         (this.Defend + this.Shield).Format(ThemeColor.Shield),
                         this.GetStat(Stats.Hp).Format(ThemeColor.Hp), dmgFull.Format()));
@@ -468,7 +470,7 @@ public sealed class Unit {
 
                 // todo this should come after the dmg message; is this needed now that shield is a buff
                 if ((this.Shield == 0) && (this.GetBoolStat(BoolStats.EffectBlock) <= 0)) {
-                    msg.Add(string.Format(Lang.LogChangeBooleanStatEffectBlock, name, 0));
+                    msg.Add("LogChangeBooleanStatEffectBlock".FormatLang(name, 0));
                 }
             }
 
@@ -477,20 +479,20 @@ public sealed class Unit {
                 if (this.Shield > dmg) {
                     int shieldOld = this.Shield;
                     this.Shield -= dmg;
-                    return new Result(ResultType.HitEffectBlock, string.Format(Lang.LogChangeShield,
+                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang(
                         nameS, (defendOld + shieldOld).Format(ThemeColor.Shield), this.Shield.Format(ThemeColor.Shield),
                         this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-dmgFull).Format()));
                 }
 
                 // Destroy Shield and proceed to HP
-                msg.Add(string.Format(Lang.LogChangeShield, nameS, (defendOld + this.Shield).Format(ThemeColor.Shield),
+                msg.Add("LogChangeShield".FormatLang(nameS, (defendOld + this.Shield).Format(ThemeColor.Shield),
                     ThemeColor.Shield + 0, this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp),
                     (-(defendOld + this.Shield)).Format()));
                 dmg -= this.Shield;
                 this.Shield = 0;
                 if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
                     // todo is this needed
-                    msg.Add(string.Format(Lang.LogChangeBooleanStatEffectBlock, name, 0));
+                    msg.Add("LogChangeBooleanStatEffectBlock".FormatLang(name, 0));
                 }
             }
         }
@@ -498,7 +500,7 @@ public sealed class Unit {
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
-        msg.Add(string.Format(Lang.LogChangeHp, nameS, hpOld.Format(ThemeColor.Hp, false),
+        msg.Add("LogChangeHp".FormatLang(nameS, hpOld.Format(ThemeColor.Hp, false),
             hpNew.Format(ThemeColor.Hp, false),
             this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()));
 
@@ -509,7 +511,7 @@ public sealed class Unit {
 
         return dmg > 0
             ? new Result(ResultType.Success, msg)
-            : new Result(ResultType.Fail, string.Format(Lang.LogNoEffect, name));
+            : new Result(ResultType.Fail, "LogNoEffect".FormatLang(name));
     }
 
     // todo support other langs (+ nicknames?)

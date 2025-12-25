@@ -26,7 +26,7 @@ public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable {
     }
 
     public override string GetFullDesc() =>
-        string.Format(Lang.WeaponDesc, this._GetFormattedDescInclusions());
+        "WeaponDesc".FormatLang(this._GetFormattedDescInclusions());
 
     protected override HashSet<IDescribable> _GetDescInclusions() =>
         IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);

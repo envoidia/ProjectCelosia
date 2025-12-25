@@ -240,7 +240,7 @@ public static class BattleLib {
         for (int i = 0; i < TeamCount; i++) {
             // todo fix it getting confused by the /
             _BloomLabels[i].Text =
-                $"{ThemeColor.Stat.Str()}{Lang.Bloom}{ThemeColor.White.Str()}: {ThemeColor.Bloom.Str()}{Battle.GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str()}//{ThemeColor.Bloom.Str()}1,000";
+                $"{ThemeColor.Stat.Str()}{"Bloom".GetLang()}{ThemeColor.White.Str()}: {ThemeColor.Bloom.Str()}{Battle.GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str()}//{ThemeColor.Bloom.Str()}1,000";
         }
 
         Unit[] units = Battle.GetAllUnits();
@@ -249,7 +249,7 @@ public static class BattleLib {
         // Update nameplates
         for (int i = 0; i < units.Length; i++) {
             // Stat display
-            _Stats[i].Text = $"{units[i].FormatName(false)}\n{Lang.StatHp}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str()}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{Lang.StatSp}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
+            _Stats[i].Text = $"{units[i].FormatName(false)}\n{"StatHp".GetLang()}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str()}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
 
             // Buff display
             int buffCount = 0;
@@ -429,22 +429,22 @@ public static class BattleLib {
         _UpdateStatDisplay(self.Pos);
 
         if (self.IsBoolStat(BoolStats.UnableToAct)) {
-            LogLib.Add(string.Format(Lang.LogSkillFailUnableToAct, move.GetTriesToUseString(),
-            string.Format(Lang.LogButIsUnableToAct, self.GetBoolStat(BoolStats.UnableToAct).ToString()))); // todo test
+            LogLib.Add("LogSkillFailUnableToAct".FormatLang(move.GetTriesToUseString(),
+            "LogButIsUnableToAct".FormatLang(self.GetBoolStat(BoolStats.UnableToAct).ToString()))); // todo test
             _EndMove();
             return;
         }
 
         int cd = move.SkillInstance.Cooldown;
         if (cd > 0 && _applyingEffect == 0) {
-            LogLib.Add(string.Format(Lang.LogSkillFailCooldown, move.GetTriesToUseString(),
-                Lang.LogButItsOnCooldown.FormatIcu(cd)));
+            LogLib.Add("LogSkillFailCooldown".FormatLang(move.GetTriesToUseString(),
+                "LogButItsOnCooldown".IcuFormatLang(cd)));
             _EndMove();
             return;
         }
 
         if (!move.IsInRange()) {
-            LogLib.Add(string.Format(Lang.LogSkillFailRange, move.GetTriesToUseString(), Lang.LogButCantReach));
+            LogLib.Add("LogSkillFailRange".FormatLang(move.GetTriesToUseString(), "LogButCantReach".GetLang()));
             _EndMove();
             return;
         }
@@ -469,8 +469,8 @@ public static class BattleLib {
             spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
 
             if (spNew < 0) {
-                string msg = string.Format(Lang.LogSkillFailSp, move.GetTriesToUseString(),
-                    Lang.LogButDoesntHaveEnough.FormatIcu(Convert.ToInt32(skill.IsBloom)));
+                string msg = "LogSkillFailSp".FormatLang(move.GetTriesToUseString(),
+                    "LogButDoesntHaveEnough".IcuFormatLang(Convert.ToInt32(skill.IsBloom)));
                 LogLib.Add(msg);
             } else {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
@@ -480,7 +480,7 @@ public static class BattleLib {
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = Lang.LogSkillUseChangeSpBloom.FormatIcu(Convert.ToInt32(skill.IsBloom),
+                    changeSp = "LogSkillUseChangeSpBloom".IcuFormatLang(Convert.ToInt32(skill.IsBloom),
                         spOld.Format(ThemeColor.Sp, false),
                         spNew.Format(ThemeColor.Sp, false), change.Format());
                 }
@@ -488,7 +488,7 @@ public static class BattleLib {
                 if (skill.IsBloom) team.Bloom = spNew;
                 else self.Sp = spNew;
 
-                LogLib.Add(Lang.LogSkillUse.FormatIcu(self.FormatName(false),
+                LogLib.Add("LogSkillUse".IcuFormatLang(self.FormatName(false),
                     skill.GetName(ThemeColor.Skill),
                     target.FormatName(false),
                     Convert.ToInt32(skill.IsRangeSelf()).ToString(), changeSp));
@@ -571,7 +571,7 @@ public static class BattleLib {
 
             foreach (Passive passive in unit.Passives) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(),
+                    new StringBuilder("LogTurnEndEffect".FormatLang(unit.FormatName(),
                         ThemeColor.Passive + passive.GetName())).Append(' ');
 
                 foreach (IBuffEffect buffEffect in passive.BuffEffects) {
@@ -588,7 +588,7 @@ public static class BattleLib {
 
             foreach (BuffInstance buffInstance in unit.BuffInstances) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder(string.Format(Lang.LogTurnEndEffect, unit.FormatName(),
+                    new StringBuilder("LogTurnEndEffect".FormatLang(unit.FormatName(),
                     buffInstance.Buff.GetName())).Append(' ');
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
@@ -608,7 +608,7 @@ public static class BattleLib {
 
         // todo is trailing white needed
         LogLib.Add(_GetTurnString(Battle.Turn));
-        LogLib.Add(Lang.LogGainSpBloom);
+        LogLib.Add("LogGainSpBloom".GetLang());
 
         // Increase bloom
         Battle.PlayerTeam.Bloom = Math.Min(Battle.PlayerTeam.Bloom + 100, 1000);
@@ -627,7 +627,7 @@ public static class BattleLib {
         units.Sort(static (a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
 
     private static string _GetTurnString(int turn) =>
-        $"{ThemeColor.Turn.Str()}{Lang.Turn} {turn}{ThemeColor.White.Str()}";
+        $"{ThemeColor.Turn.Str()}{"Turn".GetLang()} {turn}{ThemeColor.White.Str()}";
 
     #endregion
 }

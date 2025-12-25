@@ -10,7 +10,7 @@ namespace API.Graphics;
 /// Layered bars representing HP, Shield, and HP over max
 /// </summary>
 public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPriority)
-    : StatBarWidgetBase(pos, width, renderPriority, ThemeColor.Stat.Str() + Lang.StatHp) {
+    : StatBarWidgetBase(pos, width, renderPriority, ThemeColor.Stat.Str() + "StatHp".GetLang()) {
     public int Hp {
         get;
         set {

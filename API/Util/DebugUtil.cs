@@ -151,7 +151,6 @@ public static class DebugUtil {
 
         // todo update text if lang changed
 
-
         // Lerped FPS counter
         _avgFrameTime += (gameTime.ElapsedGameTime - _avgFrameTime) * 0.01f;
 
@@ -160,7 +159,7 @@ public static class DebugUtil {
         // Update timed text
         if (_timeSinceUpdate < TimeSpan.FromSeconds(1)) return;
 
-        _DebugInfoR.Text = string.Format(Lang.DebugInfoR,
+        _DebugInfoR.Text = string.Format("DebugInfoR".GetLang(),
             $"{(int) (1 / _avgFrameTime.TotalSeconds)}({(int) (1 / gameTime.ElapsedGameTime.TotalSeconds)})", // todo temp
             GC.GetTotalMemory(false) / _Mb,
             "todo",
@@ -177,6 +176,8 @@ public static class DebugUtil {
         if (InputLib.Check(Keybinds.DebugInfo)) {
             // temp
             _Test();
+
+            Console.WriteLine("DebugInfoHelp".GetLang());
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
                 _drawDebugInfoHelp ^= true;
@@ -209,15 +210,19 @@ public static class DebugUtil {
         if (InputLib.IsKeyJustPressed(Keys.F6)) {
             Console.WriteLine(Registry.ToString());
             Log("Output Registry to console", _ClassName);
-
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F7)) {
+            Console.WriteLine(Settings.Language.ToString());
+            Log("Output current language to console", _ClassName);
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.F8)) {
             Console.WriteLine(Stage.ToString());
             Log("Output Stage to console", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F8)) {
+        if (InputLib.IsKeyJustPressed(Keys.F9)) {
             string str = string.Join('\n', LogLib._LogText);
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
@@ -229,7 +234,7 @@ public static class DebugUtil {
             }
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F9)) {
+        if (InputLib.IsKeyJustPressed(Keys.F10)) {
             if (InputLib.Check(Keybinds.Hotkey1)) _CyclePalette();
             else if (InputLib.Check(Keybinds.Hotkey2)) {
                 Console.WriteLine(Settings.Theme.ToDetailedString());
@@ -239,19 +244,14 @@ public static class DebugUtil {
 
         // todo remove functions after this? theyre not rly used
 
-        if (InputLib.IsKeyJustPressed(Keys.F10)) {
+        if (InputLib.IsKeyJustPressed(Keys.F11)) {
             Stage._RecalcLayoutWidgets();
             Log("Recalculated ILayoutWidgets", _ClassName);
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F11)) {
+        if (InputLib.IsKeyJustPressed(Keys.F12)) {
             Stage.Sort();
             Log("Cleaned up Stage", _ClassName);
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F12)) {
-            GC.Collect();
-            Log("Forced GC collect", _ClassName);
         }
     }
 
@@ -267,12 +267,12 @@ public static class DebugUtil {
 
     // todo cleanup
     private static string _GetInfoLText() =>
-        string.Format(Lang.DebugInfoL, Keybinds.DebugInfo.GetCurrentGlyph(),
+        string.Format("DebugInfoL".GetLang(), Keybinds.DebugInfo.GetCurrentGlyph(),
             Keybinds.Hotkey1.GetCurrentGlyph(), BuildInfo.BuildDate) +
             (_drawDebugInfoHelp ? $"\n{_GetInfoHelpText()}" : "");
 
     private static string _GetInfoHelpText() =>
-        string.Format(Lang.DebugInfoHelp, Keybinds.Hotkey1.GetCurrentGlyph(), Keybinds.Hotkey2.GetCurrentGlyph());
+        string.Format("DebugInfoHelp".GetLang(), Keybinds.Hotkey1.GetCurrentGlyph(), Keybinds.Hotkey2.GetCurrentGlyph());
 
     private static string _GetKeyNameText() {
         StringBuilder sb = new();

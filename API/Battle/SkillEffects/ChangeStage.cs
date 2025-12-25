@@ -31,7 +31,7 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
         string stageName = stageType.GetName();
 
         if (stageNew != stageOld) {
-            str = string.Format(Lang.LogChangeStageStacks, unit.FormatName(),
+            str = "LogChangeStageStacks".FormatLang(unit.FormatName(),
                 stageName, stageOld.Format(), stageNew.Format());
             str2 = unit.GetStageStatString(stageType, stageNew);
 
@@ -43,10 +43,10 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
         if (((stageOld >= 0) && (stacksMod >= 0)) || ((stageOld <= 0) && (stacksMod <= 0) && (turnsMod > turnsOld))) {
             unit.SetStageTurns(stageType, turnsMod);
             if (stageNew != stageOld) {
-                msg.Add(str + string.Format(Lang.LogTurnsNameless, ThemeColor.Imp.Str() + turnsOld, ThemeColor.Imp.Str() + turnsMod) +
+                msg.Add(str + "LogTurnsNameless".FormatLang(ThemeColor.Imp.Str() + turnsOld, ThemeColor.Imp.Str() + turnsMod) +
                         str2);
             } else {
-                msg.Add(string.Format(Lang.LogChangeStageTurns, unit.FormatName(), stageName, ThemeColor.Imp.Str() + turnsOld,
+                msg.Add("LogChangeStageTurns".FormatLang(unit.FormatName(), stageName, ThemeColor.Imp.Str() + turnsOld,
                     ThemeColor.Imp.Str() + turnsMod));
             }
         } else if (stageNew != stageOld) {

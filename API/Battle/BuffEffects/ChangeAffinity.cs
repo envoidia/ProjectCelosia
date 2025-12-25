@@ -13,7 +13,7 @@ public sealed class ChangeAffinity(Element element, int change) : IBuffEffect {
         int affNew = affOld + changeFull;
         self.SetAffinity(element, affNew);
 
-        LogLib.Add(string.Format(Lang.LogChangeAff, self.FormatName(),
+        LogLib.Add("LogChangeAff".FormatLang(self.FormatName(),
             element.GetName(), affOld.Format(), affNew.Format()));
     }
 }

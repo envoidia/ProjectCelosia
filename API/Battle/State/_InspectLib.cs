@@ -8,6 +8,7 @@ using API.Menu;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 using System.Linq;
+using API.Extensions;
 
 namespace API.Battle.State;
 
@@ -138,7 +139,7 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str() + Lang.StatSp) {
+            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str() + "StatSp".GetLang()) {
         ColorLayer0 = ThemeColor.SpBack,
         ColorLayer1 = ThemeColor.Sp,
         MaxVal = 1000
@@ -265,7 +266,7 @@ internal sealed class _InspectLib {
 
         // Initial translate and subscribe to event
         _Translate();
-        Language.Language.OnChange += _Translate;
+        Lang.Language.OnChange += _Translate;
     }
 
     /// <summary>
@@ -274,11 +275,11 @@ internal sealed class _InspectLib {
     // todo if unit names can change that part must be re-called on open
     internal static void _Translate() {
         // Stat types
-        string[] names = [Lang.InfoMult, Lang.InfoMod, Lang.InfoOther];
-        for (int i = 0; i < _StatTypeCount; i++) _StatCategoryHeaders[i].Text = names[i];
+        string[] names = ["InfoMult", "InfoMod", "InfoOther"];
+        for (int i = 0; i < _StatTypeCount; i++) _StatCategoryHeaders[i].Text = names[i].GetLang();
 
         // Page list
-        _PageTabs.SetText([Lang.Skills, Lang.Passives, Lang.Buffs, Lang.Stats]);
+        _PageTabs.SetText(["Skills".GetLang(), "Passives".GetLang(), "Buffs".GetLang(), "Stats".GetLang()]);
 
         // Basic stat list
         for (int i = 0; i < StatCount; i++) _StatsBasic[i].Title.Text = _StatList[i].GetName();

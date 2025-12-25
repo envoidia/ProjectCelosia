@@ -6,7 +6,7 @@ using API.Graphics;
 namespace Celosia.Battle;
 
 public static class Skills {
-    public static readonly Skill Fireball = new(Core.BaseModId, "SkillFireball", "SkillDescBuff",
+    public static readonly Skill Fireball = new(Core.BaseModId, "SkillFireball", "__API:SkillDescBuff",
         Ranges.Other1R, 50) {
         SkillEffects = [
             new Damage(50, SkillTypes.Mag, Elements.Ignis),

@@ -11,7 +11,7 @@ public sealed class Passive : ComplexDescribable, IRegistrable {
     public string ItemId { get; init; }
 
     public Passive(string modId, string keyName, string keyDesc, string icon, IBuffEffect[] buffEffects,
-        string? itemId = null) : base(keyName, icon, keyDesc) {
+        string? itemId = null) : base($"{modId}:{keyName}", icon, $"{modId}:{keyDesc}") {
         this.BuffEffects = buffEffects;
 
         this.ModId = modId;

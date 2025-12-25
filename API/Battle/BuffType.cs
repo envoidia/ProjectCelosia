@@ -1,3 +1,4 @@
+using API.Extensions;
 using API.Util;
 
 namespace API.Battle;
@@ -11,8 +12,8 @@ public enum BuffType {
 public static class BuffTypeExtensions {
     extension(BuffType @this) {
         public string GetName() => @this switch {
-            BuffType.Buff => Lang.Buff,
-            BuffType.Debuff => Lang.Debuff,
+            BuffType.Buff => "Buff".GetLang(),
+            BuffType.Debuff => "Debuff".GetLang(),
             _ => throw new ClosedEnumsWhenException()
         };
     }

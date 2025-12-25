@@ -66,7 +66,7 @@ public sealed class Range : IDescribable, IRegistrable {
 
     public string GetName(ThemeColor color) => color.Str() + this.GetLang();
     public string GetName() => this.GetName(ThemeColor.White);
-    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
+    public string GetDesc() => this.KeyDesc.GetLang();
 
 }
 

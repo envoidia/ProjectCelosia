@@ -1,5 +1,6 @@
 using System;
 using API.Battle.State;
+using API.Extensions;
 using API.Graphics;
 
 namespace API.Battle.BuffEffects;
@@ -18,7 +19,7 @@ public sealed class ChangeMult(Mult mult, int change) : IBuffEffect {
 
         self.SetMult(mult, multNew);
 
-        LogLib.Add(string.Format(Lang.LogChangeMult, self.FormatName(), ThemeColor.Stat.Str() + mult.GetName(),
+        LogLib.Add("LogChangeMult".FormatLang(self.FormatName(), ThemeColor.Stat.Str() + mult.GetName(),
             mult.Format(multOld), mult.Format(multNew), mult.FormatChange(changeDisplay)));
     }
 }

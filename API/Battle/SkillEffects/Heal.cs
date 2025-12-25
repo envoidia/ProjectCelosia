@@ -33,7 +33,7 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth) {
         if (hpNew > hpOld) {
             unit.Hp = hpNew;
 
-            msg.Add(string.Format(Lang.LogChangeHp, unit.FormatName(), hpOld.Format(ThemeColor.Hp),
+            msg.Add("LogChangeHp".FormatLang(unit.FormatName(), hpOld.Format(ThemeColor.Hp),
                 hpNew.Format(ThemeColor.Hp), hpMax.Format(ThemeColor.Hp),
                 (hpNew - hpOld).Format(ThemeColor.Hp)));
         }

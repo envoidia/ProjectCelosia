@@ -1,5 +1,8 @@
 using System;
 using System.Resources;
+using API.Extensions;
+using API.Graphics;
+using API.Name;
 using Microsoft.Xna.Framework;
 
 namespace API.Modding;
@@ -9,8 +12,7 @@ namespace API.Modding;
 /// </summary>
 /// <param name="id">Unique string ID for this mod</param>
 /// <param name="version">Mod version</param>
-/// <param name="resourceManager">Mod's <c>Lang.ResourceManager</c></param>
-public sealed class GameMod(string id, Version version, ResourceManager resourceManager) {
+public sealed class GameMod(string id, Version version) : IDescribable {
     /// <summary>
     /// Unique string ID for this mod
     /// </summary>
@@ -27,12 +29,16 @@ public sealed class GameMod(string id, Version version, ResourceManager resource
     public Version Version { get; } = version;
 
     /// <summary>
-    /// Mod's <c>Lang.ResourceManager</c>
-    /// </summary>
-    public ResourceManager ResourceManager { get; } = resourceManager;
-
-    /// <summary>
     /// Called every frame
     /// </summary>
     public Action<GameTime>? OnUpdate { get; init; } = null;
+
+    public string KeyName => $"{this.Id}:{ModLoader.NameKey}";
+    public string KeyDesc => $"{this.KeyName}Desc";
+
+    public string GetName() => this.GetName(ThemeColor.White);
+    public string GetName(ThemeColor color) => color.Str() + this.KeyName.GetLang();
+    public string GetDesc() => this.KeyDesc.GetLang();
+
+
 }

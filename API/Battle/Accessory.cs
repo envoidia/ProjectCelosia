@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using API.Extensions;
 using API.Modding;
 using API.Name;
 
@@ -13,16 +14,16 @@ public sealed class Accessory : ComplexDescribable, IRegistrable, IEquippable {
 
     public string ItemId { get; init; }
 
-    public Accessory(string modId, string keyName, string icon, string? itemId = null) :
-        base(keyName, icon, $"{keyName}Desc") {
+    public Accessory(string modId, string keyName, string icon, string? itemId = null)
+        : base(keyName, icon, $"{keyName}Desc") {
         this.ModId = modId;
         this.ItemId = itemId ?? keyName;
 
         Registry.Register(this);
     }
-    
+
     public override string GetFullDesc() =>
-        string.Format(Lang.AccessoryDesc, this._GetFormattedDescInclusions());
+        "AccessoryDesc".FormatLang(this._GetFormattedDescInclusions());
 
     protected override HashSet<IDescribable> _GetDescInclusions() =>
        IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);

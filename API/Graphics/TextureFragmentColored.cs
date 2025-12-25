@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,6 +23,9 @@ public sealed class TextureFragmentColored : IRenderable {
         this.Region = region;
     }
 
-    public void Draw(FSRenderContext context, Vector2 position, Color color) =>
-        context.DrawImage(this.Texture, this.Region, position, this._Scale, color);
+    public void Draw(FSRenderContext context, Vector2 position, Color color) {
+        //FieldInfo? f = typeof(FSRenderContext).GetField("_scale", BindingFlags.NonPublic | BindingFlags.Instance);
+        //f.SetValue(context, new Vector2(1.5f));
+        context.DrawImage(this.Texture, this.Region, position, Vector2.Zero, color);
+    }
 }

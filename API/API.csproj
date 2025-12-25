@@ -21,11 +21,9 @@
         <PackageReference Include="ResolutionBuddy" Version="5.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Update="Language/Lang.resx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Generator>PublicResXFileCodeGenerator</Generator>
-            <LastGenOutput>Lang.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
+    <None Update="Lang/Lang.en-US.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     </ItemGroup>
     <Target Name="GenerateBuildDate" BeforeTargets="BeforeCompile">
         <PropertyGroup>

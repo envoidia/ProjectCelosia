@@ -1,4 +1,5 @@
 using API.Battle.State;
+using API.Extensions;
 using API.Graphics;
 
 namespace API.Battle.BuffEffects;
@@ -13,7 +14,7 @@ public sealed class ChangeStatMod(StatMod mod, int change) : IBuffEffect {
 
         self.SetStatMod(mod, modNew);
 
-        LogLib.Add(string.Format(Lang.LogChangeMod, self.FormatName()),
+        LogLib.Add("LogChangeMod".FormatLang(self.FormatName()),
             ThemeColor.Stat.Str() + mod.GetName(), mod.Format(modOld), mod.Format(modNew));
     }
 }

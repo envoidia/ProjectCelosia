@@ -2,7 +2,7 @@ using API.Modding;
 using System.Diagnostics.CodeAnalysis;
 using API;
 using API.Battle;
-using CBattle = Celosia.Battle; // temp
+using CBattle = Celosia.Battle;
 
 namespace Celosia;
 
@@ -12,7 +12,7 @@ public static class Main {
     /// <summary>
     /// <c>GameMod</c> instance
     /// </summary>
-    public static GameMod Mod { get; } = new(Core.BaseModId, new Version(0, 1), Lang.ResourceManager);
+    public static GameMod Mod { get; } = new(Core.BaseModId, new Version(0, 1));
 
     static Main() {
         // Really gross temporary initialize for testing battles
@@ -25,5 +25,8 @@ public static class Main {
                 new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend),
                 new Unit(CBattle.UnitTypes.Johny, 19, null, Skills.Nothing, Skills.Defend),
                 new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend)));
+
+        // Add lang file
+        API.Lang.Language.AddLangFile(API.Lang.Language.EnUS, Core.BaseModId, "Lang/CelosiaLang.en-US.properties");
     }
 }
