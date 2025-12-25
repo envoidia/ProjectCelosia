@@ -1,7 +1,3 @@
-MonoGame port of [project_celosia](https://github.com/envoidia/project_celosia)
-
-Currently nowhere near as complete
-
 # Project Celosia
 ### ⚠ While this software is visible-source, it is not free. Building from source if you do not own a legitimate copy constitutes piracy️
 

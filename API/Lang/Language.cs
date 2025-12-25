@@ -44,13 +44,16 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
         AddLangFile(EnUS, Core.Id, "Lang/Lang.en-US.properties");
     }
 
-    public static void AddLangFile(string lang, string modId, string file) {
-        Dictionary<string, string> entries = Langs[lang].Entries;
+    /// <summary>
+    /// Parses a .properties file and adds its entries to the lang dictionary for the given locale code under the given mod ID
+    /// </summary>
+    public static void AddLangFile(string localeCode, string modId, string file) {
+        Dictionary<string, string> entries = Langs[localeCode].Entries;
 
         foreach (KeyValuePair<string, string> kvp in Properties.Parse(file)) {
             if (entries.GetValueOrDefault(kvp.Key) is not null) {
                 DebugUtil.Log(
-                    $"Language {lang} already has a value at {modId}:{kvp.Key} ({entries[kvp.Key]}), overwriting with {kvp.Value}",
+                    $"Language {localeCode} already has a value at {modId}:{kvp.Key} ({entries[kvp.Key]}), overwriting with {kvp.Value}",
                     nameof(Language), DebugUtil.LogLevel.Warning);
             }
             entries[$"{modId}:{kvp.Key}"] = kvp.Value;
