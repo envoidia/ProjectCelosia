@@ -225,9 +225,9 @@ public sealed class Unit {
             int statNew = this.GetStatWithStage(stat, stageNew);
             int change = statNew - statOld;
 
-            builder.Append("LogStageStat".FormatLang(this.FormatName(), stat.GetName(),
+            builder.Append("LogStageStat".FormatLang([this.FormatName(), stat.GetName(),
                 TextLib.FormatStat(statOld, statDefault), TextLib.FormatStat(statNew, statDefault),
-                statDefault.Format(ThemeColor.Imp), change.Format()));
+                statDefault.Format(ThemeColor.Imp), change.Format()]));
 
             builder.Append(i == (statCount - 1) ? ")" : ", ");
         }
@@ -406,9 +406,9 @@ public sealed class Unit {
         foreach (StageType stageType in Registry.Of<StageType>()) {
             int stage = this.GetStage(stageType);
             if (stage != 0 && --this._StageTurns[stageType] == 0) {
-                LogLib.Add("LogLoseStage".IcuFormatLang(this.FormatName(false),
+                LogLib.Add("LogLoseStage".IcuFormatLang([this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
-                    this.GetStageStatString(StageTypes.Atk, 0)));
+                    this.GetStageStatString(StageTypes.Atk, 0)]));
                 this.SetStage(stageType, 0);
             }
         }
@@ -421,9 +421,9 @@ public sealed class Unit {
             if (turns is >= 2 and < BuffInstance.InfiniteTurns) {
                 buffInstance.Turns = turns - 1;
             } else {
-                LogLib.Add("LogLoseBuff".IcuFormatLang(this.FormatName(false),
+                LogLib.Add("LogLoseBuff".IcuFormatLang([this.FormatName(false),
                     buffInstance.Buff.MaxStacks, ThemeColor.Imp + buffInstance.Stacks,
-                    buffInstance.Buff.GetName(), buffInstance.Stacks));
+                    buffInstance.Buff.GetName(), buffInstance.Stacks]));
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
                     buffEffect.OnRemove(this, buffInstance.Stacks);
@@ -458,10 +458,10 @@ public sealed class Unit {
                 // Only hit Defend
                 if (this.Defend > dmg) {
                     this.Defend -= dmg;
-                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang(nameS,
+                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang([nameS,
                         (defendOld + this.Shield).Format(ThemeColor.Shield),
                         (this.Defend + this.Shield).Format(ThemeColor.Shield),
-                        this.GetStat(Stats.Hp).Format(ThemeColor.Hp), dmgFull.Format()));
+                        this.GetStat(Stats.Hp).Format(ThemeColor.Hp), dmgFull.Format()]));
                 }
 
                 // Destroy Defend and proceed to Shield
@@ -470,7 +470,7 @@ public sealed class Unit {
 
                 // todo this should come after the dmg message; is this needed now that shield is a buff
                 if ((this.Shield == 0) && (this.GetBoolStat(BoolStats.EffectBlock) <= 0)) {
-                    msg.Add("LogChangeBooleanStatEffectBlock".FormatLang(name, 0));
+                    msg.Add("LogChangeBooleanStatEffectBlock".FormatLang([name, 0]));
                 }
             }
 
@@ -479,20 +479,20 @@ public sealed class Unit {
                 if (this.Shield > dmg) {
                     int shieldOld = this.Shield;
                     this.Shield -= dmg;
-                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang(
+                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang([
                         nameS, (defendOld + shieldOld).Format(ThemeColor.Shield), this.Shield.Format(ThemeColor.Shield),
-                        this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-dmgFull).Format()));
+                        this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-dmgFull).Format()]));
                 }
 
                 // Destroy Shield and proceed to HP
-                msg.Add("LogChangeShield".FormatLang(nameS, (defendOld + this.Shield).Format(ThemeColor.Shield),
+                msg.Add("LogChangeShield".FormatLang([nameS, (defendOld + this.Shield).Format(ThemeColor.Shield),
                     ThemeColor.Shield + 0, this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp),
-                    (-(defendOld + this.Shield)).Format()));
+                    (-(defendOld + this.Shield)).Format()]));
                 dmg -= this.Shield;
                 this.Shield = 0;
                 if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
                     // todo is this needed
-                    msg.Add("LogChangeBooleanStatEffectBlock".FormatLang(name, 0));
+                    msg.Add("LogChangeBooleanStatEffectBlock".FormatLang([name, 0]));
                 }
             }
         }
@@ -500,9 +500,9 @@ public sealed class Unit {
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
-        msg.Add("LogChangeHp".FormatLang(nameS, hpOld.Format(ThemeColor.Hp, false),
+        msg.Add("LogChangeHp".FormatLang([nameS, hpOld.Format(ThemeColor.Hp, false),
             hpNew.Format(ThemeColor.Hp, false),
-            this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()));
+            this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()]));
 
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {

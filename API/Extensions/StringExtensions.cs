@@ -43,13 +43,16 @@ public static class StringExtensions {
         /// </returns>
         /// <para>Asserts > 0 args passed</para>
         /// <param name="args">The formatting arguments to apply</param>
-        public string FormatLang(string modId, params object[] args) {
+        public string FormatLang(string modId, object[] args) {
             // todo Assert.LenNotZero(args);
             return string.Format(@this.GetLang(modId), args);
         }
 
         /// <inheritdoc cref="FormatLang(string, string, object[])" />
-        public string FormatLang(params object[] args) => @this.FormatLang(Core.Id, args);
+        public string FormatLang(object[] args) => @this.FormatLang(Core.Id, args);
+
+        /// <inheritdoc cref="FormatLang(string, string, object[])" />
+        public string FormatLang(object args) => @this.FormatLang(Core.Id, [args]);
 
         /// <returns>
         /// Searches the current lang for key <c>modId:this</c> and ICU MessageFormats it.
@@ -60,7 +63,7 @@ public static class StringExtensions {
         /// <para>Asserts > 0 args passed</para>
         /// </summary>
         /// <param name="args">The formatting arguments to apply</param>
-        public string IcuFormatLang(string modId, params object[] args) {
+        public string IcuFormatLang(string modId, object[] args) {
             // todo Assert.LenNotZero(args);
 
             Dictionary<string, object?> dict = new(args.Length);
@@ -71,7 +74,10 @@ public static class StringExtensions {
         }
 
         /// <inheritdoc cref="IcuFormatLang(string, string, object[])" />
-        public string IcuFormatLang(params object[] args) => @this.IcuFormatLang(Core.Id, args);
+        public string IcuFormatLang(object[] args) => @this.IcuFormatLang(Core.Id, args);
+
+        /// <inheritdoc cref="IcuFormatLang(string, string, object[])" />
+        public string IcuFormatLang(object args) => @this.IcuFormatLang(Core.Id, [args]);
 
         /// <returns>
         /// The provided <c>string</c> with the first character lowercased

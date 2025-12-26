@@ -429,22 +429,22 @@ public static class BattleLib {
         _UpdateStatDisplay(self.Pos);
 
         if (self.IsBoolStat(BoolStats.UnableToAct)) {
-            LogLib.Add("LogSkillFailUnableToAct".FormatLang(move.GetTriesToUseString(),
-            "LogButIsUnableToAct".FormatLang(self.GetBoolStat(BoolStats.UnableToAct).ToString()))); // todo test
+            LogLib.Add("LogSkillFailUnableToAct".FormatLang([move.GetTriesToUseString(),
+            "LogButIsUnableToAct".FormatLang(self.GetBoolStat(BoolStats.UnableToAct).ToString())])); // todo test
             _EndMove();
             return;
         }
 
         int cd = move.SkillInstance.Cooldown;
         if (cd > 0 && _applyingEffect == 0) {
-            LogLib.Add("LogSkillFailCooldown".FormatLang(move.GetTriesToUseString(),
-                "LogButItsOnCooldown".IcuFormatLang(cd)));
+            LogLib.Add("LogSkillFailCooldown".FormatLang([move.GetTriesToUseString(),
+                "LogButItsOnCooldown".IcuFormatLang(cd)]));
             _EndMove();
             return;
         }
 
         if (!move.IsInRange()) {
-            LogLib.Add("LogSkillFailRange".FormatLang(move.GetTriesToUseString(), "LogButCantReach".GetLang()));
+            LogLib.Add("LogSkillFailRange".FormatLang([move.GetTriesToUseString(), "LogButCantReach".GetLang()]));
             _EndMove();
             return;
         }
@@ -469,8 +469,8 @@ public static class BattleLib {
             spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
 
             if (spNew < 0) {
-                string msg = "LogSkillFailSp".FormatLang(move.GetTriesToUseString(),
-                    "LogButDoesntHaveEnough".IcuFormatLang(Convert.ToInt32(skill.IsBloom)));
+                string msg = "LogSkillFailSp".FormatLang([move.GetTriesToUseString(),
+                    "LogButDoesntHaveEnough".IcuFormatLang(Convert.ToInt32(skill.IsBloom))]);
                 LogLib.Add(msg);
             } else {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
@@ -480,18 +480,18 @@ public static class BattleLib {
                 string changeSp = "";
 
                 if (spOld != spNew) {
-                    changeSp = "LogSkillUseChangeSpBloom".IcuFormatLang(Convert.ToInt32(skill.IsBloom),
+                    changeSp = "LogSkillUseChangeSpBloom".IcuFormatLang([Convert.ToInt32(skill.IsBloom),
                         spOld.Format(ThemeColor.Sp, false),
-                        spNew.Format(ThemeColor.Sp, false), change.Format());
+                        spNew.Format(ThemeColor.Sp, false), change.Format()]);
                 }
 
                 if (skill.IsBloom) team.Bloom = spNew;
                 else self.Sp = spNew;
 
-                LogLib.Add("LogSkillUse".IcuFormatLang(self.FormatName(false),
+                LogLib.Add("LogSkillUse".IcuFormatLang([self.FormatName(false),
                     skill.GetName(ThemeColor.Skill),
                     target.FormatName(false),
-                    Convert.ToInt32(skill.IsRangeSelf()).ToString(), changeSp));
+                    Convert.ToInt32(skill.IsRangeSelf()).ToString(), changeSp]));
 
                 self.OnUseSkill(target, skill);
 
@@ -571,8 +571,8 @@ public static class BattleLib {
 
             foreach (Passive passive in unit.Passives) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder("LogTurnEndEffect".FormatLang(unit.FormatName(),
-                        ThemeColor.Passive + passive.GetName())).Append(' ');
+                    new StringBuilder("LogTurnEndEffect".FormatLang([unit.FormatName(),
+                        ThemeColor.Passive + passive.GetName()])).Append(' ');
 
                 foreach (IBuffEffect buffEffect in passive.BuffEffects) {
                     StringBuilder turnEnd2 = new();
@@ -588,8 +588,8 @@ public static class BattleLib {
 
             foreach (BuffInstance buffInstance in unit.BuffInstances) {
                 StringBuilder turnEnd1 =
-                    new StringBuilder("LogTurnEndEffect".FormatLang(unit.FormatName(),
-                    buffInstance.Buff.GetName())).Append(' ');
+                    new StringBuilder("LogTurnEndEffect".FormatLang([unit.FormatName(),
+                    buffInstance.Buff.GetName()])).Append(' ');
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
                     StringBuilder turnEnd2 = new();

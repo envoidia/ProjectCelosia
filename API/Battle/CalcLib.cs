@@ -11,8 +11,8 @@ public static class CalcLib {
 
         if (spNew != spOld) {
             unit.Sp = spNew;
-            return "LogChangeSp".FormatLang(unit.FormatName(), spOld.Format(ThemeColor.Sp),
-                spNew.Format(ThemeColor.Sp), (spNew - spOld).Format());
+            return "LogChangeSp".FormatLang([unit.FormatName(), spOld.Format(ThemeColor.Sp),
+                spNew.Format(ThemeColor.Sp), (spNew - spOld).Format()]);
         }
 
         return "";
@@ -24,8 +24,8 @@ public static class CalcLib {
 
         if (bloomNew != bloomOld) {
             team.Bloom = bloomNew;
-            return "LogChangeBloom".IcuFormatLang((int) side, bloomOld.Format(ThemeColor.Bloom),
-                bloomNew.Format(ThemeColor.Bloom), (bloomNew - bloomOld).Format());
+            return "LogChangeBloom".IcuFormatLang([(int) side, bloomOld.Format(ThemeColor.Bloom),
+                bloomNew.Format(ThemeColor.Bloom), (bloomNew - bloomOld).Format()]);
         }
 
         return "";

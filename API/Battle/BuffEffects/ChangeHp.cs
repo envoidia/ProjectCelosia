@@ -44,8 +44,8 @@ public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercen
         int changeFull = Math.Max(hpNew - hpOld, 0);
 
         return [
-            "LogChangeHp".FormatLang( "", hpOld.Format(ThemeColor.Hp), hpNew.Format(ThemeColor.Hp),
-                hpMax.Format(ThemeColor.Hp), changeFull.Format())
+            "LogChangeHp".FormatLang([hpOld.Format(ThemeColor.Hp), hpNew.Format(ThemeColor.Hp),
+                hpMax.Format(ThemeColor.Hp), changeFull.Format()])
         ];
     }
 }

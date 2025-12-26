@@ -33,9 +33,9 @@ public sealed class Buff : ComplexDescribable, IRegistrable {
 
     // Todo use stack amount to show multiplied values
     public override string GetFullDesc() =>
-        "BuffDesc".FormatLang(this.BuffType.GetName(),
+        "BuffDesc".FormatLang([this.BuffType.GetName(),
             this.MaxStacks == 1 ? "" : "BuffDescStacksTo".FormatLang(ThemeColor.Imp.Str() + this.MaxStacks),
-            this._GetFormattedDescInclusions());
+            this._GetFormattedDescInclusions()]);
 }
 
 public static class Buffs {

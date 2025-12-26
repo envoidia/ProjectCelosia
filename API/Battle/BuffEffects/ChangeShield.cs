@@ -17,8 +17,8 @@ public sealed class ChangeShield : IBuffEffect {
                 (defend + shieldOld).Format(ThemeColor.Shield), defend.Format(ThemeColor.Shield),
                 self.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-shieldOld).Format(ThemeColor.Shield));
         } else {
-            LogLib.Add("LogLoseShield".FormatLang(self.FormatName(false),
-                shieldOld.Format(ThemeColor.Shield)));
+            LogLib.Add("LogLoseShield".FormatLang([self.FormatName(false),
+                shieldOld.Format(ThemeColor.Shield)]));
         }
     }
 }
