@@ -10,7 +10,7 @@ namespace API.Graphics;
 /// Layered bars representing HP, Shield, and HP over max
 /// </summary>
 public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPriority)
-    : StatBarWidgetBase(pos, width, renderPriority, ThemeColor.Stat.Str() + "StatHp".GetLang()) {
+    : StatBarWidgetBase(pos, width, renderPriority, ThemeColor.Stat.Str + "StatHp".GetLang()) {
     public int Hp {
         get;
         set {
@@ -49,7 +49,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
 
-        if (DebugUtil._drawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines) {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
@@ -76,7 +76,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         Array.Sort(this._barLens, this._layers);
 
         string shield = this.Shield > 0 ? $"+{this.Shield.FormatNoColor(false)}" : "";
-        this.Text.Text = $"{ThemeColor.Black.Str()}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
+        this.Text.Text = $"{ThemeColor.Black.Str}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
 
         this.CalcLayout();
     }

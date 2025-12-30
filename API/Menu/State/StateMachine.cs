@@ -30,7 +30,7 @@ public static class StateMachine {
     /// <returns>
     /// The last <c>State</c> in the <c>NavPath</c>
     /// </returns>
-    public static State GetState() => _Path[^1];
+    public static State State => _Path[^1];
 
     /// <summary>
     /// Add an <c>State</c> to the <c>NavPath</c>
@@ -56,5 +56,5 @@ public static class StateMachine {
     /// <summary>
     /// Update the input prompt <c>Label</c> in the bottom-right corner
     /// </summary>
-    public static void UpdateInputPrompt() => _InputPrompt.Text = GetState().GetInputPrompt();
+    public static void UpdateInputPrompt() => _InputPrompt.Text = State.GetInputPrompt();
 }

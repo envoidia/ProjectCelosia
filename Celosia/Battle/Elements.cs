@@ -6,23 +6,23 @@ namespace Celosia.Battle;
 
 public static class Elements {
     public static readonly Element Ignis = new(Core.BaseModId, "ElementIgnis",
-        $"{ThemeColor.Ignis.Str()}/i[fire]", Mults.IgnisDmgDealt, Mults.IgnisDmgTaken);
+        $"{ThemeColor.Ignis.Str}/i[fire]", Mults.IgnisDmgDealt, Mults.IgnisDmgTaken);
 
     public static readonly Element Glacies = new(Core.BaseModId, "ElementGlacies",
-        $"{ThemeColor.Glacies.Str()}/i[snowflake-2]", Mults.GlaciesDmgDealt, Mults.GlaciesDmgTaken);
+        $"{ThemeColor.Glacies.Str}/i[snowflake-2]", Mults.GlaciesDmgDealt, Mults.GlaciesDmgTaken);
 
     public static readonly Element Fulgur = new(Core.BaseModId, "ElementFulgur",
-        $"{ThemeColor.Fulgur.Str()}/i[electric]", Mults.FulgurDmgDealt, Mults.FulgurDmgTaken);
+        $"{ThemeColor.Fulgur.Str}/i[electric]", Mults.FulgurDmgDealt, Mults.FulgurDmgTaken);
 
     public static readonly Element Ventus = new(Core.BaseModId, "ElementVentus",
-        $"{ThemeColor.Ventus.Str()}/i[wind-slap]", Mults.VentusDmgDealt, Mults.VentusDmgTaken);
+        $"{ThemeColor.Ventus.Str}/i[wind-slap]", Mults.VentusDmgDealt, Mults.VentusDmgTaken);
 
     public static readonly Element Terra = new(Core.BaseModId, "ElementTerra",
-        $"{ThemeColor.Terra.Str()}/i[rock]", Mults.TerraDmgDealt, Mults.TerraDmgTaken);
+        $"{ThemeColor.Terra.Str}/i[rock]", Mults.TerraDmgDealt, Mults.TerraDmgTaken);
 
     public static readonly Element Lux = new(Core.BaseModId, "ElementLux",
-        $"{ThemeColor.Lux.Str()}/i[sparkles]", Mults.LuxDmgDealt, Mults.LuxDmgTaken);
+        $"{ThemeColor.Lux.Str}/i[sparkles]", Mults.LuxDmgDealt, Mults.LuxDmgTaken);
 
     public static readonly Element Malum = new(Core.BaseModId, "ElementMalum",
-        $"{ThemeColor.Malum.Str()}/i[evil-wings]", Mults.MalumDmgDealt, Mults.MalumDmgTaken);
+        $"{ThemeColor.Malum.Str}/i[evil-wings]", Mults.MalumDmgDealt, Mults.MalumDmgTaken);
 }

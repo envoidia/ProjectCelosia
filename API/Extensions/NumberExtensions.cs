@@ -17,8 +17,8 @@ public static class NumberExtensions {
         /// <param name="divisor"><c>float</c> to divide the <c>int</c> by before displaying it</param>
         /// todo a lot of things need to be redone to account for how this auto appends white now
         public string Format(ThemeColor color, bool useSign = true, char? suffix = null, float divisor = 1f) =>
-            color.Str() + (useSign && @this > 0 ? '+' : null) + ((int) (@this / divisor)).ToString(IntegerFormat) +
-            suffix + ThemeColor.White.Str();
+            color.Str + (useSign && @this > 0 ? '+' : null) + ((int) (@this / divisor)).ToString(IntegerFormat) +
+            suffix + ThemeColor.White.Str;
 
         /// <returns>
         /// The given <c>int</c> formatted based on the current locale, with no color
@@ -61,8 +61,8 @@ public static class NumberExtensions {
         /// <param name="suffix">Added after the formatted <c>float</c></param>
         /// <param name="divisor"><c>float</c> to divide the <c>float</c> by before displaying it</param>
         public string Format(int threshold, bool isPositive = true, bool useSign = true, char? suffix = null, float divisor = 1f) =>
-            TextLib.GetColor(@this, threshold, isPositive).Str() + (useSign && @this > 0 ? '+' : null) + (@this / divisor)
-            .ToString(NumberFormat) + suffix + ThemeColor.White.Str();
+            TextLib.GetColor(@this, threshold, isPositive).Str + (useSign && @this > 0 ? '+' : null) + (@this / divisor)
+            .ToString(NumberFormat) + suffix + ThemeColor.White.Str;
 
         /// <returns>
         /// The given <c>float</c> formatted as a percentage. Expects 1 = 100% with default params

@@ -50,9 +50,9 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
 
         foreach (KeyValuePair<string, string> kvp in Properties.Parse(file)) {
             if (entries.GetValueOrDefault(kvp.Key) is not null) {
-                DebugUtil.Log(
+                DebugConsole.Log(
                     $"Language {localeCode} already has a value at {modId}:{kvp.Key} ({entries[kvp.Key]}), overwriting with {kvp.Value}",
-                    nameof(Language), DebugUtil.LogLevel.Warning);
+                    nameof(Language), DebugConsole.LogLevel.Warning);
             }
             entries[$"{modId}:{kvp.Key}"] = kvp.Value;
         }

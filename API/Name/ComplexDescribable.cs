@@ -33,7 +33,7 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
 
     public virtual string GetName(ThemeColor color) =>
-        $"{this.Icon} {color.Str()}{this.KeyName.GetLang(this.ModId)}";
+        $"{this.Icon} {color.Str}{this.KeyName.GetLang(this.ModId)}";
     public virtual string GetName() => this.GetName(ThemeColor.White);
 
     public virtual string GetDesc() => this.KeyDesc.FormatLang(this.ModId, this._GetDescArgs());
@@ -50,9 +50,9 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
         if (this.DescInclusions.Count > 0) formattedInclusions.Append('\n');
 
         foreach (IDescribable inclusion in this._GetDescInclusions()) {
-            formattedInclusions.Append('\n').Append(ThemeColor.White.Str()).Append('(')
-                .Append(inclusion.GetName()).Append(ThemeColor.White.Str()).Append(": ")
-                .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str()).Append(')');
+            formattedInclusions.Append('\n').Append(ThemeColor.White.Str).Append('(')
+                .Append(inclusion.GetName()).Append(ThemeColor.White.Str).Append(": ")
+                .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str).Append(')');
         }
 
         return formattedInclusions.ToString();

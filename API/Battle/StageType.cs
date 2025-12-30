@@ -40,7 +40,7 @@ public sealed class StageType : IDescribable, IRegistrable {
     public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
 
     public string GetName(ThemeColor color) =>
-        $"{this.Icon} {color.Str()}{this.GetLang()}";
+        $"{this.Icon} {color.Str}{this.GetLang()}";
     public string GetName() => this.GetName(ThemeColor.Buff);
 
     public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
@@ -50,14 +50,14 @@ public sealed class StageType : IDescribable, IRegistrable {
 
 public static class StageTypes {
     public static readonly StageType Atk = new(Core.Id, "StageAtk",
-        $"{ThemeColor.Atk.Str()}/i[energy-sword]", [Stats.Str, Stats.Mag]);
+        $"{ThemeColor.Atk.Str}/i[energy-sword]", [Stats.Str, Stats.Mag]);
 
     public static readonly StageType Def = new(Core.Id, "StageDef",
-        $"{ThemeColor.Def.Str()}/i[rosa-shield]", [Stats.Amr, Stats.Res]);
+        $"{ThemeColor.Def.Str}/i[rosa-shield]", [Stats.Amr, Stats.Res]);
 
     public static readonly StageType Fth = new(Core.Id, "StatFth",
-        $"{ThemeColor.Fth.Str()}/i[star-altar]", [Stats.Fth], "StageTypeFth");
+        $"{ThemeColor.Fth.Str}/i[star-altar]", [Stats.Fth], "StageTypeFth");
 
     public static readonly StageType Agi = new(Core.Id, "StatAgi",
-        $"{ThemeColor.Agi.Str()}/i[walking-boot]", [Stats.Agi], "StageTypeAgi");
+        $"{ThemeColor.Agi.Str}/i[walking-boot]", [Stats.Agi], "StageTypeAgi");
 }

@@ -92,7 +92,7 @@ public sealed class ListRightWidget : ListWidget {
 
         foreach (Label l in this.LabelsRight) {
             l.Data.Act(gameTime);
-            if (DebugUtil._drawActorOutlines) l.Data.DrawDebug(false);
+            if (DebugUtil.DrawActorOutlines) l.Data.DrawDebug(false);
         }
     }
 }

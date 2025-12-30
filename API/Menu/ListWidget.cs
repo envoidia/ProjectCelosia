@@ -137,8 +137,6 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
     public virtual void Draw(GameTime gameTime) {
         // todo cleanup + move input out of draw + dont have the cursor immediately vanish when optcount goes from n>0 to 0
         if (this.OptCount != 0) {
-            this.Input(gameTime);
-
             int h = 0;
             for (int i = 0; i < this.OptCount; i++) {
                 this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gameTime,
@@ -162,11 +160,11 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             l.Data.Act(gameTime);
-            if (DebugUtil._drawActorOutlines) l.Data.DrawDebug(false);
+            if (DebugUtil.DrawActorOutlines) l.Data.DrawDebug(false);
         }
 
         // Disabled input overlay
-        if (DebugUtil._drawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines) {
             if (!this.CheckInput) this.Data.DrawBackground(Color.ActorDisabledInput);
         }
     }

@@ -15,7 +15,7 @@ public static class States {
 
     public static readonly State Battle = new("Battle", BattleLib._Update,
     static () =>
-        State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm, Back, InputPrompts.Log, InputPrompts.Inspect)) {
+        State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm, Back, InputPrompts.Log, Inspect)) {
         OnCreate = BattleLib._Create, OnDestroy = BattleLib._Destroy
     };
 
@@ -26,10 +26,4 @@ public static class States {
         },
 
         static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Top, Bottom, BackLog));
-
-    // todo remove
-    public static readonly State Inspect = new("Inspect",
-        _InspectLib._Update, _InspectLib._GetInputPrompt) {
-        OnCreate = _InspectLib._Create, OnDestroy = _InspectLib._Destroy
-    };
 }

@@ -13,7 +13,7 @@ public sealed class Element : INameable, IRegistrable {
     /// Base/no element
     /// </summary>
     public static readonly Element Vis = new(Core.Id, "ElementVis",
-        $"{ThemeColor.Vis.Str()}/i[rolling-energy]") { IsVisible = false };
+        $"{ThemeColor.Vis.Str}/i[rolling-energy]") { IsVisible = false };
 
     /// <summary>
     /// <c>Mult</c> to use as the dmg taken mult for this
@@ -52,6 +52,6 @@ public sealed class Element : INameable, IRegistrable {
 
     public override string ToString() => $"{base.ToString()}: {this.GetName()}";
 
-    public string GetName(ThemeColor color) => $"{this.Icon} {color.Str()}{this.GetLang()}";
+    public string GetName(ThemeColor color) => $"{this.Icon} {color.Str}{this.GetLang()}";
     public string GetName() => this.GetName(ThemeColor.Element);
 }

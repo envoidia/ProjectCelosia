@@ -143,7 +143,7 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str() + "StatSp".GetLang()) {
+            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str + "StatSp".GetLang()) {
         ColorLayer0 = ThemeColor.SpBack,
         ColorLayer1 = ThemeColor.Sp,
         MaxVal = 1000
@@ -304,8 +304,6 @@ internal sealed class _InspectLib {
         States.Battle.AddMenu(_Menu);
     }
 
-    internal static void _Destroy() => States.Inspect.RemoveMenu();
-
     #endregion
 
     #region Update Methods
@@ -346,7 +344,7 @@ internal sealed class _InspectLib {
     internal static void _UpdateInspectUnitPage(int index) {
         Unit u = _GetUnitsSortedByAgi()[index];
 
-        _Lvl.Text = $"Lvl {ThemeColor.Imp.Str()}{u.Lvl + 1}";
+        _Lvl.Text = $"Lvl {ThemeColor.Imp.Str}{u.Lvl + 1}";
 
         // HP and SP
         // todo account for infinite sp
@@ -427,7 +425,7 @@ internal sealed class _InspectLib {
             return;
         }
 
-        _Desc.Text = $"{cd.GetName()}{ThemeColor.White.Str()}\n\n{cd.GetFullDesc()}";
+        _Desc.Text = $"{cd.GetName()}{ThemeColor.White.Str}\n\n{cd.GetFullDesc()}";
     }
 
     private static void _SetStatVisibility(bool visible) {

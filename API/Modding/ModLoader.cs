@@ -52,7 +52,7 @@ public static class ModLoader {
     internal static void _LoadAllMods() {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder, "*.dll", SearchOption.AllDirectories);
         foreach (string dllPath in dllFiles) _LoadSingleModAssembly(dllPath);
-        DebugUtil.Log("AllModsLoaded".IcuFormatLang([_LoadedMods.Count, dllFiles.Count()]), _ClassName);
+        DebugConsole.Log("AllModsLoaded".IcuFormatLang([_LoadedMods.Count, dllFiles.Count()]), _ClassName);
     }
 
     private static void _LoadSingleModAssembly(string dllPath) {
@@ -99,7 +99,7 @@ public static class ModLoader {
                 return true;
             })
             .Select(prop => {
-                DebugUtil.Log("ModLoaded".FormatLang([$"{entryPoint.FullName}.{prop.Name}",
+                DebugConsole.Log("ModLoaded".FormatLang([$"{entryPoint.FullName}.{prop.Name}",
                     Path.GetFileName(dllPath)]), _ClassName);
 
                 return prop.GetValue(null);

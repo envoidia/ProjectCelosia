@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
@@ -7,12 +8,28 @@ namespace API.Graphics;
 public class RectangleActor : IActor {
     public ActorData Data { get; set; }
 
-    public RectangleActor() => this.Data = new(this);
+    public RectangleActor(ThemeColor color = ThemeColor.White, RenderPriority priority = RenderPriority.B1Med) {
+        this.Data = new(this, priority);
+        this.Color = color;
+        Theme.OnChange += this._ThemeChange;
+    }
+
+    public ThemeColor Color {
+        get;
+        set {
+            field = value;
+            this._ThemeChange();
+        }
+    }
+
+    private Color _color;
+
+    private void _ThemeChange() => this._color = Settings.Theme.Get(this.Color);
 
     public void OnCreate() { }
     public void OnDestroy() { }
 
     public void Draw(GameTime gameTime) => Core.ShapeBatch.DrawRectangle(
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new(this.Width, this.Height), Color.Trans, Settings.Theme.White);
+            new(this.Width, this.Height), Microsoft.Xna.Framework.Color.Trans, _color);
 }

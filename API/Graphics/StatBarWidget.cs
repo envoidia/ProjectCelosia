@@ -84,7 +84,7 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         this.Title.Data.Act(gameTime);
         this.Text.Data.Act(gameTime);
 
-        if (DebugUtil._drawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines) {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
@@ -110,7 +110,7 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         _layers = [Settings.Theme.Pos, Settings.Theme.StatBarLayer4, Settings.Theme.StatBarLayer5, Settings.Theme.White];
 
     private void _UpdateText() {
-        this.Text.Text = $"{ThemeColor.Black.Str()}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
+        this.Text.Text = $"{ThemeColor.Black.Str}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
         this.CalcLayout();
     }
 

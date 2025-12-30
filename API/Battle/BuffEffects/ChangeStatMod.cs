@@ -15,6 +15,6 @@ public sealed class ChangeStatMod(StatMod mod, int change) : IBuffEffect {
         self.SetStatMod(mod, modNew);
 
         LogLib.Add("LogChangeMod".FormatLang(self.FormatName()),
-            ThemeColor.Stat.Str() + mod.GetName(), mod.Format(modOld), mod.Format(modNew));
+            ThemeColor.Stat.Str + mod.GetName(), mod.Format(modOld), mod.Format(modNew));
     }
 }

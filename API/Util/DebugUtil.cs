@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using API.Battle.State;
 using API.Extensions;
@@ -19,16 +20,16 @@ public static class DebugUtil {
 
     private const int _Mb = 1024 * 1024;
 
-    private const int _LogLimit = 24;
-    private static readonly List<string> _LogText = new(8);
-
     private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
-    internal static bool _drawDebugInfo = false;
-    private static bool _drawDebugInfoHelp = false;
-    internal static bool _drawActorOutlines = false;
-    internal static bool _drawPalette = false;
+    /// <summary>
+    /// todo docs
+    /// </summary>
+    public static bool DrawDebugInfo { get; private set; } = false;
+    public static bool DrawDebugInfoHelp { get; private set; } = false;
+    public static bool DrawActorOutlines { get; private set; } = false;
+    public static bool DrawPalette { get; private set; } = false;
 
     #region Labels
 
@@ -47,16 +48,6 @@ public static class DebugUtil {
         Padding = new(10),
         HasBackground = true,
         Alignment = Alignment.TopRight,
-        Priority = RenderPriority.Highest,
-        AnimType = AnimType.None,
-        IsVisible = false
-    };
-
-    private static readonly Label _DebugLog = new(font: Core.Koruri40) {
-        Position = new(10, World.H - 10),
-        Padding = new(10),
-        HasBackground = true,
-        Alignment = Alignment.BottomLeft,
         Priority = RenderPriority.Highest,
         AnimType = AnimType.None,
         IsVisible = false
@@ -88,7 +79,6 @@ public static class DebugUtil {
     static DebugUtil() {
         Stage.Add(_DebugInfoL);
         Stage.Add(_DebugInfoR);
-        Stage.Add(_DebugLog);
 
         Stage.Add(_DebugInfoKeyNames);
         Stage.Add(_DebugInfoKeyHeld);
@@ -108,45 +98,10 @@ public static class DebugUtil {
         _DebugInfoKeyNames.Text = _GetKeyNameText();
     }
 
-    /// <summary>
-    /// Write a message to the ingame debug log and the attached OS console
-    /// </summary>
-    /// <param name="msg">Message</param>
-    /// <param name="source">Origin to display for the message. API uses the name of the current class, but mods should
-    /// use more specific names so it's clear exactly what mod it's coming from</param>
-    /// <param name="logLevel">Color to use to indicate message severity</param>
-    public static void Log(string msg, string source, LogLevel logLevel = LogLevel.Info) {
-        if (_LogText.Count == _LogLimit) _LogText.RemoveFirst();
-
-        _LogText.Add($"{logLevel switch {
-            LogLevel.Info => ThemeColor.White.Str(),
-            LogLevel.Warning => ThemeColor.Imp.Str(),
-            LogLevel.Error => ThemeColor.Neg.Str(),
-            _ => throw new ClosedEnumsWhenException()
-        }}[{source}] {msg}");
-
-        _DebugLog.Text = string.Join('\n', _LogText);
-
-        Console.WriteLine($"{logLevel switch {
-            LogLevel.Info => "",
-            LogLevel.Warning => "\e[0;33m",
-            LogLevel.Error => "\e[0;31m",
-            _ => throw new ClosedEnumsWhenException()
-        }}[{source}] {msg}");
-    }
-
-    /// <summary>
-    /// Determines the color of log messages
-    /// </summary>
-    public enum LogLevel {
-        Info,
-        Warning,
-        Error
-    }
-
     internal static void _Update(GameTime gameTime) {
         if (!Settings.EnableDebugFeatures) return;
 
+        DebugConsole.Update();
         _CheckInputs();
 
         // todo update text if lang changed
@@ -164,7 +119,7 @@ public static class DebugUtil {
             GC.GetTotalMemory(false) / _Mb,
             "todo",
             StateMachine.ToString(),
-            StateMachine.GetState().GetMenuString(),
+            StateMachine.State.GetMenuString(),
             Stage.ActorCount(),
             "todo",
             ModLoader._LoadedMods.Count);
@@ -180,7 +135,7 @@ public static class DebugUtil {
             Console.WriteLine("DebugInfoHelp".GetLang());
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
-                _drawDebugInfoHelp ^= true;
+                DrawDebugInfoHelp ^= true;
                 _DebugInfoL.Text = _GetInfoLText();
             } else {
                 _DebugInfoL.IsVisible ^= true;
@@ -188,14 +143,7 @@ public static class DebugUtil {
             }
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.F2)) {
-            if (InputLib.Check(Keybinds.Hotkey1)) {
-                Console.WriteLine(_DebugLog.Text);
-                Log("Output debug log to console", _ClassName);
-            } else _DebugLog.IsVisible ^= true;
-        }
-
-        _drawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
+        DrawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
 
         if (InputLib.IsKeyJustPressed(Keys.F4)) {
             _DebugInfoKeyNames.IsVisible ^= true;
@@ -204,22 +152,22 @@ public static class DebugUtil {
 
         if (InputLib.IsKeyJustPressed(Keys.F5)) {
             Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
-            Log("Output LoadedMods to console", _ClassName);
+            DebugConsole.Log("Output LoadedMods to console", _ClassName);
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F6)) {
             Console.WriteLine(Registry.ToString());
-            Log("Output Registry to console", _ClassName);
+            DebugConsole.Log("Output Registry to console", _ClassName);
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F7)) {
             Console.WriteLine(Settings.Language.ToString());
-            Log("Output current language to console", _ClassName);
+            DebugConsole.Log("Output current language to console", _ClassName);
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F8)) {
             Console.WriteLine(Stage.ToString());
-            Log("Output Stage to console", _ClassName);
+            DebugConsole.Log("Output Stage to console", _ClassName);
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F9)) {
@@ -227,10 +175,10 @@ public static class DebugUtil {
 
             if (InputLib.Check(Keybinds.Hotkey1)) {
                 Console.WriteLine(str);
-                Log("Output raw battle log to console", _ClassName);
+                DebugConsole.Log("Output raw battle log to console", _ClassName);
             } else {
                 Console.WriteLine(str.RemoveFormattingCodes());
-                Log("Output battle log to console", _ClassName);
+                DebugConsole.Log("Output battle log to console", _ClassName);
             }
         }
 
@@ -238,20 +186,20 @@ public static class DebugUtil {
             if (InputLib.Check(Keybinds.Hotkey1)) _CyclePalette();
             else if (InputLib.Check(Keybinds.Hotkey2)) {
                 Console.WriteLine(Settings.Theme.ToDetailedString());
-                Log("Output Theme to console", _ClassName);
-            } else _drawPalette ^= true;
+                DebugConsole.Log("Output Theme to console", _ClassName);
+            } else DrawPalette ^= true;
         }
 
         // todo remove functions after this? theyre not rly used
 
         if (InputLib.IsKeyJustPressed(Keys.F11)) {
             Stage._RecalcLayoutWidgets();
-            Log("Recalculated ILayoutWidgets", _ClassName);
+            DebugConsole.Log("Recalculated ILayoutWidgets", _ClassName);
         }
 
         if (InputLib.IsKeyJustPressed(Keys.F12)) {
             Stage.Sort();
-            Log("Cleaned up Stage", _ClassName);
+            DebugConsole.Log("Cleaned up Stage", _ClassName);
         }
     }
 
@@ -262,14 +210,14 @@ public static class DebugUtil {
         Theme[] themes = [.. Registry.Of<Theme>()];
         int i = themes.IndexOf(Settings.Theme);
         Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
-        Log($"Theme changed to {Settings.Theme.GetName().RemoveFormattingCodes()}", _ClassName);
+        DebugConsole.Log($"Theme changed to {Settings.Theme.GetName().RemoveFormattingCodes()}", _ClassName);
     }
 
     // todo cleanup
     private static string _GetInfoLText() =>
         string.Format("DebugInfoL".GetLang(), Keybinds.DebugInfo.GetCurrentGlyph(),
             Keybinds.Hotkey1.GetCurrentGlyph(), BuildInfo.BuildDate) +
-            (_drawDebugInfoHelp ? $"\n{_GetInfoHelpText()}" : "");
+            (DrawDebugInfoHelp ? $"\n{_GetInfoHelpText()}" : "");
 
     private static string _GetInfoHelpText() =>
         string.Format("DebugInfoHelp".GetLang(), Keybinds.Hotkey1.GetCurrentGlyph(), Keybinds.Hotkey2.GetCurrentGlyph());

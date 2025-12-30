@@ -43,6 +43,6 @@ public sealed class GameMod(string id, Version version) : IDescribable {
     public string KeyDesc => $"{this.KeyName}Desc";
 
     public string GetName() => this.GetName(ThemeColor.White);
-    public string GetName(ThemeColor color) => color.Str() + this.KeyName.GetLang();
+    public string GetName(ThemeColor color) => color.Str + this.KeyName.GetLang();
     public string GetDesc() => this.KeyDesc.GetLang();
 }

@@ -191,12 +191,13 @@ public static class BattleLib {
     #region Update Methods
 
     internal static void _Update(GameTime gameTime) {
-        // Return if log/inspect. TODO: convert skill select and move exec to menus and remove this check
-        if (States.Battle._Menus.Count > 0 && States.Battle._Menus[^1] == _InspectLib._Menu) return;
+        //if (Parellelograms.CoverLeft.Prog == 0) _CheckOpenLogInspect(true);
+        //else return;
+        // todo convert skill selection to menu and remove this check (prevent dbgconsole from blocking battle exec
+        // and targeting from blocking inspect)
+        if (States.Battle.Menus.Count > 0) return;
 
-        _CheckOpenLogInspect(true);
-
-        if (States.Battle._Menus.Count > 0 && States.Battle._Menus[^1] == _TargetingLib._Menu) return;
+        _CheckOpenLogInspect();
 
         if (_delay > TimeSpan.Zero) {
             _delay -= gameTime.ElapsedGameTime;
@@ -214,20 +215,17 @@ public static class BattleLib {
 
     internal static void _CheckOpenLogInspect(bool changeTarget = false) {
         // todo fix it might still be possible to double the coverleft???
-        if (Parellelograms.CoverLeft.Prog == 0) {
-            if (InputLib.Check(Keybinds.Menu1)) {
-                StateMachine.Add(States.Log);
-                return;
-            }
-
-            if (InputLib.Check(Keybinds.Menu2)) {
-                if (changeTarget) _indexTarget = _GetQueuePos();
-                //StateMachine.Add(States.Inspect);
-                _InspectLib._Create();
-                return;
-            }
+        if (InputLib.Check(Keybinds.Menu1)) {
+            StateMachine.Add(States.Log);
+            return;
         }
 
+        if (InputLib.Check(Keybinds.Menu2)) {
+            if (changeTarget) _indexTarget = _GetQueuePos();
+            //StateMachine.Add(States.Inspect);
+            _InspectLib._Create();
+            return;
+        }
     }
 
     /// <summary>
@@ -240,7 +238,7 @@ public static class BattleLib {
         for (int i = 0; i < TeamCount; i++) {
             // todo fix it getting confused by the /
             _BloomLabels[i].Text =
-                $"{ThemeColor.Stat.Str()}{"Bloom".GetLang()}{ThemeColor.White.Str()}: {ThemeColor.Bloom.Str()}{Battle.GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str()}//{ThemeColor.Bloom.Str()}1,000";
+                $"{ThemeColor.Stat.Str}{"Bloom".GetLang()}{ThemeColor.White.Str}: {ThemeColor.Bloom.Str}{Battle.GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str}//{ThemeColor.Bloom.Str}1,000";
         }
 
         Unit[] units = Battle.GetAllUnits();
@@ -249,7 +247,7 @@ public static class BattleLib {
         // Update nameplates
         for (int i = 0; i < units.Length; i++) {
             // Stat display
-            _Stats[i].Text = $"{units[i].FormatName(false)}\n{"StatHp".GetLang()}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str()}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
+            _Stats[i].Text = $"{units[i].FormatName(false)}\n{"StatHp".GetLang()}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
 
             // Buff display
             int buffCount = 0;
@@ -262,7 +260,7 @@ public static class BattleLib {
 
                     buffCount++;
 
-                    sb.Append(stageType.Icon).Append(ThemeColor.White.Str()).Append((stage >= 1) ? '+' : "")
+                    sb.Append(stageType.Icon).Append(ThemeColor.White.Str).Append((stage >= 1) ? '+' : "")
                     .Append(stage).Append('(').Append(units[i].GetStageTurns(stageType)).Append(") ");
                 }
             }
@@ -276,15 +274,15 @@ public static class BattleLib {
                 buffCount++;
 
                 if (buffInstance.Buff == Buffs.Defend) {
-                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str()).Append('x')
+                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
                             .Append(units[i].Defend.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 } else if (buffInstance.Buff == Buffs.Shield) {
-                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str()).Append('x')
+                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
                             .Append(units[i].Shield.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 } else {
-                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str());
+                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str);
                     if (buffInstance.Buff.MaxStacks > 1) {
                         sb.Append('x').Append(buffInstance.Stacks);
                     }
@@ -341,7 +339,7 @@ public static class BattleLib {
             $"{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Skill
                 // temp
                 // todo real skill description display
-                .GetName()}";//({ThemeColor.Cooldown}{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Cooldown}{ThemeColor.White.Str()})";
+                .GetName()}";//({ThemeColor.Cooldown}{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Cooldown}{ThemeColor.White.Str})";
 
         _SelectMove();
     }
@@ -627,7 +625,7 @@ public static class BattleLib {
         units.Sort(static (a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
 
     private static string _GetTurnString(int turn) =>
-        $"{ThemeColor.Turn.Str()}{"Turn".GetLang()} {turn}{ThemeColor.White.Str()}";
+        $"{ThemeColor.Turn.Str}{"Turn".GetLang()} {turn}{ThemeColor.White.Str}";
 
     #endregion
 }

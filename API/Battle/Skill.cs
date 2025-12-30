@@ -63,7 +63,7 @@ public sealed class Skill : ComplexDescribable, IRegistrable {
     public int GetStartingIndex() => this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
 
     public override string GetName(ThemeColor color) =>
-        $"{this.GetElement().Icon} {color.Str()}{this.GetLang()}";
+        $"{this.GetElement().Icon} {color.Str}{this.GetLang()}";
     public override string GetName() => this.GetName(ThemeColor.Skill);
 
     // todo stat skills
@@ -80,18 +80,18 @@ public sealed class Skill : ComplexDescribable, IRegistrable {
 
             if (effectType is null) continue;
 
-            skillTypes.Add(effectType.GetName() + ThemeColor.White.Str());
+            skillTypes.Add(effectType.GetName() + ThemeColor.White.Str);
         }
 
         string skillTypesStr = skillTypes.Count != 0
             ? string.Join(", ", skillTypes)
-            : SkillTypes.Stat.GetName() + ThemeColor.White.Str();
+            : SkillTypes.Stat.GetName() + ThemeColor.White.Str;
 
         return "SkillDesc".FormatLang([skillTypesStr, this.GetElement().GetName(),
-            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str()}{pow} {ThemeColor.White.Str()}{"Pow".GetLang()}",
+            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str}{pow} {ThemeColor.White.Str}{"Pow".GetLang()}",
             this.Prio == 0
                 ? ""
-                : $", {((int) this.Prio).Format()} {ThemeColor.White.Str()}{"Prio".GetLang()}",
+                : $", {((int) this.Prio).Format()} {ThemeColor.White.Str}{"Prio".GetLang()}",
             this._GetFormattedDescInclusions()]);
     }
 

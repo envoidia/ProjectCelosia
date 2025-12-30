@@ -20,8 +20,8 @@ public static class Registry {
 
         // todo should this refuse to overwrite instead?
         if (_Reg.ContainsKey(key)) {
-            DebugUtil.Log($"Key {key} already contains {Get(key)}. Overwriting with {val}",
-            nameof(Registry), DebugUtil.LogLevel.Warning);
+            DebugConsole.Log($"Key {key} already contains {Get(key)}. Overwriting with {val}",
+            nameof(Registry), DebugConsole.LogLevel.Warning);
         }
 
         _Reg[key] = val;

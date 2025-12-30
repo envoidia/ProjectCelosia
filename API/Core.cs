@@ -58,8 +58,6 @@ public class Core : Game {
     public static DynamicSpriteFont Koruri60 { get; private set; } = null!;
     public static DynamicSpriteFont Koruri40 { get; private set; } = null!;
 
-    public static bool ExitOnEscape { get; set; } = false;
-
     #endregion
 
     // temp debug
@@ -116,10 +114,6 @@ public class Core : Game {
         // todo: Force Celosia.Main to be loaded
         // The easy way is to call a dummy method from it
 #endif
-
-#if DEBUG
-        ExitOnEscape = true;
-#endif
     }
 
     /// <summary>
@@ -156,7 +150,7 @@ public class Core : Game {
 
         // Scaling
         Resolution.Init(new ResolutionComponent(this, Graphics, new(World.W, World.H),
-            new(2560, 1440), true, false, false));
+            new(1920, 1080), false, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;
@@ -182,16 +176,12 @@ public class Core : Game {
         DebugUtil._Update(gameTime);
 
         // Update the current State
-        StateMachine.GetState().Update(gameTime);
+        StateMachine.State.Update(gameTime);
 
 #if !NATIVE_AOT
         ModLoader._UpdateAllMods(gameTime);
 #endif
         // todo: if AOT and Celosia gets an Update: Celosia.Main.Mod.OnUpdate(gameTime);
-
-        if (ExitOnEscape && InputLib._KeyboardState.IsKeyDown(Keys.Escape)) {
-            this.Exit();
-        }
 
         base.Update(gameTime);
     }

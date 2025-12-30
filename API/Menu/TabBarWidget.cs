@@ -168,8 +168,6 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
             this.PromptL.IsVisible = this.CheckInput;
             this.PromptR.IsVisible = this.CheckInput;
 
-            this.Input(gameTime);
-
             int w = 0;
             for (int i = 0; i < this.OptCount; i++) {
                 this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], this.Speed, gameTime,
@@ -200,13 +198,13 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
         foreach (Label l in this.Labels) {
             l.Data.Act(gameTime);
-            if (DebugUtil._drawActorOutlines) l.Data.DrawDebug(false);
+            if (DebugUtil.DrawActorOutlines) l.Data.DrawDebug(false);
         }
 
         this.PromptL.Data.Act(gameTime);
         this.PromptR.Data.Act(gameTime);
 
-        if (DebugUtil._drawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines) {
             this.PromptL.Data.DrawDebug(false);
             this.PromptR.Data.DrawDebug(false);
 

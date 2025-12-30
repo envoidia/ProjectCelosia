@@ -15,7 +15,7 @@ public sealed class Label : IActor {
     public string Text {
         get => this.RichTextLayout.Text;
         set {
-            this.RichTextLayout.Text = value; //$"{ThemeColor.White.Str()}{value}"; // todo idt this is needed
+            this.RichTextLayout.Text = value; //$"{ThemeColor.White.Str}{value}"; // todo idt this is needed
             this.Size = this.RichTextLayout.Size;
             this.Origin = this.Data.CalcOrigin();
         }
@@ -23,6 +23,8 @@ public sealed class Label : IActor {
 
     // Background
     public bool HasBackground { get; set; } = false;
+
+    public Vector2 MinBackgroundSize { get; set; } = Vector2.Zero;
 
     private Color _bgC;
     public ThemeColor BackgroundColor { get; set; } = ThemeColor.TransBlack;
@@ -57,7 +59,7 @@ public sealed class Label : IActor {
         // todo is this return good
         if (string.IsNullOrWhiteSpace(this.Text)) return;
 
-        if (this.HasBackground) this.Data.DrawBackground(this._bgC);
+        if (this.HasBackground) this.Data.DrawBackground(this._bgC, this.MinBackgroundSize);
 
         this.RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,
             (float) this.Prog), Settings.Theme.Fg, 0f, this.Origin.ToVector2());

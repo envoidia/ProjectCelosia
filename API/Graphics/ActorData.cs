@@ -160,10 +160,13 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         actor.Draw(gameTime);
     }
 
-    public void DrawBackground(Color c) => Core.ShapeBatch.FillRectangle(
+    public void DrawBackground(Color c, Vector2 minSize) => Core.ShapeBatch.FillRectangle(
             new((int) (this.Position.X - this.Padding.L - this.Origin.X),
             (int) (this.Position.Y - this.Padding.T - this.Origin.Y)),
-            new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), c);
+            new(Math.Max(minSize.X, this.Width + this.Padding.LR),
+            Math.Max(minSize.Y, this.Height + this.Padding.TB)), c);
+
+    public void DrawBackground(Color c) => this.DrawBackground(c, Vector2.Zero);
 
     public void DrawDebug(bool drawOrigin = true) {
         Color outlineColor = this.Prog == 0

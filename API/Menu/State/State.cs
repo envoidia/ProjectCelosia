@@ -31,19 +31,23 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// Current list of menus that have been traveled through in this
     /// </summary>
     // todo private
-    internal List<Menu> _Menus { get; init; } = [];
+    public List<Menu> Menus { get; init; } = [];
 
     /// <inheritdoc cref="OnCreate" />
     public void Create() {
         this.OnCreate?.Invoke();
-        if (this._Menus.Count > 0) this._Menus[0].Create();
+        if (this.Menus.Count > 0) this.Menus[0].Create();
     }
 
     /// <inheritdoc cref="OnDestroy" />
     public void Destroy() => this.OnDestroy?.Invoke();
 
     public void Update(GameTime gameTime) {
-        if (this._Menus.Count > 0) this._Menus[^1].Update(gameTime);
+        if (this.Menus.Count > 0) {
+            this.Menus[^1].Input(gameTime);
+            this.Menus[^1].Update(gameTime);
+        }
+
         this.OnUpdate?.Invoke(gameTime);
     }
 
@@ -52,8 +56,8 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// </returns>
     public string GetInputPrompt() {
         // Use Menu prompt
-        if (this._Menus.Count > 0) {
-            Func<string>? menuPrompt = this._Menus[^1].GetInputPrompt;
+        if (this.Menus.Count > 0) {
+            Func<string>? menuPrompt = this.Menus[^1].GetInputPrompt;
             if (menuPrompt is not null) {
                 return menuPrompt();
             }
@@ -68,7 +72,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// </summary>
     public void AddMenu(Menu menu) {
         menu.Create();
-        this._Menus.Add(menu);
+        this.Menus.Add(menu);
         StateMachine.UpdateInputPrompt();
     }
 
@@ -76,13 +80,13 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// Remove and deinitialize the current <c>Menu</c>
     /// </summary>
     public void RemoveMenu() {
-        this._Menus[^1].Destroy();
-        this._Menus.RemoveLast();
+        this.Menus[^1].Destroy();
+        this.Menus.RemoveLast();
         StateMachine.UpdateInputPrompt();
     }
 
     public string GetMenuString() =>
-        string.Join(", ", [.. this._Menus.Select(static m => m.DbgName)]);
+        string.Join(", ", [.. this.Menus.Select(static m => m.DbgName)]);
 
     public static string GetInputPromptString(params InputPrompt[] inputPrompts) {
         StringBuilder inputs = new();

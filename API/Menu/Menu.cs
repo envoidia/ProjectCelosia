@@ -11,7 +11,7 @@ namespace API.Menu;
 /// A set of actors and <c>IInputWidgets</c>. Handles when they should be added to / removed from the stage
 /// and assigns controls
 /// </summary>
-public sealed class Menu {
+public class Menu    {
     /// <summary>
     /// Display name for this. Only used in debug features
     /// </summary>
@@ -88,6 +88,13 @@ public sealed class Menu {
     // todo do i need this? will there be extra behavior?
     public void Update(GameTime gameTime) => this.OnUpdate?.Invoke(gameTime);
 
+    /// <inheritdoc cref="Update" />
+    public void Input(GameTime gameTime) {
+        foreach (IInputWidget iw in this.Actors.OfType<IInputWidget>().Concat(this.InputWidgets)) {
+            iw.Input(gameTime);
+        }
+    }
+
     /// <returns>
     /// The <c>IInputWidget</c> currently assigned to a given <c>SelectionType</c>, if any
     /// </returns>
@@ -107,24 +114,24 @@ public sealed class Menu {
         bool usedVert = false;
         bool usedPage = false;
 
-        foreach (IInputWidget ia in this.Actors.OfType<IInputWidget>().Concat(this.InputWidgets)) {
+        foreach (IInputWidget iw in this.Actors.OfType<IInputWidget>().Concat(this.InputWidgets)) {
             // todo cleanup
-            switch (ia.PrefDir) {
+            switch (iw.PrefDir) {
                 case SelectionType.Horiz:
                     if (!usedHoriz) {
-                        ia.CurDir = SelectionType.Horiz;
+                        iw.CurDir = SelectionType.Horiz;
                         usedHoriz = true;
                         break;
                     }
 
                     if (!usedPage) {
-                        ia.CurDir = SelectionType.Page;
+                        iw.CurDir = SelectionType.Page;
                         usedPage = true;
                         break;
                     }
 
                     if (!usedVert) {
-                        ia.CurDir = SelectionType.Vert;
+                        iw.CurDir = SelectionType.Vert;
                         usedVert = true;
                         break;
                     }
@@ -132,19 +139,19 @@ public sealed class Menu {
                     throw new _MenuAssignException();
                 case SelectionType.Vert:
                     if (!usedVert) {
-                        ia.CurDir = SelectionType.Vert;
+                        iw.CurDir = SelectionType.Vert;
                         usedVert = true;
                         break;
                     }
 
                     if (!usedHoriz) {
-                        ia.CurDir = SelectionType.Horiz;
+                        iw.CurDir = SelectionType.Horiz;
                         usedHoriz = true;
                         break;
                     }
 
                     if (!usedPage) {
-                        ia.CurDir = SelectionType.Page;
+                        iw.CurDir = SelectionType.Page;
                         usedPage = true;
                         break;
                     }
@@ -152,19 +159,19 @@ public sealed class Menu {
                     throw new _MenuAssignException();
                 case SelectionType.Page:
                     if (!usedPage) {
-                        ia.CurDir = SelectionType.Page;
+                        iw.CurDir = SelectionType.Page;
                         usedPage = true;
                         break;
                     }
 
                     if (!usedHoriz) {
-                        ia.CurDir = SelectionType.Horiz;
+                        iw.CurDir = SelectionType.Horiz;
                         usedHoriz = true;
                         break;
                     }
 
                     if (!usedVert) {
-                        ia.CurDir = SelectionType.Vert;
+                        iw.CurDir = SelectionType.Vert;
                         usedVert = true;
                         break;
                     }
@@ -172,7 +179,7 @@ public sealed class Menu {
                     throw new _MenuAssignException();
                 case SelectionType.HorizVert:
                     if (!usedHoriz && !usedVert) {
-                        ia.CurDir = SelectionType.HorizVert;
+                        iw.CurDir = SelectionType.HorizVert;
                         usedHoriz = true;
                         usedVert = true;
                         break;
@@ -185,14 +192,14 @@ public sealed class Menu {
         if ((usedHoriz && usedVert) || (!usedHoriz && !usedVert)) return;
 
         // Assign secondary inputs, if there are leftovers
-        foreach (IInputWidget w in this.Actors.OfType<IInputWidget>()) {
-            if (!usedHoriz && w.CurDir == SelectionType.Vert) {
-                w.CurDir = SelectionType.HorizVert;
+        foreach (IInputWidget iw in this.Actors.OfType<IInputWidget>()) {
+            if (!usedHoriz && iw.CurDir == SelectionType.Vert) {
+                iw.CurDir = SelectionType.HorizVert;
                 return;
             }
 
-            if (!usedVert && w.CurDir == SelectionType.Horiz) {
-                w.CurDir = SelectionType.HorizVert;
+            if (!usedVert && iw.CurDir == SelectionType.Horiz) {
+                iw.CurDir = SelectionType.HorizVert;
                 return;
             }
         }

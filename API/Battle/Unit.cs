@@ -181,13 +181,13 @@ public sealed class Unit {
     public string GetAffinitiesString(bool current) {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
-        StringBuilder sb = new($"{ThemeColor.Stat.Str()}{"Affinities".GetLang()}:{ThemeColor.White.Str()} ");
+        StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ");
         foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible)) {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
 
             if (current) {
-                sb.Append(ThemeColor.White.Str()).Append("//")
+                sb.Append(ThemeColor.White.Str).Append("//")
                     .Append(this.UnitType._Affinities.GetValueOrDefault(element, 0).Format());
             }
 
@@ -215,7 +215,7 @@ public sealed class Unit {
 
     public string GetStageStatString(StageType stageType, int stageNew) {
         StringBuilder builder = new();
-        builder.Append(ThemeColor.White.Str()).Append(" (");
+        builder.Append(ThemeColor.White.Str).Append(" (");
         int statCount = stageType.Stats.Length;
 
         for (int i = 0; i < statCount; i++) {
@@ -398,7 +398,7 @@ public sealed class Unit {
 
     // todo weapon
     public string GetEquipString() =>
-        $"{ThemeColor.Stat.Str()}{"Accessory".GetLang()}:{ThemeColor.White.Str()} {(this.Equipped as INameable)?.GetName() ??
+        $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.White.Str} {(this.Equipped as INameable)?.GetName() ??
             "None".GetLang()}";
 
     public void DecrementTurns() {
@@ -529,7 +529,7 @@ public sealed class Unit {
             else suffix = "'s";
         }
 
-        return name + suffix + ThemeColor.White.Str();
+        return name + suffix + ThemeColor.White.Str;
     }
 
     #endregion

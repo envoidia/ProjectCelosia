@@ -32,12 +32,15 @@ public static class Stage {
         for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.B3Low; i--) _Actors[i].Data.Act(gameTime);
         end();
         begin();
+        for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.Highest; i--) _Actors[i].Data.Act(gameTime);
+        end();
+        begin();
         for (; i >= 0; i--) _Actors[i].Data.Act(gameTime);
-        if (DebugUtil._drawPalette) Settings.Theme._DrawPalette(); // todo how is it possible that this draws between f1 and its text
+        if (DebugUtil.DrawPalette) Settings.Theme._DrawPalette(); // todo how is it possible that this draws between f1 and its text
         end();
 
         // Debug overlay (F3)
-        if (DebugUtil._drawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines) {
             begin();
             foreach (IActor a in _Actors) a.Data.DrawDebug();
             end();
@@ -89,6 +92,7 @@ public static class Stage {
 
     /// <summary>
     /// Applies sorting
+    /// todo remove individual sort calls all over and just call 1 time after init
     /// </summary>
     public static void Sort() {
         if (!_needsSorting) return;
@@ -102,7 +106,7 @@ public static class Stage {
     public static int ActorCount() => _Actors.Count;
 
     public new static string ToString() =>
-        string.Join("\n", [.. _Actors.Select(static a => a.ToString())]);
+        string.Join("\n", [.. _Actors.Select(static a => a.ToString() + " " + a.Priority.ToString())]);
 
     internal static void _RecalcLayoutWidgets() =>
         _Actors.OfType<ILayoutWidget>().ToList().ForEach(w => w.CalcLayout());

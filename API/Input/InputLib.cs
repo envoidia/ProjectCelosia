@@ -12,9 +12,9 @@ public static class InputLib {
 
     #region Fields
 
-    // todo private?
-    private static KeyboardState _PreviousKeyboardState { get; set; }
-    internal static KeyboardState _KeyboardState { get; private set; }
+    // todo docs
+    public static KeyboardState PreviousKeyboardState { get; set; }
+    public static KeyboardState KeyboardState { get; private set; }
 
     private static GamePadState _GamePadState { get; set; } // todo
 
@@ -59,15 +59,15 @@ public static class InputLib {
                 Color c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
                     ? Settings.Theme.Cooldown : Settings.Theme.White;
 
-                sb.Append(_CheckKeybind(Keybinds.UniqueKeybinds[i]) ? ThemeColor.Cooldown.Str() : ThemeColor.White.Str())
+                sb.Append(_CheckKeybind(Keybinds.UniqueKeybinds[i]) ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
                     .Append(s.ToString("0.##")).Append('\n');
             }
 
             bool check = _CheckKeybind(Keybinds.Hotkey1);
-            sb.Append(check ? ThemeColor.Pos.Str() : ThemeColor.Neg.Str()).Append(check).Append('\n');
+            sb.Append(check ? ThemeColor.Pos.Str : ThemeColor.Neg.Str).Append(check).Append('\n');
 
             check = _CheckKeybind(Keybinds.Hotkey2);
-            sb.Append(check ? ThemeColor.Pos.Str() : ThemeColor.Neg.Str()).Append(check);
+            sb.Append(check ? ThemeColor.Pos.Str : ThemeColor.Neg.Str).Append(check);
 
             l.Text = sb.ToString();
 
@@ -92,8 +92,8 @@ public static class InputLib {
         }*/
 
     public static void Update(GameTime gameTime) {
-        _PreviousKeyboardState = _KeyboardState;
-        _KeyboardState = Keyboard.GetState();
+        PreviousKeyboardState = KeyboardState;
+        KeyboardState = Keyboard.GetState();
         _GamePadState = GamePad.GetState(PlayerIndex.One);
 
         _elapsedTime = gameTime.ElapsedGameTime;
@@ -112,7 +112,7 @@ public static class InputLib {
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame
     /// </returns>
-    public static bool IsKeyPressed(Keys key) => _KeyboardState.IsKeyDown(key);
+    public static bool IsKeyPressed(Keys key) => KeyboardState.IsKeyDown(key);
 
     /// <summary>
     /// Doesn't account for remapping. Prefer <c>Check()</c>
@@ -121,7 +121,7 @@ public static class InputLib {
     /// Whether a <c>Keys</c> was pressed this frame and not the previous frame
     /// </returns>
     public static bool IsKeyJustPressed(Keys key) =>
-        _KeyboardState.IsKeyDown(key) && _PreviousKeyboardState.IsKeyUp(key);
+        KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
 
     #region CheckInput
 
@@ -196,15 +196,15 @@ public static class InputLib {
     }
 
     private static bool _IsKeyDown(Keys key) => key switch {
-        Keys.LeftShift or Keys.RightShift => _KeyboardState.IsKeyDown(Keys.LeftShift) ||
-            _KeyboardState.IsKeyDown(Keys.RightShift),
-        Keys.LeftControl or Keys.RightControl => _KeyboardState.IsKeyDown(Keys.LeftControl) ||
-            _KeyboardState.IsKeyDown(Keys.RightControl),
-        Keys.LeftAlt or Keys.RightAlt => _KeyboardState.IsKeyDown(Keys.LeftAlt) ||
-            _KeyboardState.IsKeyDown(Keys.RightAlt),
-        Keys.LeftWindows or Keys.RightWindows => _KeyboardState.IsKeyDown(Keys.LeftWindows) ||
-            _KeyboardState.IsKeyDown(Keys.RightWindows),
-        _ => _KeyboardState.IsKeyDown(key),
+        Keys.LeftShift or Keys.RightShift => KeyboardState.IsKeyDown(Keys.LeftShift) ||
+            KeyboardState.IsKeyDown(Keys.RightShift),
+        Keys.LeftControl or Keys.RightControl => KeyboardState.IsKeyDown(Keys.LeftControl) ||
+            KeyboardState.IsKeyDown(Keys.RightControl),
+        Keys.LeftAlt or Keys.RightAlt => KeyboardState.IsKeyDown(Keys.LeftAlt) ||
+            KeyboardState.IsKeyDown(Keys.RightAlt),
+        Keys.LeftWindows or Keys.RightWindows => KeyboardState.IsKeyDown(Keys.LeftWindows) ||
+            KeyboardState.IsKeyDown(Keys.RightWindows),
+        _ => KeyboardState.IsKeyDown(key),
     };
 
     private static bool _IsButtonDown(Buttons button) => button switch {

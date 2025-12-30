@@ -19,7 +19,7 @@ public sealed class ChangeMult(Mult mult, int change) : IBuffEffect {
 
         self.SetMult(mult, multNew);
 
-        LogLib.Add("LogChangeMult".FormatLang([self.FormatName(), ThemeColor.Stat.Str() + mult.GetName(),
+        LogLib.Add("LogChangeMult".FormatLang([self.FormatName(), ThemeColor.Stat.Str + mult.GetName(),
             mult.Format(multOld), mult.Format(multNew), mult.FormatChange(changeDisplay)]));
     }
 }

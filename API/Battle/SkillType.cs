@@ -29,7 +29,7 @@ public sealed class SkillType : INameable, IRegistrable {
         Registry.Register(this);
     }
 
-    public string GetName(ThemeColor color) => color.Str() + this.GetLang();
+    public string GetName(ThemeColor color) => color.Str + this.GetLang();
     public string GetName() => this.GetName(ThemeColor.Stat);
 }
 

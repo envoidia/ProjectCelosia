@@ -6,7 +6,7 @@ namespace Celosia.Battle;
 
 public static class Accessories {
     public static readonly Accessory FirebornRing = new(Core.BaseModId, "AccessoryFirebornRing",
-        $"{ThemeColor.Ignis.Str()}/i[fire-ring]") {
+        $"{ThemeColor.Ignis.Str}/i[fire-ring]") {
         Passives = [Passives.IgnisAffUp]
     };
 }

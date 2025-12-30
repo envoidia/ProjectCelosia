@@ -24,16 +24,16 @@ public static class StringExtensions {
             if ((lang = Settings.Language.Entries.GetValueOrDefault(key)) is not null) return lang;
 
             // Fall back to en-US
-            DebugUtil.Log(
+            DebugConsole.Log(
                 $"Lang entry {key} not found in language {Settings.Language.Name}: {Settings.Language.LocaleCode}, falling back to en-US",
-                nameof(StringExtensions), DebugUtil.LogLevel.Warning);
+                nameof(StringExtensions), DebugConsole.LogLevel.Warning);
 
             if ((lang = Lang.Language.English.Entries.GetValueOrDefault(key)) is not null) return lang;
 
             // Default to ID
-            DebugUtil.Log($"Lang entry {key} not found", nameof(StringExtensions),
-                DebugUtil.LogLevel.Warning);
-            return $"{ThemeColor.Neg.Str()}MISSING LANG ENTRY: {key}";
+            DebugConsole.Log($"Lang entry {key} not found", nameof(StringExtensions),
+                DebugConsole.LogLevel.Warning);
+            return $"{ThemeColor.Neg.Str}MISSING LANG ENTRY: {key}";
         }
 
         /// <returns>
