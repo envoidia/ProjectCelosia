@@ -7,7 +7,7 @@ using Jeffijoe.MessageFormat;
 
 namespace API.Extensions;
 
-// the warning is a compiler bug. can only wait for a fix
+// todo the warning is a compiler bug. can only wait for a fix
 // https://github.com/dotnet/roslyn/issues/80024
 public static class StringExtensions {
     private static readonly MessageFormatter _Formatter = new();

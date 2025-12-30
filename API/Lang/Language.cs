@@ -40,9 +40,7 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
     /// </summary>
     public static event Action? OnChange;
 
-    static Language() {
-        AddLangFile(EnUS, Core.Id, "Lang/Lang.en-US.properties");
-    }
+    static Language() => AddLangFile(EnUS, Core.Id, "Lang/Lang.en-US.properties");
 
     /// <summary>
     /// Parses a .properties file and adds its entries to the lang dictionary for the given locale code under the given mod ID

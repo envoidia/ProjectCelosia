@@ -12,9 +12,9 @@ namespace API.Menu;
 /// </summary>
 public sealed class Menu {
     /// <summary>
-    /// Display name for this (todo i18n)
+    /// Display name for this. Only used in debug features
     /// </summary>
-    public string Name { get; }
+    public string DbgName { get; }
 
     /// <summary>
     /// Called when this is first reached to update the input prompt <c>Label</c> in the bottom-right corner
@@ -49,18 +49,15 @@ public sealed class Menu {
     /// <summary>
     /// Initializes this with no behavior or actors
     /// </summary>
-    public Menu(string name) {
-        this.Name = name;
-    }
+    public Menu(string name) => this.DbgName = name;
 
     public Menu(string name, params IActor[] actors) {
-        this.Name = name;
+        this.DbgName = name;
         this.Setup(actors);
     }
 
     public void Setup(params IActor[] actors) {
         this.Actors = actors;
-
         this.SetupWidgets();
     }
 

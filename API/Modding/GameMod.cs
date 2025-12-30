@@ -33,12 +33,16 @@ public sealed class GameMod(string id, Version version) : IDescribable {
     /// </summary>
     public Action<GameTime>? OnUpdate { get; init; } = null;
 
+    /// <summary>
+    /// todo nyi Called when this' ingame settings menu is opened.
+    /// If null, it'll instead display a popup saying that this mod has no settings
+    /// </summary>
+    public Action? OnOpenSettings { get; init; } = null;
+
     public string KeyName => $"{this.Id}:{ModLoader.NameKey}";
     public string KeyDesc => $"{this.KeyName}Desc";
 
     public string GetName() => this.GetName(ThemeColor.White);
     public string GetName(ThemeColor color) => color.Str() + this.KeyName.GetLang();
     public string GetDesc() => this.KeyDesc.GetLang();
-
-
 }

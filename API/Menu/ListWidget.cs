@@ -38,6 +38,9 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
         }
     }
 
+    /// <summary>
+    /// Invoked when <c>Index</c> changes
+    /// </summary>
     public Action<int>? OnSelect { get; set; }
 
     /// <summary>
@@ -56,9 +59,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
         }
     }
 
-    public ListWidget(Vector2 pos, int capacity) {
-        this._Setup(pos, capacity);
-    }
+    public ListWidget(Vector2 pos, int capacity) => this._Setup(pos, capacity);
 
     public ListWidget(Vector2 pos, params string[] optionText) {
         this._Setup(pos, optionText.Length);
@@ -133,7 +134,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
     }
 
     public virtual void Draw(GameTime gameTime) {
-        // todo cleanup
+        // todo cleanup + move input out of draw
         if (this.OptCount != 0) {
             this.Input(gameTime);
 

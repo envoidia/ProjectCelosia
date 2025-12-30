@@ -34,7 +34,7 @@ public static class ModLoader {
     /// <returns>
     /// The first <c>GameMod</c> with the given ID, or null if none
     /// </returns>
-    public static GameMod? GetFromId(string modId) => _LoadedMods.FirstOrDefault(m => m.Id == modId);
+    public static GameMod? Get(string modId) => _LoadedMods.FirstOrDefault(m => m.Id == modId);
 
     #endregion
 

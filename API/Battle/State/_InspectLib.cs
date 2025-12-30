@@ -9,6 +9,9 @@ using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 using System.Linq;
 using API.Extensions;
+using API.Name;
+using System;
+using API.Util;
 
 namespace API.Battle.State;
 
@@ -73,7 +76,8 @@ internal sealed class _InspectLib {
     // Items on current page
     private static readonly ListRightWidget _PageItems = new(new(60, 740), 16) {
         ItemPadding = new(40, 20, 10, 10),
-        FixedWidth = 800
+        FixedWidth = 800,
+        OnSelect = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
     };
 
     private static readonly LineActor _PageDivL = new(new(35, 590), new(635, 20));
@@ -338,6 +342,7 @@ internal sealed class _InspectLib {
         ? Menu.State.State.GetInputPromptString(Faster, Jump, Back)
         : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, Jump, Back);
 
+    // todo fix some shit that fails to change
     internal static void _UpdateInspectUnitPage(int index) {
         Unit u = _GetUnitsSortedByAgi()[index];
 
@@ -376,27 +381,21 @@ internal sealed class _InspectLib {
                 _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ThemeColor.White))]);
                 _PageItems.SetRightText([.. u.SkillInstances.Select(s => s.GetCostCdFormatted())]);
 
-                if (_PageItems.OptCount != 0) {
-                    _Desc.Text = $"{u.SkillInstances[_PageItems.Index].Skill.GetName()}\n\n{u.SkillInstances[_PageItems.Index].Skill.GetFullDesc()}";
-                }
+                _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
             case _InspectPage.Passives:
                 _PageItems.SetRightText(); // todo
                 _PageItems.SetText([.. u.Passives.Select(s => s.GetName(ThemeColor.White))]);
 
-                if (_PageItems.OptCount != 0) {
-                    _Desc.Text = $"{u.Passives[_PageItems.Index].GetName()}\n\n{u.Passives[_PageItems.Index].GetFullDesc()}";
-                }
+                _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
             case _InspectPage.Buffs:
                 _PageItems.SetText([.. u.BuffInstances.Select(b => b.Buff.GetName(ThemeColor.White))]);
                 _PageItems.SetRightText([.. u.BuffInstances.Select(b => b.GetTurnsStacksFormatted())]);
 
-                if (_PageItems.OptCount != 0) {
-                    _Desc.Text = $"{u.BuffInstances[_PageItems.Index].Buff.GetName()}\n\n{u.BuffInstances[_PageItems.Index].Buff.GetFullDesc()}";
-                }
+                _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
             case _InspectPage.Stats:
@@ -407,15 +406,33 @@ internal sealed class _InspectLib {
         }
     }
 
-    private static void _HandleInspectPage() { }
+    private static void _UpdatePageItemDesc(int index, int inspectPageIndex) {
+        if (_PageItems.OptCount == 0) {
+            _Desc.Text = "";
+            return;
+        }
+
+        Unit u = _GetUnitsSortedByAgi()[_Queue.Index];
+
+        ComplexDescribable? cd = (_InspectPage) inspectPageIndex switch {
+            _InspectPage.Skills => u.SkillInstances[index].Skill,
+            _InspectPage.Passives => u.Passives[index],
+            _InspectPage.Buffs => u.BuffInstances[index].Buff,
+            _InspectPage.Stats => null,
+            _ => throw new ClosedEnumsWhenException()
+        };
+
+        if (cd is null) {
+            _Desc.Text = "";
+            return;
+        }
+
+        _Desc.Text = $"{cd.GetName()}{ThemeColor.White.Str()}\n\n{cd.GetFullDesc()}";
+    }
 
     private static void _SetStatVisibility(bool visible) {
         foreach (Label l in _StatCategoryHeaders) l.IsVisible = visible;
     }
-
-    private static void _SetPageItemVisibility(bool visible) { }
-
-    private static void _DeleteInspect() { }
 
     #endregion
 }

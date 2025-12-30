@@ -2,6 +2,7 @@ using API.Graphics;
 
 namespace API.Save;
 
+// todo serialize + use dict from props
 public static class Settings {
     #region General
 
@@ -48,8 +49,7 @@ public static class Settings {
 
     #endregion
 
-    static Settings() {
+    static Settings() =>
         // Set up default theme
         Theme._ChangeFSSColors();
-    }
 }
