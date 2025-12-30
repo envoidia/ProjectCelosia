@@ -11,6 +11,7 @@ namespace API.Menu;
 /* todo:
     - internal label alignment setting
     - max height (creates scrollbar)
+    - maybe make every option an IComponent and make them hold Labels?
 */
 public class ListWidget : ILayoutWidget, IInputWidget, IActor {
     public List<Label> Labels { get; private set; } = null!;
@@ -134,7 +135,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
     }
 
     public virtual void Draw(GameTime gameTime) {
-        // todo cleanup + move input out of draw
+        // todo cleanup + move input out of draw + dont have the cursor immediately vanish when optcount goes from n>0 to 0
         if (this.OptCount != 0) {
             this.Input(gameTime);
 

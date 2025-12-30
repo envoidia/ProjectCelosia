@@ -115,7 +115,7 @@ internal sealed class _InspectLib {
 
     // Current unit items
     private static readonly RectangleActor _UnitBounds = new() {
-        Position = new(30, 30),
+        Position = new(40, 95),
         Size = new(384),
         Priority = RenderPriority.B2Med
     };

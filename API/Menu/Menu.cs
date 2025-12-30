@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using API.Graphics;
 using Microsoft.Xna.Framework;
@@ -29,7 +30,7 @@ public sealed class Menu {
     /// <summary>
     /// <c>IInputWidgets</c> that this will handle controls for in addition to its actors
     /// </summary>
-    public IInputWidget[] InputWidgets { get; init; } = [];
+    public List<IInputWidget> InputWidgets { get; init; } = [];
 
     /// <summary>
     /// Called by <c>this.Create</c>. Do not call directly
