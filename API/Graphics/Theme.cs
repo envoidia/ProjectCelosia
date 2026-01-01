@@ -14,7 +14,8 @@ namespace API.Graphics;
 /// <summary>
 /// Color theme
 /// </summary>
-public class Theme : IDescribable, IRegistrable {
+public class Theme : IDescribable, IRegistrable
+{
     /// <summary>
     /// Notified when the current <c>Theme</c> changes
     /// </summary>
@@ -32,7 +33,8 @@ public class Theme : IDescribable, IRegistrable {
     /// </summary>
     public const int TransOpacity = 120;
 
-    public Theme(string modId, string keyName, string? itemId = null) {
+    public Theme(string modId, string keyName, string? itemId = null)
+    {
         this.KeyName = keyName;
         this.KeyDesc = $"{keyName}Desc";
 
@@ -51,7 +53,8 @@ public class Theme : IDescribable, IRegistrable {
     public static Theme MikuMikuTheme { get; }
     public static Theme RedMode { get; }
 
-    static Theme() {
+    static Theme()
+    {
         // https://lospec.com/palette-list/apollo
         #region Apollo
 
@@ -65,7 +68,8 @@ public class Theme : IDescribable, IRegistrable {
             Color[] grayBlues = Color.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
             Color[] whites = Color.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
 
-            Apollo = new(Core.Id, "ThemeApollo") {
+            Apollo = new(Core.Id, "ThemeApollo")
+            {
                 White = whites[3],
                 Gray = whites[0],
                 Black = grayBlues[0],
@@ -141,7 +145,8 @@ public class Theme : IDescribable, IRegistrable {
             Color lightPink = Color.FromRgb(0xe9aee4);
             Color darkPink = Color.FromRgb(0xda86d1);
 
-            Void = new(Core.Id, "ThemeVoid") {
+            Void = new(Core.Id, "ThemeVoid")
+            {
                 White = white,
                 Gray = gray,
                 Black = black,
@@ -216,7 +221,8 @@ public class Theme : IDescribable, IRegistrable {
             Color darkPink = Color.FromRgb(0xC586C0);
             Color magenta = Color.FromRgb(0xd96fd5);
 
-            VSCode = new(Core.Id, "ThemeVSCode") {
+            VSCode = new(Core.Id, "ThemeVSCode")
+            {
                 White = white,
                 Gray = gray,
                 Black = black,
@@ -274,7 +280,8 @@ public class Theme : IDescribable, IRegistrable {
             Color lightRed = new(255, 81, 81);
             Color elecBlue = new(24, 152, 255);
 
-            HighContrast = new(Core.Id, "ThemeHighContrast") {
+            HighContrast = new(Core.Id, "ThemeHighContrast")
+            {
                 White = Color.White,
                 Gray = Color.Gray,
                 Black = Color.Black,
@@ -344,7 +351,8 @@ public class Theme : IDescribable, IRegistrable {
             Color hotPink = Color.FromRgb(0xe8418f);
             Color redPink = Color.FromRgb(0xe3004f);
 
-            MikuMikuTheme = new(Core.Id, "ThemeMikuMikuTheme") {
+            MikuMikuTheme = new(Core.Id, "ThemeMikuMikuTheme")
+            {
                 White = white,
                 Gray = gray,
                 Black = black,
@@ -398,11 +406,15 @@ public class Theme : IDescribable, IRegistrable {
 
         {
             Color[] r = new Color[10];
-            for (int i = 0; i < r.Length; i++) r[i] = new((i * 23) + 26, 0, 0);
+            for (int i = 0; i < r.Length; i++)
+            {
+                r[i] = new((i * 23) + 26, 0, 0);
+            }
 
             Color white = new(255, 100, 100);
 
-            RedMode = new(Core.Id, "ThemeRedMode") {
+            RedMode = new(Core.Id, "ThemeRedMode")
+            {
                 White = white,
                 Gray = r[9],
                 Black = r[0],
@@ -678,68 +690,81 @@ public class Theme : IDescribable, IRegistrable {
 
     #region Methods
 
-    public Color Get(ThemeColor tc) => tc switch {
-        ThemeColor.White => this.White,
-        ThemeColor.Gray => this.Gray,
-        ThemeColor.Black => this.Black,
-        ThemeColor.TransBlack => this.TransBlack,
+    public Color Get(ThemeColor tc)
+    {
+        return tc switch
+        {
+            ThemeColor.White => this.White,
+            ThemeColor.Gray => this.Gray,
+            ThemeColor.Black => this.Black,
+            ThemeColor.TransBlack => this.TransBlack,
 
-        ThemeColor.Fg => this.Fg,
-        ThemeColor.Bg => this.Bg,
-        ThemeColor.Accent => this.Accent,
+            ThemeColor.Fg => this.Fg,
+            ThemeColor.Bg => this.Bg,
+            ThemeColor.Accent => this.Accent,
 
-        ThemeColor.Pos => this.Pos,
-        ThemeColor.Neg => this.Neg,
-        ThemeColor.Imp => this.Imp,
-        ThemeColor.Ally => this.Ally,
-        ThemeColor.Opp => this.Opp,
-        ThemeColor.Turn => this.Turn,
-        ThemeColor.Hp => this.Hp,
-        ThemeColor.Sp => this.Sp,
-        ThemeColor.Shield => this.Shield,
-        ThemeColor.Bloom => this.Bloom,
-        ThemeColor.Buff => this.Buff,
-        ThemeColor.Skill => this.Skill,
-        ThemeColor.Element => this.Element,
-        ThemeColor.Passive => this.Passive,
-        ThemeColor.Stat => this.Stat,
-        ThemeColor.Cooldown => this.Cooldown,
+            ThemeColor.Pos => this.Pos,
+            ThemeColor.Neg => this.Neg,
+            ThemeColor.Imp => this.Imp,
+            ThemeColor.Ally => this.Ally,
+            ThemeColor.Opp => this.Opp,
+            ThemeColor.Turn => this.Turn,
+            ThemeColor.Hp => this.Hp,
+            ThemeColor.Sp => this.Sp,
+            ThemeColor.Shield => this.Shield,
+            ThemeColor.Bloom => this.Bloom,
+            ThemeColor.Buff => this.Buff,
+            ThemeColor.Skill => this.Skill,
+            ThemeColor.Element => this.Element,
+            ThemeColor.Passive => this.Passive,
+            ThemeColor.Stat => this.Stat,
+            ThemeColor.Cooldown => this.Cooldown,
 
-        ThemeColor.SpBack => this.SpBack,
-        ThemeColor.Overheal => this.Overheal,
-        ThemeColor.StatBarLayer4 => this.StatBarLayer4,
-        ThemeColor.StatBarLayer5 => this.StatBarLayer5,
+            ThemeColor.SpBack => this.SpBack,
+            ThemeColor.Overheal => this.Overheal,
+            ThemeColor.StatBarLayer4 => this.StatBarLayer4,
+            ThemeColor.StatBarLayer5 => this.StatBarLayer5,
 
-        ThemeColor.Atk => this.Atk,
-        ThemeColor.Def => this.Def,
-        ThemeColor.Fth => this.Fth,
-        ThemeColor.Agi => this.Agi,
+            ThemeColor.Atk => this.Atk,
+            ThemeColor.Def => this.Def,
+            ThemeColor.Fth => this.Fth,
+            ThemeColor.Agi => this.Agi,
 
-        ThemeColor.Vis => this.Vis,
-        ThemeColor.Ignis => this.Ignis,
-        ThemeColor.Glacies => this.Glacies,
-        ThemeColor.Fulgur => this.Fulgur,
-        ThemeColor.Ventus => this.Ventus,
-        ThemeColor.Terra => this.Terra,
-        ThemeColor.Lux => this.Lux,
-        ThemeColor.Malum => this.Malum,
+            ThemeColor.Vis => this.Vis,
+            ThemeColor.Ignis => this.Ignis,
+            ThemeColor.Glacies => this.Glacies,
+            ThemeColor.Fulgur => this.Fulgur,
+            ThemeColor.Ventus => this.Ventus,
+            ThemeColor.Terra => this.Terra,
+            ThemeColor.Lux => this.Lux,
+            ThemeColor.Malum => this.Malum,
 
-        _ => throw new ClosedEnumsWhenException()
-    };
+            _ => throw new ClosedEnumsWhenException()
+        };
+    }
 
-    internal void _DrawPalette() {
+    internal void _DrawPalette()
+    {
         const int Size = 64;
 
         int y = -Size;
-        for (int i = 0; i < this.AllColors.Length; i++) {
+        for (int i = 0; i < this.AllColors.Length; i++)
+        {
             int iMod = i % 8;
+
+            if (iMod == 0)
+            {
+                y += Size;
+            }
+
             int x = iMod * Size;
-            if (iMod == 0) y += Size;
+
             Core.ShapeBatch.FillRectangle(new(x, y), new(Size, Size), this.AllColors[i]);
         }
     }
 
-    internal static void _Change() {
+    internal static void _Change()
+    {
         _ChangeFSSColors();
         OnChange?.Invoke();
     }
@@ -747,32 +772,51 @@ public class Theme : IDescribable, IRegistrable {
     /// <summary>
     /// Add custom color aliases to FSS's text processing for the given palette
     /// </summary>
-    internal static void _ChangeFSSColors() {
+    internal static void _ChangeFSSColors()
+    {
         Dictionary<string, Color> colorMap = [];
 
-        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>()) {
+        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
+        {
             colorMap[tc.ToString().FirstToLower()] = Settings.Theme.Get(tc);
         }
-        foreach (KeyValuePair<string, Color> kvp in colorMap) {
+        foreach (KeyValuePair<string, Color> kvp in colorMap)
+        {
             ColorStorage.Colors[kvp.Key] = new() { Color = kvp.Value };
         }
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    }
 
-    public string ToDetailedString() {
+    public string ToDetailedString()
+    {
         StringBuilder sb = new(this.ToString());
 
-        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>()) {
+        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
+        {
             sb.Append($"{tc}: {this.Get(tc).ToRgbaStr()}");
         }
 
         return sb.ToString();
     }
 
-    public string GetName(ThemeColor color) => color.Str + this.GetLang();
-    public string GetName() => this.GetName(ThemeColor.White);
-    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.GetLang();
+    }
+
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.White);
+    }
+
+    public string GetDesc()
+    {
+        return this.KeyDesc.GetLang(this.ModId);
+    }
 
     #endregion
 }

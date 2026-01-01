@@ -10,26 +10,33 @@ namespace API.Graphics;
 /// Layered bars representing HP, Shield, and HP over max
 /// </summary>
 public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPriority)
-    : StatBarWidgetBase(pos, width, renderPriority, ThemeColor.Stat.Str + "StatHp".GetLang()) {
-    public int Hp {
+    : StatBarWidgetBase(pos, width, renderPriority, ThemeColor.Stat.Str + "StatHp".GetLang())
+{
+    public int Hp
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._Update();
         }
     }
 
-    public int Shield {
+    public int Shield
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._Update();
         }
     }
 
-    public int MaxHp {
+    public int MaxHp
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._Update();
         }
@@ -38,23 +45,41 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
     private float[] _barLens = [0, 0, 0];
     private Color[] _layers = [];
 
-    public override void Draw(GameTime gameTime) {
+    public override void Draw(GameTime gt)
+    {
         // todo animate between stages whenever it changes
 
-        if (this._barLens[0] > 0) drawBar(this._layers[0], 0, this._barLens[0]);
-        if (this._barLens[1] > 0) drawBar(this._layers[1], this._barLens[0], this._barLens[1] - this._barLens[0]);
-        if (this._barLens[2] > 0) drawBar(this._layers[2], this._barLens[1], this._barLens[2] - this._barLens[1]);
-        if (this._barLens[2] != 1) drawBar(Settings.Theme.Neg, this._barLens[2], 1 - this._barLens[2]);
+        if (this._barLens[0] > 0)
+        {
+            drawBar(this._layers[0], 0, this._barLens[0]);
+        }
 
-        this.Title.Data.Act(gameTime);
-        this.Text.Data.Act(gameTime);
+        if (this._barLens[1] > 0)
+        {
+            drawBar(this._layers[1], this._barLens[0], this._barLens[1] - this._barLens[0]);
+        }
 
-        if (DebugUtil.DrawActorOutlines) {
+        if (this._barLens[2] > 0)
+        {
+            drawBar(this._layers[2], this._barLens[1], this._barLens[2] - this._barLens[1]);
+        }
+        
+        if (this._barLens[2] != 1)
+        {
+            drawBar(Settings.Theme.Neg, this._barLens[2], 1 - this._barLens[2]);
+        }
+
+        this.Title.Data.Act(gt);
+        this.Text.Data.Act(gt);
+
+        if (DebugUtil.DrawActorOutlines)
+        {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
 
-        void drawBar(Color c, float start, float len) {
+        void drawBar(Color c, float start, float len)
+        {
             Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X,
                 this.X + ((this.Width - _BarStartOffset) * start) + _BarStartOffset, (float) this.Prog),
                 this.Y + _HeightOffset);
@@ -66,9 +91,13 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         }
     }
 
-    public override void ThemeChange() => this._Update();
+    public override void ThemeChange()
+    {
+        this._Update();
+    }
 
-    private void _Update() {
+    private void _Update()
+    {
         float hpLen = this.Hp / (float) this.MaxHp;
         this._barLens = [Math.Min(hpLen, 1), this.Shield / (float) this.MaxHp, Math.Max(hpLen - 1, 0)];
         this._layers = [Settings.Theme.Hp, Settings.Theme.Shield, Settings.Theme.Overheal];

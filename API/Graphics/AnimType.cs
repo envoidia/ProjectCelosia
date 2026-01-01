@@ -4,7 +4,8 @@ namespace API.Graphics;
 /// Create/destroy animation types for <c>IActor</c>s
 /// </summary>
 // todo add more
-public enum AnimType {
+public enum AnimType
+{
     Move,
     None
 }

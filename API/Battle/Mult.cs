@@ -10,7 +10,8 @@ namespace API.Battle;
 /// A multiplier stat. Defaults to 1000 (100%)
 /// </summary>
 // todo IDescribable?
-public sealed class Mult : INameable, IRegistrable {
+public sealed class Mult : INameable, IRegistrable
+{
     /// <summary>
     /// Whether higher is better
     /// </summary>
@@ -26,7 +27,8 @@ public sealed class Mult : INameable, IRegistrable {
     public string ModId { get; }
     public string ItemId { get; init; }
 
-    public Mult(string modId, string keyName, bool isPositive, string? itemId = null) {
+    public Mult(string modId, string keyName, bool isPositive, string? itemId = null)
+    {
         this.IsPositive = isPositive;
 
         this.KeyName = keyName;
@@ -37,19 +39,34 @@ public sealed class Mult : INameable, IRegistrable {
         Registry.Register(this);
     }
 
-    public string Format(int val) => Math.Max(val, this.MinValue).FormatPerc(isPositive: this.IsPositive);
+    public string Format(int val)
+    {
+        return Math.Max(val, this.MinValue).FormatPerc(isPositive: this.IsPositive);
+    }
 
-    public string FormatChange(float val) =>
-        Math.Max(val, this.MinValue).FormatPerc(true, isPositive: this.IsPositive);
+    public string FormatChange(float val)
+    {
+        return Math.Max(val, this.MinValue).FormatPerc(true, isPositive: this.IsPositive);
+    }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()}";
+    }
 
-    public string GetName(ThemeColor color) => color.Str + this.GetLang();
-    public string GetName() => this.GetName(ThemeColor.Stat);
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.GetLang();
+    }
 
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.Stat);
+    }
 }
 
-public static class Mults {
+public static class Mults
+{
     public static readonly Mult DmgDealt = new(Core.Id, "MultDmgDealt", true);
     public static readonly Mult DmgTaken = new(Core.Id, "MultDmgTaken", false);
     public static readonly Mult WeakDmgDealt = new(Core.Id, "MultWeakDmgDealt", true);

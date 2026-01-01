@@ -22,7 +22,8 @@ namespace API;
 /// Core of the game
 /// </summary>
 // todo internalify
-public class Core : Game {
+public class Core : Game
+{
     /// <summary>
     /// Global instance of Core
     /// </summary>
@@ -51,19 +52,20 @@ public class Core : Game {
     public static ShapeBatch ShapeBatch { get; private set; } = null!;
     public static readonly Dictionary<string, Texture2DRegion> TextureCache = [];
 
-    public static Texture2DAtlas IconsAtlas { get; set; } = null!;
+    private static Texture2DAtlas _iconsAtlas = null!;
 
     // Fonts
-    public static FontSystem KoruriSystem { get; set; } = null!;
-    public static DynamicSpriteFont Koruri60 { get; private set; } = null!;
-    public static DynamicSpriteFont Koruri40 { get; private set; } = null!;
+    public static readonly FontSystem KoruriSystem;
+    public static readonly DynamicSpriteFont Koruri60;
+    public static readonly DynamicSpriteFont Koruri40;
 
     #endregion
 
     // temp debug
-    public static Battle.Battle battle = null!;
+    public static Battle.Battle Battle = null!;
 
-    static Core() {
+    static Core()
+    {
         // Setup font
         // todo
         //FontSystemDefaults.TextureWidth = 4096;
@@ -81,12 +83,14 @@ public class Core : Game {
         Koruri40 = KoruriSystem.GetFont(40);
 
         // Images in text
-        RichTextDefaults.ImageResolver = static str => {
-            if (TextureCache.TryGetValue(str, out Texture2DRegion? region)) {
+        RichTextDefaults.ImageResolver = static str =>
+        {
+            if (TextureCache.TryGetValue(str, out Texture2DRegion? region))
+            {
                 return new TextureFragmentColored(region.Texture, region.Bounds);
             }
 
-            region = IconsAtlas.GetRegion(str);
+            region = _iconsAtlas.GetRegion(str);
 
             // Cache the region for future use
             TextureCache[str] = region;
@@ -120,7 +124,8 @@ public class Core : Game {
     /// Creates a new Core instance.
     /// </summary>
     /// <param name="title">The title to display in the title bar of the game window.</param>
-    public Core(string title) {
+    public Core(string title)
+    {
         // Ensure that multiple cores are not created
         Debug.Assert(Instance is null, "Only a single instance of Core should be created");
 
@@ -128,7 +133,8 @@ public class Core : Game {
         Instance = this;
 
         // Create a new graphics device manager
-        Graphics = new GraphicsDeviceManager(this) {
+        Graphics = new GraphicsDeviceManager(this)
+        {
             SynchronizeWithVerticalRetrace = false, // Vsync
             GraphicsProfile = GraphicsProfile.HiDef
             //PreferMultiSampling = true
@@ -150,14 +156,15 @@ public class Core : Game {
 
         // Scaling
         Resolution.Init(new ResolutionComponent(this, Graphics, new(World.W, World.H),
-            new(1920, 1080), false, false, false));
+            new(2560, 1440), true, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;
 #endif
     }
 
-    protected override void Initialize() {
+    protected override void Initialize()
+    {
         base.Initialize();
 
         // Set the core's graphics device to a reference of the base Game's graphics device.
@@ -171,36 +178,39 @@ public class Core : Game {
     }
 
     // Update is called before Draw
-    protected override void Update(GameTime gameTime) {
-        InputLib.Update(gameTime);
-        DebugUtil._Update(gameTime);
+    protected override void Update(GameTime gt)
+    {
+        InputLib.Update(gt);
+        DebugUtil._Update(gt);
 
         // Update the current State
-        StateMachine.State.Update(gameTime);
+        StateMachine.State.Update(gt);
 
 #if !NATIVE_AOT
-        ModLoader._UpdateAllMods(gameTime);
+        ModLoader._UpdateAllMods(gt);
 #endif
-        // todo: if AOT and Celosia gets an Update: Celosia.Main.Mod.OnUpdate(gameTime);
+        // todo: if AOT and Celosia gets an Update: Celosia.Main.Mod.OnUpdate(gt);
 
-        base.Update(gameTime);
+        base.Update(gt);
     }
 
-    protected override void LoadContent() {
-        IconsAtlas = this.Content.Load<Texture2DAtlas>("img/icons");
+    protected override void LoadContent()
+    {
+        _iconsAtlas = this.Content.Load<Texture2DAtlas>("img/icons");
 
         base.LoadContent();
     }
 
-    protected override void Draw(GameTime gameTime) {
+    protected override void Draw(GameTime gt)
+    {
         GraphicsDevice.Clear(Color.Black);
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
 
         // Act Actors
         // todo: avoid logic in draw by moving routines out of draw and also moving widget input out of draw?
-        Stage.Act(gameTime);
+        Stage.Act(gt);
 
-        base.Draw(gameTime);
+        base.Draw(gt);
     }
 }

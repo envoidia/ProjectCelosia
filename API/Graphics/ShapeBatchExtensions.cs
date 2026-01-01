@@ -3,18 +3,22 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public static class ShapeBatchExtensions {
+public static class ShapeBatchExtensions
+{
     private static readonly Vector2 _TR = new(+1, -1);
     private static readonly Vector2 _BL = new(-1, +1);
 
-    extension(ShapeBatch @this) {
+    extension(ShapeBatch @this)
+    {
         /// <summary>
         /// Not really a triangle strip, but we're gonna pretend it is
         /// </summary>
         public void DrawTriangleStrip(Vector2 tl, Vector2 tr, Vector2 bl, Vector2 br,
-            Color fill, Color border, float thickness) {
+            Color fill, Color border, float thickness)
+        {
             // Outline
-            if (thickness != 0) {
+            if (thickness != 0)
+            {
                 Vector2 t = new(thickness);
 
                 Vector2 tlo = tl - t;

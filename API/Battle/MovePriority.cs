@@ -1,6 +1,7 @@
 namespace API.Battle;
 
-public enum MovePriority {
+public enum MovePriority
+{
     Last,
     VeryLate,
     Late,

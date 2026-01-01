@@ -11,7 +11,8 @@ namespace API.Name;
 /// An item that can be named and described, with a description that can include formatting args
 /// and the descriptions of any <c>IDescribable</c>
 /// </summary>
-public abstract class ComplexDescribable(string keyName, string icon, string keyDesc) : IDescribable {
+public abstract class ComplexDescribable(string keyName, string icon, string keyDesc) : IDescribable
+{
     public DescArg[] DescArgs { private get; init; } = [];
     public HashSet<IDescribable> DescInclusions { protected get; init; } = [];
 
@@ -24,32 +25,59 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     /// </summary>
     public string ModId { get; protected init; } = Core.Id;
 
-    private string[] _GetDescArgs() {
+    private string[] _GetDescArgs()
+    {
         string[] args = new string[this.DescArgs.Length];
-        for (int i = 0; i < this.DescArgs.Length; i++) args[i] = this.DescArgs[i].GetString();
+
+        for (int i = 0; i < this.DescArgs.Length; i++)
+        {
+            args[i] = this.DescArgs[i].GetString();
+        }
+
         return args;
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    }
 
-    public virtual string GetName(ThemeColor color) =>
-        $"{this.Icon} {color.Str}{this.KeyName.GetLang(this.ModId)}";
-    public virtual string GetName() => this.GetName(ThemeColor.White);
+    public virtual string GetName(ThemeColor color)
+    {
+        return $"{this.Icon} {color.Str}{this.KeyName.GetLang(this.ModId)}";
+    }
 
-    public virtual string GetDesc() => this.KeyDesc.FormatLang(this.ModId, this._GetDescArgs());
+    public virtual string GetName()
+    {
+        return this.GetName(ThemeColor.White);
+    }
+
+    public virtual string GetDesc()
+    {
+        return this.KeyDesc.FormatLang(this.ModId, this._GetDescArgs());
+    }
 
     /// <returns>
     /// The description of this with all inclusions
     /// </returns>
     public abstract string GetFullDesc();
 
-    protected virtual HashSet<IDescribable> _GetDescInclusions() => this.DescInclusions;
+    protected virtual HashSet<IDescribable> _GetDescInclusions()
+    {
+        return this.DescInclusions;
+    }
 
-    protected string _GetFormattedDescInclusions() {
+    protected string _GetFormattedDescInclusions()
+    {
         StringBuilder formattedInclusions = new(this.GetDesc());
-        if (this.DescInclusions.Count > 0) formattedInclusions.Append('\n');
 
-        foreach (IDescribable inclusion in this._GetDescInclusions()) {
+        if (this.DescInclusions.Count > 0)
+        {
+            formattedInclusions.Append('\n');
+        }
+
+        foreach (IDescribable inclusion in this._GetDescInclusions())
+        {
             formattedInclusions.Append('\n').Append(ThemeColor.White.Str).Append('(')
                 .Append(inclusion.GetName()).Append(ThemeColor.White.Str).Append(": ")
                 .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str).Append(')');
@@ -59,7 +87,8 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     }
 }
 
-public enum DescArgType {
+public enum DescArgType
+{
     PlainText,
     LangKey
 }
@@ -70,11 +99,22 @@ public enum DescArgType {
 /// <summary>
 /// A formatting argument for the description. Can be an <c>IDescribable</c> or a <c>string</c>
 /// </summary>
-public sealed class DescArg(OneOf<string, ComplexDescribable> value, DescArgType descriptionArgType = DescArgType.PlainText) {
-    public string GetString() => value.Match(
+public sealed class DescArg(OneOf<string, ComplexDescribable> value, DescArgType descriptionArgType = DescArgType.PlainText)
+{
+    public string GetString()
+    {
+        return value.Match(
         str => descriptionArgType == DescArgType.PlainText ? str : str.GetLang(),
         ne => ne.GetName());
+    }
 
-    public static implicit operator DescArg(string val) => new(val);
-    public static implicit operator DescArg(ComplexDescribable val) => new(val);
+    public static implicit operator DescArg(string val)
+    {
+        return new(val);
+    }
+
+    public static implicit operator DescArg(ComplexDescribable val)
+    {
+        return new(val);
+    }
 }

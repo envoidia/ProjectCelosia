@@ -5,7 +5,8 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class BoolStat : INameable, IRegistrable {
+public sealed class BoolStat : INameable, IRegistrable
+{
     public string LogMsgKey { get; }
     public bool IsPositive { get; }
     public bool PossessiveNameInLogMsg { get; }
@@ -17,7 +18,8 @@ public sealed class BoolStat : INameable, IRegistrable {
     public string ItemId { get; init; }
 
     public BoolStat(string modId, string keyName, string logMsgKey, bool isPositive, bool possessiveNameInLogMsg,
-        bool isVisible, string? itemId = null) {
+        bool isVisible, string? itemId = null)
+    {
         this.LogMsgKey = logMsgKey;
         this.IsPositive = isPositive;
         this.PossessiveNameInLogMsg = possessiveNameInLogMsg;
@@ -31,15 +33,26 @@ public sealed class BoolStat : INameable, IRegistrable {
         Registry.Register(this);
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()}";
+    }
 
-    public string GetName(ThemeColor color) => color.Str + this.GetLang();
-    public string GetName() => this.GetName(ThemeColor.Stat);
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.GetLang();
+    }
+
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.Stat);
+    }
 
     // todo format?
 }
 
-public static class BoolStats {
+public static class BoolStats
+{
     public static readonly BoolStat EffectBlock = new(Core.Id, "BoolEffectBlock",
         "LogChangeBooleanStatEffectBlock", true, false, true);
 

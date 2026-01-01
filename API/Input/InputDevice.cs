@@ -3,30 +3,42 @@ using API.Util;
 
 namespace API.Input;
 
-public enum InputDevice {
+public enum InputDevice
+{
     Keyboard,
     SwitchController,
     PlaystationController,
     XboxController
 }
 
-public static class InputDeviceExtensions {
+public static class InputDeviceExtensions
+{
     // todo support controller remapping
-    extension(InputDevice @this) {
-        private string GetGlyphIdentifier() => @this switch {
-            InputDevice.SwitchController => "S",
-            InputDevice.PlaystationController => "P",
-            InputDevice.XboxController => "X",
-            _ => throw new ClosedEnumsWhenException()
-        };
+    extension(InputDevice @this)
+    {
+        private string GetGlyphIdentifier()
+        {
+            return @this switch
+            {
+                InputDevice.SwitchController => "S",
+                InputDevice.PlaystationController => "P",
+                InputDevice.XboxController => "X",
+                _ => throw new ClosedEnumsWhenException()
+            };
+        }
 
-        public string FormatSingleGlyph(string glyphType) =>
-            $"/i[{@this.GetGlyphIdentifier()}{glyphType}]";
+        public string FormatSingleGlyph(string glyphType)
+        {
+            return $"/i[{@this.GetGlyphIdentifier()}{glyphType}]";
+        }
 
-        public string GetMergedGlyph(KeybindId id) {
-            switch (id) {
+        public string GetMergedGlyph(KeybindId id)
+        {
+            switch (id)
+            {
                 case KeybindId.LeftRight:
-                    if (@this == InputDevice.Keyboard) {
+                    if (@this == InputDevice.Keyboard)
+                    {
                         return $"{Keybinds.Left.Key.GetGlyph()}//{Keybinds.Right.Key.GetGlyph()}";
                     }
 
@@ -34,7 +46,8 @@ public static class InputDeviceExtensions {
                         .Replace($"/i[{@this.GetGlyphIdentifier()}DL]///i[{@this.GetGlyphIdentifier()}DR]",
                             $"/i[{@this.GetGlyphIdentifier()}DX]");
                 case KeybindId.UpDown:
-                    if (@this == InputDevice.Keyboard) {
+                    if (@this == InputDevice.Keyboard)
+                    {
                         return $"{Keybinds.Up.Key.GetGlyph()}//{Keybinds.Down.Key.GetGlyph()}";
                     }
 
@@ -42,7 +55,8 @@ public static class InputDeviceExtensions {
                         .Replace($"/i[{@this.GetGlyphIdentifier()}DU]///i[{@this.GetGlyphIdentifier()}DD]",
                             $"/i[{@this.GetGlyphIdentifier()}DY]");
                 case KeybindId.LeftRightUpDown:
-                    if (@this == InputDevice.Keyboard) {
+                    if (@this == InputDevice.Keyboard)
+                    {
                         return $"{Keybinds.Left.Key.GetGlyph()}//{Keybinds.Right.Key.GetGlyph()}//{Keybinds.Up.Key.GetGlyph()}//{Keybinds.Down.Key.GetGlyph()}";
                     }
 

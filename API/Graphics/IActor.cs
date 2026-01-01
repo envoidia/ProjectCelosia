@@ -6,7 +6,8 @@ namespace API.Graphics;
 /// <summary>
 /// Type that can be rendered and can hold actions to be executed
 /// </summary>
-public interface IActor {
+public interface IActor
+{
     /// <summary>
     /// Data holder for this
     /// </summary>
@@ -27,14 +28,14 @@ public interface IActor {
     /// <summary>
     /// Draws this
     /// </summary>
-    void Draw(GameTime gameTime);
+    void Draw(GameTime gt);
 
     /// <summary>
     /// Animate in
     /// </summary>
     static readonly Routine In = new(
         static actor => Assert.Zero(actor.Prog),
-        static (actor, gameTime) => actor.UpdateProg(gameTime, AnimDirs.In));
+        static (actor, gt) => actor.UpdateProg(gt, AnimDirs.In));
 
     /// <summary>
     /// Animate out
@@ -42,8 +43,10 @@ public interface IActor {
     static readonly Routine Out = new(
         static actor => Assert.One(actor.Prog),
 
-        static (actor, gameTime) => {
-            if (actor.UpdateProg(gameTime, AnimDirs.Out)) {
+        static (actor, gt) =>
+        {
+            if (actor.UpdateProg(gt, AnimDirs.Out))
+            {
                 Stage.Remove(actor);
                 return true;
             }
@@ -54,101 +57,130 @@ public interface IActor {
     const float DefaultSpeed = 4f;
 }
 
-public static class ActorExtensions {
-    extension(IActor @this) {
-        public bool IsVisible {
+public static class ActorExtensions
+{
+    extension(IActor @this)
+    {
+        public bool IsVisible
+        {
             get => @this.Data.IsVisible;
             set => @this.Data.IsVisible = value;
         }
 
         /// <inheritdoc cref="ActorData.Priority" />
-        public RenderPriority Priority {
+        public RenderPriority Priority
+        {
             get => @this.Data.Priority;
             set => @this.Data.Priority = value;
         }
 
-        public Vector2 Position {
+        public Vector2 Position
+        {
             get => @this.Data.Position;
             set => @this.Data.Position = value;
         }
-        public float X {
+        public float X
+        {
             get => @this.Data.X;
             set => @this.Data.X = value;
         }
-        public float Y {
+        public float Y
+        {
             get => @this.Data.Y;
             set => @this.Data.Y = value;
         }
 
-        public Point Size {
+        public Point Size
+        {
             get => @this.Data.Size;
             set => @this.Data.Size = value;
         }
-        public int Width {
+        public int Width
+        {
             get => @this.Data.Width;
             set => @this.Data.Width = value;
         }
-        public int Height {
+        public int Height
+        {
             get => @this.Data.Height;
             set => @this.Data.Height = value;
         }
 
-        public Alignment Alignment {
+        public Alignment Alignment
+        {
             get => @this.Data.Alignment;
             set => @this.Data.Alignment = value;
         }
 
-        public Point Origin {
+        public Point Origin
+        {
             get => @this.Data.Origin;
             set => @this.Data.Origin = value;
         }
 
         /// <inheritdoc cref="ActorData.Padding" />
-        public Padding Padding {
+        public Padding Padding
+        {
             get => @this.Data.Padding;
             set => @this.Data.Padding = value;
         }
 
         /// <inheritdoc cref="ActorData.Prog" />
-        public Progress Prog {
+        public Progress Prog
+        {
             get => @this.Data.Prog;
             set => @this.Data.Prog = value;
         }
 
         /// <inheritdoc cref="ActorData.AnimFrom" />
-        public Vector2 AnimFrom {
+        public Vector2 AnimFrom
+        {
             get => @this.Data.AnimFrom;
             set => @this.Data.AnimFrom = value;
         }
 
         /// <inheritdoc cref="ActorData.AnimFromDir" />
-        public Dir AnimFromDir {
+        public Dir AnimFromDir
+        {
             get => @this.Data.AnimFromDir;
             set => @this.Data.AnimFromDir = value;
         }
 
         /// <inheritdoc cref="ActorData.AnimType" />
-        public AnimType AnimType {
+        public AnimType AnimType
+        {
             get => @this.Data.AnimType;
             set => @this.Data.AnimType = value;
         }
 
         /// <inheritdoc cref="ActorData.Speed" />
-        public float Speed {
+        public float Speed
+        {
             get => @this.Data.Speed;
             set => @this.Data.Speed = value;
         }
 
         /// <inheritdoc cref="ActorData.Create" />
-        public void Create() => @this.Data.Create();
+        public void Create()
+        {
+            @this.Data.Create();
+        }
 
         /// <inheritdoc cref="ActorData.Destroy" />
-        public void Destroy() => @this.Data.Destroy();
+        public void Destroy()
+        {
+            @this.Data.Destroy();
+        }
 
         /// <inheritdoc cref="ActorData.AddRoutine" />
-        public void AddRoutine(Routine routine) => @this.Data.AddRoutine(routine);
+        public void AddRoutine(Routine routine)
+        {
+            @this.Data.AddRoutine(routine);
+        }
 
-        public bool UpdateProg(GameTime gameTime, AnimDirs dir) => @this.Data.UpdateProg(gameTime, dir);
-
+        public bool UpdateProg(GameTime gt, AnimDirs dir)
+        {
+            return @this.Data.UpdateProg(gt, dir);
+        }
     }
 }

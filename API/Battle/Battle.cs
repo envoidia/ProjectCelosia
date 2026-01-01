@@ -3,16 +3,18 @@ using System.Linq;
 
 namespace API.Battle;
 
-public sealed class Battle {
+public sealed class Battle
+{
     public Team PlayerTeam { get; }
     public Team OpponentTeam { get; }
 
     /// <summary>
     /// Current turn, starting at 1
     /// </summary>
-    public int Turn { get; set; } = 1;
+    public int Turn = 1;
 
-    public Battle(Team playerTeam, Team opponentTeam) {
+    public Battle(Team playerTeam, Team opponentTeam)
+    {
         this.PlayerTeam = playerTeam;
         this.OpponentTeam = opponentTeam;
 
@@ -24,10 +26,12 @@ public sealed class Battle {
                 static g => g.Count());
         Dictionary<UnitType, int> counterDict = [];
 
-        for (int i = 0; i < units.Length; i++) {
+        for (int i = 0; i < units.Length; i++)
+        {
             units[i].Pos = i;
 
-            if (!countDict.ContainsKey(units[i].UnitType)) {
+            if (!countDict.ContainsKey(units[i].UnitType))
+            {
                 units[i].DupeIndex = 0;
                 continue;
             }
@@ -37,15 +41,26 @@ public sealed class Battle {
         }
     }
 
-    public Unit GetUnitAtPos(int pos) =>
-        pos < PosLib.LowestOpp ? this.PlayerTeam.Units[pos] : this.OpponentTeam.Units[pos - PosLib.LowestOpp];
+    public Unit GetUnitAtPos(int pos)
+    {
+        return pos < PosLib.LowestOpp ? this.PlayerTeam.Units[pos] : this.OpponentTeam.Units[pos - PosLib.LowestOpp];
+    }
 
     /// <returns>
     /// The <c>Team</c> that the <c>Unit</c> at <c>pos</c> belongs to
     /// </returns>
-    public Team GetTeamAtPos(int pos) => pos < PosLib.LowestOpp ? this.PlayerTeam : this.OpponentTeam;
+    public Team GetTeamAtPos(int pos)
+    {
+        return pos < PosLib.LowestOpp ? this.PlayerTeam : this.OpponentTeam;
+    }
 
-    public Team GetTeamBySide(Side side) => side == Side.Ally ? this.PlayerTeam : this.OpponentTeam;
+    public Team GetTeamBySide(Side side)
+    {
+        return side == Side.Ally ? this.PlayerTeam : this.OpponentTeam;
+    }
 
-    public Unit[] GetAllUnits() => [.. this.PlayerTeam.Units, .. this.OpponentTeam.Units];
+    public Unit[] GetAllUnits()
+    {
+        return [.. this.PlayerTeam.Units, .. this.OpponentTeam.Units];
+    }
 }

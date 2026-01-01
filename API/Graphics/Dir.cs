@@ -1,6 +1,7 @@
 namespace API.Graphics;
 
-public enum Dir {
+public enum Dir
+{
     Left,
     Right,
     Up,

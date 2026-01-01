@@ -8,26 +8,30 @@ namespace API.Graphics;
 /// Base class for StatBarWidget and HpBarWidget.
 /// Expected to have static lifetime -- otherwise, make sure to manually unsubscribe from <c>Theme.Change</c>
 /// </summary>
-public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
+public abstract class StatBarWidgetBase : ILayoutWidget, IActor
+{
     protected const int _BarStartOffset = 100;
     protected const int _HeightOffset = 5;
 
     public Label Title { get; } = new() { Alignment = Alignment.Controlled };
     public Label Text { get; } = new() { Alignment = Alignment.Controlled };
 
-    public ActorData Data { get; set; }
+    public ActorData Data { get; }
 
     /// <inheritdoc cref="ActorData.AnimFromDir" />
-    public Dir AnimFromDir {
+    public Dir AnimFromDir
+    {
         get => this.Data.AnimFromDir;
-        set {
+        set
+        {
             this.Data.AnimFromDir = value;
             this.Title.AnimFromDir = value;
             this.Text.AnimFromDir = value;
         }
     }
 
-    public StatBarWidgetBase(Vector2 pos, int width, RenderPriority renderPriority, string text) {
+    public StatBarWidgetBase(Vector2 pos, int width, RenderPriority renderPriority, string text)
+    {
         this.Data = new(this, renderPriority);
         this.Position = pos;
         this.Width = width;
@@ -38,7 +42,8 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
         this.CalcLayout();
     }
 
-    public void CalcLayout() {
+    public void CalcLayout()
+    {
         this.Title.Position = this.Position;
         this.Title.Origin = this.Origin;
 
@@ -49,17 +54,19 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor {
     }
 
     // todo respect anim type
-    public void OnCreate() {
+    public void OnCreate()
+    {
         this.Title.Create();
         this.Text.Create();
     }
 
-    public void OnDestroy() {
+    public void OnDestroy()
+    {
         this.Title.Destroy();
         this.Text.Destroy();
     }
 
-    public abstract void Draw(GameTime gameTime);
+    public abstract void Draw(GameTime gt);
 
     public abstract void ThemeChange();
 }

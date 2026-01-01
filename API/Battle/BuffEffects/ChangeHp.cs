@@ -6,18 +6,29 @@ using API.Graphics;
 namespace API.Battle.BuffEffects;
 
 public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercentage = true, bool isPierce = false)
-    : IBuffEffect {
+    : IBuffEffect
+{
     // todo this might need to display the name if immediate
-    public void OnGive(Unit self, int stacks) {
-        if (!isImmediate) return;
+    public void OnGive(Unit self, int stacks)
+    {
+        if (!isImmediate)
+        {
+            return;
+        }
+
         LogLib.Add(this._Calc(self, stacks));
     }
 
-    public string[] OnTurnEnd(Unit self, int stacks) => !isImmediate ? this._Calc(self, stacks) : [];
+    public string[] OnTurnEnd(Unit self, int stacks)
+    {
+        return !isImmediate ? this._Calc(self, stacks) : [];
+    }
 
-    private string[] _Calc(Unit self, int stacks) {
+    private string[] _Calc(Unit self, int stacks)
+    {
         // Damage
-        if (change < 0) {
+        if (change < 0)
+        {
             float multDoTDmgTaken = isImmediate ? 1 : self.GetMult(Mults.DoTDmgTaken);
 
             int dmg = isPercentage
@@ -36,7 +47,10 @@ public sealed class ChangeHp(int change, bool isImmediate = false, bool isPercen
         int heal = (int) (change * (isPercentage ? hpMax : 1) * stacks * self.GetMult(Mults.HealingTaken));
         int hpNew = Math.Max(hpOld, Math.Min(hpOld + heal, hpMax));
 
-        if (hpNew <= hpOld) return [];
+        if (hpNew <= hpOld)
+        {
+            return [];
+        }
 
         self.OnTakeHeal(self, heal, 0);
 

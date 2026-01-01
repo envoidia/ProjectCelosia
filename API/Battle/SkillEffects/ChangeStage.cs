@@ -6,9 +6,14 @@ using API.Graphics;
 
 namespace API.Battle.SkillEffects;
 
-public sealed class ChangeStage(StageType stageType, int turns, int stacks) : SkillEffect(descInclusion: stageType) {
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
-        if (this.MainTargetOnly && !isMainTarget) return ResultType.PseudoSuccess;
+public sealed class ChangeStage(StageType stageType, int turns, int stacks) : SkillEffect(descInclusion: stageType)
+{
+    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    {
+        if (this.MainTargetOnly && !isMainTarget)
+        {
+            return ResultType.PseudoSuccess;
+        }
 
         List<string> msg = [];
         string str = "";
@@ -30,7 +35,8 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
 
         string stageName = stageType.GetName();
 
-        if (stageNew != stageOld) {
+        if (stageNew != stageOld)
+        {
             str = "LogChangeStageStacks".FormatLang([unit.FormatName(),
                 stageName, stageOld.Format(), stageNew.Format()]);
             str2 = unit.GetStageStatString(stageType, stageNew);
@@ -40,20 +46,29 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
 
         // Refresh turns
         int turnsOld = unit.GetStageTurns(stageType);
-        if (((stageOld >= 0) && (stacksMod >= 0)) || ((stageOld <= 0) && (stacksMod <= 0) && (turnsMod > turnsOld))) {
+        if (((stageOld >= 0) && (stacksMod >= 0)) || ((stageOld <= 0) && (stacksMod <= 0) && (turnsMod > turnsOld)))
+        {
             unit.SetStageTurns(stageType, turnsMod);
-            if (stageNew != stageOld) {
+            if (stageNew != stageOld)
+            {
                 msg.Add(str + "LogTurnsNameless".FormatLang([ThemeColor.Imp.Str + turnsOld,
                     ThemeColor.Imp.Str + turnsMod]) + str2);
-            } else {
+            }
+            else
+            {
                 msg.Add("LogChangeStageTurns".FormatLang([unit.FormatName(), stageName,
                     ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]));
             }
-        } else if (stageNew != stageOld) {
+        }
+        else if (stageNew != stageOld)
+        {
             msg.Add(str + str2);
         }
 
-        if (msg.Count > 0) LogLib.Add(msg);
+        if (msg.Count > 0)
+        {
+            LogLib.Add(msg);
+        }
 
         return ResultType.PseudoSuccess;
     }

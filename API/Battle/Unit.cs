@@ -13,13 +13,14 @@ using MonoGame.Extended.Collections;
 
 namespace API.Battle;
 
-public sealed class Unit {
+public sealed class Unit
+{
     #region Fields
 
     public UnitType UnitType { get; }
     public int Lvl { get; }
-    public int Hp { get; set; }
-    public int Sp { get; set; } = 200;
+    public int Hp;
+    public int Sp = 200;
 
     /// <summary>
     /// Position on the battlefield.
@@ -28,23 +29,23 @@ public sealed class Unit {
     /// 2 6 /
     /// 3 7
     /// </summary>
-    public int Pos { get; set; }
+    public int Pos;
 
     /// <summary>
     /// If there's more than 1 Unit with this UnitType in the current battle, disambiguates which one this is.
     /// 0 = There are no duplicates
     /// </summary>
-    public int DupeIndex { get; set; } = 0;
+    public int DupeIndex = 0;
 
     /// <summary>
     /// Shield is hit before HP, and Defend before Shield. Together they cannot exceed max HP
     /// </summary>
-    public int Shield { get; set; } = 0;
+    public int Shield = 0;
 
     /// <summary>
     /// Shield is hit before HP, and Defend before Shield. Together they cannot exceed max HP
     /// </summary>
-    public int Defend { get; set; } = 0;
+    public int Defend = 0;
 
     public List<SkillInstance> SkillInstances { get; }
     public List<BuffInstance> BuffInstances { get; } = [];
@@ -68,20 +69,23 @@ public sealed class Unit {
     /// <summary>
     /// Equipped item (Accessory or Weapon)
     /// </summary>
-    public IEquippable? Equipped {
+    public IEquippable? Equipped
+    {
         get;
-        set {
+        set
+        {
             field?.Unequip(this);
             field = value;
             field?.Equip(this);
         }
     }
 
-    public int ExtraActions { get; set; } = 0;
+    public int ExtraActions = 0;
 
     #endregion
 
-    public Unit(UnitType unitType, int lvl, IEquippable? equipped, params Skill[] skills) {
+    public Unit(UnitType unitType, int lvl, IEquippable? equipped, params Skill[] skills)
+    {
         this.UnitType = unitType;
         this.Lvl = lvl;
 
@@ -97,79 +101,158 @@ public sealed class Unit {
         this.Equipped?.Equip(this);
     }
 
-    public void AddSkills(params Skill[] skills) {
-        foreach (Skill skill in skills) this.SkillInstances.Add(new SkillInstance(skill));
-    }
-
-    public void RemoveSkills(params Skill[] skills) {
-        foreach (Skill skill in skills) this.SkillInstances.Remove(new SkillInstance(skill));
-    }
-
-    public void AddPassives(params Passive[] passives) {
-        foreach (Passive passive in passives) {
-            this.Passives.Add(passive);
-            foreach (IBuffEffect buffEffect in passive.BuffEffects) buffEffect.OnGive(this, 1);
+    public void AddSkills(params Skill[] skills)
+    {
+        foreach (Skill skill in skills)
+        {
+            this.SkillInstances.Add(new SkillInstance(skill));
         }
     }
 
-    public void RemovePassives(params Passive[] passives) {
-        foreach (Passive passive in passives) {
+    public void RemoveSkills(params Skill[] skills)
+    {
+        foreach (Skill skill in skills)
+        {
+            this.SkillInstances.Remove(new SkillInstance(skill));
+        }
+    }
+
+    public void AddPassives(params Passive[] passives)
+    {
+        foreach (Passive passive in passives)
+        {
+            this.Passives.Add(passive);
+
+            foreach (IBuffEffect buffEffect in passive.BuffEffects)
+            {
+                buffEffect.OnGive(this, 1);
+            }
+        }
+    }
+
+    public void RemovePassives(params Passive[] passives)
+    {
+        foreach (Passive passive in passives)
+        {
             this.Passives.Remove(passive);
-            foreach (IBuffEffect buffEffect in passive.BuffEffects) buffEffect.OnRemove(this, 1);
+
+            foreach (IBuffEffect buffEffect in passive.BuffEffects)
+            {
+                buffEffect.OnRemove(this, 1);
+            }
         }
     }
 
     #region Stats
 
-    public int GetStatWithStage(Stat stat, int stage) {
-        if (stat == Stats.Hp) return this.Hp;
+    public int GetStatWithStage(Stat stat, int stage)
+    {
+        if (stat == Stats.Hp)
+        {
+            return this.Hp;
+        }
 
         return (int) (this._Stats.GetValueOrDefault(stat, 0) *
                (Math.Max(this._StatsMult.GetValueOrDefault(stat, 1000), 100) / 1000f) *
                (1 + (stage / 10 / (stage < 0 ? 2 : 1))));
     }
 
-    public int GetStat(Stat stat) => this.GetStatWithStage(stat, this.GetStage(stat.StageType));
-    public int GetBaseStat(Stat stat) => this._Stats.GetValueOrDefault(stat, 0);
+    public int GetStat(Stat stat)
+    {
+        return this.GetStatWithStage(stat, this.GetStage(stat.StageType));
+    }
 
-    public int GetStatMult(Stat stat) => this._StatsMult.GetValueOrDefault(stat, 1000);
-    public void SetStatMult(Stat stat, int set) => this._StatsMult[stat] = set;
+    public int GetBaseStat(Stat stat)
+    {
+        return this._Stats.GetValueOrDefault(stat, 0);
+    }
+
+    public int GetStatMult(Stat stat)
+    {
+        return this._StatsMult.GetValueOrDefault(stat, 1000);
+    }
+
+    public void SetStatMult(Stat stat, int set)
+    {
+        this._StatsMult[stat] = set;
+    }
 
     #endregion
 
     #region Affinities
 
-    public int GetAffinity(Element element) => this._Affinities.GetValueOrDefault(element, 0);
-    public void SetAffinity(Element element, int set) => this._Affinities[element] = set;
-    public bool IsWeakTo(Element element) => this._Affinities.GetValueOrDefault(element, 0) < 0;
-    public bool Resists(Element element) => this._Affinities.GetValueOrDefault(element, 0) > 0;
-    public bool IsImmuneTo(Element element) => this._Affinities.GetValueOrDefault(element, 0) >= 5;
-    public bool IsNeutralTo(Element element) => this._Affinities.GetValueOrDefault(element, 0) == 0;
+    public int GetAffinity(Element element)
+    {
+        return this._Affinities.GetValueOrDefault(element, 0);
+    }
+
+    public void SetAffinity(Element element, int set)
+    {
+        this._Affinities[element] = set;
+    }
+
+    public bool IsWeakTo(Element element)
+    {
+        return this._Affinities.GetValueOrDefault(element, 0) < 0;
+    }
+
+    public bool Resists(Element element)
+    {
+        return this._Affinities.GetValueOrDefault(element, 0) > 0;
+    }
+
+    public bool IsImmuneTo(Element element)
+    {
+        return this._Affinities.GetValueOrDefault(element, 0) >= 5;
+    }
+
+    public bool IsNeutralTo(Element element)
+    {
+        return this._Affinities.GetValueOrDefault(element, 0) == 0;
+    }
 
     private static readonly int[] _CoreDmgDealt = [300, 500, 650, 800, 900, 1000, 1100, 1200, 1350, 1500, 1700];
-    public int GetElementDmgDealt(Element element) =>
-        _Extrapolate(this.GetAffinity(element), _CoreDmgDealt, 200, -200);
+    public int GetElementDmgDealt(Element element)
+    {
+        return _Extrapolate(this.GetAffinity(element), _CoreDmgDealt, 200, -200);
+    }
 
     private static readonly int[] _CoreDmgTaken = [2500, 2000, 1700, 1400, 1200, 1000, 900, 800, 650, 500, 0];
-    public int GetElementDmgTaken(Element element) =>
-        _Extrapolate(this.GetAffinity(element), _CoreDmgTaken, 0, 500);
+    public int GetElementDmgTaken(Element element)
+    {
+        return _Extrapolate(this.GetAffinity(element), _CoreDmgTaken, 0, 500);
+    }
 
     private static readonly int[] _CoreSpCost = [1700, 1500, 1300, 1200, 1100, 1000, 950, 900, 850, 800, 750];
-    public int GetElementSpCost(Element element) =>
-            _Extrapolate(this.GetAffinity(element), _CoreSpCost, -50, 200);
+    public int GetElementSpCost(Element element)
+    {
+        return _Extrapolate(this.GetAffinity(element), _CoreSpCost, -50, 200);
+    }
 
-    private static int _Extrapolate(int i, int[] core, int stepUp, int stepDown) {
+    private static int _Extrapolate(int i, int[] core, int stepUp, int stepDown)
+    {
         // Real index
         int index = i + 5;
 
         int value;
 
         // In bounds
-        if (index >= 0 && index < core.Length) value = core[index];
+        if (index >= 0 && index < core.Length)
+        {
+            value = core[index];
+        }
+
         // Above bounds
-        else if (i >= core.Length) value = core[^1] + ((stepUp * index) - (core.Length - 1));
+        else if (i >= core.Length)
+        {
+            value = core[^1] + ((stepUp * index) - (core.Length - 1));
+        }
+
         // Below bounds
-        else value = core[0] + (stepDown * Math.Abs(index));
+        else
+        {
+            value = core[0] + (stepDown * Math.Abs(index));
+        }
 
         // Max to 0
         return Math.Max(value, 0);
@@ -178,15 +261,18 @@ public sealed class Unit {
 
     /// <param name="current">Whether to compare to base</param>
     /// <returns>Affinities of this formatted readably</returns>
-    public string GetAffinitiesString(bool current) {
+    public string GetAffinitiesString(bool current)
+    {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
         StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ");
-        foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible)) {
+        foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible))
+        {
             sb.Append(element.Icon).Append(' ')
                 .Append(affs.GetValueOrDefault(element, 0).Format());
 
-            if (current) {
+            if (current)
+            {
                 sb.Append(ThemeColor.White.Str).Append("//")
                     .Append(this.UnitType._Affinities.GetValueOrDefault(element, 0).Format());
             }
@@ -201,24 +287,43 @@ public sealed class Unit {
 
     #region Stages
 
-    public int GetStage(StageType? stageType) {
-        if (stageType is null) return 0;
+    public int GetStage(StageType? stageType)
+    {
+        if (stageType is null)
+        {
+            return 0;
+        }
+
         return this._Stages.GetValueOrDefault(stageType, 0);
     }
-    public void SetStage(StageType stageType, int set) => this._Stages[stageType] = set;
+    public void SetStage(StageType stageType, int set)
+    {
+        this._Stages[stageType] = set;
+    }
 
-    public int GetStageTurns(StageType stageType) => this._StageTurns.GetValueOrDefault(stageType, 0);
-    public void SetStageTurns(StageType stageType, int set) => this._StageTurns[stageType] = set;
+    public int GetStageTurns(StageType stageType)
+    {
+        return this._StageTurns.GetValueOrDefault(stageType, 0);
+    }
 
-    public string GetTurnsStacksFormatted(StageType stageType) =>
-        $"{this.GetStage(stageType).Format()}({this.GetStageTurns(stageType)})";
+    public void SetStageTurns(StageType stageType, int set)
+    {
+        this._StageTurns[stageType] = set;
+    }
 
-    public string GetStageStatString(StageType stageType, int stageNew) {
+    public string GetTurnsStacksFormatted(StageType stageType)
+    {
+        return $"{this.GetStage(stageType).Format()}({this.GetStageTurns(stageType)})";
+    }
+
+    public string GetStageStatString(StageType stageType, int stageNew)
+    {
         StringBuilder builder = new();
         builder.Append(ThemeColor.White.Str).Append(" (");
         int statCount = stageType.Stats.Length;
 
-        for (int i = 0; i < statCount; i++) {
+        for (int i = 0; i < statCount; i++)
+        {
             Stat stat = stageType.Stats[i];
             int statDefault = this._Stats[stat];
             int statOld = this.GetStat(stat);
@@ -239,13 +344,26 @@ public sealed class Unit {
 
     #region Mults
 
-    public float GetMult(Mult mult) => this._Mults.GetValueOrDefault(mult, 1000) / 1000f;
-    public int GetRawMult(Mult mult) => this._Mults.GetValueOrDefault(mult, 1000);
-    public void SetMult(Mult mult, int set) => this._Mults[mult] = set; // todo ensure these dont crash
+    public float GetMult(Mult mult)
+    {
+        return this._Mults.GetValueOrDefault(mult, 1000) / 1000f;
+    }
 
-    public string GetMultsString() {
+    public int GetRawMult(Mult mult)
+    {
+        return this._Mults.GetValueOrDefault(mult, 1000);
+    }
+
+    public void SetMult(Mult mult, int set)
+    {
+        this._Mults[mult] = set; // todo ensure these dont crash
+    }
+
+    public string GetMultsString()
+    {
         StringBuilder str = new();
-        foreach (Mult mult in Registry.Of<Mult>()) {
+        foreach (Mult mult in Registry.Of<Mult>())
+        {
             int curMult = this._Mults[mult];
             str.Append(mult.Format(curMult)).Append('\n');
         }
@@ -257,16 +375,26 @@ public sealed class Unit {
 
     #region BoolStats
 
-    public int GetBoolStat(BoolStat boolStat) => this._BoolStats.GetValueOrDefault(boolStat, 1000);
-    public void SetBoolStat(BoolStat boolStat, int set) => this._BoolStats[boolStat] = set;
+    public int GetBoolStat(BoolStat boolStat)
+    {
+        return this._BoolStats.GetValueOrDefault(boolStat, 1000);
+    }
 
-    public bool IsBoolStat(BoolStat boolStat) {
-        if (boolStat == BoolStats.EquipDisabled) {
+    public void SetBoolStat(BoolStat boolStat, int set)
+    {
+        this._BoolStats[boolStat] = set;
+    }
+
+    public bool IsBoolStat(BoolStat boolStat)
+    {
+        if (boolStat == BoolStats.EquipDisabled)
+        {
             return (this._BoolStats.GetValueOrDefault(BoolStats.EquipDisabled, 0) > 0) &&
                    (this._BoolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0) <= 0);
         }
 
-        if (boolStat == BoolStats.UnableToAct) {
+        if (boolStat == BoolStats.UnableToAct)
+        {
             return (this._BoolStats.GetValueOrDefault(BoolStats.UnableToAct, 0) > 0) &&
                    (this._BoolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0) <= 0);
         }
@@ -274,23 +402,34 @@ public sealed class Unit {
         return this._BoolStats.GetValueOrDefault(boolStat, 0) > 0;
     }
 
-    public bool IsImmuneToBoolStat(BoolStat boolStat) =>
-        ((boolStat == BoolStats.UnableToAct) &&
+    public bool IsImmuneToBoolStat(BoolStat boolStat)
+    {
+        return ((boolStat == BoolStats.UnableToAct) &&
         (this._BoolStats.GetValueOrDefault(BoolStats.UnableToActImmunity, 0) > 0)) ||
         ((boolStat == BoolStats.EquipDisabled) &&
         (this._BoolStats.GetValueOrDefault(BoolStats.EquipDisabledImmunity, 0) > 0));
+    }
 
-    public string GetOtherStatsString() {
+    public string GetOtherStatsString()
+    {
         StringBuilder str = new();
-        foreach (BoolStat stat in Registry.Of<BoolStat>()) {
-            if (stat.IsVisible) str.Append(this.GetBoolStatString(stat)).Append('\n');
+        foreach (BoolStat stat in Registry.Of<BoolStat>())
+        {
+            if (stat.IsVisible)
+            {
+                str.Append(this.GetBoolStatString(stat)).Append('\n');
+            }
         }
 
         return str.Append(this.ExtraActions.Format()).ToString();
     }
 
-    public string GetBoolStatString(BoolStat stat) {
-        if (this.IsImmuneToBoolStat(stat)) return ThemeColor.Pos + "Immune".GetLang();
+    public string GetBoolStatString(BoolStat stat)
+    {
+        if (this.IsImmuneToBoolStat(stat))
+        {
+            return ThemeColor.Pos + "Immune".GetLang();
+        }
 
         return (stat.IsPositive ? ThemeColor.Pos : ThemeColor.Neg) +
             (this.IsBoolStat(stat) ? "Yes".GetLang() : "No".GetLang());
@@ -300,30 +439,47 @@ public sealed class Unit {
 
     #region StatMods
 
-    public int GetStatMod(StatMod statMod) => this._StatMods.GetValueOrDefault(statMod, 0);
-    public void SetStatMod(StatMod statMod, int set) => this._StatMods[statMod] = set;
+    public int GetStatMod(StatMod statMod)
+    {
+        return this._StatMods.GetValueOrDefault(statMod, 0);
+    }
 
-    public int GetDurationModBuffTypeDealt(BuffType buffType) =>
-        this._StatMods.GetValueOrDefault(
+    public void SetStatMod(StatMod statMod, int set)
+    {
+        this._StatMods[statMod] = set;
+    }
+
+    public int GetDurationModBuffTypeDealt(BuffType buffType)
+    {
+        return this._StatMods.GetValueOrDefault(
             buffType == BuffType.Buff ? StatMods.DurationBuffDealt : StatMods.DurationDebuffDealt,
             0);
+    }
 
-    public int GetDurationModBuffTypeTaken(BuffType buffType) =>
-        this._StatMods.GetValueOrDefault(
+    public int GetDurationModBuffTypeTaken(BuffType buffType)
+    {
+        return this._StatMods.GetValueOrDefault(
             buffType == BuffType.Buff ? StatMods.DurationBuffTaken : StatMods.DurationDebuffTaken,
             0);
+    }
 
-    public int GetStacksModBuffTypeDealt(BuffType buffType) =>
-        this._StatMods.GetValueOrDefault(
+    public int GetStacksModBuffTypeDealt(BuffType buffType)
+    {
+        return this._StatMods.GetValueOrDefault(
             buffType == BuffType.Buff ? StatMods.StacksBuffDealt : StatMods.StacksDebuffDealt, 0);
+    }
 
-    public int GetStacksModBuffTypeTaken(BuffType buffType) =>
-        this._StatMods.GetValueOrDefault(
+    public int GetStacksModBuffTypeTaken(BuffType buffType)
+    {
+        return this._StatMods.GetValueOrDefault(
             buffType == BuffType.Buff ? StatMods.StacksBuffTaken : StatMods.StacksDebuffTaken, 0);
+    }
 
-    public string GetStatModsString() {
+    public string GetStatModsString()
+    {
         StringBuilder str = new();
-        foreach (StatMod mod in Registry.Of<StatMod>()) {
+        foreach (StatMod mod in Registry.Of<StatMod>())
+        {
             str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
         }
 
@@ -334,98 +490,138 @@ public sealed class Unit {
 
     #region BuffEffects
 
-    private void _NotifyBuffEffects(Unit target, Action<IBuffEffect, Unit, Unit, int> notifier) {
+    private void _NotifyBuffEffects(Unit target, Action<IBuffEffect, Unit, Unit, int> notifier)
+    {
         // Handle Passives
-        foreach (Passive passive in this.Passives) {
-            foreach (IBuffEffect buffEffect in passive.BuffEffects) {
+        foreach (Passive passive in this.Passives)
+        {
+            foreach (IBuffEffect buffEffect in passive.BuffEffects)
+            {
                 notifier(buffEffect, this, target, 1);
             }
         }
 
         // Handle Buffs
-        foreach (BuffInstance buffInstance in this.BuffInstances) {
-            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
+        foreach (BuffInstance buffInstance in this.BuffInstances)
+        {
+            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+            {
                 notifier(buffEffect, this, target, buffInstance.Stacks);
             }
         }
     }
 
-    public void OnUseSkill(Unit target, Skill skill) =>
+    public void OnUseSkill(Unit target, Skill skill)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnUseSkill(s, t, stacks, skill));
+    }
 
-    public void OnTargetedBySkill(Unit target, Skill skill) =>
+    public void OnTargetedBySkill(Unit target, Skill skill)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnTargetedBySkill(s, t, stacks, skill));
+    }
 
-    public void OnDealDamage(Unit target, int damage, Element element) =>
+    public void OnDealDamage(Unit target, int damage, Element element)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnDealDamage(s, t, stacks, damage, element));
+    }
 
-    public void OnTakeDamage(Unit target, int damage, Element? element = null) =>
+    public void OnTakeDamage(Unit target, int damage, Element? element = null)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnTakeDamage(s, t, stacks, damage, element));
+    }
 
-    public void OnDealHeal(Unit target, int heal, int overheal) =>
+    public void OnDealHeal(Unit target, int heal, int overheal)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnDealHeal(s, t, stacks, heal, overheal));
+    }
 
-    public void OnTakeHeal(Unit target, int heal, int overheal) =>
+    public void OnTakeHeal(Unit target, int heal, int overheal)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnTakeHeal(s, t, stacks, heal, overheal));
+    }
 
-    public void OnDealShield(Unit target, int turns, int heal) =>
+    public void OnDealShield(Unit target, int turns, int heal)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnDealShield(s, t, stacks, turns, heal));
+    }
 
-    public void OnTakeShield(Unit target, int turns, int heal) =>
+    public void OnTakeShield(Unit target, int turns, int heal)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnTakeShield(s, t, stacks, turns, heal));
+    }
 
-    public void OnGiveBuff(Unit target, Buff buff, int turns, int stacksChange) =>
+    public void OnGiveBuff(Unit target, Buff buff, int turns, int stacksChange)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnGiveBuff(s, t, stacks, buff, turns, stacksChange));
+    }
 
-    public void OnChangeStage(Unit target, StageType stageType, int turns, int stacksChange) =>
+    public void OnChangeStage(Unit target, StageType stageType, int turns, int stacksChange)
+    {
         this._NotifyBuffEffects(target, (effect, s, t, stacks) =>
             effect.OnChangeStage(s, t, stacks, stageType, turns, stacksChange));
+    }
 
-    public Side GetSide() => this.Pos < PosLib.LowestOpp ? Side.Ally : Side.Opponent;
+    public Side GetSide()
+    {
+        return this.Pos < PosLib.LowestOpp ? Side.Ally : Side.Opponent;
+    }
 
     #endregion
 
     #region Misc
 
     // todo weapon
-    public string GetEquipString() =>
-        $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.White.Str} {(this.Equipped as INameable)?.GetName() ??
+    public string GetEquipString()
+    {
+        return $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.White.Str} {(this.Equipped as INameable)?.GetName() ??
             "None".GetLang()}";
+    }
 
-    public void DecrementTurns() {
+    public void DecrementTurns()
+    {
         // Stages
-        foreach (StageType stageType in Registry.Of<StageType>()) {
+        foreach (StageType stageType in Registry.Of<StageType>())
+        {
             int stage = this.GetStage(stageType);
-            if (stage != 0 && --this._StageTurns[stageType] == 0) {
+
+            if (stage != 0 && --this._StageTurns[stageType] == 0)
+            {
                 LogLib.Add("LogLoseStage".IcuFormatLang([this.FormatName(false),
                     stage, stage.Format(), StageTypes.Atk.GetName(),
                     this.GetStageStatString(StageTypes.Atk, 0)]));
+
                 this.SetStage(stageType, 0);
             }
         }
 
         // Buffs; iterate backwards so they can be removed
-        for (int i = this.BuffInstances.Count - 1; i >= 0; i--) {
+        for (int i = this.BuffInstances.Count - 1; i >= 0; i--)
+        {
             BuffInstance buffInstance = this.BuffInstances[i];
             int turns = buffInstance.Turns;
 
-            if (turns is >= 2 and < BuffInstance.InfiniteTurns) {
+            if (turns is >= 2 and < BuffInstance.InfiniteTurns)
+            {
                 buffInstance.Turns = turns - 1;
-            } else {
+            }
+            else
+            {
                 LogLib.Add("LogLoseBuff".IcuFormatLang([this.FormatName(false),
                     buffInstance.Buff.MaxStacks, ThemeColor.Imp + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks]));
 
-                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
+                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+                {
                     buffEffect.OnRemove(this, buffInstance.Stacks);
                 }
 
@@ -434,12 +630,17 @@ public sealed class Unit {
         }
 
         // Skill cooldowns
-        foreach (SkillInstance skillInstance in this.SkillInstances) {
-            if (skillInstance.Cooldown > 0) skillInstance.Cooldown--;
+        foreach (SkillInstance skillInstance in this.SkillInstances)
+        {
+            if (skillInstance.Cooldown > 0)
+            {
+                skillInstance.Cooldown--;
+            }
         }
     }
 
-    public Result Damage(int dmg, bool pierce = false, bool useName = true) {
+    public Result Damage(int dmg, bool pierce = false, bool useName = true)
+    {
         int dmgFull = dmg;
         int defendOld = this.Defend;
         List<string> msg = [];
@@ -447,16 +648,20 @@ public sealed class Unit {
         string name = "";
         string nameS = "";
 
-        if (useName) {
+        if (useName)
+        {
             name = $"{this.FormatName(false)} ";
             nameS = $"{this.FormatName()} ";
         }
 
         // Pierce skips Defend and Shield
-        if (!pierce) {
-            if ((this.Defend > 0) && (dmg > 0)) {
+        if (!pierce)
+        {
+            if ((this.Defend > 0) && (dmg > 0))
+            {
                 // Only hit Defend
-                if (this.Defend > dmg) {
+                if (this.Defend > dmg)
+                {
                     this.Defend -= dmg;
                     return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang([nameS,
                         (defendOld + this.Shield).Format(ThemeColor.Shield),
@@ -469,14 +674,17 @@ public sealed class Unit {
                 this.Defend = 0;
 
                 // todo this should come after the dmg message; is this needed now that shield is a buff
-                if ((this.Shield == 0) && (this.GetBoolStat(BoolStats.EffectBlock) <= 0)) {
+                if ((this.Shield == 0) && (this.GetBoolStat(BoolStats.EffectBlock) <= 0))
+                {
                     msg.Add("LogChangeBooleanStatEffectBlock".FormatLang([name, 0]));
                 }
             }
 
-            if ((this.Shield > 0) && (dmg > 0)) {
+            if ((this.Shield > 0) && (dmg > 0))
+            {
                 // Only hit Shield
-                if (this.Shield > dmg) {
+                if (this.Shield > dmg)
+                {
                     int shieldOld = this.Shield;
                     this.Shield -= dmg;
                     return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang([
@@ -488,9 +696,12 @@ public sealed class Unit {
                 msg.Add("LogChangeShield".FormatLang([nameS, (defendOld + this.Shield).Format(ThemeColor.Shield),
                     ThemeColor.Shield + 0, this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp),
                     (-(defendOld + this.Shield)).Format()]));
+
                 dmg -= this.Shield;
                 this.Shield = 0;
-                if (this.GetBoolStat(BoolStats.EffectBlock) <= 0) {
+
+                if (this.GetBoolStat(BoolStats.EffectBlock) <= 0)
+                {
                     // todo is this needed
                     msg.Add("LogChangeBooleanStatEffectBlock".FormatLang([name, 0]));
                 }
@@ -500,12 +711,14 @@ public sealed class Unit {
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
+
         msg.Add("LogChangeHp".FormatLang([nameS, hpOld.Format(ThemeColor.Hp, false),
             hpNew.Format(ThemeColor.Hp, false),
             this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()]));
 
         // todo should this be a separate result from hitting shield
-        if (this.GetBoolStat(BoolStats.EffectBlock) > 0) {
+        if (this.GetBoolStat(BoolStats.EffectBlock) > 0)
+        {
             return new Result(ResultType.HitEffectBlock, msg);
         }
 
@@ -515,7 +728,8 @@ public sealed class Unit {
     }
 
     // todo support other langs (+ nicknames?)
-    public string FormatName(bool possessive = true) {
+    public string FormatName(bool possessive = true)
+    {
         string name = this.UnitType.GetName(
             // Color
             this.GetSide() == Side.Ally ? ThemeColor.Ally : ThemeColor.Opp) +
@@ -524,9 +738,9 @@ public sealed class Unit {
 
         string suffix = "";
 
-        if (possessive) {
-            if (name.ToUpperInvariant().EndsWith('S')) suffix = "'";
-            else suffix = "'s";
+        if (possessive)
+        {
+            suffix = name.ToUpperInvariant().EndsWith('S') ? "'" : "'s";
         }
 
         return name + suffix + ThemeColor.White.Str;

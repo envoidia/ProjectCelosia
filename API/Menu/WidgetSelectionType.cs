@@ -6,7 +6,8 @@ namespace API.Menu;
 /// <summary>
 /// The directions that an <c>IWidget</c> would like to use for input
 /// </summary>
-public enum SelectionType {
+public enum SelectionType
+{
     /// <summary>
     /// No navigation
     /// </summary>
@@ -30,28 +31,44 @@ public enum SelectionType {
     /// <summary>
     /// PageL/PageR
     /// </summary>
-    Page
+    Page,
+
+    /// <summary>
+    /// Almost all keys on KB, L/R/U/D on controller
+    /// </summary>
+    TextInput
 }
 
-// todo account for none
-public static class SelectionTypeExtensions {
-    extension(SelectionType @this) {
-        public Keybind? GetInc() => @this switch {
-            SelectionType.Horiz => Keybinds.Right,
-            SelectionType.Vert => Keybinds.Down,
-            SelectionType.HorizVert => Keybinds.RightDown,
-            SelectionType.Page => Keybinds.PageR,
-            SelectionType.None => null,
-            _ => throw new ClosedEnumsWhenException()
-        };
+public static class SelectionTypeExtensions
+{
+    extension(SelectionType @this)
+    {
+        /// <returns><c>Keybind</c> to increase this' index by 1</returns>
+        public Keybind? GetInc()
+        {
+            return @this switch
+            {
+                SelectionType.Horiz => Keybinds.Right,
+                SelectionType.Vert => Keybinds.Down,
+                SelectionType.HorizVert => Keybinds.RightDown,
+                SelectionType.Page => Keybinds.PageR,
+                SelectionType.None or SelectionType.TextInput => null,
+                _ => throw new ClosedEnumsWhenException()
+            };
+        }
 
-        public Keybind? GetDec() => @this switch {
-            SelectionType.Horiz => Keybinds.Left,
-            SelectionType.Vert => Keybinds.Up,
-            SelectionType.HorizVert => Keybinds.LeftUp,
-            SelectionType.Page => Keybinds.PageL,
-            SelectionType.None => null,
-            _ => throw new ClosedEnumsWhenException()
-        };
+        /// <returns><c>Keybind</c> to decrease this' index by 1</returns>
+        public Keybind? GetDec()
+        {
+            return @this switch
+            {
+                SelectionType.Horiz => Keybinds.Left,
+                SelectionType.Vert => Keybinds.Up,
+                SelectionType.HorizVert => Keybinds.LeftUp,
+                SelectionType.Page => Keybinds.PageL,
+                SelectionType.None or SelectionType.TextInput => null,
+                _ => throw new ClosedEnumsWhenException()
+            };
+        }
     }
 }

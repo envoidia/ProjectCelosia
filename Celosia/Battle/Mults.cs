@@ -3,7 +3,8 @@ using API.Battle;
 
 namespace Celosia.Battle;
 
-public static class Mults {
+public static class Mults
+{
     public static readonly Mult IgnisDmgDealt = new(Core.BaseModId, "MultIgnisDmgDealt", true);
     public static readonly Mult IgnisDmgTaken = new(Core.BaseModId, "MultIgnisDmgTaken", false);
     public static readonly Mult GlaciesDmgDealt = new(Core.BaseModId, "MultGlaciesDmgDealt", true);

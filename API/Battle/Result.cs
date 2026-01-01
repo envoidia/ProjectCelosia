@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 namespace API.Battle;
 
-public enum ResultType {
+public enum ResultType
+{
     Fail,
     HitEffectBlock,
     Success,

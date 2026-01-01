@@ -13,14 +13,21 @@ namespace API.Menu;
     - max height (creates scrollbar)
     - maybe make every option an IComponent and make them hold Labels?
 */
-public class ListWidget : ILayoutWidget, IInputWidget, IActor {
+public class ListWidget : ILayoutWidget, IInputWidget, IActor
+{
     public List<Label> Labels { get; private set; } = null!;
 
-    public Padding ItemPadding {
+    public Padding ItemPadding
+    {
         get;
-        init {
+        init
+        {
             field = value;
-            foreach (Label l in this.Labels) l.Padding = value;
+
+            foreach (Label l in this.Labels)
+            {
+                l.Padding = value;
+            }
         }
     } = new(30, 20);
 
@@ -31,18 +38,17 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
 
     public int Index { get; set; } = 0;
 
-    public int OptCount {
+    public int OptCount
+    {
         get;
-        protected set {
+        protected set
+        {
             field = value;
             this.Index = Math.Clamp(this.Index, 0, Math.Max(value - 1, 0));
         }
     }
 
-    /// <summary>
-    /// Invoked when <c>Index</c> changes
-    /// </summary>
-    public Action<int>? OnSelect { get; set; }
+    public Action<int>? OnChangeIndex { get; set; }
 
     /// <summary>
     /// Animation progress per-item
@@ -52,53 +58,75 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
     public ActorData Data { get; private set; } = null!;
 
     /// <inheritdoc cref="ActorData.AnimFromDir" />
-    public Dir AnimFromDir {
+    public Dir AnimFromDir
+    {
         get => this.Data.AnimFromDir;
-        set {
+        set
+        {
             this.Data.AnimFromDir = value;
-            foreach (Label l in this.Labels) l.AnimFromDir = value;
+
+            foreach (Label l in this.Labels)
+            {
+                l.AnimFromDir = value;
+            }
         }
     }
 
     public ListWidget(Vector2 pos, int capacity) => this._Setup(pos, capacity);
 
-    public ListWidget(Vector2 pos, params string[] optionText) {
+    public ListWidget(Vector2 pos, params string[] optionText)
+    {
         this._Setup(pos, optionText.Length);
-        for (int i = 0; i < this.Labels.Count; i++) this.Labels[i].Text = optionText[i];
+
+        for (int i = 0; i < this.Labels.Count; i++)
+        {
+            this.Labels[i].Text = optionText[i];
+        }
+
         this.CalcLayout();
     }
 
-    protected virtual void _Setup(Vector2 pos, int capacity) {
+    protected virtual void _Setup(Vector2 pos, int capacity)
+    {
         this.Data = new ActorData(this, RenderPriority.B2Med);
 
         this.Position = pos;
         this.Size = Point.Zero;
 
         this.Labels = new List<Label>(capacity);
-        for (int i = 0; i < capacity; i++) this.Labels.Add(new Label());
+
+        for (int i = 0; i < capacity; i++)
+        {
+            this.Labels.Add(new Label());
+        }
 
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
         this.OptCount = capacity;
     }
 
-    public void SetText(params string[] optionText) {
+    public void SetText(params string[] optionText)
+    {
         int i = 0;
-        for (; i < optionText.Length && i < this.Labels.Count; i++) {
+        for (; i < optionText.Length && i < this.Labels.Count; i++)
+        {
             this.Labels[i].IsVisible = true;
             this.Labels[i].Padding = this.ItemPadding;
             this.Labels[i].Text = optionText[i];
         }
 
         // New list shorter, blank out remaining Labels and progs
-        for (; i < this.Labels.Count; i++) {
+        for (; i < this.Labels.Count; i++)
+        {
             this.Labels[i].IsVisible = false;
             this.Labels[i].Padding = Padding.Zero;
             this.Progs[i] = new();
         }
 
         // New list longer, add more Labels and progs
-        for (; i < optionText.Length; i++) {
-            this.Labels.Add(new Label() {
+        for (; i < optionText.Length; i++)
+        {
+            this.Labels.Add(new Label()
+            {
                 Text = optionText[i],
                 Padding = this.ItemPadding
             });
@@ -111,38 +139,58 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
         this.CalcLayout();
     }
 
-    public virtual void CalcLayout() {
+    public virtual void CalcLayout()
+    {
         this.Size = Point.Zero;
 
-        foreach (Label l in this.Labels) {
+        foreach (Label l in this.Labels)
+        {
             this.Height += l.Padding.T;
             l.Position = this.Position + new Vector2(l.Padding.L, this.Height);
             this.Height += l.Height + l.Padding.B;
-            if (l.Width + l.Padding.LR > this.Width) this.Width = l.Width + l.Padding.LR;
+            if (l.Width + l.Padding.LR > this.Width)
+            {
+                this.Width = l.Width + l.Padding.LR;
+            }
         }
 
         this.Origin = this.Data.CalcOrigin();
     }
 
-    public void Input(GameTime gameTime) => this.Index = this.CheckInput();
-
-    public virtual void OnCreate() {
-        foreach (Label l in this.Labels) l.Create();
+    public void Input(GameTime gt)
+    {
+        this.Index = this.CheckInput();
     }
 
-    public virtual void OnDestroy() {
-        foreach (Label l in this.Labels) l.Destroy();
+    public virtual void OnCreate()
+    {
+        foreach (Label l in this.Labels)
+        {
+            l.Create();
+        }
     }
 
-    public virtual void Draw(GameTime gameTime) {
+    public virtual void OnDestroy()
+    {
+        foreach (Label l in this.Labels)
+        {
+            l.Destroy();
+        }
+    }
+
+    public virtual void Draw(GameTime gt)
+    {
         // todo cleanup + move input out of draw + dont have the cursor immediately vanish when optcount goes from n>0 to 0
-        if (this.OptCount != 0) {
+        if (this.OptCount != 0)
+        {
             int h = 0;
-            for (int i = 0; i < this.OptCount; i++) {
-                this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gameTime,
+            for (int i = 0; i < this.OptCount; i++)
+            {
+                this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gt,
                     i == this.Index ? AnimDirs.In : AnimDirs.Out);
 
-                if (this.Progs[i] != 0) {
+                if (this.Progs[i] != 0)
+                {
                     // Cursor
                     RenderLib.DrawParallelogram(new(MathHelper.SmoothStep(this.AnimFrom.X,
                         this.Position.X - this.Padding.L, (float) this.Prog),
@@ -158,14 +206,22 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor {
             }
         }
 
-        foreach (Label l in this.Labels) {
-            l.Data.Act(gameTime);
-            if (DebugUtil.DrawActorOutlines) l.Data.DrawDebug(false);
+        foreach (Label l in this.Labels)
+        {
+            l.Data.Act(gt);
+            if (DebugUtil.DrawActorOutlines)
+            {
+                l.Data.DrawDebug(false);
+            }
         }
 
         // Disabled input overlay
-        if (DebugUtil.DrawActorOutlines) {
-            if (!this.CheckInput) this.Data.DrawBackground(Color.ActorDisabledInput);
+        if (DebugUtil.DrawActorOutlines)
+        {
+            if (!this.CheckInput)
+            {
+                this.Data.DrawBackground(Color.ActorDisabledInput);
+            }
         }
     }
 }

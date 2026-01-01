@@ -8,7 +8,8 @@ namespace API.Battle;
 /// <summary>
 /// todo docs
 /// </summary>
-public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable {
+public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable
+{
     public Dictionary<Element, int> Affinities { get; init; }
     public Skill[] Skills { get; init; } = [];
     public Passive[] Passives { get; init; } = [];
@@ -16,7 +17,8 @@ public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable {
     public string ItemId { get; init; }
 
     public Weapon(string modId, string keyName, string icon, Dictionary<Element, int> affinities, string? itemId = null)
-        : base(keyName, icon, $"{keyName}Desc") {
+        : base(keyName, icon, $"{keyName}Desc")
+    {
         this.Affinities = affinities;
 
         this.ModId = modId;
@@ -25,24 +27,32 @@ public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable {
         Registry.Register(this);
     }
 
-    public override string GetFullDesc() =>
-        "WeaponDesc".FormatLang(this._GetFormattedDescInclusions());
+    public override string GetFullDesc()
+    {
+        return "WeaponDesc".FormatLang(this._GetFormattedDescInclusions());
+    }
 
-    protected override HashSet<IDescribable> _GetDescInclusions() =>
-        IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);
+    protected override HashSet<IDescribable> _GetDescInclusions()
+    {
+        return IEquippable.GetDescInclusions(this.DescInclusions, this.Skills, this.Passives);
+    }
 
-    public void Apply(Unit unit, bool give) {
+    public void Apply(Unit unit, bool give)
+    {
         int multiplier = give.ToSign();
 
         // Merge affinity maps
-        foreach ((Element element, int value) in this.Affinities) {
+        foreach ((Element element, int value) in this.Affinities)
+        {
             unit.SetAffinity(element, unit.GetAffinity(element) + (value * multiplier));
         }
 
-        if (give) {
+        if (give)
+        {
             unit.AddSkills(this.Skills);
             unit.AddPassives(this.Passives);
-        } else {
+        } else
+        {
             unit.RemoveSkills(this.Skills);
             unit.RemovePassives(this.Passives);
         }

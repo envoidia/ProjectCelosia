@@ -3,17 +3,23 @@ using API.Extensions;
 
 namespace API.Input;
 
-public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
+public sealed class InputPrompt(string keyName, params Keybind[] keybinds)
+{
     public MultiInputType multiInputType = MultiInputType.Or;
 
-    public string GetText() {
+    public string GetText()
+    {
         StringBuilder builder = new();
 
-        for (int i = 0; i < keybinds.Length; i++) {
+        for (int i = 0; i < keybinds.Length; i++)
+        {
             builder.Append(keybinds[i].GetCurrentGlyph());
 
             // Divider
-            if (i != keybinds.Length - 1) builder.Append(this.multiInputType == MultiInputType.Or ? "//" : '+');
+            if (i != keybinds.Length - 1)
+            {
+                builder.Append(this.multiInputType == MultiInputType.Or ? "//" : '+');
+            }
         }
 
         return builder.Append(' ').Append(keyName.GetLang()).ToString();
@@ -23,7 +29,8 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds) {
 // Possible inputs not noted by any InputPrompt:
 // - Debug hotkeys (once you find F1, the rest are listed from there)
 // - If the keys are available, you can use L/R in U/D menus, and vice-versa
-public static class InputPrompts {
+public static class InputPrompts
+{
     public static readonly InputPrompt Confirm = new("InputConfirm", Keybinds.Confirm);
     public static readonly InputPrompt ConfirmInspect = new("InputConfirm", Keybinds.Confirm, Keybinds.Menu2);
     public static readonly InputPrompt Back = new("InputBack", Keybinds.Back);
@@ -38,7 +45,8 @@ public static class InputPrompts {
 
     public static readonly InputPrompt Log = new("InputLog", Keybinds.Menu1);
     public static readonly InputPrompt Inspect = new("InputInspect", Keybinds.Menu2);
-    public static readonly InputPrompt InspectHere = new("InputInspectHere", Keybinds.Menu2, Keybinds.Hotkey1) {
+    public static readonly InputPrompt InspectHere = new("InputInspectHere", Keybinds.Menu2, Keybinds.Hotkey1)
+    {
         multiInputType = MultiInputType.And
     };
 
@@ -59,7 +67,8 @@ public static class InputPrompts {
     public static readonly InputPrompt InspectPageR = new("Blank", Keybinds.Right);
 }
 
-public enum MultiInputType {
+public enum MultiInputType
+{
     Or,
     And
 }

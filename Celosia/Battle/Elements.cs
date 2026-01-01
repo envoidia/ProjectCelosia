@@ -4,7 +4,8 @@ using API.Graphics;
 
 namespace Celosia.Battle;
 
-public static class Elements {
+public static class Elements
+{
     public static readonly Element Ignis = new(Core.BaseModId, "ElementIgnis",
         $"{ThemeColor.Ignis.Str}/i[fire]", Mults.IgnisDmgDealt, Mults.IgnisDmgTaken);
 

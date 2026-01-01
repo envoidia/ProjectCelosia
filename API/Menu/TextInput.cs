@@ -3,18 +3,20 @@ using System.Linq;
 using System.Text;
 using API.Graphics;
 using API.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace API.Menu;
 
 /// <summary>
-/// Handles single-line text input. Does not add the given label to the <c>Stage</c>
+/// Handles single-line text input
 /// </summary>
-public sealed class TextInput(string dbgName, Label label, Func<bool> onEnter) : Menu(dbgName) {
+public sealed class TextInput : IInputWidget
+{
     /// <summary>
     /// Current text as a <c>StringBuilder</c>
     /// </summary>
-    public StringBuilder Sb { get; } = new();
+    public readonly StringBuilder Sb = new();
 
     /// <summary>
     /// Current text as a <c>string</c>
@@ -24,39 +26,67 @@ public sealed class TextInput(string dbgName, Label label, Func<bool> onEnter) :
     /// <summary>
     /// Text display
     /// </summary>
-    public Label Label => label;
+    public readonly Label Label;
 
     /// <summary>
     /// Current cursor position. 0 = very left
     /// </summary>
-    public int CursorPos { get; set; } = 0;
+    public int CursorPos = 0;
 
     /// <summary>
     /// Invoked when enter is pressed. If it returns true, text is wiped
     /// </summary>
-    public Func<bool> OnEnter => onEnter;
+    public readonly Func<bool> OnEnter;
 
     /// <summary>
     /// Invoked when the text is changed
     /// </summary>
-    public Action? OnChangeText { get; init; }
+    public Action? OnChangeText;
 
     /// <summary>
     /// Whether the text has changed this frame
     /// </summary>
-    public bool Changed { get; set; }
+    public bool Changed;
 
-    public void Input() {
+    public bool CheckInput { get; set; }
+    public int Index { get; set; }
+
+    public int OptCount { get; }
+
+    public Action<int>? OnChangeIndex { get; set; }
+
+    public SelectionType PrefDir => SelectionType.TextInput;
+
+    public SelectionType CurDir { get; set; } = SelectionType.TextInput;
+
+    public TextInput(Label label, Func<bool> onEnter)
+    {
+        this.Label = label;
+        this.Label.RichTextLayout.CalculateGlyphs = true;
+        this.OnEnter = onEnter;
+    }
+
+    public void Input(GameTime gt)
+    {
         Keys[] keys = [.. InputLib.KeyboardState.GetPressedKeys()
             .Except(InputLib.PreviousKeyboardState.GetPressedKeys())];
 
-        if (keys.Length == 0) return;
+        if (keys.Length == 0)
+        {
+            return;
+        }
 
-        foreach (Keys key in keys) {
-            switch (key) {
+        foreach (Keys key in keys)
+        {
+            switch (key)
+            {
                 case Keys.Enter:
-                    if (this.Sb.Length > 0) {
-                        if (this.OnEnter()) this.Clear();
+                    if (this.Sb.Length > 0)
+                    {
+                        if (this.OnEnter())
+                        {
+                            this.Clear();
+                        }
                         return;
                     }
 
@@ -64,7 +94,8 @@ public sealed class TextInput(string dbgName, Label label, Func<bool> onEnter) :
 
 
                 case Keys.Back:
-                    if (this.CursorPos > 0) {
+                    if (this.CursorPos > 0)
+                    {
                         this.Changed = true;
                         this.Sb.Remove(this.CursorPos - 1, 1);
                         this.CursorPos--;
@@ -72,9 +103,24 @@ public sealed class TextInput(string dbgName, Label label, Func<bool> onEnter) :
 
                     break;
 
+                case Keys.Left:
+                    if (this.CursorPos > 0)
+                    {
+                        this.CursorPos--;
+                    }
+                    break;
+
+                case Keys.Right:
+                    if (this.CursorPos < this.Sb.Length - 1)
+                    {
+                        this.CursorPos++;
+                    }
+                    break;
+
                 default:
                     char? ch = key.Type();
-                    if (ch is not null) {
+                    if (ch is not null)
+                    {
                         this.Changed = true;
                         this.Sb.Insert(this.CursorPos, (char) ch);
                         this.CursorPos++;
@@ -84,10 +130,14 @@ public sealed class TextInput(string dbgName, Label label, Func<bool> onEnter) :
             }
         }
 
-        if (this.Changed) this.OnChangeText?.Invoke();
+        if (this.Changed)
+        {
+            this.OnChangeText?.Invoke();
+        }
     }
 
-    public void Clear() {
+    public void Clear()
+    {
         this.Changed = true;
         this.Sb.Clear();
         this.OnChangeText?.Invoke();

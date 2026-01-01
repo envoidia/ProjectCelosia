@@ -5,13 +5,15 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Passive : ComplexDescribable, IRegistrable {
+public sealed class Passive : ComplexDescribable, IRegistrable
+{
     public IBuffEffect[] BuffEffects { get; init; }
 
     public string ItemId { get; init; }
 
     public Passive(string modId, string keyName, string keyDesc, string icon, IBuffEffect[] buffEffects,
-        string? itemId = null) : base($"{modId}:{keyName}", icon, $"{modId}:{keyDesc}") {
+        string? itemId = null) : base($"{modId}:{keyName}", icon, $"{modId}:{keyDesc}")
+    {
         this.BuffEffects = buffEffects;
 
         this.ModId = modId;
@@ -20,7 +22,13 @@ public sealed class Passive : ComplexDescribable, IRegistrable {
         Registry.Register(this);
     }
 
-    public override string GetName() => this.GetName(ThemeColor.Passive);
+    public override string GetName()
+    {
+        return this.GetName(ThemeColor.Passive);
+    }
 
-    public override string GetFullDesc() => "todo";
+    public override string GetFullDesc()
+    {
+        return "todo";
+    }
 }

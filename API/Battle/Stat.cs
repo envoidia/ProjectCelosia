@@ -5,7 +5,8 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class Stat : INameable, IRegistrable {
+public sealed class Stat : INameable, IRegistrable
+{
     public StageType? StageType { get; }
 
     public string KeyName { get; }
@@ -13,7 +14,8 @@ public sealed class Stat : INameable, IRegistrable {
     public string ModId { get; }
     public string ItemId { get; init; }
 
-    public Stat(string modId, string keyName, StageType? stageType, string? itemId = null) {
+    public Stat(string modId, string keyName, StageType? stageType, string? itemId = null)
+    {
         this.StageType = stageType;
 
         this.KeyName = keyName;
@@ -24,13 +26,24 @@ public sealed class Stat : INameable, IRegistrable {
         Registry.Register(this);
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()}";
+    }
 
-    public string GetName(ThemeColor color) => color.Str + this.GetLang();
-    public string GetName() => this.GetName(ThemeColor.Stat);
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.GetLang();
+    }
+
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.Stat);
+    }
 }
 
-public static class Stats {
+public static class Stats
+{
     public static readonly Stat Hp = new(Core.Id, "StatHp", null);
     public static readonly Stat Str = new(Core.Id, "StatStr", StageTypes.Atk);
     public static readonly Stat Mag = new(Core.Id, "StatMag", StageTypes.Atk);

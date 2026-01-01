@@ -32,7 +32,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Spaces between operators (including after casts)
 - Wrap at 120 columns (in some cases, a little over might be fine)
   - Wrap after operators (except ternary operators, the extension operator (`:`), and certain special cases where it looks better)
-- Opening brackets on the same line with 1 preceding space
+- Opening brackets on the next line
 - 1 statement per line
 - 1 line between lines of code that aren't extremely closely related/simple
 - Set `else`/`catch` statements against the closing bracket of the `if`/`try` statement
@@ -47,8 +47,9 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Avoid using `try`/`catch` for control flow
   - When using `throw`, the intention should be that the program crashes, not that the exception is caught
 - Prefer expression-bodied members
-- Prefer computed properties, then auto-properties
+- Prefer readonly fields over computed properties over fields over auto-properties
 - Prefer Array over List
+- Pre-allocate collections when possible. For lists, assert that the size doesn't change
 - Early returns are usually **but not always** better
 - Use the most restrictive possible access modifier, keeping moddability in mind
 - Large functions should be split apart when possible
@@ -60,7 +61,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 
 # Numbers
 - Only use `float` if floating-point values are needed
-- Only use larger types if needed
+- Only use larger or unsigned types if needed
 - Only use smaller types if performance is critical
 - Avoid storing data as floating-point to prevent compounding error. Prefer fixed-point storage and dividing on-site
 

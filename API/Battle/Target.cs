@@ -3,7 +3,8 @@ namespace API.Battle;
 /// <summary>
 /// A single relative target for a <c>Range</c>
 /// </summary>
-public enum Target {
+public enum Target
+{
     Self,
 
     /// <summary>

@@ -16,7 +16,8 @@ namespace API.Menu.State;
 /// <param name="OnGetInputPrompt">Called when this is first reached to update the input prompt <c>Label</c>
 /// in the bottom-right corner. Menus can override this</param>
 // todo should states store List<IActor> and automatically add/remove them
-public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>? OnGetInputPrompt) {
+public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>? OnGetInputPrompt)
+{
     /// <summary>
     /// Called on <c>StateMachine.Add</c>. Do not call elsewhere
     /// </summary>
@@ -34,31 +35,44 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     public List<Menu> Menus { get; init; } = [];
 
     /// <inheritdoc cref="OnCreate" />
-    public void Create() {
+    public void Create()
+    {
         this.OnCreate?.Invoke();
-        if (this.Menus.Count > 0) this.Menus[0].Create();
+
+        if (this.Menus.Count > 0)
+        {
+            this.Menus[0].Create();
+        }
     }
 
     /// <inheritdoc cref="OnDestroy" />
-    public void Destroy() => this.OnDestroy?.Invoke();
+    public void Destroy()
+    {
+        this.OnDestroy?.Invoke();
+    }
 
-    public void Update(GameTime gameTime) {
-        if (this.Menus.Count > 0) {
-            this.Menus[^1].Input(gameTime);
-            this.Menus[^1].Update(gameTime);
+    public void Update(GameTime gt)
+    {
+        if (this.Menus.Count > 0)
+        {
+            this.Menus[^1].Input(gt);
+            this.Menus[^1].Update(gt);
         }
 
-        this.OnUpdate?.Invoke(gameTime);
+        this.OnUpdate?.Invoke(gt);
     }
 
     /// <returns>
     /// Called when this is first reached and on menu change to update the input prompt <c>Label</c> in the bottom-right corner
     /// </returns>
-    public string GetInputPrompt() {
+    public string GetInputPrompt()
+    {
         // Use Menu prompt
-        if (this.Menus.Count > 0) {
+        if (this.Menus.Count > 0)
+        {
             Func<string>? menuPrompt = this.Menus[^1].GetInputPrompt;
-            if (menuPrompt is not null) {
+            if (menuPrompt is not null)
+            {
                 return menuPrompt();
             }
         }
@@ -70,7 +84,8 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// <summary>
     /// Add and initialize a <c>Menu</c>
     /// </summary>
-    public void AddMenu(Menu menu) {
+    public void AddMenu(Menu menu)
+    {
         menu.Create();
         this.Menus.Add(menu);
         StateMachine.UpdateInputPrompt();
@@ -79,21 +94,30 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// <summary>
     /// Remove and deinitialize the current <c>Menu</c>
     /// </summary>
-    public void RemoveMenu() {
+    public void RemoveMenu()
+    {
         this.Menus[^1].Destroy();
         this.Menus.RemoveLast();
         StateMachine.UpdateInputPrompt();
     }
 
-    public string GetMenuString() =>
-        string.Join(", ", [.. this.Menus.Select(static m => m.DbgName)]);
+    public string GetMenuString()
+    {
+        return string.Join(", ", [.. this.Menus.Select(static m => m.DbgName)]);
+    }
 
-    public static string GetInputPromptString(params InputPrompt[] inputPrompts) {
+    public static string GetInputPromptString(params InputPrompt[] inputPrompts)
+    {
         StringBuilder inputs = new();
 
-        for (int i = 0; i < inputPrompts.Length; i++) {
+        for (int i = 0; i < inputPrompts.Length; i++)
+        {
             inputs.Append(inputPrompts[i].GetText());
-            if (i != (inputPrompts.Length - 1)) inputs.Append("  ");
+
+            if (i != (inputPrompts.Length - 1))
+            {
+                inputs.Append("  ");
+            }
         }
 
         return inputs.ToString();

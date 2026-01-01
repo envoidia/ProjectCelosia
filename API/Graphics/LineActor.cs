@@ -7,12 +7,14 @@ namespace API.Graphics;
 /// <summary>
 /// A line with slanted edges. Can only be horizontal or vertical, not arbitrary angles (todo: currently only supports horizontal)
 /// </summary>
-public class LineActor : IActor {
-    // todo public LineDir LineDir { get; set; }
+public class LineActor : IActor
+{
+    // todo public LineDir LineDir;
 
-    public ActorData Data { get; set; }
+    public ActorData Data { get; }
 
-    public LineActor(Vector2 pos, Point size, RenderPriority renderPriority = RenderPriority.B2Med) {
+    public LineActor(Vector2 pos, Point size, RenderPriority renderPriority = RenderPriority.B2Med)
+    {
         this.Data = new(this, renderPriority);
 
         this.Position = pos;
@@ -23,7 +25,8 @@ public class LineActor : IActor {
     public void OnCreate() { }
     public void OnDestroy() { }
 
-    public void Draw(GameTime gameTime) {
+    public void Draw(GameTime gt)
+    {
         Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X, (float) this.Prog), this.Y);
 
         RenderLib.DrawParallelogram(pos, this.Size, this.Origin, Settings.Theme.Fg,

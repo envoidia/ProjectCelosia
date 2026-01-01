@@ -4,16 +4,21 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public static class RenderLib {
+public static class RenderLib
+{
     public const int DefaultSlant = 6;
 
-    public static Progress UpdateProg(Progress prog, float speed, GameTime gameTime, AnimDirs dir) =>
-        prog + (float) (gameTime.ElapsedGameTime.TotalSeconds * (int) dir * speed *
+    public static Progress UpdateProg(Progress prog, float speed, GameTime gt, AnimDirs dir)
+    {
+        return prog + (float) (gt.ElapsedGameTime.TotalSeconds * (int) dir * speed *
             (1 + Convert.ToInt32((int) dir == -1)));
+    }
+
 
     // todo deprecate
     public static void DrawParallelogram(int l, int r, int t, int b, Color color, Color outlineColor,
-        float outlineThickness, int slantL, int slantR, Progress prog) {
+        float outlineThickness, int slantL, int slantR, Progress prog)
+    {
         float height = b - t;
 
         float angLOff = slantL > 0 ? height / slantL : 0;
@@ -28,7 +33,8 @@ public static class RenderLib {
     }
 
     public static void DrawParallelogram(Vector2 pos, Point size, Point origin, Color color, Color outlineColor,
-        float outlineThickness, int slantL, int slantR, Progress prog) {
+        float outlineThickness, int slantL, int slantR, Progress prog)
+    {
 
         pos -= origin.ToVector2();
 

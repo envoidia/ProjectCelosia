@@ -2,7 +2,8 @@ using API.Battle.State;
 
 namespace API.Battle.SkillEffects;
 
-public sealed class Damage : SkillEffect {
+public sealed class Damage : SkillEffect
+{
     public ResultType MinResultType { get; init; } = ResultType.HitEffectBlock;
     public bool IsPierce { get; init; } = false;
     public bool IsFollowUp { get; init; } = false;
@@ -10,21 +11,25 @@ public sealed class Damage : SkillEffect {
     public Damage(int pow, SkillType skillType, Element element) : base(pow, skillType, null) =>
         this.Element = element;
 
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
+    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    {
         // If the previous hit failed entirely, this one wouldn't have been reached. If this return statement is ever
         // reached, it's under special circumstances (such as a main target only effect), so let the attack continue
         // just to be safe
-        if (((int) prevResultType < (int) this.MinResultType) || (this.MainTargetOnly && !isMainTarget)) {
+        if (((int) prevResultType < (int) this.MinResultType) || (this.MainTargetOnly && !isMainTarget))
+        {
             return ResultType.PseudoSuccess;
         }
 
         int aksdfjhsdkf;
         int def;
 
-        if (this.SkillType == SkillTypes.Str) {
+        if (this.SkillType == SkillTypes.Str)
+        {
             aksdfjhsdkf = self.GetStat(Stats.Str);
             def = target.GetStat(Stats.Amr);
-        } else {
+        } else
+        {
             aksdfjhsdkf = self.GetStat(Stats.Mag);
             def = target.GetStat(Stats.Res);
         }
@@ -35,7 +40,8 @@ public sealed class Damage : SkillEffect {
         float multWeakDmgDealt = 1;
         float multWeakDmgTaken = 1;
 
-        if (target.IsWeakTo(this.Element)) {
+        if (target.IsWeakTo(this.Element))
+        {
             multWeakDmgDealt = self.GetMult(Mults.WeakDmgDealt);
             multWeakDmgTaken = target.GetMult(Mults.WeakDmgTaken);
         }
@@ -43,7 +49,8 @@ public sealed class Damage : SkillEffect {
         float multFollowUpDmgDealt = 1;
         float multFollowUpDmgTaken = 1;
 
-        if (this.IsFollowUp) {
+        if (this.IsFollowUp)
+        {
             multFollowUpDmgDealt = self.GetMult(Mults.FollowUpDmgDealt);
             multFollowUpDmgTaken = target.GetMult(Mults.FollowUpDmgTaken);
         }
@@ -51,9 +58,11 @@ public sealed class Damage : SkillEffect {
         int dmg;
 
         // No damage on affinity immunity
-        if (affMultDmgTaken == 0) {
+        if (affMultDmgTaken == 0)
+        {
             dmg = 0;
-        } else {
+        } else
+        {
             float mdd = this.Element.MultDmgDealt is null ? 1f : self.GetMult(this.Element.MultDmgDealt);
             float mdt = this.Element.MultDmgTaken is null ? 1f : target.GetMult(this.Element.MultDmgTaken);
 

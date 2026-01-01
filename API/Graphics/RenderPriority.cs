@@ -3,7 +3,8 @@ namespace API.Graphics;
 /// <summary>
 /// Drawing is split into 3 batches. Within each batch, all sprites will render above all shapes
 /// </summary>
-public enum RenderPriority {
+public enum RenderPriority
+{
     B1Low,
     B1Med,
     B1High,

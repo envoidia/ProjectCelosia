@@ -6,7 +6,8 @@ namespace API.Graphics;
 /// For when you need to store a color that could change with the <c>Theme</c>.
 /// Use <c>Theme.Get()</c> to convert to a <c>ColorCode</c> and <c>ThemeColor.Str</c> to convert to a string
 /// </summary>
-public enum ThemeColor {
+public enum ThemeColor
+{
     White,
     Gray,
     Black,
@@ -53,10 +54,15 @@ public enum ThemeColor {
     Malum
 }
 
-public static class ThemeColorExtensions {
-    extension(ThemeColor @this) {
+public static class ThemeColorExtensions
+{
+    extension(ThemeColor @this)
+    {
         public string Str => _Wrap(@this.ToString().FirstToLower());
     }
 
-    private static string _Wrap(string str) => $"/c[{str}]";
+    private static string _Wrap(string str)
+    {
+        return $"/c[{str}]";
+    }
 }

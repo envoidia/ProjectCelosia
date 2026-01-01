@@ -6,14 +6,22 @@ namespace API.Battle;
 /// <summary>
 /// An equippable item
 /// </summary>
-public interface IEquippable : IDescribable {
+public interface IEquippable : IDescribable
+{
     void Apply(Unit unit, bool giving);
 
-    void Equip(Unit unit) => this.Apply(unit, true);
+    void Equip(Unit unit)
+    {
+        this.Apply(unit, true);
+    }
 
-    void Unequip(Unit unit) => this.Apply(unit, false);
+    void Unequip(Unit unit)
+    {
+        this.Apply(unit, false);
+    }
 
-    static HashSet<IDescribable> GetDescInclusions(HashSet<IDescribable> inclusions, Skill[] skills, Passive[] passives) {
+    static HashSet<IDescribable> GetDescInclusions(HashSet<IDescribable> inclusions, Skill[] skills, Passive[] passives)
+    {
         HashSet<IDescribable> inclusionsCopy = [.. inclusions];
 
         inclusionsCopy.UnionWith(skills);

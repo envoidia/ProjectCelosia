@@ -9,7 +9,10 @@
         <PublishAot>false</PublishAot>
         <IsAotCompatible>true</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1591, 1573</NoWarn>
+        <!-- CS1591: Missing XML comment for publicly visible type or member 
+        CS1573: Parameter has no matching param tag in the XML comment (but other parameters do)
+        CA2211: Non-constant (static) fields should not be visible -->
+        <NoWarn>1591, 1573, CA2211</NoWarn>
     </PropertyGroup>
     <PropertyGroup Condition="'$(PublishAot)' == 'true'">
         <DefineConstants>$(DefineConstants);NATIVE_AOT</DefineConstants>

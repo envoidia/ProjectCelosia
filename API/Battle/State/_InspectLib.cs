@@ -16,17 +16,20 @@ using API.Util;
 namespace API.Battle.State;
 
 // todo cleanup
-internal sealed class _InspectLib {
+internal sealed class _InspectLib
+{
     #region Display Fields
 
     private const int _ActorCount = 51; // todo
-    private static readonly List<IActor> _Actors = new(_ActorCount);
+    private static readonly SizedArr<IActor> _Actors = new(_ActorCount);
 
-    private const int _AnimPrimActorCount = 6; //todo merge;
-    private static readonly List<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
+    private const int _AnimPrimActorCount = 1; //6 todo; //todo merge;
+    private static readonly SizedArr<IActor> _AnimPrimActors = new(_AnimPrimActorCount);
 
-    internal static readonly Menu.Menu _Menu = new("Inspect") {
-        OnCreate = static () => {
+    internal static readonly Menu.Menu _Menu = new("Inspect")
+    {
+        OnCreate = static () =>
+        {
             _Queue.CheckInput = true;
 
             // Set selected unit in queue to current
@@ -36,7 +39,8 @@ internal sealed class _InspectLib {
             _UpdateInspectPage(_PageTabs!.Index);
         },
 
-        OnDestroy = static () => {
+        OnDestroy = static () =>
+        {
             _Queue.CheckInput = false;
 
             // Set selected unit in queue to what it was
@@ -68,16 +72,18 @@ internal sealed class _InspectLib {
     private static readonly Label[] _StatsPageNum = new Label[_StatTypeCount];
 
     // Page list
-    private static readonly TabBarWidget _PageTabs = new(new(1135, 600), 8) {
+    private static readonly TabBarWidget _PageTabs = new(new(1135, 600), 8)
+    {
         Priority = RenderPriority.B2Med,
-        OnSelect = _UpdateInspectPage
+        OnChangeIndex = _UpdateInspectPage
     };
 
     // Items on current page
-    private static readonly ListRightWidget _PageItems = new(new(60, 740), 16) {
+    private static readonly ListRightWidget _PageItems = new(new(60, 740), 16)
+    {
         ItemPadding = new(40, 20, 10, 10),
         FixedWidth = 800,
-        OnSelect = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
+        OnChangeIndex = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
     };
 
     private static readonly LineActor _PageDivL = new(new(35, 590), new(635, 20));
@@ -114,7 +120,8 @@ internal sealed class _InspectLib {
     //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
     // Current unit items
-    private static readonly RectangleActor _UnitBounds = new() {
+    private static readonly RectangleActor _UnitBounds = new()
+    {
         Position = new(40, 95),
         Size = new(384),
         Priority = RenderPriority.B2Med
@@ -126,7 +133,8 @@ internal sealed class _InspectLib {
     private const int _StatStartY = 175;
     private const int _StatGapY = 65;
 
-    private static readonly Label _Lvl = new(RenderPriority.B2Med) {
+    private static readonly Label _Lvl = new(RenderPriority.B2Med)
+    {
         Position = new(_StatStartX, _StatStartY)
     };
 
@@ -143,7 +151,8 @@ internal sealed class _InspectLib {
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
     private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str + "StatSp".GetLang()) {
+            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str + "StatSp".GetLang())
+    {
         ColorLayer0 = ThemeColor.SpBack,
         ColorLayer1 = ThemeColor.Sp,
         MaxVal = 1000
@@ -157,10 +166,13 @@ internal sealed class _InspectLib {
     //     Alignment = Alignment.TopRight
     // };
 
-    private static readonly Label _Equip = new(RenderPriority.B2Med) {
+    private static readonly Label _Equip = new(RenderPriority.B2Med)
+    {
         Position = new(_StatStartX, _StatStartY + (_StatGapY * 3))
     };
-    private static readonly Label _Affinities = new(RenderPriority.B2Med) {
+
+    private static readonly Label _Affinities = new(RenderPriority.B2Med)
+    {
         Position = new(_StatStartX, _StatStartY + (_StatGapY * 4))
     };
 
@@ -182,7 +194,8 @@ internal sealed class _InspectLib {
     private static readonly Label _PageItemList = new(RenderPriority.B2Med);
     private static readonly Label _PageItemRightList = new(RenderPriority.B2Med);
     private static readonly Label _DescHeader = new(RenderPriority.B2Med);
-    private static readonly Label _Desc = new(RenderPriority.B2Med) {
+    private static readonly Label _Desc = new(RenderPriority.B2Med)
+    {
         Position = new(950, 740)
     };
 
@@ -191,7 +204,8 @@ internal sealed class _InspectLib {
     #region Logic Fields
 
     // todo
-    private enum _InspectPage {
+    private enum _InspectPage
+    {
         Skills,
         Passives,
         Buffs,
@@ -210,7 +224,8 @@ internal sealed class _InspectLib {
 
     #region Setup Methods
 
-    static _InspectLib() {
+    static _InspectLib()
+    {
         // Add preinitialized actors
         _Actors.AddRange(_UnitBounds, _Equip, _Affinities, _Lvl, _Hp, _Sp,
             _PageItemList, _PageItemRightList, _DescHeader, _Desc, _PageDivL, _PageDivR);
@@ -220,10 +235,12 @@ internal sealed class _InspectLib {
             /*_PageDivL, _PageDivR, _MultP, _ModP, _OtherP*/);
 
         // Stat types
-        for (int i = 0; i < _StatTypeCount; i++) {
+        for (int i = 0; i < _StatTypeCount; i++)
+        {
             int x = 75 + (i * 675);
 
-            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med) {
+            _Actors.Add(_StatCategoryHeaders[i] = new Label(RenderPriority.B2Med)
+            {
                 Position = new(x, 720),
             });
 
@@ -231,14 +248,16 @@ internal sealed class _InspectLib {
 
             _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2Med) { Position = new(x, Y) });
 
-            _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2Med) {
+            _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2Med)
+            {
                 Position = new(x + 585, Y),
                 Alignment = Alignment.TopRight
             });
         }
 
         // Basic stat list
-        for (int i = 0; i < StatCount; i++) {
+        for (int i = 0; i < StatCount; i++)
+        {
             int x = _StatStartX + _StatGapX * (i > 2 ? 2 : 1);
             int y = _StatStartY + (_StatGapY * (i % 3));
 
@@ -260,7 +279,8 @@ internal sealed class _InspectLib {
         Vector2[] promptPos = [new(1290, 170), new(700, 245), new(300, 245), new(300, 385), new(750, 385),
             new(1125, 385), new(310, 52), new(0, 52), new(385, 320), new(857, 320)];
 
-        for (int i = 0; i < _PromptCount; i++) {
+        for (int i = 0; i < _PromptCount; i++)
+        {
             //todo _Actors.Add(_Prompts[i] = new Label(RenderPriority.B2Med) { Position = promptPos[i] });
         }
 
@@ -277,30 +297,44 @@ internal sealed class _InspectLib {
     /// Sets the text of menu elements
     /// </summary>
     // todo if unit names can change that part must be re-called on open
-    internal static void _Translate() {
+    internal static void _Translate()
+    {
         // Stat types
         string[] names = ["InfoMult", "InfoMod", "InfoOther"];
-        for (int i = 0; i < _StatTypeCount; i++) _StatCategoryHeaders[i].Text = names[i].GetLang();
+        for (int i = 0; i < _StatTypeCount; i++)
+        {
+            _StatCategoryHeaders[i].Text = names[i].GetLang();
+        }
 
         // Page list
         _PageTabs.SetText(["Skills".GetLang(), "Passives".GetLang(), "Buffs".GetLang(), "Stats".GetLang()]);
 
         // Basic stat list
-        for (int i = 0; i < StatCount; i++) _StatsBasic[i].Title.Text = _StatList[i].GetName();
+        for (int i = 0; i < StatCount; i++)
+        {
+            _StatsBasic[i].Title.Text = _StatList[i].GetName();
+        }
     }
 
-    internal static void _LateInit() {
+    internal static void _LateInit()
+    {
         // todo account for non-8 units?
         // todo unify for nameplates
         Unit[] u = BattleLib.Battle.GetAllUnits();
-        for (int i = 0; i < UnitCount; i++) _UnitList[i] = u[i].FormatName(false);
+
+        for (int i = 0; i < UnitCount; i++)
+        {
+            _UnitList[i] = u[i].FormatName(false);
+        }
+
         // todo set their X here
 
         _Menu.Setup([.. _AnimPrimActors, .. _Actors, _PageTabs, _PageItems]);
     }
 
     // todo remove
-    internal static void _Create() {
+    internal static void _Create()
+    {
         States.Battle.AddMenu(_Menu);
     }
 
@@ -308,15 +342,19 @@ internal sealed class _InspectLib {
 
     #region Update Methods
 
-    internal static void _Update(GameTime gameTime) {
-        if (Parellelograms.CoverLeft.Prog == 1 && InputLib.Check(Keybinds.Back)) {
+    internal static void _Update(GameTime gt)
+    {
+        if (Parellelograms.CoverLeft.Prog == 1 && InputLib.Check(Keybinds.Back))
+        {
             //StateMachine.Remove();
             States.Battle.RemoveMenu();
             return;
         }
 
-        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q)) {
-            foreach (Unit u in BattleLib.Battle.GetAllUnits()) {
+        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q))
+        {
+            foreach (Unit u in BattleLib.Battle.GetAllUnits())
+            {
                 u.SetStatMult(Stats.Agi, u.GetStatMult(Stats.Agi) + 240);
                 u.Shield += 500;
             }
@@ -324,8 +362,10 @@ internal sealed class _InspectLib {
             _UpdateInspectUnitPage(_Queue.Index);
         }
 
-        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.W)) {
-            foreach (Unit u in BattleLib.Battle.GetAllUnits()) {
+        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.W))
+        {
+            foreach (Unit u in BattleLib.Battle.GetAllUnits())
+            {
                 u.Hp += 500;
             }
 
@@ -336,12 +376,16 @@ internal sealed class _InspectLib {
         // UpdateInputPrompt on page change
     }
 
-    internal static string _GetInputPrompt() => _curPage == _InspectPage.Stats
+    internal static string _GetInputPrompt()
+    {
+        return _curPage == _InspectPage.Stats
         ? Menu.State.State.GetInputPromptString(Faster, Jump, Back)
         : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, Jump, Back);
+    }
 
     // todo fix some shit that fails to change
-    internal static void _UpdateInspectUnitPage(int index) {
+    internal static void _UpdateInspectUnitPage(int index)
+    {
         Unit u = _GetUnitsSortedByAgi()[index];
 
         _Lvl.Text = $"Lvl {ThemeColor.Imp.Str}{u.Lvl + 1}";
@@ -358,7 +402,8 @@ internal sealed class _InspectLib {
         _Affinities.Text = u.GetAffinitiesString(true);
 
         // Basic stats
-        for (int i = 0; i < StatCount; i++) {
+        for (int i = 0; i < StatCount; i++)
+        {
             int curStat = u.GetStat(_StatList[i]);
             int baseStat = u.GetBaseStat(_StatList[i]);
 
@@ -369,12 +414,14 @@ internal sealed class _InspectLib {
         _UpdateInspectPage(_PageTabs.Index);
     }
 
-    private static void _UpdateInspectPage(int index) {
+    private static void _UpdateInspectPage(int index)
+    {
         Unit u = _GetUnitsSortedByAgi()[_Queue.Index];
 
         _SetStatVisibility((_InspectPage) index == _InspectPage.Stats);
 
-        switch ((_InspectPage) index) {
+        switch ((_InspectPage) index)
+        {
             case _InspectPage.Skills:
                 _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ThemeColor.White))]);
                 _PageItems.SetRightText([.. u.SkillInstances.Select(s => s.GetCostCdFormatted())]);
@@ -404,15 +451,18 @@ internal sealed class _InspectLib {
         }
     }
 
-    private static void _UpdatePageItemDesc(int index, int inspectPageIndex) {
-        if (_PageItems.OptCount == 0) {
+    private static void _UpdatePageItemDesc(int index, int inspectPageIndex)
+    {
+        if (_PageItems.OptCount == 0)
+        {
             _Desc.Text = "";
             return;
         }
 
         Unit u = _GetUnitsSortedByAgi()[_Queue.Index];
 
-        ComplexDescribable? cd = (_InspectPage) inspectPageIndex switch {
+        ComplexDescribable? cd = (_InspectPage) inspectPageIndex switch
+        {
             _InspectPage.Skills => u.SkillInstances[index].Skill,
             _InspectPage.Passives => u.Passives[index],
             _InspectPage.Buffs => u.BuffInstances[index].Buff,
@@ -420,7 +470,8 @@ internal sealed class _InspectLib {
             _ => throw new ClosedEnumsWhenException()
         };
 
-        if (cd is null) {
+        if (cd is null)
+        {
             _Desc.Text = "";
             return;
         }
@@ -428,8 +479,12 @@ internal sealed class _InspectLib {
         _Desc.Text = $"{cd.GetName()}{ThemeColor.White.Str}\n\n{cd.GetFullDesc()}";
     }
 
-    private static void _SetStatVisibility(bool visible) {
-        foreach (Label l in _StatCategoryHeaders) l.IsVisible = visible;
+    private static void _SetStatVisibility(bool visible)
+    {
+        foreach (Label l in _StatCategoryHeaders)
+        {
+            l.IsVisible = visible;
+        }
     }
 
     #endregion

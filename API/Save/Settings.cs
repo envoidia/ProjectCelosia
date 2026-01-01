@@ -3,12 +3,15 @@ using API.Graphics;
 namespace API.Save;
 
 // todo serialize + use dict from props
-public static class Settings {
+public static class Settings
+{
     #region General
 
-    public static Lang.Language Language {
+    public static Lang.Language Language
+    {
         get;
-        set {
+        set
+        {
             field = value;
             Lang.Language._Change();
         }
@@ -18,9 +21,11 @@ public static class Settings {
 
     #region Visual
 
-    public static Theme Theme {
+    public static Theme Theme
+    {
         get;
-        set {
+        set
+        {
             field = value;
             Theme._Change();
         }
@@ -29,15 +34,16 @@ public static class Settings {
     #endregion
 
     #region Battle
+
     // Speed of battle animations
     // Duration of in-battle pauses relative to 100% (1 = 100%, 0.1 = 10%)
-    public static float BattleSpeed { get; } = 1f;
+    public static float BattleSpeed = 1f;
 
     #endregion
 
     #region Debug
 
-    public static bool EnableDebugFeatures { get; set; } =
+    public static bool EnableDebugFeatures =
 #if DEBUG
         true
 #else 
@@ -45,7 +51,7 @@ public static class Settings {
 #endif
         ;
 
-    public static bool SelectOpponentMoves { get; } = false;
+    public static bool SelectOpponentMoves = false;
 
     #endregion
 

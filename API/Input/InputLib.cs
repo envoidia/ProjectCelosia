@@ -8,17 +8,18 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Input;
 
-public static class InputLib {
+public static class InputLib
+{
 
     #region Fields
 
     // todo docs
-    public static KeyboardState PreviousKeyboardState { get; set; }
+    public static KeyboardState PreviousKeyboardState { get; private set; }
     public static KeyboardState KeyboardState { get; private set; }
 
-    private static GamePadState _GamePadState { get; set; } // todo
+    private static GamePadState _gamePadState; // todo
 
-    private static InputDevice _PreviousInputSource { get; set; } = InputDevice.Keyboard;
+    private static InputDevice _previousInputSource = InputDevice.Keyboard;
     public static InputDevice LastInputSource { get; private set; } = InputDevice.Keyboard;
 
     /// <summary>
@@ -48,11 +49,13 @@ public static class InputLib {
     /// Tracks the status of input
     /// </summary>
     internal static readonly Routine _TrackInput = new(a => Assert.Is<Label>(a),
-        static (a, gameTime) => {
+        static (a, gt) =>
+        {
             Label l = (Label) a;
 
             StringBuilder sb = new();
-            for (int i = 0; i < _Held.Length; i++) {
+            for (int i = 0; i < _Held.Length; i++)
+            {
                 TimeSpan held = _Held[i];
                 double s = held.TotalSeconds;
 
@@ -91,16 +94,18 @@ public static class InputLib {
             GamePads[i] = new GamePadState((PlayerIndex)i);
         }*/
 
-    public static void Update(GameTime gameTime) {
+    public static void Update(GameTime gt)
+    {
         PreviousKeyboardState = KeyboardState;
         KeyboardState = Keyboard.GetState();
-        _GamePadState = GamePad.GetState(PlayerIndex.One);
+        _gamePadState = GamePad.GetState(PlayerIndex.One);
 
-        _elapsedTime = gameTime.ElapsedGameTime;
+        _elapsedTime = gt.ElapsedGameTime;
 
-        if (_PreviousInputSource != LastInputSource) {
+        if (_previousInputSource != LastInputSource)
+        {
             OnDeviceChange?.Invoke();
-            _PreviousInputSource = LastInputSource;
+            _previousInputSource = LastInputSource;
             return;
         }
 
@@ -112,7 +117,10 @@ public static class InputLib {
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame
     /// </returns>
-    public static bool IsKeyPressed(Keys key) => KeyboardState.IsKeyDown(key);
+    public static bool IsKeyPressed(Keys key)
+    {
+        return KeyboardState.IsKeyDown(key);
+    }
 
     /// <summary>
     /// Doesn't account for remapping. Prefer <c>Check()</c>
@@ -120,57 +128,75 @@ public static class InputLib {
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame and not the previous frame
     /// </returns>
-    public static bool IsKeyJustPressed(Keys key) =>
-        KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
+    public static bool IsKeyJustPressed(Keys key)
+    {
+        return KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
+    }
 
     #region CheckInput
 
     /// <summary>
     /// Check for input from 1 <c>Keybind</c>
     /// </summary>
-    public static bool Check(Keybind? keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS) =>
-        _IsKeybindPressed(allowHold, holdDelayS, keybind);
+    public static bool Check(Keybind? keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS)
+    {
+        return _IsKeybindPressed(allowHold, holdDelayS, keybind);
+    }
 
     /// <summary>
     /// Check for input from either of 2 <c>Keybind</c>s
     /// </summary>
-    public static bool Check(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS) =>
-        _IsKeybindPressed(allowHold, holdDelayS, keybind1) ||
+    public static bool Check(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS)
+    {
+        return _IsKeybindPressed(allowHold, holdDelayS, keybind1) ||
         _IsKeybindPressed(allowHold, holdDelayS, keybind2);
+    }
 
     #endregion
 
     #region Internals
 
-    private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind? keybind) {
-        if (keybind is null) return false;
+    private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind? keybind)
+    {
+        if (keybind is null)
+        {
+            return false;
+        }
 
         // Bypasses held time checks
-        if (keybind.Id is KeybindId.Hotkey1 or KeybindId.Hotkey2) return _CheckKeybind(keybind);
+        if (keybind.Id is KeybindId.Hotkey1 or KeybindId.Hotkey2)
+        {
+            return _CheckKeybind(keybind);
+        }
 
         // Merged keybinds
-        if (keybind == Keybinds.LeftUp) {
+        if (keybind == Keybinds.LeftUp)
+        {
             return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Left) ||
                 _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Up);
         }
 
-        if (keybind == Keybinds.RightDown) {
+        if (keybind == Keybinds.RightDown)
+        {
             return _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Right) ||
                 _IsKeybindPressed(allowHold, holdDelayS, Keybinds.Down);
         }
 
         // Normal keybinds
-        if (!_CheckKeybind(keybind)) {
+        if (!_CheckKeybind(keybind))
+        {
             _Held[(int) keybind.Id] = TimeSpan.Zero;
             return false;
         }
 
-        if (_Held[(int) keybind.Id] == TimeSpan.Zero && _CheckKeybind(keybind)) {
+        if (_Held[(int) keybind.Id] == TimeSpan.Zero && _CheckKeybind(keybind))
+        {
             _Held[(int) keybind.Id] += _elapsedTime;
             return true;
         }
 
-        if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && _CheckKeybind(keybind)) {
+        if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && _CheckKeybind(keybind))
+        {
             _Held[(int) keybind.Id] = _HoldInitDelay - (_CheckKeybind(Keybinds.Hotkey1)
                 ? TimeSpan.FromSeconds(holdDelayS / 2)
                 : TimeSpan.FromSeconds(holdDelayS));
@@ -181,13 +207,16 @@ public static class InputLib {
         return false;
     }
 
-    private static bool _CheckKeybind(Keybind keybind) {
-        if (_IsKeyDown(keybind.Key)) {
+    private static bool _CheckKeybind(Keybind keybind)
+    {
+        if (_IsKeyDown(keybind.Key))
+        {
             LastInputSource = InputDevice.Keyboard;
             return true;
         }
 
-        if (_IsButtonDown(keybind.Button)) {
+        if (_IsButtonDown(keybind.Button))
+        {
             LastInputSource = InputDevice.XboxController; // todo
             return true;
         }
@@ -195,27 +224,35 @@ public static class InputLib {
         return false;
     }
 
-    private static bool _IsKeyDown(Keys key) => key switch {
-        Keys.LeftShift or Keys.RightShift => KeyboardState.IsKeyDown(Keys.LeftShift) ||
-            KeyboardState.IsKeyDown(Keys.RightShift),
-        Keys.LeftControl or Keys.RightControl => KeyboardState.IsKeyDown(Keys.LeftControl) ||
-            KeyboardState.IsKeyDown(Keys.RightControl),
-        Keys.LeftAlt or Keys.RightAlt => KeyboardState.IsKeyDown(Keys.LeftAlt) ||
-            KeyboardState.IsKeyDown(Keys.RightAlt),
-        Keys.LeftWindows or Keys.RightWindows => KeyboardState.IsKeyDown(Keys.LeftWindows) ||
-            KeyboardState.IsKeyDown(Keys.RightWindows),
-        _ => KeyboardState.IsKeyDown(key),
-    };
+    private static bool _IsKeyDown(Keys key)
+    {
+        return key switch
+        {
+            Keys.LeftShift or Keys.RightShift => KeyboardState.IsKeyDown(Keys.LeftShift) ||
+                KeyboardState.IsKeyDown(Keys.RightShift),
+            Keys.LeftControl or Keys.RightControl => KeyboardState.IsKeyDown(Keys.LeftControl) ||
+                KeyboardState.IsKeyDown(Keys.RightControl),
+            Keys.LeftAlt or Keys.RightAlt => KeyboardState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardState.IsKeyDown(Keys.RightAlt),
+            Keys.LeftWindows or Keys.RightWindows => KeyboardState.IsKeyDown(Keys.LeftWindows) ||
+                KeyboardState.IsKeyDown(Keys.RightWindows),
+            _ => KeyboardState.IsKeyDown(key),
+        };
+    }
 
-    private static bool _IsButtonDown(Buttons button) => button switch {
-        Buttons.DPadLeft => _GamePadState.ThumbSticks.Left.X < -_MinAxisDist,
-        Buttons.DPadRight => _GamePadState.ThumbSticks.Left.X > _MinAxisDist,
-        Buttons.DPadUp => _GamePadState.ThumbSticks.Left.Y < -_MinAxisDist,
-        Buttons.DPadDown => _GamePadState.ThumbSticks.Left.Y > _MinAxisDist,
-        Buttons.LeftTrigger => _GamePadState.Triggers.Left > _MinAxisDist,
-        Buttons.RightTrigger => _GamePadState.Triggers.Right > _MinAxisDist,
-        _ => _GamePadState.IsButtonDown(button)
-    };
+    private static bool _IsButtonDown(Buttons button)
+    {
+        return button switch
+        {
+            Buttons.DPadLeft => _gamePadState.ThumbSticks.Left.X < -_MinAxisDist,
+            Buttons.DPadRight => _gamePadState.ThumbSticks.Left.X > _MinAxisDist,
+            Buttons.DPadUp => _gamePadState.ThumbSticks.Left.Y < -_MinAxisDist,
+            Buttons.DPadDown => _gamePadState.ThumbSticks.Left.Y > _MinAxisDist,
+            Buttons.LeftTrigger => _gamePadState.Triggers.Left > _MinAxisDist,
+            Buttons.RightTrigger => _gamePadState.Triggers.Right > _MinAxisDist,
+            _ => _gamePadState.IsButtonDown(button)
+        };
+    }
 
     #endregion
 }

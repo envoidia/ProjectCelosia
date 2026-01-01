@@ -8,7 +8,8 @@ using Microsoft.Xna.Framework.Input;
 namespace API.Input;
 
 // todo if closed enums get added, use them in various places
-public enum KeybindId {
+public enum KeybindId
+{
     Confirm,
     Back,
     Menu1,
@@ -38,36 +39,57 @@ public enum KeybindId {
     LeftRightUpDown
 }
 
-public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) : IDescribable {
+public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) : IDescribable
+{
     public KeybindId Id => id;
-    public Keys Key { get; set; } = key;
-    public Buttons Button { get; set; } = button;
+    public Keys Key = key;
+    public Buttons Button = button;
 
     public string KeyName { get; set; } = keyName;
     public string KeyDesc { get; set; } = $"{keyName}Desc";
 
-    public string GetCurrentGlyph() => this.Id switch {
-        KeybindId.LeftRight or KeybindId.UpDown or KeybindId.LeftRightUpDown =>
-            InputLib.LastInputSource.GetMergedGlyph(this.Id),
-        KeybindId.LeftUp => _GetCurrentGlyph(Keybinds.Left.Key, Keybinds.Left.Button),
-        KeybindId.RightDown => _GetCurrentGlyph(Keybinds.Right.Key, Keybinds.Right.Button),
-        _ => _GetCurrentGlyph(this.Key, this.Button)
-    };
+    public string GetCurrentGlyph()
+    {
+        return this.Id switch
+        {
+            KeybindId.LeftRight or KeybindId.UpDown or KeybindId.LeftRightUpDown =>
+                InputLib.LastInputSource.GetMergedGlyph(this.Id),
+            KeybindId.LeftUp => _GetCurrentGlyph(Keybinds.Left.Key, Keybinds.Left.Button),
+            KeybindId.RightDown => _GetCurrentGlyph(Keybinds.Right.Key, Keybinds.Right.Button),
+            _ => _GetCurrentGlyph(this.Key, this.Button)
+        };
+    }
 
-    private static string _GetCurrentGlyph(Keys key, Buttons button) {
+    private static string _GetCurrentGlyph(Keys key, Buttons button)
+    {
         return InputLib.LastInputSource == InputDevice.Keyboard
             ? key.GetGlyph()
             : button.GetGlyph(InputLib.LastInputSource);
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    }
 
-    public string GetName(ThemeColor color) => color.Str + this.KeyName.GetLang();
-    public string GetName() => this.GetName(ThemeColor.White);
-    public string GetDesc() => this.KeyDesc.GetLang();
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.KeyName.GetLang();
+    }
+
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.White);
+    }
+
+    public string GetDesc()
+    {
+        return this.KeyDesc.GetLang();
+    }
 }
 
-public static class Keybinds {
+public static class Keybinds
+{
     /// <summary>
     /// Number of <c>Keybinds</c> with standard check behavior
     /// </summary>

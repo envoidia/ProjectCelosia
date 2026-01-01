@@ -5,11 +5,20 @@ using API.Graphics;
 
 namespace API.Battle.BuffEffects;
 
-public sealed class ChangeMult(Mult mult, int change) : IBuffEffect {
-    public void OnGive(Unit self, int stacks) => this._Calc(self, change * stacks);
-    public void OnRemove(Unit self, int stacks) => this._Calc(self, change * -stacks);
+public sealed class ChangeMult(Mult mult, int change) : IBuffEffect
+{
+    public void OnGive(Unit self, int stacks)
+    {
+        this._Calc(self, change * stacks);
+    }
 
-    private void _Calc(Unit self, int changeFull) {
+    public void OnRemove(Unit self, int stacks)
+    {
+        this._Calc(self, change * -stacks);
+    }
+
+    private void _Calc(Unit self, int changeFull)
+    {
         // Minimum mult to display
         int multMin = mult.MinValue;
 

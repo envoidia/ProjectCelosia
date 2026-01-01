@@ -6,11 +6,16 @@ using API.Graphics;
 
 namespace API.Battle.SkillEffects;
 
-public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth) {
+public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth)
+{
     public int Overheal { get; init; } = 0;
 
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
-        if (this.MainTargetOnly && !isMainTarget) return ResultType.PseudoSuccess;
+    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    {
+        if (this.MainTargetOnly && !isMainTarget)
+        {
+            return ResultType.PseudoSuccess;
+        }
 
         List<string> msg = [];
 
@@ -30,7 +35,8 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth) {
         // of this skill), and then the higher between that and current HP
         int hpNew = Math.Max(hpOld, Math.Min(hpOld + heal, (int) (hpMax * (1 + (this.Overheal / 1000d)))));
 
-        if (hpNew > hpOld) {
+        if (hpNew > hpOld)
+        {
             unit.Hp = hpNew;
 
             msg.Add("LogChangeHp".FormatLang([unit.FormatName(), hpOld.Format(ThemeColor.Hp),

@@ -2,7 +2,11 @@ using System;
 
 namespace API.Menu;
 
-public interface IComponent {
+/// <summary>
+/// todo should ListWidget and etc just take this instead of strings
+/// </summary>
+public interface IComponent
+{
     int Index { get; set; }
 
     Action? OnSelect { get; init; }

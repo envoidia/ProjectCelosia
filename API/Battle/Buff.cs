@@ -9,7 +9,8 @@ namespace API.Battle;
 /// <summary>
 /// todo docs
 /// </summary>
-public sealed class Buff : ComplexDescribable, IRegistrable {
+public sealed class Buff : ComplexDescribable, IRegistrable
+{
     public BuffType BuffType { get; }
     public int MaxStacks { get; }
     public IBuffEffect[] BuffEffects { get; }
@@ -18,7 +19,8 @@ public sealed class Buff : ComplexDescribable, IRegistrable {
 
     public Buff(string modId, string keyName, string icon, string keyDesc, BuffType buffType,
         int maxStacks, IBuffEffect[] buffEffects, string? itemId = null)
-        : base(keyName, icon, keyDesc) {
+        : base(keyName, icon, keyDesc)
+    {
         this.BuffType = buffType;
         this.MaxStacks = maxStacks;
         this.BuffEffects = buffEffects;
@@ -29,16 +31,22 @@ public sealed class Buff : ComplexDescribable, IRegistrable {
         Registry.Register(this);
     }
 
-    public override string GetName() => this.GetName(ThemeColor.Buff);
+    public override string GetName()
+    {
+        return this.GetName(ThemeColor.Buff);
+    }
 
     // Todo use stack amount to show multiplied values
-    public override string GetFullDesc() =>
-        "BuffDesc".FormatLang([this.BuffType.GetName(),
+    public override string GetFullDesc()
+    {
+        return "BuffDesc".FormatLang([this.BuffType.GetName(),
             this.MaxStacks == 1 ? "" : "BuffDescStacksTo".FormatLang(ThemeColor.Imp.Str + this.MaxStacks),
             this._GetFormattedDescInclusions()]);
+    }
 }
 
-public static class Buffs {
+public static class Buffs
+{
     // todo
     public static readonly Buff Defend;
     public static readonly Buff Shield;

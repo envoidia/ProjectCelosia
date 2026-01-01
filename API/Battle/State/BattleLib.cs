@@ -17,7 +17,8 @@ using Microsoft.Xna.Framework;
 namespace API.Battle.State;
 
 // todo finish + cleanup + reduce visibility when possible
-public static class BattleLib {
+public static class BattleLib
+{
     public static Battle Battle { get; private set; } = null!; // todo
 
     #region Constants
@@ -43,10 +44,11 @@ public static class BattleLib {
     //private static readonly List<Actor> _AnimPrimActors = new(_AnimPrimActorCount);
 
     private static readonly string[] _UnitList = new string[UnitCount];
-    internal static readonly TabBarWidget _Queue = new(new(World.W2, 90), UnitCount) {
+    internal static readonly TabBarWidget _Queue = new(new(World.W2, 90), UnitCount)
+    {
         CheckInput = false,
         Priority = RenderPriority.B2Med,
-        OnSelect = _InspectLib._UpdateInspectUnitPage,
+        OnChangeIndex = _InspectLib._UpdateInspectUnitPage,
         AnimFromDir = Dir.Up
     };
 
@@ -115,41 +117,49 @@ public static class BattleLib {
 
     #region Setup Methods
 
-    static BattleLib() {
+    static BattleLib()
+    {
         // Add preinitialized actors
         _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL);
 
         // Setup Labels
-        for (int i = 0; i < TeamCount; i++) {
+        for (int i = 0; i < TeamCount; i++)
+        {
             // todo midgame translation
-            _Actors.Add(_BloomLabels[i] = new Label() {
+            _Actors.Add(_BloomLabels[i] = new Label()
+            {
                 Position = new(i == 1 ? World.W - 105 : 105, 135),
                 Alignment = i == 1 ? Alignment.TopRight : Alignment.TopLeft
             });
         }
 
         // Per-unit Labels
-        for (int i = 0; i < UnitCount; i++) {
+        for (int i = 0; i < UnitCount; i++)
+        {
             int x1 = 75;
             int x2 = 600;
             int y = 450 + (450 * i);
             Dir dir = i > PosLib.HighestAlly ? Dir.Right : Dir.Left;
 
-            if (i >= PosLib.LowestOpp) {
+            if (i >= PosLib.LowestOpp)
+            {
                 x1 = World.W - 500;
                 x2 = World.W - 825;
                 y = 450 + (450 * (i - PosLib.LowestOpp));
             }
 
-            _Actors.Add(_Stats[i] = new Label() {
+            _Actors.Add(_Stats[i] = new Label()
+            {
                 Position = new(x1, y),
                 AnimFromDir = dir
             });
-            _Actors.Add(_Buffs[i] = new Label() {
+            _Actors.Add(_Buffs[i] = new Label()
+            {
                 Position = new(x1, y + 150),
                 AnimFromDir = dir
             });
-            _Actors.Add(_Moves[i] = new Label() {
+            _Actors.Add(_Moves[i] = new Label()
+            {
                 Position = new(x2, y + 50),
                 AnimFromDir = dir
             });
@@ -158,15 +168,20 @@ public static class BattleLib {
         Assert.LenIs(_Actors, _ActorCount);
     }
 
-    internal static void _Create() {
+    internal static void _Create()
+    {
         // temp setup teams
-        Battle = Core.battle;
+        Battle = Core.Battle;
 
         // Setup unit names for queue
         // todo account for non-8 units?
         // todo unify for nameplates
         Unit[] u = Battle.GetAllUnits();
-        for (int i = 0; i < UnitCount; i++) _UnitList[i] = u[i].FormatName(false);
+
+        for (int i = 0; i < UnitCount; i++)
+        {
+            _UnitList[i] = u[i].FormatName(false);
+        }
 
         _Queue.SetText(_UnitList);
 
@@ -182,46 +197,64 @@ public static class BattleLib {
     }
 
     // todo remove?
-    internal static void _Destroy() {
-        foreach (IActor a in _Actors) a.Destroy();
+    internal static void _Destroy()
+    {
+        foreach (IActor a in _Actors)
+        {
+            a.Destroy();
+        }
     }
 
     #endregion
 
     #region Update Methods
 
-    internal static void _Update(GameTime gameTime) {
-        //if (Parellelograms.CoverLeft.Prog == 0) _CheckOpenLogInspect(true);
+    internal static void _Update(GameTime gt)
+    {
+        //if (Parellelograms.CoverLeft.Prog == 0) {{_CheckOpenLogInspect(true);
+        //}
         //else return;
         // todo convert skill selection to menu and remove this check (prevent dbgconsole from blocking battle exec
         // and targeting from blocking inspect)
-        if (States.Battle.Menus.Count > 0) return;
+        if (States.Battle.Menus.Count > 0)
+        {
+            return;
+        }
 
         _CheckOpenLogInspect();
 
-        if (_delay > TimeSpan.Zero) {
-            _delay -= gameTime.ElapsedGameTime;
+        if (_delay > TimeSpan.Zero)
+        {
+            _delay -= gt.ElapsedGameTime;
             return;
         }
 
         Assert.InRangeOr(_selectingMove, 0, PosLib.Highest, _ExecutionPhase);
 
-        switch (_selectingMove) {
+        switch (_selectingMove)
+        {
             case < PosLib.LowestOpp: _SelectPlayerMove(); return;
             case <= PosLib.Highest: _SelectOpponentMove(); return;
             case _ExecutionPhase: _ExecuteMove(); return;
         }
     }
 
-    internal static void _CheckOpenLogInspect(bool changeTarget = false) {
+    internal static void _CheckOpenLogInspect(bool changeTarget = false)
+    {
         // todo fix it might still be possible to double the coverleft???
-        if (InputLib.Check(Keybinds.Menu1)) {
+        if (InputLib.Check(Keybinds.Menu1))
+        {
             StateMachine.Add(States.Log);
             return;
         }
 
-        if (InputLib.Check(Keybinds.Menu2)) {
-            if (changeTarget) _indexTarget = _GetQueuePos();
+        if (InputLib.Check(Keybinds.Menu2))
+        {
+            if (changeTarget)
+            {
+                _indexTarget = _GetQueuePos();
+            }
+
             //StateMachine.Add(States.Inspect);
             _InspectLib._Create();
             return;
@@ -231,11 +264,13 @@ public static class BattleLib {
     /// <summary>
     /// Updates bloom labels, queue, and Unit nameplates
     /// </summary>
-    internal static void _UpdateStatDisplay(int curPos) {
+    internal static void _UpdateStatDisplay(int curPos)
+    {
         Assert.InRange(curPos, 0, PosLib.Highest);
 
         // Update bloom labels
-        for (int i = 0; i < TeamCount; i++) {
+        for (int i = 0; i < TeamCount; i++)
+        {
             // todo fix it getting confused by the /
             _BloomLabels[i].Text =
                 $"{ThemeColor.Stat.Str}{"Bloom".GetLang()}{ThemeColor.White.Str}: {ThemeColor.Bloom.Str}{Battle.GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str}//{ThemeColor.Bloom.Str}1,000";
@@ -245,7 +280,8 @@ public static class BattleLib {
         StringBuilder sb = new();
 
         // Update nameplates
-        for (int i = 0; i < units.Length; i++) {
+        for (int i = 0; i < units.Length; i++)
+        {
             // Stat display
             _Stats[i].Text = $"{units[i].FormatName(false)}\n{"StatHp".GetLang()}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
 
@@ -253,10 +289,17 @@ public static class BattleLib {
             int buffCount = 0;
 
             // List stage changes
-            foreach (StageType stageType in Registry.Of<StageType>()) {
+            foreach (StageType stageType in Registry.Of<StageType>())
+            {
                 int stage = units[i].GetStage(stageType);
-                if (stage != 0) {
-                    if (buffCount > 0 && buffCount % 4 == 0) sb.Append('\n');
+                if (stage != 0)
+                {
+                    if (buffCount > 0 && buffCount % 4 == 0)
+                    {
+                        {
+                            sb.Append('\n');
+                        }
+                    }
 
                     buffCount++;
 
@@ -268,28 +311,47 @@ public static class BattleLib {
             // List buffs
             List<BuffInstance> buffInstances = units[i].BuffInstances;
 
-            foreach (BuffInstance buffInstance in buffInstances) {
-                if (buffCount > 0 && buffCount % 4 == 0) sb.Append('\n');
+            foreach (BuffInstance buffInstance in buffInstances)
+            {
+                if (buffCount > 0 && buffCount % 4 == 0)
+                {
+                    sb.Append('\n');
+                }
 
                 buffCount++;
 
-                if (buffInstance.Buff == Buffs.Defend) {
+                if (buffInstance.Buff == Buffs.Defend)
+                {
                     sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
                             .Append(units[i].Defend.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
-                } else if (buffInstance.Buff == Buffs.Shield) {
+                }
+                else if (buffInstance.Buff == Buffs.Shield)
+                {
                     sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
                             .Append(units[i].Shield.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
-                } else {
+                }
+                else
+                {
                     sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str);
-                    if (buffInstance.Buff.MaxStacks > 1) {
+
+                    if (buffInstance.Buff.MaxStacks > 1)
+                    {
                         sb.Append('x').Append(buffInstance.Stacks);
                     }
 
                     sb.Append('(');
-                    if (buffInstance.Turns < BuffInstance.InfiniteTurns) sb.Append(buffInstance.Turns);
-                    else sb.Append('∞');
+
+                    if (buffInstance.Turns < BuffInstance.InfiniteTurns)
+                    {
+                        sb.Append(buffInstance.Turns);
+                    }
+                    else
+                    {
+                        sb.Append('∞');
+                    }
+
                     sb.Append(") ");
                 }
 
@@ -305,7 +367,8 @@ public static class BattleLib {
         _Queue.SetText([.. units.Select(static u => u.FormatName(false))]);
     }
 
-    internal static Unit[] _GetUnitsSortedByAgi() {
+    internal static Unit[] _GetUnitsSortedByAgi()
+    {
         Unit[] units = Battle.GetAllUnits();// todo this might need to not copy
         SortByAgi(units);
         return units;
@@ -314,7 +377,8 @@ public static class BattleLib {
     /// <summary>
     /// Gets the queue index of the Unit currently acting or selecting their move
     /// </summary>
-    internal static int _GetQueueIndex(int curPos, Unit[]? units = null) {
+    internal static int _GetQueueIndex(int curPos, Unit[]? units = null)
+    {
         units ??= _GetUnitsSortedByAgi();
         return units.IndexOf(units.FirstOrDefault(u => u.Pos == curPos));
     }
@@ -322,14 +386,21 @@ public static class BattleLib {
     /// <returns>
     /// Pos of the Unit that the queue should currently be focused on
     /// </returns>
-    internal static int _GetQueuePos() => _selectingMove == _ExecutionPhase ? _usingMove : _selectingMove;
+    internal static int _GetQueuePos()
+    {
+        return _selectingMove == _ExecutionPhase ? _usingMove : _selectingMove;
+    }
 
     #endregion
 
     #region Move Execution Methods
 
-    private static void _SelectPlayerMove() {
-        if (_selectingMove >= Battle.PlayerTeam.Units.Length) return;
+    private static void _SelectPlayerMove()
+    {
+        if (_selectingMove >= Battle.PlayerTeam.Units.Length)
+        {
+            return;
+        }
 
         _SkillsL.Position = new(600, 500 + (450 * _selectingMove));
         // todo support ExA
@@ -344,8 +415,10 @@ public static class BattleLib {
         _SelectMove();
     }
 
-    private static void _SelectOpponentMove() {
-        if (Settings.SelectOpponentMoves) {
+    private static void _SelectOpponentMove()
+    {
+        if (Settings.SelectOpponentMoves)
+        {
             _SelectMove();
             return;
         }
@@ -361,12 +434,17 @@ public static class BattleLib {
 
         _selectingMove++;
 
-        if (_selectingMove > PosLib.Highest) _selectingMove = _ExecutionPhase;
+        if (_selectingMove > PosLib.Highest)
+        {
+            _selectingMove = _ExecutionPhase;
+        }
     }
 
-    private static void _SelectMove() {
+    private static void _SelectMove()
+    {
         // Cancel
-        if (_selectingMove != 0 && InputLib.Check(Keybinds.Back)) {
+        if (_selectingMove != 0 && InputLib.Check(Keybinds.Back))
+        {
             // todo
             _SkillsL.Text = "";
 
@@ -376,7 +454,10 @@ public static class BattleLib {
             _indexSkill = 0;
             _Moves[_selectingMove].Text = "";
 
-            for (int i = 0; i <= Battle.PlayerTeam.Units[_selectingMove].ExtraActions; i++) _CurMoves.RemoveLast();
+            for (int i = 0; i <= Battle.PlayerTeam.Units[_selectingMove].ExtraActions; i++)
+            {
+                _CurMoves.RemoveLast();
+            }
 
             return;
         }
@@ -385,7 +466,10 @@ public static class BattleLib {
 
         //MenuLib.handleOptColor(skills, indexSkill); todo
 
-        if (!InputLib.Check(Keybinds.Confirm)) return;
+        if (!InputLib.Check(Keybinds.Confirm))
+        {
+            return;
+        }
 
         _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_indexSkill];
         _Moves[_selectingMove].Text = _selectedSkillInstance.Skill.GetName();
@@ -399,22 +483,31 @@ public static class BattleLib {
     }
 
     // todo split out into multiple fns
-    private static void _ExecuteMove() {
-        if (_CurMoves.Count == 0) {
+    private static void _ExecuteMove()
+    {
+        if (_CurMoves.Count == 0)
+        {
             _EndTurn();
             return;
         }
 
         // Sort moves
         // todo test
-        _CurMoves.Sort(static (a, b) => {
+        _CurMoves.Sort(static (a, b) =>
+        {
             // Sort by Prio
             int prioComparison = a.SkillInstance.Skill.Prio.CompareTo(b.SkillInstance.Skill.Prio);
-            if (prioComparison != 0) return prioComparison;
+            if (prioComparison != 0)
+            {
+                return prioComparison;
+            }
 
             // Sort by Agi
             int agiComparison = a.Self.GetStat(Stats.Agi).CompareTo(b.Self.GetStat(Stats.Agi));
-            if (agiComparison != 0) return agiComparison;
+            if (agiComparison != 0)
+            {
+                return agiComparison;
+            }
 
             // Sort by Pos
             return a.Self.Pos.CompareTo(b.Self.Pos);
@@ -426,7 +519,8 @@ public static class BattleLib {
 
         _UpdateStatDisplay(self.Pos);
 
-        if (self.IsBoolStat(BoolStats.UnableToAct)) {
+        if (self.IsBoolStat(BoolStats.UnableToAct))
+        {
             LogLib.Add("LogSkillFailUnableToAct".FormatLang([move.GetTriesToUseString(),
             "LogButIsUnableToAct".FormatLang(self.GetBoolStat(BoolStats.UnableToAct).ToString())])); // todo test
             _EndMove();
@@ -434,14 +528,16 @@ public static class BattleLib {
         }
 
         int cd = move.SkillInstance.Cooldown;
-        if (cd > 0 && _applyingEffect == 0) {
+        if (cd > 0 && _applyingEffect == 0)
+        {
             LogLib.Add("LogSkillFailCooldown".FormatLang([move.GetTriesToUseString(),
                 "LogButItsOnCooldown".IcuFormatLang(cd)]));
             _EndMove();
             return;
         }
 
-        if (!move.IsInRange()) {
+        if (!move.IsInRange())
+        {
             LogLib.Add("LogSkillFailRange".FormatLang([move.GetTriesToUseString(), "LogButCantReach".GetLang()]));
             _EndMove();
             return;
@@ -452,7 +548,8 @@ public static class BattleLib {
 
         Skill skill = move.SkillInstance.Skill;
 
-        if (_applyingEffect == 0) {
+        if (_applyingEffect == 0)
+        {
             move.SkillInstance.Cooldown = cd;
 
             Element element = skill.GetElement();
@@ -466,25 +563,35 @@ public static class BattleLib {
             int change = (int) (skill.IsBloom ? costMod : costMod * self.GetMult(Mults.SpUse));
             spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
 
-            if (spNew < 0) {
+            if (spNew < 0)
+            {
                 string msg = "LogSkillFailSp".FormatLang([move.GetTriesToUseString(),
                     "LogButDoesntHaveEnough".IcuFormatLang(Convert.ToInt32(skill.IsBloom))]);
                 LogLib.Add(msg);
-            } else {
+            }
+            else
+            {
                 Unit target = Battle.GetUnitAtPos(move.TargetPos);
 
                 int spOld = skill.IsBloom ? team.Bloom : self.Sp;
                 change *= -1;
                 string changeSp = "";
 
-                if (spOld != spNew) {
+                if (spOld != spNew)
+                {
                     changeSp = "LogSkillUseChangeSpBloom".IcuFormatLang([Convert.ToInt32(skill.IsBloom),
                         spOld.Format(ThemeColor.Sp, false),
                         spNew.Format(ThemeColor.Sp, false), change.Format()]);
                 }
 
-                if (skill.IsBloom) team.Bloom = spNew;
-                else self.Sp = spNew;
+                if (skill.IsBloom)
+                {
+                    team.Bloom = spNew;
+                }
+                else
+                {
+                    self.Sp = spNew;
+                }
 
                 LogLib.Add("LogSkillUse".IcuFormatLang([self.FormatName(false),
                     skill.GetName(ThemeColor.Skill),
@@ -494,7 +601,8 @@ public static class BattleLib {
                 self.OnUseSkill(target, skill);
 
                 // Color move for currently acting combatant (temp)
-                for (int i = 0; i < UnitCount; i++) {
+                for (int i = 0; i < UnitCount; i++)
+                {
                     //moves[i].Color = (self.Pos == i) ? Color.Pink : Color.White;
                 }
 
@@ -509,23 +617,32 @@ public static class BattleLib {
         // The check for reaching skillEffects.length will only apply here if the length is 0, because otherwise it'll
         // be applied at the end
         // todo should this be checking _applyingEffect > _nonFails
-        if (spNew < 0 || _applyingEffect == skillEffects.Length || (_nonFails == 0 && _applyingEffect > 0)) {
+        if (spNew < 0 || _applyingEffect == skillEffects.Length || (_nonFails == 0 && _applyingEffect > 0))
+        {
             _UpdateStatDisplay(self.Pos);
             _EndMove();
             return;
         }
 
-        foreach (int targetPos in skill.Range.GetTargetPositions(self.Pos, move.TargetPos)) {
-            if (targetPos == PosLib.Invalid) continue;
+        foreach (int targetPos in skill.Range.GetTargetPositions(self.Pos, move.TargetPos))
+        {
+            if (targetPos == PosLib.Invalid)
+            {
+                continue;
+            }
 
             Unit targetCur = Battle.GetUnitAtPos(targetPos);
-            if (_applyingEffect == 0) {
+            if (_applyingEffect == 0)
+            {
                 _prevResults[targetPos] = ResultType.Success;
 
                 targetCur.OnTargetedBySkill(self, skill);
             }
 
-            if (_prevResults[targetPos] == ResultType.Fail) continue;
+            if (_prevResults[targetPos] == ResultType.Fail)
+            {
+                continue;
+            }
 
             _nonFails++;
 
@@ -534,69 +651,97 @@ public static class BattleLib {
             _prevResults[targetPos] = resultType;
         }
 
-        if (!skillEffects[_applyingEffect].IsInstant) _delay += TimeSpan.FromSeconds(0.25f * Settings.BattleSpeed);
+        if (!skillEffects[_applyingEffect].IsInstant)
+        {
+            _delay += TimeSpan.FromSeconds(0.25f * Settings.BattleSpeed);
+        }
 
         _applyingEffect++;
 
         _UpdateStatDisplay(self.Pos);
 
-        if (skillEffects.Length != _applyingEffect) return;
+        if (skillEffects.Length != _applyingEffect)
+        {
+            return;
+        }
 
         _EndMove();
         move.SkillInstance.Cooldown = move.SkillInstance.Skill.Cooldown;
         // todo delete killed units
     }
 
-    private static void _EndMove() {
+    private static void _EndMove()
+    {
         _applyingEffect = 0;
         _nonFails = 0;
         _CurMoves.RemoveFirst();
         _delay += TimeSpan.FromSeconds(1) * Settings.BattleSpeed;
     }
 
-    private static void _EndTurn() {
+    private static void _EndTurn()
+    {
         _selectingMove = 0;
         _usingMove = _SelectionPhase;
         Battle.Turn++;
 
-        for (int i = 0; i < UnitCount; i++) {
+        for (int i = 0; i < UnitCount; i++)
+        {
             _Moves[i].Text = "";
             //moves[i].Color = Settings.Palette.White;
         }
 
-        foreach (Unit unit in Battle.GetAllUnits()) {
+        foreach (Unit unit in Battle.GetAllUnits())
+        {
             unit.Sp = (int) Math.Min(unit.Sp + (100 * unit.GetMult(Mults.SpGain)), 1000);
 
-            foreach (Passive passive in unit.Passives) {
+            foreach (Passive passive in unit.Passives)
+            {
                 StringBuilder turnEnd1 =
                     new StringBuilder("LogTurnEndEffect".FormatLang([unit.FormatName(),
                         ThemeColor.Passive + passive.GetName()])).Append(' ');
 
-                foreach (IBuffEffect buffEffect in passive.BuffEffects) {
+                foreach (IBuffEffect buffEffect in passive.BuffEffects)
+                {
                     StringBuilder turnEnd2 = new();
                     string[] effectMsgs = buffEffect.OnTurnEnd(unit, 1);
 
-                    foreach (string effectMsg in effectMsgs) {
-                        if (!string.IsNullOrEmpty(effectMsg)) turnEnd2.Append(effectMsg);
+                    foreach (string effectMsg in effectMsgs)
+                    {
+                        if (!string.IsNullOrEmpty(effectMsg))
+                        {
+                            turnEnd2.Append(effectMsg);
+                        }
                     }
 
-                    if (turnEnd2.Length > 0) LogLib.Add(turnEnd1 + turnEnd2.ToString());
+                    if (turnEnd2.Length > 0)
+                    {
+                        LogLib.Add(turnEnd1 + turnEnd2.ToString());
+                    }
                 }
             }
 
-            foreach (BuffInstance buffInstance in unit.BuffInstances) {
+            foreach (BuffInstance buffInstance in unit.BuffInstances)
+            {
                 StringBuilder turnEnd1 =
                     new StringBuilder("LogTurnEndEffect".FormatLang([unit.FormatName(),
                     buffInstance.Buff.GetName()])).Append(' ');
 
-                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
+                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+                {
                     StringBuilder turnEnd2 = new();
                     string[] effectMsgs = buffEffect.OnTurnEnd(unit, buffInstance.Stacks);
-                    foreach (string effectMsg in effectMsgs) {
-                        if (!string.IsNullOrEmpty(effectMsg)) turnEnd2.Append(effectMsg);
+                    foreach (string effectMsg in effectMsgs)
+                    {
+                        if (!string.IsNullOrEmpty(effectMsg))
+                        {
+                            turnEnd2.Append(effectMsg);
+                        }
                     }
 
-                    if (turnEnd2.Length > 0) LogLib.Add(turnEnd1 + turnEnd2.ToString());
+                    if (turnEnd2.Length > 0)
+                    {
+                        LogLib.Add(turnEnd1 + turnEnd2.ToString());
+                    }
                 }
             }
 
@@ -619,13 +764,20 @@ public static class BattleLib {
 
     #region Utility Methods
 
-    public static BuffType GetStageBuffType(int stacks) => stacks >= 0 ? BuffType.Buff : BuffType.Debuff;
+    public static BuffType GetStageBuffType(int stacks)
+    {
+        return stacks >= 0 ? BuffType.Buff : BuffType.Debuff;
+    }
 
-    public static void SortByAgi(Unit[] units) =>
+    public static void SortByAgi(Unit[] units)
+    {
         units.Sort(static (a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
+    }
 
-    private static string _GetTurnString(int turn) =>
-        $"{ThemeColor.Turn.Str}{"Turn".GetLang()} {turn}{ThemeColor.White.Str}";
+    private static string _GetTurnString(int turn)
+    {
+        return $"{ThemeColor.Turn.Str}{"Turn".GetLang()} {turn}{ThemeColor.White.Str}";
+    }
 
     #endregion
 }

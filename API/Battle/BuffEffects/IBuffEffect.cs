@@ -1,11 +1,15 @@
 namespace API.Battle.BuffEffects;
 
-public interface IBuffEffect {
+public interface IBuffEffect
+{
     void OnGive(Unit self, int stacks) { }
 
     void OnRemove(Unit self, int stacks) { }
 
-    string[] OnTurnEnd(Unit self, int stacks) => [];
+    string[] OnTurnEnd(Unit self, int stacks)
+    {
+        return [];
+    }
 
     void OnUseSkill(Unit self, Unit target, int stacks, Skill skill) { }
 

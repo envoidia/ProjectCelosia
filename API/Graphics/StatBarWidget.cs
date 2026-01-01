@@ -9,18 +9,23 @@ namespace API.Graphics;
 /// <summary>
 /// Layered bars representing a numerical amount, with text
 /// </summary>
-public sealed class StatBarWidget : StatBarWidgetBase {
-    public ThemeColor ColorLayer0 {
+public sealed class StatBarWidget : StatBarWidgetBase
+{
+    public ThemeColor ColorLayer0
+    {
         get;
-        init {
+        init
+        {
             field = value;
             this.ThemeChange();
         }
     } = ThemeColor.Neg;
 
-    public ThemeColor ColorLayer1 {
+    public ThemeColor ColorLayer1
+    {
         get;
-        init {
+        init
+        {
             field = value;
             this.ThemeChange();
         }
@@ -34,9 +39,11 @@ public sealed class StatBarWidget : StatBarWidgetBase {
     /// <summary>
     /// The value being tracked
     /// </summary>
-    public int Val {
+    public int Val
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._UpdateText();
         }
@@ -45,9 +52,11 @@ public sealed class StatBarWidget : StatBarWidgetBase {
     /// <summary>
     /// The amount to be considered 100%
     /// </summary>
-    public int MaxVal {
+    public int MaxVal
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._UpdateText();
         }
@@ -56,7 +65,8 @@ public sealed class StatBarWidget : StatBarWidgetBase {
     private Color _c0;
     private Color _c1;
 
-    static StatBarWidget() {
+    static StatBarWidget()
+    {
         ThemeChangeStatic();
         Theme.OnChange += ThemeChangeStatic;
     }
@@ -64,7 +74,8 @@ public sealed class StatBarWidget : StatBarWidgetBase {
     public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
         : base(pos, width, renderPriority, text) => this.ThemeChange();
 
-    public override void Draw(GameTime gameTime) {
+    public override void Draw(GameTime gt)
+    {
         // todo animate between stages whenever it changes
 
         // Draw bars
@@ -77,19 +88,22 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         drawBar(this._GetLayerColor((int) Math.Floor(barCount)), upperBarLen, 1 - upperBarLen);
 
         // Upper bar
-        if (barCount != Math.Floor(barCount)) {
+        if (barCount != Math.Floor(barCount))
+        {
             drawBar(this._GetLayerColor((int) Math.Ceiling(barCount)), 0, upperBarLen);
         }
 
-        this.Title.Data.Act(gameTime);
-        this.Text.Data.Act(gameTime);
+        this.Title.Data.Act(gt);
+        this.Text.Data.Act(gt);
 
-        if (DebugUtil.DrawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines)
+        {
             this.Title.Data.DrawDebug(false);
             this.Text.Data.DrawDebug(false);
         }
 
-        void drawBar(Color c, float start, float len) {
+        void drawBar(Color c, float start, float len)
+        {
             Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X,
                 this.X + ((this.Width - _BarStartOffset) * start) + _BarStartOffset, (float) this.Prog),
                 this.Y + _HeightOffset);
@@ -101,22 +115,30 @@ public sealed class StatBarWidget : StatBarWidgetBase {
         }
     }
 
-    public override void ThemeChange() {
+    public override void ThemeChange()
+    {
         this._c0 = Settings.Theme.Get(this.ColorLayer0);
         this._c1 = Settings.Theme.Get(this.ColorLayer1);
     }
 
-    private static void ThemeChangeStatic() =>
+    private static void ThemeChangeStatic()
+    {
         _layers = [Settings.Theme.Pos, Settings.Theme.StatBarLayer4, Settings.Theme.StatBarLayer5, Settings.Theme.White];
+    }
 
-    private void _UpdateText() {
+    private void _UpdateText()
+    {
         this.Text.Text = $"{ThemeColor.Black.Str}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
         this.CalcLayout();
     }
 
-    private Color _GetLayerColor(int layer) => layer switch {
-        0 => this._c0,
-        1 => this._c1,
-        _ => _layers[Math.Min(layer - 2, _layers.Length - 1)]
-    };
+    private Color _GetLayerColor(int layer)
+    {
+        return layer switch
+        {
+            0 => this._c0,
+            1 => this._c1,
+            _ => _layers[Math.Min(layer - 2, _layers.Length - 1)]
+        };
+    }
 }

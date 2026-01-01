@@ -5,18 +5,22 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class RectangleActor : IActor {
-    public ActorData Data { get; set; }
+public class RectangleActor : IActor
+{
+    public ActorData Data { get; }
 
-    public RectangleActor(ThemeColor color = ThemeColor.White, RenderPriority priority = RenderPriority.B1Med) {
+    public RectangleActor(ThemeColor color = ThemeColor.White, RenderPriority priority = RenderPriority.B1Med)
+    {
         this.Data = new(this, priority);
         this.Color = color;
         Theme.OnChange += this._ThemeChange;
     }
 
-    public ThemeColor Color {
+    public ThemeColor Color
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._ThemeChange();
         }
@@ -24,12 +28,18 @@ public class RectangleActor : IActor {
 
     private Color _color;
 
-    private void _ThemeChange() => this._color = Settings.Theme.Get(this.Color);
+    private void _ThemeChange()
+    {
+        this._color = Settings.Theme.Get(this.Color);
+    }
 
     public void OnCreate() { }
     public void OnDestroy() { }
 
-    public void Draw(GameTime gameTime) => Core.ShapeBatch.DrawRectangle(
+    public void Draw(GameTime gt)
+    {
+        Core.ShapeBatch.DrawRectangle(
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new(this.Width, this.Height), Microsoft.Xna.Framework.Color.Trans, _color);
+            new(this.Width, this.Height), Microsoft.Xna.Framework.Color.Trans, this._color);
+    }
 }

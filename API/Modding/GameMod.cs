@@ -12,7 +12,8 @@ namespace API.Modding;
 /// </summary>
 /// <param name="id">Unique string ID for this mod</param>
 /// <param name="version">Mod version</param>
-public sealed class GameMod(string id, Version version) : IDescribable {
+public sealed class GameMod(string id, Version version) : IDescribable
+{
     /// <summary>
     /// Unique string ID for this mod
     /// </summary>
@@ -23,9 +24,6 @@ public sealed class GameMod(string id, Version version) : IDescribable {
     /// </summary>
     public string[] DependencyIds { get; init; } = [];
 
-    /// <summary>
-    /// Mod version
-    /// </summary>
     public Version Version { get; } = version;
 
     /// <summary>
@@ -42,7 +40,18 @@ public sealed class GameMod(string id, Version version) : IDescribable {
     public string KeyName => $"{this.Id}:{ModLoader.NameKey}";
     public string KeyDesc => $"{this.KeyName}Desc";
 
-    public string GetName() => this.GetName(ThemeColor.White);
-    public string GetName(ThemeColor color) => color.Str + this.KeyName.GetLang();
-    public string GetDesc() => this.KeyDesc.GetLang();
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.White);
+    }
+
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.KeyName.GetLang();
+    }
+
+    public string GetDesc()
+    {
+        return this.KeyDesc.GetLang();
+    }
 }

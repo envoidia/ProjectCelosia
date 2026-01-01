@@ -2,10 +2,12 @@ using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
 
-internal static class _MainMenuLib {
+internal static class _MainMenuLib
+{
     private static int _index;
 
-    private enum _Options {
+    private enum _Options
+    {
         Start,
         Encyclopedia,
         Options,
@@ -25,7 +27,8 @@ internal static class _MainMenuLib {
     //     CurDir = SelectionType.Horiz
     // };
 
-    internal static void _Update(GameTime gameTime) {
+    internal static void _Update(GameTime gt)
+    {
         StateMachine.Add(States.Battle);
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
@@ -58,7 +61,8 @@ internal static class _MainMenuLib {
         }
 
         if (InputLib.Check(Keybinds.Back)) {
-            if ((_Options) _index == _Options.Quit) Core.Instance.Exit();
+            if ((_Options) _index == _Options.Quit) {Core.Instance.Exit();
+            }
             _index = (int) _Options.Quit;
         }*/
     }

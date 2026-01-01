@@ -2,19 +2,34 @@ using API.Battle.State;
 
 namespace API.Battle.BuffEffects;
 
-public sealed class ChangeSp(int change, bool isImmediate = false) : IBuffEffect {
-    public void OnGive(Unit self, int stacks) {
-        if (!isImmediate) return;
+public sealed class ChangeSp(int change, bool isImmediate = false) : IBuffEffect
+{
+    public void OnGive(Unit self, int stacks)
+    {
+        if (!isImmediate)
+        {
+            return;
+        }
 
         string str = CalcLib.ChangeSp(self, change);
-        if (!self.IsBoolStat(BoolStats.InfiniteSp)) LogLib.Add(str);
+        if (!self.IsBoolStat(BoolStats.InfiniteSp))
+        {
+            LogLib.Add(str);
+        }
     }
 
-    public string[] OnTurnEnd(Unit self, int stacks) {
-        if (isImmediate) return [];
+    public string[] OnTurnEnd(Unit self, int stacks)
+    {
+        if (isImmediate)
+        {
+            return [];
+        }
 
         string str = CalcLib.ChangeSp(self, change);
-        if (!self.IsBoolStat(BoolStats.InfiniteSp)) return [str];
+        if (!self.IsBoolStat(BoolStats.InfiniteSp))
+        {
+            return [str];
+        }
 
         return [];
     }

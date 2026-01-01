@@ -7,7 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace API.Graphics;
 
 // todo find a way to resize icons / scale font size
-public sealed class TextureFragmentColored : IRenderable {
+public sealed class TextureFragmentColored : IRenderable
+{
     public Texture2D Texture { get; }
     public Rectangle Region { get; }
 
@@ -16,14 +17,16 @@ public sealed class TextureFragmentColored : IRenderable {
 
     private readonly Vector2 _Scale = Vector2.One;
 
-    public TextureFragmentColored(Texture2D texture, Rectangle region) {
+    public TextureFragmentColored(Texture2D texture, Rectangle region)
+    {
         ArgumentNullException.ThrowIfNull(texture);
 
         this.Texture = texture;
         this.Region = region;
     }
 
-    public void Draw(FSRenderContext context, Vector2 position, Color color) {
+    public void Draw(FSRenderContext context, Vector2 position, Color color)
+    {
         //FieldInfo? f = typeof(FSRenderContext).GetField("_scale", BindingFlags.NonPublic | BindingFlags.Instance);
         //f.SetValue(context, new Vector2(1.5f));
         context.DrawImage(this.Texture, this.Region, position, Vector2.Zero, color);

@@ -10,8 +10,10 @@ namespace API.Battle.State;
 using static API.Battle.State.BattleLib;
 using static API.Input.InputPrompts;
 
-internal static class _TargetingLib {
-    internal static readonly Menu.Menu _Menu = new("Targeting") {
+internal static class _TargetingLib
+{
+    internal static readonly Menu.Menu _Menu = new("Targeting")
+    {
         OnUpdate = _Update,
         GetInputPrompt = static () =>
             Menu.State.State.GetInputPromptString(Move, Faster, Jump, Confirm, Back, Log, Inspect)
@@ -22,10 +24,12 @@ internal static class _TargetingLib {
     /// </summary>
     private static int _extraActions = 0;
 
-    private static void _Update(GameTime gameTime) {
+    private static void _Update(GameTime gt)
+    {
         _CheckOpenLogInspect();
 
-        if (InputLib.Check(Keybinds.Back)) {
+        if (InputLib.Check(Keybinds.Back))
+        {
             //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";
 
@@ -39,7 +43,10 @@ internal static class _TargetingLib {
 
         //MenuLib.handleOptColor(stats, indexTarget);
 
-        if (!InputLib.Check(Keybinds.Confirm)) return;
+        if (!InputLib.Check(Keybinds.Confirm))
+        {
+            return;
+        }
 
         Unit self = Battle.PlayerTeam.Units[_selectingMove];
         Unit target = _indexTarget < PosLib.LowestOpp
@@ -49,14 +56,18 @@ internal static class _TargetingLib {
         // todo support ExA
         _Moves[_selectingMove].Text = $"{_Moves[_selectingMove].Text} /c[white]→ {target.FormatName(false)}";
 
-        foreach (Label stat in _Stats) {
+        foreach (Label stat in _Stats)
+        {
             //stat.Color = Colors.White;
         }
 
         // Move on to next Unit unless this one has extra actions
-        if (_extraActions < self.ExtraActions) {
+        if (_extraActions < self.ExtraActions)
+        {
             _extraActions++;
-        } else {
+        }
+        else
+        {
             _extraActions = 0;
             _selectingMove++;
         }

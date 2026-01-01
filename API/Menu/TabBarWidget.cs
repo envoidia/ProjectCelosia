@@ -13,13 +13,16 @@ namespace API.Menu;
 /// A set of tabs
 /// Expected to have static lifetime -- otherwise, make sure to manually unsubscribe from <c>InputLib.DeviceChange</c>
 /// </summary>
-public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
+public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
+{
     public List<Label> Labels { get; private set; }
 
     public SelectionType PrefDir => SelectionType.Horiz;
-    public SelectionType CurDir {
+    public SelectionType CurDir
+    {
         get;
-        set {
+        set
+        {
             field = value;
             this._UpdateInputPrompt();
         }
@@ -28,11 +31,13 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     private const int _DefaultLabelPaddingLR = 30;
     private const int _DefaultLabelPaddingTB = 20;
 
-    public Label PromptL { get; } = new() {
+    public Label PromptL { get; } = new()
+    {
         Padding = new(0, _DefaultLabelPaddingTB),
         Alignment = Alignment.Controlled
     };
-    public Label PromptR { get; } = new() {
+    public Label PromptR { get; } = new()
+    {
         Padding = new(0, _DefaultLabelPaddingTB),
         Alignment = Alignment.Controlled
     };
@@ -41,15 +46,17 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
 
     public int Index { get; set; } = 0;
 
-    public int OptCount {
+    public int OptCount
+    {
         get;
-        private set {
+        private set
+        {
             field = value;
             this.Index = Math.Clamp(this.Index, 0, Math.Max(value - 1, 0));
         }
     }
 
-    public Action<int>? OnSelect { get; set; }
+    public Action<int>? OnChangeIndex { get; set; }
 
     /// <summary>
     /// Animation progress per-item
@@ -59,11 +66,18 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     public ActorData Data { get; private set; }
 
     /// <inheritdoc cref="ActorData.AnimFromDir" />
-    public Dir AnimFromDir {
+    public Dir AnimFromDir
+    {
         get => this.Data.AnimFromDir;
-        set {
+        set
+        {
             this.Data.AnimFromDir = value;
-            foreach (Label l in this.Labels) l.AnimFromDir = value;
+
+            foreach (Label l in this.Labels)
+            {
+                l.AnimFromDir = value;
+            }
+
             this.PromptL.AnimFromDir = value;
             this.PromptR.AnimFromDir = value;
         }
@@ -72,7 +86,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
     private const int _OutlineWidth = 10;
     private const int _YOffset = 9;
 
-    public TabBarWidget(Vector2 pos, int capacity) {
+    public TabBarWidget(Vector2 pos, int capacity)
+    {
         this.Data = new ActorData(this, RenderPriority.B2Med);
 
         this.Position = pos;
@@ -88,31 +103,41 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
         InputLib.OnDeviceChange += this._UpdateInputPrompt;
     }
 
-    public TabBarWidget(Vector2 pos, params string[] optionText) : this(pos, optionText.Length) {
-        for (int i = 0; i < optionText.Length; i++) this.Labels.Add(new Label() {
-            Text = optionText[i],
-            Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
-        });
+    public TabBarWidget(Vector2 pos, params string[] optionText) : this(pos, optionText.Length)
+    {
+        for (int i = 0; i < optionText.Length; i++)
+        {
+            this.Labels.Add(new Label()
+            {
+                Text = optionText[i],
+                Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
+            });
+        }
 
         this.CalcLayout();
     }
 
-    public void SetText(params string[] optionText) {
+    public void SetText(params string[] optionText)
+    {
         int i = 0;
-        for (; i < optionText.Length && i < this.Labels.Count; i++) {
+        for (; i < optionText.Length && i < this.Labels.Count; i++)
+        {
             this.Labels[i].IsVisible = true;
             this.Labels[i].Text = optionText[i];
         }
 
         // New list shorter, blank out remaining Labels and progs
-        for (; i < this.Labels.Count; i++) {
+        for (; i < this.Labels.Count; i++)
+        {
             this.Labels[i].IsVisible = false;
             this.Progs[i] = new();
         }
 
         // New list longer, add more Labels and progs
-        for (; i < optionText.Length; i++) {
-            this.Labels.Add(new Label() {
+        for (; i < optionText.Length; i++)
+        {
+            this.Labels.Add(new Label()
+            {
                 Text = optionText[i],
                 Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
                 Alignment = Alignment.Controlled
@@ -126,20 +151,30 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
         this.CalcLayout();
     }
 
-    public void CalcLayout() {
+    public void CalcLayout()
+    {
         this.Size = Point.Zero;
 
-        foreach (Label l in this.Labels) {
+        foreach (Label l in this.Labels)
+        {
             this.Width += l.Padding.L;
             l.Position = new(this.X + this.Width, this.Y + l.Padding.T);
             this.Width += l.Width + l.Padding.R;
 
-            if (l.Height + l.Padding.TB > this.Height) this.Height = l.Height + l.Padding.TB;
+            if (l.Height + l.Padding.TB > this.Height)
+            {
+                this.Height = l.Height + l.Padding.TB;
+            }
         }
+
         this.Origin = this.Data.CalcOrigin();
 
-        if (this.Origin != Point.Zero) {
-            foreach (Label l in this.Labels) l.Origin = this.Origin;
+        if (this.Origin != Point.Zero)
+        {
+            foreach (Label l in this.Labels)
+            {
+                l.Origin = this.Origin;
+            }
             this.PromptL.Origin = this.Origin;
             this.PromptR.Origin = this.Origin;
         }
@@ -148,29 +183,46 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
         this.PromptR.Position = new(this.X + this.Width + this.Padding.R, this.Y + this.PromptR.Padding.T);
     }
 
-    public void Input(GameTime gameTime) => this.Index = this.CheckInput();
+    public void Input(GameTime gt)
+    {
+        this.Index = this.CheckInput();
+    }
 
-    public void OnCreate() {
+    public void OnCreate()
+    {
         // todo why dont prompts appear to animate
         this.PromptL.Create();
         this.PromptR.Create();
-        foreach (Label l in this.Labels) l.Create();
+
+        foreach (Label l in this.Labels)
+        {
+            l.Create();
+        }
     }
 
-    public void OnDestroy() {
+    public void OnDestroy()
+    {
         this.PromptL.Destroy();
         this.PromptR.Destroy();
-        foreach (Label l in this.Labels) l.Destroy();
+
+        foreach (Label l in this.Labels)
+        {
+            l.Destroy();
+        }
     }
 
-    public void Draw(GameTime gameTime) {
-        if (this.OptCount != 0) {
+    public void Draw(GameTime gt)
+    {
+        if (this.OptCount != 0)
+        {
             this.PromptL.IsVisible = this.CheckInput;
             this.PromptR.IsVisible = this.CheckInput;
 
             int w = 0;
-            for (int i = 0; i < this.OptCount; i++) {
-                this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], this.Speed, gameTime,
+
+            for (int i = 0; i < this.OptCount; i++)
+            {
+                this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], this.Speed, gt,
                     i == this.Index ? AnimDirs.In : AnimDirs.Out);
 
                 float yOff = (float) this.Progs[i] * _YOffset;
@@ -184,7 +236,9 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
                 RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.Theme.Bg,
                     Settings.Theme.Fg, _OutlineWidth, RenderLib.DefaultSlant,
                     RenderLib.DefaultSlant, Progress.One);
-                if (this.Progs[i] != 0) {
+
+                if (this.Progs[i] != 0)
+                {
 
                     // Cursor
                     RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.Theme.Accent,
@@ -196,26 +250,37 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor {
             }
         }
 
-        foreach (Label l in this.Labels) {
-            l.Data.Act(gameTime);
-            if (DebugUtil.DrawActorOutlines) l.Data.DrawDebug(false);
+        foreach (Label l in this.Labels)
+        {
+            l.Data.Act(gt);
+
+            if (DebugUtil.DrawActorOutlines)
+            {
+                l.Data.DrawDebug(false);
+            }
         }
 
-        this.PromptL.Data.Act(gameTime);
-        this.PromptR.Data.Act(gameTime);
+        this.PromptL.Data.Act(gt);
+        this.PromptR.Data.Act(gt);
 
-        if (DebugUtil.DrawActorOutlines) {
+        if (DebugUtil.DrawActorOutlines)
+        {
             this.PromptL.Data.DrawDebug(false);
             this.PromptR.Data.DrawDebug(false);
 
             // Disabled input overlay
-            if (!this.CheckInput) this.Data.DrawBackground(Color.ActorDisabledInput);
+            if (!this.CheckInput)
+            {
+                this.Data.DrawBackground(Color.ActorDisabledInput);
+            }
         }
     }
 
-    private void _UpdateInputPrompt() {
+    private void _UpdateInputPrompt()
+    {
         this.PromptL.Text = this.CurDir.GetDec()?.GetCurrentGlyph() ?? "";
         this.PromptR.Text = this.CurDir.GetInc()?.GetCurrentGlyph() ?? "";
+
         this.CalcLayout();
     }
 }

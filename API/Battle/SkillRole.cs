@@ -1,6 +1,7 @@
 namespace API.Battle;
 
-public enum SkillRole {
+public enum SkillRole
+{
     Attack,
     Heal,
     Shield,

@@ -7,7 +7,8 @@ using API.Name;
 namespace API.Battle;
 
 // todo represent available and equipped skills and equipped item
-public sealed class UnitType : IDescribable, IRegistrable {
+public sealed class UnitType : IDescribable, IRegistrable
+{
 
     public Dictionary<Stat, int> Stats { get; }
     internal readonly Dictionary<Element, int> _Affinities;
@@ -20,7 +21,8 @@ public sealed class UnitType : IDescribable, IRegistrable {
     public string ItemId { get; init; }
 
     public UnitType(string modId, string keyName, Dictionary<Stat, int> stats,
-        Dictionary<Element, int> affinities, Passive[] passives, string? itemId = null) {
+        Dictionary<Element, int> affinities, Passive[] passives, string? itemId = null)
+    {
         this.Stats = stats;
         this._Affinities = affinities;
         this.Passives = passives;
@@ -34,16 +36,31 @@ public sealed class UnitType : IDescribable, IRegistrable {
         Registry.Register(this);
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    }
 
-    public string GetName(ThemeColor color) => color.Str + this.GetLang();
-    public string GetName() => this.GetName(ThemeColor.White);
-    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
+    public string GetName(ThemeColor color)
+    {
+        return color.Str + this.GetLang();
+    }
 
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.White);
+    }
+
+    public string GetDesc()
+    {
+        return this.KeyDesc.GetLang(this.ModId);
+    }
 }
 
-public static class UnitTypes {
-    public static readonly UnitType TestUnitType = new(Core.Id, "TestUnitType", new Dictionary<Stat, int>() {
+public static class UnitTypes
+{
+    public static readonly UnitType TestUnitType = new(Core.Id, "TestUnitType", new Dictionary<Stat, int>()
+    {
         [Stats.Hp] = 100, [Stats.Str] = 100, [Stats.Mag] = 100, [Stats.Fth] = 100,
         [Stats.Amr] = 100, [Stats.Res] = 100, [Stats.Agi] = 100
     }, [], []);

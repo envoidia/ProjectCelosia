@@ -8,11 +8,14 @@ using API.Graphics;
 namespace API.Battle.SkillEffects;
 
 // todo special case for shield
-public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect(descInclusion: buff) {
+public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect(descInclusion: buff)
+{
     public ResultType MinResultType { get; init; } = ResultType.Success;
 
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType) {
-        if ((this.MainTargetOnly && !isMainTarget) || ((int) prevResultType > (int) this.MinResultType)) {
+    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    {
+        if ((this.MainTargetOnly && !isMainTarget) || ((int) prevResultType > (int) this.MinResultType))
+        {
             return ResultType.PseudoSuccess;
         }
 
@@ -29,21 +32,27 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
 
         BuffInstance? buffInstance = null;
 
-        foreach (BuffInstance instance in unit.BuffInstances) {
-            if (instance.Buff == buff) buffInstance = instance;
+        foreach (BuffInstance instance in unit.BuffInstances)
+        {
+            if (instance.Buff == buff)
+            {
+                buffInstance = instance;
+            }
         }
 
         string buffName = buff.GetName();
 
         // Already has buff
         // todo fix dupe buff bug
-        if (buffInstance is not null) {
+        if (buffInstance is not null)
+        {
             StringBuilder str = new();
 
             int stacksOld = buffInstance.Stacks;
             int stacksNew = Math.Min(buff.MaxStacks, stacksOld + stacksMod);
 
-            if (stacksNew != stacksOld) {
+            if (stacksNew != stacksOld)
+            {
                 buffInstance.Stacks = stacksNew;
 
                 str.Append("LogGiveBuffStacks".FormatLang([unit.FormatName(), buffName,
@@ -51,13 +60,17 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
             }
 
             int turnsOld = buffInstance.Turns;
-            if (turnsMod > turnsOld) {
+            if (turnsMod > turnsOld)
+            {
                 buffInstance.Turns = turnsMod;
 
-                if (stacksNew != stacksOld) {
+                if (stacksNew != stacksOld)
+                {
                     str.Append("LogTurnsNameless".FormatLang([ThemeColor.Imp.Str + turnsOld,
                         ThemeColor.Imp.Str + turnsMod]));
-                } else {
+                }
+                else
+                {
                     str = new StringBuilder("LogGiveBuffTurns".FormatLang([unit.FormatName(),
                         buffName, ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]));
                 }
@@ -67,12 +80,18 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
 
             int stacksAdded = stacksNew - stacksOld;
 
-            if (stacksAdded <= 0) return ResultType.PseudoSuccess;
+            if (stacksAdded <= 0)
+            {
+                return ResultType.PseudoSuccess;
+            }
 
-            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects) {
+            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+            {
                 buffEffect.OnGive(unit, stacksAdded);
             }
-        } else {
+        }
+        else
+        {
             // Add buff
             LogLib.Add("LogGiveBuffGain".IcuFormatLang([unit.FormatName(false),
                 buffName, buff.MaxStacks, ThemeColor.Imp.Str + stacksMod, stacksMod,
@@ -82,7 +101,8 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
             buffInstance = unit.BuffInstances[^1];
 
             IBuffEffect[] buffEffects = buffInstance.Buff.BuffEffects;
-            foreach (IBuffEffect buffEffect in buffEffects) {
+            foreach (IBuffEffect buffEffect in buffEffects)
+            {
                 buffEffect.OnGive(unit, buffInstance.Stacks);
             }
         }

@@ -5,7 +5,8 @@ using API.Name;
 
 namespace API.Battle;
 
-public sealed class StageType : IDescribable, IRegistrable {
+public sealed class StageType : IDescribable, IRegistrable
+{
     public Stat[] Stats { get; }
 
     public string KeyName { get; }
@@ -24,7 +25,8 @@ public sealed class StageType : IDescribable, IRegistrable {
     /// <param name="icon"></param>
     /// <param name="itemId">Item ID. If not provided, will use <c>keyName</c></param>
     /// <param name="stats"></param>
-    public StageType(string modId, string keyName, string icon, Stat[] stats, string? itemId = null) {
+    public StageType(string modId, string keyName, string icon, Stat[] stats, string? itemId = null)
+    {
         this.Stats = stats;
 
         this.KeyName = keyName;
@@ -37,18 +39,34 @@ public sealed class StageType : IDescribable, IRegistrable {
         Registry.Register(this);
     }
 
-    public override string ToString() => $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    public override string ToString()
+    {
+        return $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
+    }
 
-    public string GetName(ThemeColor color) =>
-        $"{this.Icon} {color.Str}{this.GetLang()}";
-    public string GetName() => this.GetName(ThemeColor.Buff);
+    public string GetName(ThemeColor color)
+    {
+        return $"{this.Icon} {color.Str}{this.GetLang()}";
+    }
 
-    public string GetNameWithSign(int stage) => $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
+    public string GetName()
+    {
+        return this.GetName(ThemeColor.Buff);
+    }
 
-    public string GetDesc() => this.KeyDesc.GetLang(this.ModId);
+    public string GetNameWithSign(int stage)
+    {
+        return $"{this.GetName()} {(stage > 0 ? "Up" : "Down")}";
+    }
+
+    public string GetDesc()
+    {
+        return this.KeyDesc.GetLang(this.ModId);
+    }
 }
 
-public static class StageTypes {
+public static class StageTypes
+{
     public static readonly StageType Atk = new(Core.Id, "StageAtk",
         $"{ThemeColor.Atk.Str}/i[energy-sword]", [Stats.Str, Stats.Mag]);
 

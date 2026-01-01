@@ -1,6 +1,7 @@
 namespace API.Battle;
 
-public enum Side {
+public enum Side
+{
     Ally,
     Opponent,
     Both
