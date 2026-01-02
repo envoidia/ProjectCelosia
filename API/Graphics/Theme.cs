@@ -14,6 +14,7 @@ namespace API.Graphics;
 /// <summary>
 /// Color theme
 /// </summary>
+// todo load themes from props
 public class Theme : IDescribable, IRegistrable
 {
     /// <summary>
@@ -139,7 +140,6 @@ public class Theme : IDescribable, IRegistrable
 
             Color palePurple = Color.FromRgb(0xdac9ff);
             Color lightPurple = Color.FromRgb(0xbe8ff9);
-            //Color brightPurple = Color.FromRgb(0xb747ff);
 
             Color salmon = Color.FromRgb(0xed94bb);
             Color lightPink = Color.FromRgb(0xe9aee4);

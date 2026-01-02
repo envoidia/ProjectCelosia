@@ -50,17 +50,39 @@ public sealed class Range : IDescribable, IRegistrable
         {
             switch (target)
             {
-                case Self: pos.Add(posSelf); break;
-                case SelfUp: pos.Add(GetUpDown(posSelf, -1)); break;
-                case SelfDown: pos.Add(GetUpDown(posSelf, 1)); break;
-                case SelfAcross: pos.Add(GetAcross(posSelf)); break;
-                case SelfAcrossUp: pos.Add(GetUpDown(GetAcross(posSelf), -1)); break;
-                case SelfAcrossDown: pos.Add(GetUpDown(GetAcross(posSelf), 1)); break;
-                case SelfTeam: pos.AddRange(GetTeamWithout(posSelf)); break;
-                case Target.Target: pos.Add(posTarget); break;
-                case TargetUp: pos.Add(GetUpDown(posTarget, -1)); break;
-                case TargetDown: pos.Add(GetUpDown(posTarget, 1)); break;
-                case TargetTeam: pos.AddRange(GetTeamWithout(posTarget)); break;
+                case Self:
+                    pos.Add(posSelf);
+                    break;
+                case SelfUp:
+                    pos.Add(GetUpDown(posSelf, -1));
+                    break;
+                case SelfDown:
+                    pos.Add(GetUpDown(posSelf, 1));
+                    break;
+                case SelfAcross:
+                    pos.Add(GetAcross(posSelf));
+                    break;
+                case SelfAcrossUp:
+                    pos.Add(GetUpDown(GetAcross(posSelf), -1));
+                    break;
+                case SelfAcrossDown:
+                    pos.Add(GetUpDown(GetAcross(posSelf), 1));
+                    break;
+                case SelfTeam:
+                    pos.AddRange(GetTeamWithout(posSelf));
+                    break;
+                case Target.Target:
+                    pos.Add(posTarget);
+                    break;
+                case TargetUp:
+                    pos.Add(GetUpDown(posTarget, -1));
+                    break;
+                case TargetDown:
+                    pos.Add(GetUpDown(posTarget, 1));
+                    break;
+                case TargetTeam:
+                    pos.AddRange(GetTeamWithout(posTarget));
+                    break;
             }
         }
 

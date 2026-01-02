@@ -233,9 +233,15 @@ public static class BattleLib
 
         switch (_selectingMove)
         {
-            case < PosLib.LowestOpp: _SelectPlayerMove(); return;
-            case <= PosLib.Highest: _SelectOpponentMove(); return;
-            case _ExecutionPhase: _ExecuteMove(); return;
+            case < PosLib.LowestOpp:
+                _SelectPlayerMove();
+                return;
+            case <= PosLib.Highest:
+                _SelectOpponentMove();
+                return;
+            case _ExecutionPhase:
+                _ExecuteMove();
+                return;
         }
     }
 

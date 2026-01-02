@@ -15,7 +15,11 @@ public sealed class Label : IActor
 {
     public string Text
     {
-        get => this.RichTextLayout.Text;
+        get
+        {
+            return this.RichTextLayout.Text;
+        }
+
         set
         {
             this.RichTextLayout.Text = value; //$"{ThemeColor.White.Str}{value}"; // todo idt this is needed

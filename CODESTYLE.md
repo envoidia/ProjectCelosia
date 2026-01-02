@@ -35,8 +35,8 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Opening brackets on the next line
 - 1 statement per line
 - 1 line between lines of code that aren't extremely closely related/simple
-- Set `else`/`catch` statements against the closing bracket of the `if`/`try` statement
-- Bracketless statements must be contained to a single line and only used for very short lines
+- Do not set `else`/`catch` statements against the closing bracket of the `if`/`try` statement
+- No bracketless statements
 - Any `else` statement combination is allowed (`else if`, `else for`, etc)
 - In switch statements, inline the case, the action, and `break`/`return` if able. If not, don't inline any of them
 

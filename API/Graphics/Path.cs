@@ -17,8 +17,15 @@ public sealed class Path : IActor
 
     public RenderPriority Priority
     {
-        get => this.Data.Priority;
-        set => this.Data.Priority = value;
+        get
+        {
+            return this.Data.Priority;
+        }
+
+        set
+        {
+            this.Data.Priority = value;
+        }
     }
 
     public Path(Vector2 start, Vector2 end, RenderPriority renderPriority = RenderPriority.B1Med, float thickness = 5f)

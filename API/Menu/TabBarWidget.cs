@@ -68,7 +68,11 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
     /// <inheritdoc cref="ActorData.AnimFromDir" />
     public Dir AnimFromDir
     {
-        get => this.Data.AnimFromDir;
+        get
+        {
+            return this.Data.AnimFromDir;
+        }
+
         set
         {
             this.Data.AnimFromDir = value;

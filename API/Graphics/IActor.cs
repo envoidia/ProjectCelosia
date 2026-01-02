@@ -63,101 +63,213 @@ public static class ActorExtensions
     {
         public bool IsVisible
         {
-            get => @this.Data.IsVisible;
-            set => @this.Data.IsVisible = value;
+            get
+            {
+                return @this.Data.IsVisible;
+            }
+
+            set
+            {
+                @this.Data.IsVisible = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.Priority" />
         public RenderPriority Priority
         {
-            get => @this.Data.Priority;
-            set => @this.Data.Priority = value;
+            get
+            {
+                return @this.Data.Priority;
+            }
+
+            set
+            {
+                @this.Data.Priority = value;
+            }
         }
 
         public Vector2 Position
         {
-            get => @this.Data.Position;
-            set => @this.Data.Position = value;
+            get
+            {
+                return @this.Data.Position;
+            }
+
+            set
+            {
+                @this.Data.Position = value;
+            }
         }
         public float X
         {
-            get => @this.Data.X;
-            set => @this.Data.X = value;
+            get
+            {
+                return @this.Data.X;
+            }
+
+            set
+            {
+                @this.Data.X = value;
+            }
         }
         public float Y
         {
-            get => @this.Data.Y;
-            set => @this.Data.Y = value;
+            get
+            {
+                return @this.Data.Y;
+            }
+
+            set
+            {
+                @this.Data.Y = value;
+            }
         }
 
         public Point Size
         {
-            get => @this.Data.Size;
-            set => @this.Data.Size = value;
+            get
+            {
+                return @this.Data.Size;
+            }
+
+            set
+            {
+                @this.Data.Size = value;
+            }
         }
         public int Width
         {
-            get => @this.Data.Width;
-            set => @this.Data.Width = value;
+            get
+            {
+                return @this.Data.Width;
+            }
+
+            set
+            {
+                @this.Data.Width = value;
+            }
         }
         public int Height
         {
-            get => @this.Data.Height;
-            set => @this.Data.Height = value;
+            get
+            {
+                return @this.Data.Height;
+            }
+
+            set
+            {
+                @this.Data.Height = value;
+            }
         }
 
         public Alignment Alignment
         {
-            get => @this.Data.Alignment;
-            set => @this.Data.Alignment = value;
+            get
+            {
+                return @this.Data.Alignment;
+            }
+
+            set
+            {
+                @this.Data.Alignment = value;
+            }
         }
 
         public Point Origin
         {
-            get => @this.Data.Origin;
-            set => @this.Data.Origin = value;
+            get
+            {
+                return @this.Data.Origin;
+            }
+
+            set
+            {
+                @this.Data.Origin = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.Padding" />
         public Padding Padding
         {
-            get => @this.Data.Padding;
-            set => @this.Data.Padding = value;
+            get
+            {
+                return @this.Data.Padding;
+            }
+
+            set
+            {
+                @this.Data.Padding = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.Prog" />
         public Progress Prog
         {
-            get => @this.Data.Prog;
-            set => @this.Data.Prog = value;
+            get
+            {
+                return @this.Data.Prog;
+            }
+
+            set
+            {
+                @this.Data.Prog = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.AnimFrom" />
         public Vector2 AnimFrom
         {
-            get => @this.Data.AnimFrom;
-            set => @this.Data.AnimFrom = value;
+            get
+            {
+                return @this.Data.AnimFrom;
+            }
+
+            set
+            {
+                @this.Data.AnimFrom = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.AnimFromDir" />
         public Dir AnimFromDir
         {
-            get => @this.Data.AnimFromDir;
-            set => @this.Data.AnimFromDir = value;
+            get
+            {
+                return @this.Data.AnimFromDir;
+            }
+
+            set
+            {
+                @this.Data.AnimFromDir = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.AnimType" />
         public AnimType AnimType
         {
-            get => @this.Data.AnimType;
-            set => @this.Data.AnimType = value;
+            get
+            {
+                return @this.Data.AnimType;
+            }
+
+            set
+            {
+                @this.Data.AnimType = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.Speed" />
         public float Speed
         {
-            get => @this.Data.Speed;
-            set => @this.Data.Speed = value;
+            get
+            {
+                return @this.Data.Speed;
+            }
+
+            set
+            {
+                @this.Data.Speed = value;
+            }
         }
 
         /// <inheritdoc cref="ActorData.Create" />

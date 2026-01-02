@@ -31,8 +31,15 @@ public class Parellelogram : IActor
     /// <inheritdoc cref="ActorData.Priority" />
     public RenderPriority Priority
     {
-        get => this.Data.Priority;
-        set => this.Data.Priority = value;
+        get
+        {
+            return this.Data.Priority;
+        }
+
+        set
+        {
+            this.Data.Priority = value;
+        }
     }
 
     public Parellelogram(int l, int r, int t, int b, float outlineThickness = _DefaultOutlineThickness,

@@ -29,7 +29,11 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     private Vector2 _position = Vector2.Zero;
     public Vector2 Position
     {
-        get => this._position;
+        get
+        {
+            return this._position;
+        }
+
         set
         {
             this._position = value;
@@ -38,7 +42,11 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
     public float X
     {
-        get => this._position.X;
+        get
+        {
+            return this._position.X;
+        }
+
         set
         {
             this._position.X = value;
@@ -47,7 +55,11 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
     public float Y
     {
-        get => this._position.Y;
+        get
+        {
+            return this._position.Y;
+        }
+
         set
         {
             this._position.Y = value;
@@ -58,18 +70,39 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     private Point _size = Point.Zero;
     public Point Size
     {
-        get => this._size;
-        set => this._size = value;
+        get
+        {
+            return this._size;
+        }
+
+        set
+        {
+            this._size = value;
+        }
     }
     public int Width
     {
-        get => this._size.X;
-        set => this._size.X = value;
+        get
+        {
+            return this._size.X;
+        }
+
+        set
+        {
+            this._size.X = value;
+        }
     }
     public int Height
     {
-        get => this._size.Y;
-        set => this._size.Y = value;
+        get
+        {
+            return this._size.Y;
+        }
+
+        set
+        {
+            this._size.Y = value;
+        }
     }
 
     /// <summary>
