@@ -7,13 +7,13 @@ namespace API.Graphics;
 /// <summary>
 /// A line with slanted edges. Can only be horizontal or vertical, not arbitrary angles (todo: currently only supports horizontal)
 /// </summary>
-public class LineActor : IActor
+public class ALine : IActor
 {
     // todo public LineDir LineDir;
 
     public ActorData Data { get; }
 
-    public LineActor(Vector2 pos, Point size, RenderPriority renderPriority = RenderPriority.B2Med)
+    public ALine(Vector2 pos, Point size, RenderPriority renderPriority = RenderPriority.B2Med)
     {
         this.Data = new(this, renderPriority);
 

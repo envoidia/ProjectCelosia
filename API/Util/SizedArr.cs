@@ -30,7 +30,10 @@ public class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
         }
     }
 
-    public SizedArr(ReadOnlySpan<T> values) : this(values.Length) => this._arr = values.ToArray();
+    public SizedArr(ReadOnlySpan<T> values) : this(values.Length)
+    {
+        this._arr = values.ToArray();
+    }
 
     // AggressiveInlining because List.Add() has it
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -53,7 +56,7 @@ public class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
             return;
         }
 
-        if (this.Count + source.Length == this.Capacity)
+        if (this.Count + source.Length > this.Capacity)
         {
             throw new ArgumentOutOfRangeException(nameof(source),
                 $"Cannot add collection to SizedArr<{typeof(T)}> because collection length " +

@@ -53,6 +53,6 @@
         <MakeDir Directories="$(OutDir)Content/img"/>
     </Target>
     <Target Name="MoveFiles" AfterTargets="Build" Condition="'$(PublishAot)' == 'false'">
-        <Move SourceFiles="$(TargetDir)Celosia.dll" DestinationFolder="$(TargetDir)mods"/>
+        <Move SourceFiles="$(TargetDir)Celosia.dll" DestinationFolder="$(TargetDir)Mods"/>
     </Target>
 </Project>

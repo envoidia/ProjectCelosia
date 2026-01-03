@@ -11,7 +11,7 @@ namespace API.Menu;
 /// A set of actors and <c>IInputWidgets</c>. Handles when they should be added to / removed from the stage
 /// and assigns controls
 /// </summary>
-public class Menu
+public sealed class Menu
 {
     /// <summary>
     /// Display name for this. Only used in debug features
@@ -51,7 +51,10 @@ public class Menu
     /// <summary>
     /// Initializes this with no behavior or actors
     /// </summary>
-    public Menu(string name) => this.DbgName = name;
+    public Menu(string name)
+    {
+        this.DbgName = name;
+    }
 
     public Menu(string name, params IActor[] actors)
     {

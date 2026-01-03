@@ -21,7 +21,6 @@ public static class DebugUtil
 
     private const int _Mb = 1024 * 1024;
 
-    private static TimeSpan _timeSinceUpdate = TimeSpan.FromSeconds(1);
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
     /// <summary>
@@ -31,6 +30,10 @@ public static class DebugUtil
     public static bool DrawDebugInfoHelp { get; private set; } = false;
     public static bool DrawActorOutlines { get; private set; } = false;
     public static bool DrawPalette { get; private set; } = false;
+
+    public static Stopwatch Stopwatch = new();
+    public static TimeSpan LastUpdateTime = TimeSpan.Zero;
+    public static TimeSpan LastDrawTime = TimeSpan.Zero;
 
     #region Labels
 
@@ -56,7 +59,19 @@ public static class DebugUtil
         IsVisible = false
     };
 
+    private const int _InfoRUpdateRateS = 1;
+    private static TimeSpan _timeSinceUpdateInfoR = TimeSpan.FromSeconds(_InfoRUpdateRateS);
+
     private const int _KeyYOff = 927;
+
+    private static readonly FrameGraph _PerfGraph = new(new(700), new(1500, 500),
+        "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
+    {
+        IsVisible = false
+    };
+
+    private const float _GraphUpdateRateS = 0.025f;
+    private static TimeSpan _timeSinceUpdateGraph = TimeSpan.FromSeconds(_GraphUpdateRateS);
 
     private static readonly Label _DebugInfoKeyNames = new()
     {
@@ -85,6 +100,8 @@ public static class DebugUtil
     {
         Stage.Add(_DebugInfoL);
         Stage.Add(_DebugInfoR);
+
+        Stage.Add(_PerfGraph);
 
         Stage.Add(_DebugInfoKeyNames);
         Stage.Add(_DebugInfoKeyHeld);
@@ -116,30 +133,46 @@ public static class DebugUtil
         DebugConsole.Update(gt);
         _CheckInputs();
 
+
         // todo update text if lang changed
 
         // Lerped FPS counter
         _avgFrameTime += (gt.ElapsedGameTime - _avgFrameTime) * 0.01f;
 
-        _timeSinceUpdate += gt.ElapsedGameTime;
+        _timeSinceUpdateInfoR += gt.ElapsedGameTime;
+
+        _timeSinceUpdateGraph += gt.ElapsedGameTime;
+
+        // Update performance graph
+        if (_timeSinceUpdateGraph > TimeSpan.FromSeconds(_GraphUpdateRateS))
+        {
+            float u = (float) LastUpdateTime.TotalMilliseconds;
+            float d = (float) LastDrawTime.TotalMilliseconds;
+
+            _PerfGraph.AddPoint(0, u + d);
+            _PerfGraph.AddPoint(1, u);
+            _PerfGraph.AddPoint(2, d);
+
+            _timeSinceUpdateGraph = TimeSpan.Zero;
+        }
 
         // Update timed text
-        if (_timeSinceUpdate < TimeSpan.FromSeconds(1))
+        if (_timeSinceUpdateInfoR < TimeSpan.FromSeconds(_InfoRUpdateRateS))
         {
             return;
         }
 
         _DebugInfoR.Text = string.Format("DebugInfoR".GetLang(),
-            $"{(int) (1 / _avgFrameTime.TotalSeconds)}({(int) (1 / gt.ElapsedGameTime.TotalSeconds)})", // todo temp
-            GC.GetTotalMemory(false) / _Mb,
-            "todo",
-            StateMachine.ToString(),
-            StateMachine.State.GetMenuString(),
-            Stage.ActorCount(),
-            "todo",
-            ModLoader._LoadedMods.Count);
+           $"{(int) (1 / _avgFrameTime.TotalSeconds)}",
+           GC.GetTotalMemory(false) / _Mb,
+           "todo",
+           StateMachine.ToString(),
+           StateMachine.State.GetMenuString(),
+           Stage.ActorCount(),
+           "todo",
+           ModLoader._LoadedMods.Count);
 
-        _timeSinceUpdate = TimeSpan.Zero;
+        _timeSinceUpdateInfoR = TimeSpan.Zero;
     }
 
     private static void _CheckInputs()
@@ -148,8 +181,6 @@ public static class DebugUtil
         {
             // temp
             _Test();
-
-            Console.WriteLine("DebugInfoHelp".GetLang());
 
             if (InputLib.Check(Keybinds.Hotkey1))
             {
@@ -194,6 +225,8 @@ public static class DebugUtil
             Console.WriteLine(Stage.ToString());
             DebugConsole.Log("Output Stage to console", _ClassName);
         }
+
+        _PerfGraph.IsVisible ^= InputLib.IsKeyJustPressed(Keys.Q);
 
         if (InputLib.IsKeyJustPressed(Keys.F9))
         {

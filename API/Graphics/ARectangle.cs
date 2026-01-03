@@ -5,11 +5,11 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class RectangleActor : IActor
+public class ARectangle : IActor
 {
     public ActorData Data { get; }
 
-    public RectangleActor(ThemeColor color = ThemeColor.White, RenderPriority priority = RenderPriority.B1Med)
+    public ARectangle(ThemeColor color = ThemeColor.White, RenderPriority priority = RenderPriority.B1Med)
     {
         this.Data = new(this, priority);
         this.Color = color;

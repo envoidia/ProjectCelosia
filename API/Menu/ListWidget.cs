@@ -76,7 +76,10 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
     }
 
-    public ListWidget(Vector2 pos, int capacity) => this._Setup(pos, capacity);
+    public ListWidget(Vector2 pos, int capacity)
+    {
+        this._Setup(pos, capacity);
+    }
 
     public ListWidget(Vector2 pos, params string[] optionText)
     {
@@ -213,6 +216,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         foreach (Label l in this.Labels)
         {
             l.Data.Act(gt);
+            
             if (DebugUtil.DrawActorOutlines)
             {
                 l.Data.DrawDebug(false);

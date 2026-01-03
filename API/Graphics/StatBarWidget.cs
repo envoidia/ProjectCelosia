@@ -72,7 +72,10 @@ public sealed class StatBarWidget : StatBarWidgetBase
     }
 
     public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
-        : base(pos, width, renderPriority, text) => this.ThemeChange();
+        : base(pos, width, renderPriority, text)
+    {
+        this.ThemeChange();
+    }
 
     public override void Draw(GameTime gt)
     {

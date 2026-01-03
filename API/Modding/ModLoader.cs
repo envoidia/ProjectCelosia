@@ -55,12 +55,12 @@ public static class ModLoader
     /// </summary>
     internal static readonly List<GameMod> _LoadedMods = [];
 
-    private static readonly string _ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods");
+    private static readonly string _ModsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mods");
 
     internal static void _LoadAllMods()
     {
         IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder, "*.dll", SearchOption.AllDirectories);
-        
+
         foreach (string dllPath in dllFiles)
         {
             _LoadSingleModAssembly(dllPath);
@@ -73,7 +73,7 @@ public static class ModLoader
     {
         AssemblyLoadContext alc = new(Path.GetFileNameWithoutExtension(dllPath));
         Assembly asm;
-        
+
         using (FileStream fs = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
             asm = alc.LoadFromStream(fs);

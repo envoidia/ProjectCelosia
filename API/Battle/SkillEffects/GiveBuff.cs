@@ -21,7 +21,6 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
 
         Unit unit = this.GiveToSelf ? self : target;
 
-        // todo fix overflow
         int turnsMod = turns + self.GetDurationModBuffTypeDealt(buff.BuffType)
                              + unit.GetDurationModBuffTypeTaken(buff.BuffType);
 

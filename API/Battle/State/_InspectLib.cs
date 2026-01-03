@@ -86,8 +86,8 @@ internal sealed class _InspectLib
         OnChangeIndex = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
     };
 
-    private static readonly LineActor _PageDivL = new(new(35, 590), new(635, 20));
-    private static readonly LineActor _PageDivR = new(new(1600, 590), new(635, 20));
+    private static readonly ALine _PageDivL = new(new(35, 590), new(635, 20));
+    private static readonly ALine _PageDivR = new(new(1600, 590), new(635, 20));
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Unit tabs
@@ -120,7 +120,7 @@ internal sealed class _InspectLib
     //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
     // Current unit items
-    private static readonly RectangleActor _UnitBounds = new()
+    private static readonly ARectangle _UnitBounds = new()
     {
         Position = new(40, 95),
         Size = new(384),
@@ -246,7 +246,10 @@ internal sealed class _InspectLib
 
             const int Y = 702;
 
-            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2Med) { Position = new(x, Y) });
+            _Actors.Add(_StatsPage[i] = new Label(RenderPriority.B2Med)
+            {
+                Position = new(x, Y)
+            });
 
             _Actors.Add(_StatsPageNum[i] = new Label(RenderPriority.B2Med)
             {

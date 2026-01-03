@@ -55,7 +55,9 @@ public static class Settings
 
     #endregion
 
-    static Settings() =>
+    static Settings()
+    {
         // Set up default theme
         Theme._ChangeFSSColors();
+    }
 }

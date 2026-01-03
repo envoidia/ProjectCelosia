@@ -94,7 +94,7 @@ public static class DebugConsole
         InputWidgets = [_Input]
     };
 
-    private static readonly RectangleActor _Line = new(ThemeColor.Gray, RenderPriority.Highest)
+    private static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
     {
         Position = new(0, World.H - 50),
         Size = new(_MinBgWidth, 1),

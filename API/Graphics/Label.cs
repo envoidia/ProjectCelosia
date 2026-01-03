@@ -38,13 +38,21 @@ public sealed class Label : IActor
 
     public RichTextLayout RichTextLayout;
 
+    /// <summary>
+    /// Rotation of the text. The debug outline for rotated text does not currently take rotation into account
+    /// </summary>
+    public float Rotation = 0f;
+
     public ActorData Data { get; }
 
     public Label(RenderPriority priority = RenderPriority.B1Med, DynamicSpriteFont? font = null)
     {
         this.Data = new ActorData(this, priority);
 
-        this.RichTextLayout = new() { Font = font ?? Core.Koruri60 };
+        this.RichTextLayout = new()
+        {
+            Font = font ?? Core.Koruri60
+        };
 
         this._bgC = Settings.Theme.Get(this.BackgroundColor);
 
@@ -81,6 +89,6 @@ public sealed class Label : IActor
         }
 
         this.RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,
-            (float) this.Prog), Settings.Theme.Fg, 0f, this.Origin.ToVector2());
+            (float) this.Prog), Settings.Theme.Fg, this.Rotation, this.Origin.ToVector2());
     }
 }

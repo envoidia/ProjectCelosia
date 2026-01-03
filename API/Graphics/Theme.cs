@@ -782,7 +782,10 @@ public class Theme : IDescribable, IRegistrable
         }
         foreach (KeyValuePair<string, Color> kvp in colorMap)
         {
-            ColorStorage.Colors[kvp.Key] = new() { Color = kvp.Value };
+            ColorStorage.Colors[kvp.Key] = new()
+            {
+                Color = kvp.Value
+            };
         }
     }
 

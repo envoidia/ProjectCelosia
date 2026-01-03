@@ -15,7 +15,9 @@ public sealed class Element : INameable, IRegistrable
     /// </summary>
     public static readonly Element Vis = new(Core.Id, "ElementVis",
         $"{ThemeColor.Vis.Str}/i[rolling-energy]")
-    { IsVisible = false };
+    {
+        IsVisible = false
+    };
 
     /// <summary>
     /// <c>Mult</c> to use as the dmg taken mult for this

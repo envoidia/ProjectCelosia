@@ -78,5 +78,8 @@ public static class Mults
     public static readonly Mult HealingTaken = new(Core.Id, "MultHealingTaken", true);
     public static readonly Mult SpGain = new(Core.Id, "MultSpGain", true);
     public static readonly Mult SpUse = new(Core.Id, "MultSpUse", false);
-    public static readonly Mult PercentageDmgTaken = new(Core.Id, "MultPercentageDmgTaken", false) { MinValue = 1 };
+    public static readonly Mult PercentageDmgTaken = new(Core.Id, "MultPercentageDmgTaken", false)
+    {
+        MinValue = 1
+    };
 }

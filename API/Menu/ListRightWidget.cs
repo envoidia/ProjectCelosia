@@ -27,7 +27,10 @@ public sealed class ListRightWidget : ListWidget
         this.LabelsRight = new List<Label>(capacity);
         for (int i = 0; i < capacity; i++)
         {
-            this.LabelsRight.Add(new Label() { Alignment = Alignment.TopRight });
+            this.LabelsRight.Add(new Label()
+            {
+                Alignment = Alignment.TopRight
+            });
         }
     }
 
@@ -98,7 +101,7 @@ public sealed class ListRightWidget : ListWidget
     public override void OnCreate()
     {
         base.OnCreate();
-        
+
         foreach (Label l in this.LabelsRight)
         {
             l.Create();

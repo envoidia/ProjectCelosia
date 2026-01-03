@@ -180,6 +180,8 @@ public class Core : Game
     // Update is called before Draw
     protected override void Update(GameTime gt)
     {
+        DebugUtil.Stopwatch.Start();
+
         InputLib.Update(gt);
         DebugUtil._Update(gt);
 
@@ -192,6 +194,9 @@ public class Core : Game
         // todo: if AOT and Celosia gets an Update: Celosia.Main.Mod.OnUpdate(gt);
 
         base.Update(gt);
+
+        DebugUtil.LastUpdateTime = DebugUtil.Stopwatch.Elapsed;
+        DebugUtil.Stopwatch.Reset();
     }
 
     protected override void LoadContent()
@@ -203,6 +208,8 @@ public class Core : Game
 
     protected override void Draw(GameTime gt)
     {
+        DebugUtil.Stopwatch.Start();
+
         GraphicsDevice.Clear(Color.Black);
 
         //Console.WriteLine(KoruriSystem.Atlases.Count); //todo test
@@ -212,5 +219,8 @@ public class Core : Game
         Stage.Act(gt);
 
         base.Draw(gt);
+
+        DebugUtil.LastDrawTime = DebugUtil.Stopwatch.Elapsed;
+        DebugUtil.Stopwatch.Reset();
     }
 }
