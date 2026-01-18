@@ -14,7 +14,7 @@ namespace API.Graphics;
 /// </summary>
 public static class Stage
 {
-    // todo decide starting size (use max size and assert it?)
+    // todo determine max size and use FixedList
     private static readonly List<IActor> _Actors = new(250);
 
     internal static bool _needsSorting = false;
@@ -63,7 +63,7 @@ public static class Stage
 
         if (DebugUtil.DrawPalette)
         {
-            Settings.Theme._DrawPalette(); // todo how is it possible that this draws between f1 and its text
+            Settings.Theme._DrawPalette(); // todo how is it possible that this draws between f1 bg and text
         }
 
         end();
@@ -77,7 +77,7 @@ public static class Stage
             {
                 a.Data.DrawDebug();
             }
-            
+
             end();
         }
 

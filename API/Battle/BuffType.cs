@@ -3,7 +3,7 @@ using API.Util;
 
 namespace API.Battle;
 
-// todo name
+// Member names must match lang key names
 public enum BuffType
 {
     Buff,
@@ -16,12 +16,7 @@ public static class BuffTypeExtensions
     {
         public string GetName()
         {
-            return @this switch
-            {
-                BuffType.Buff => "Buff".GetLang(),
-                BuffType.Debuff => "Debuff".GetLang(),
-                _ => throw new ClosedEnumsWhenException()
-            };
+            return @this.ToString().GetLang();
         }
     }
 }

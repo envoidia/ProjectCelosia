@@ -58,7 +58,13 @@ public static class ThemeColorExtensions
 {
     extension(ThemeColor @this)
     {
-        public string Str => _Wrap(@this.ToString().FirstToLower());
+        public string Str
+        {
+            get
+            {
+                return _Wrap(@this.ToString().FirstToLower());
+            }
+        }
     }
 
     private static string _Wrap(string str)

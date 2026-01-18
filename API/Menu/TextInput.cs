@@ -21,17 +21,18 @@ public sealed class TextInput : IInputWidget
     /// <summary>
     /// Current text as a <c>string</c>
     /// </summary>
-    public string Text => this.Sb.ToString();
+    public string Text
+    {
+        get
+        {
+            return this.Sb.ToString();
+        }
+    }
 
     /// <summary>
     /// Text display
     /// </summary>
     public readonly Label Label;
-
-    /// <summary>
-    /// Current cursor position. 0 = very left
-    /// </summary>
-    public int CursorPos = 0;
 
     /// <summary>
     /// Invoked when enter is pressed. If it returns true, text is wiped
@@ -49,13 +50,23 @@ public sealed class TextInput : IInputWidget
     public bool Changed;
 
     public bool CheckInput { get; set; }
+
+    /// <summary>
+    /// Current cursor position. 0 = very left
+    /// </summary>
     public int Index { get; set; }
 
     public int OptCount { get; }
 
     public Action<int>? OnChangeIndex { get; set; }
 
-    public SelectionType PrefDir => SelectionType.TextInput;
+    public SelectionType PrefDir
+    {
+        get
+        {
+            return SelectionType.TextInput;
+        }
+    }
 
     public SelectionType CurDir { get; set; } = SelectionType.TextInput;
 
@@ -94,26 +105,26 @@ public sealed class TextInput : IInputWidget
 
 
                 case Keys.Back:
-                    if (this.CursorPos > 0)
+                    if (this.Index > 0)
                     {
                         this.Changed = true;
-                        this.Sb.Remove(this.CursorPos - 1, 1);
-                        this.CursorPos--;
+                        this.Sb.Remove(this.Index - 1, 1);
+                        this.Index--;
                     }
 
                     break;
 
                 case Keys.Left:
-                    if (this.CursorPos > 0)
+                    if (this.Index > 0)
                     {
-                        this.CursorPos--;
+                        this.Index--;
                     }
                     break;
 
                 case Keys.Right:
-                    if (this.CursorPos < this.Sb.Length - 1)
+                    if (this.Index < this.Sb.Length - 1)
                     {
-                        this.CursorPos++;
+                        this.Index++;
                     }
                     break;
 
@@ -122,8 +133,8 @@ public sealed class TextInput : IInputWidget
                     if (ch is not null)
                     {
                         this.Changed = true;
-                        this.Sb.Insert(this.CursorPos, (char) ch);
-                        this.CursorPos++;
+                        this.Sb.Insert(this.Index, (char) ch);
+                        this.Index++;
                     }
 
                     break;
@@ -141,6 +152,6 @@ public sealed class TextInput : IInputWidget
         this.Changed = true;
         this.Sb.Clear();
         this.OnChangeText?.Invoke();
-        this.CursorPos = 0;
+        this.Index = 0;
     }
 }

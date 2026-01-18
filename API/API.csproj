@@ -20,6 +20,7 @@
         </PackageReference>
         <PackageReference Include="OneOf" Version="3.0.271" />
         <PackageReference Include="ResolutionBuddy" Version="5.0.0" />
+        <!-- <Analyzer Include="..\..\ImplementsAnalyzer.dll" /> -->
     </ItemGroup>
     <ItemGroup>
     <None Update="Lang/Lang.en-US.properties">

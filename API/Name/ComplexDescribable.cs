@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
+using API.Util;
 using OneOf;
 
 namespace API.Name;
@@ -17,6 +19,7 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     public HashSet<IDescribable> DescInclusions { protected get; init; } = [];
 
     public string KeyName { get; set; } = keyName;
+
     public string Icon { get; set; } = icon;
     public string KeyDesc { get; set; } = keyDesc;
 

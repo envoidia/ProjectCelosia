@@ -37,8 +37,21 @@ public sealed class GameMod(string id, Version version) : IDescribable
     /// </summary>
     public Action? OnOpenSettings { get; init; } = null;
 
-    public string KeyName => $"{this.Id}:{ModLoader.NameKey}";
-    public string KeyDesc => $"{this.KeyName}Desc";
+    public string KeyName
+    {
+        get
+        {
+            return $"{this.Id}:{ModLoader.NameKey}";
+        }
+    }
+
+    public string KeyDesc
+    {
+        get
+        {
+            return $"{this.KeyName}Desc";
+        }
+    }
 
     public string GetName()
     {

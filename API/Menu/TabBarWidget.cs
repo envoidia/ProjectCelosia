@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using API.Graphics;
 using API.Input;
 using API.Save;
@@ -17,7 +18,14 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
 {
     public List<Label> Labels { get; private set; }
 
-    public SelectionType PrefDir => SelectionType.Horiz;
+    public SelectionType PrefDir
+    {
+        get
+        {
+            return SelectionType.Horiz;
+        }
+    }
+
     public SelectionType CurDir
     {
         get;
@@ -33,17 +41,17 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
 
     public Label PromptL { get; } = new()
     {
-        Padding = new(0, _DefaultLabelPaddingTB),
+        Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
         Alignment = Alignment.Controlled
     };
+    
     public Label PromptR { get; } = new()
     {
-        Padding = new(0, _DefaultLabelPaddingTB),
+        Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
         Alignment = Alignment.Controlled
     };
 
     public bool CheckInput { get; set; } = true;
-
     public int Index { get; set; } = 0;
 
     public int OptCount
@@ -179,6 +187,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
             {
                 l.Origin = this.Origin;
             }
+
             this.PromptL.Origin = this.Origin;
             this.PromptR.Origin = this.Origin;
         }

@@ -8,12 +8,7 @@ using static API.Input.InputPrompts;
 public static class States
 {
     public static readonly State MainMenu = new("Main", _MainMenuLib._Update,
-    static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm))
-    {
-        // OnCreate = () => {
-        //     Stage.Add(_MainMenuLib.TestT1);
-        //     MainMenu!._Menus.Add(_MainMenuLib._MainMenu);}
-    };
+    static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm));
 
     public static readonly State Battle = new("Battle", BattleLib._Update,
     static () =>

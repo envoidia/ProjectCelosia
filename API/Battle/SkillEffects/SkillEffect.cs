@@ -5,8 +5,22 @@ namespace API.Battle.SkillEffects;
 // todo arbitrary predicates (here and IBuffEffect)
 public abstract class SkillEffect(int pow = 0, SkillType? skillType = null, IDescribable? descInclusion = null)
 {
-    public int Pow => pow;
-    public SkillType? SkillType => skillType;
+    public int Pow
+    {
+        get
+        {
+            return pow;
+        }
+    }
+
+    public SkillType? SkillType
+    {
+        get
+        {
+            return skillType;
+        }
+    }
+
     public IDescribable? DescInclusion { get; init; } = descInclusion;
 
     public bool GiveToSelf { get; init; } = false;

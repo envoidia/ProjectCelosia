@@ -304,6 +304,7 @@ internal sealed class _InspectLib
     {
         // Stat types
         string[] names = ["InfoMult", "InfoMod", "InfoOther"];
+        
         for (int i = 0; i < _StatTypeCount; i++)
         {
             _StatCategoryHeaders[i].Text = names[i].GetLang();

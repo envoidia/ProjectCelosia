@@ -13,45 +13,155 @@ public readonly struct Progress(float p = 0)
 
     private readonly float _p = Math.Clamp(p, 0, 1);
 
-    public static Progress operator +(Progress l, Progress r) => new(l._p + r._p);
-    public static Progress operator +(Progress l, float r) => new(l._p + r);
-    public static Progress operator +(float l, Progress r) => new(l + r._p);
+    public static Progress operator +(Progress l, Progress r)
+    {
+        return new(l._p + r._p);
+    }
 
-    public static Progress operator -(Progress l, Progress r) => new(l._p - r._p);
-    public static Progress operator -(Progress l, float r) => new(l._p - r);
-    public static Progress operator -(float l, Progress r) => new(l - r._p);
+    public static Progress operator +(Progress l, float r)
+    {
+        return new(l._p + r);
+    }
 
-    public static Progress operator *(Progress l, Progress r) => new(l._p * r._p);
-    public static Progress operator *(Progress l, float r) => new(l._p * r);
-    public static Progress operator *(float l, Progress r) => new(l * r._p);
+    public static Progress operator +(float l, Progress r)
+    {
+        return new(l + r._p);
+    }
 
-    public static Progress operator /(Progress l, Progress r) => new(l._p / r._p);
-    public static Progress operator /(Progress l, float r) => new(l._p / r);
-    public static Progress operator /(float l, Progress r) => new(l / r._p);
+    public static Progress operator -(Progress l, Progress r)
+    {
+        return new(l._p - r._p);
+    }
 
-    public static bool operator ==(Progress l, Progress r) => l._p == r._p;
-    public static bool operator ==(Progress l, float r) => l._p == r;
-    public static bool operator ==(float l, Progress r) => l == r._p;
+    public static Progress operator -(Progress l, float r)
+    {
+        return new(l._p - r);
+    }
 
-    public static bool operator !=(Progress l, Progress r) => l._p != r._p;
-    public static bool operator !=(Progress l, float r) => l._p != r;
-    public static bool operator !=(float l, Progress r) => l != r._p;
+    public static Progress operator -(float l, Progress r)
+    {
+        return new(l - r._p);
+    }
 
-    public static bool operator >(Progress l, Progress r) => l._p > r._p;
-    public static bool operator >(Progress l, float r) => l._p > r;
-    public static bool operator >(float l, Progress r) => l > r._p;
+    public static Progress operator *(Progress l, Progress r)
+    {
+        return new(l._p * r._p);
+    }
 
-    public static bool operator <(Progress l, Progress r) => l._p < r._p;
-    public static bool operator <(Progress l, float r) => l._p < r;
-    public static bool operator <(float l, Progress r) => l < r._p;
+    public static Progress operator *(Progress l, float r)
+    {
+        return new(l._p * r);
+    }
 
-    public static bool operator >=(Progress l, Progress r) => l._p >= r._p;
-    public static bool operator >=(Progress l, float r) => l._p >= r;
-    public static bool operator >=(float l, Progress r) => l >= r._p;
+    public static Progress operator *(float l, Progress r)
+    {
+        return new(l * r._p);
+    }
 
-    public static bool operator <=(Progress l, Progress r) => l._p <= r._p;
-    public static bool operator <=(Progress l, float r) => l._p <= r;
-    public static bool operator <=(float l, Progress r) => l <= r._p;
+    public static Progress operator /(Progress l, Progress r)
+    {
+        return new(l._p / r._p);
+    }
+
+    public static Progress operator /(Progress l, float r)
+    {
+        return new(l._p / r);
+    }
+
+    public static Progress operator /(float l, Progress r)
+    {
+        return new(l / r._p);
+    }
+
+    public static bool operator ==(Progress l, Progress r)
+    {
+        return l._p == r._p;
+    }
+
+    public static bool operator ==(Progress l, float r)
+    {
+        return l._p == r;
+    }
+
+    public static bool operator ==(float l, Progress r)
+    {
+        return l == r._p;
+    }
+
+    public static bool operator !=(Progress l, Progress r)
+    {
+        return l._p != r._p;
+    }
+
+    public static bool operator !=(Progress l, float r)
+    {
+        return l._p != r;
+    }
+
+    public static bool operator !=(float l, Progress r)
+    {
+        return l != r._p;
+    }
+
+    public static bool operator >(Progress l, Progress r)
+    {
+        return l._p > r._p;
+    }
+
+    public static bool operator >(Progress l, float r)
+    {
+        return l._p > r;
+    }
+
+    public static bool operator >(float l, Progress r)
+    {
+        return l > r._p;
+    }
+
+    public static bool operator <(Progress l, Progress r)
+    {
+        return l._p < r._p;
+    }
+
+    public static bool operator <(Progress l, float r)
+    {
+        return l._p < r;
+    }
+
+    public static bool operator <(float l, Progress r)
+    {
+        return l < r._p;
+    }
+
+    public static bool operator >=(Progress l, Progress r)
+    {
+        return l._p >= r._p;
+    }
+
+    public static bool operator >=(Progress l, float r)
+    {
+        return l._p >= r;
+    }
+
+    public static bool operator >=(float l, Progress r)
+    {
+        return l >= r._p;
+    }
+
+    public static bool operator <=(Progress l, Progress r)
+    {
+        return l._p <= r._p;
+    }
+
+    public static bool operator <=(Progress l, float r)
+    {
+        return l._p <= r;
+    }
+
+    public static bool operator <=(float l, Progress r)
+    {
+        return l <= r._p;
+    }
 
     public static explicit operator float(Progress p)
     {

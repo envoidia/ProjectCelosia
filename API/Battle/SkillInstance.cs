@@ -4,7 +4,14 @@ namespace API.Battle;
 
 public sealed class SkillInstance(Skill skill)
 {
-    public Skill Skill => skill;
+    public Skill Skill
+    {
+        get
+        {
+            return skill;
+        }
+    }
+
     public int Cooldown = 0;
 
     public string GetCostCdFormatted()

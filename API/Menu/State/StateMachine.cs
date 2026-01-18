@@ -33,7 +33,13 @@ public static class StateMachine
     /// <returns>
     /// The last <c>State</c> in the <c>NavPath</c>
     /// </returns>
-    public static State State => _Path[^1];
+    public static State State
+    {
+        get
+        {
+            return _Path[^1];
+        }
+    }
 
     /// <summary>
     /// Add an <c>State</c> to the <c>NavPath</c>

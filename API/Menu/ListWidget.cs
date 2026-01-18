@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using API.Graphics;
 using API.Save;
 using API.Util;
@@ -31,7 +32,14 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
     } = new(30, 20);
 
-    public SelectionType PrefDir => SelectionType.Vert;
+    public SelectionType PrefDir
+    {
+        get
+        {
+            return SelectionType.Vert;
+        }
+    }
+
     public SelectionType CurDir { get; set; } = SelectionType.None;
 
     public bool CheckInput { get; set; } = true;
@@ -216,7 +224,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         foreach (Label l in this.Labels)
         {
             l.Data.Act(gt);
-            
+
             if (DebugUtil.DrawActorOutlines)
             {
                 l.Data.DrawDebug(false);

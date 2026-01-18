@@ -6,16 +6,70 @@ public static class ColorExtensions
 {
     extension(Color @this)
     {
-        public static Color Trans => new(0);
+        public static Color Trans
+        {
+            get
+            {
+                return new(0);
+            }
+        }
 
         // Debug outlines for actors
-        public static Color ActorOutline => Color.Blue;
-        public static Color ActorOutlineProg0 => Color.Yellow;
-        public static Color ActorOutlineProg1 => Color.Fuchsia;
-        public static Color ActorPadding => Color.Cyan;
-        public static Color ActorOrigin => Color.Lime;
-        public static Color ActorMarked => new(1f, 0f, 0f, 0.1f);
-        public static Color ActorDisabledInput => new(0f, 0f, 1f, 0.1f);
+        public static Color ActorOutline
+        {
+            get
+            {
+                return Color.Blue;
+            }
+        }
+
+        public static Color ActorOutlineProg0
+        {
+            get
+            {
+                return Color.Yellow;
+            }
+        }
+
+        public static Color ActorOutlineProg1
+        {
+            get
+            {
+                return Color.Fuchsia;
+            }
+        }
+
+        public static Color ActorPadding
+        {
+            get
+            {
+                return Color.Cyan;
+            }
+        }
+
+        public static Color ActorOrigin
+        {
+            get
+            {
+                return Color.Lime;
+            }
+        }
+
+        public static Color ActorMarked
+        {
+            get
+            {
+                return new(1f, 0f, 0f, 0.1f);
+            }
+        }
+
+        public static Color ActorDisabledInput
+        {
+            get
+            {
+                return new(0f, 0f, 1f, 0.1f);
+            }
+        }
 
         public string ToRgbaStr()
         {

@@ -12,8 +12,14 @@ public sealed class TextureFragmentColored : IRenderable
     public Texture2D Texture { get; }
     public Rectangle Region { get; }
 
-    public Point Size => new((int) ((this.Region.Width * this._Scale.X) + 0.5f),
+    public Point Size
+    {
+        get
+        {
+            return new((int) ((this.Region.Width * this._Scale.X) + 0.5f),
         (int) ((this.Region.Height * this._Scale.Y) + 0.5f));
+        }
+    }
 
     private readonly Vector2 _Scale = Vector2.One;
 

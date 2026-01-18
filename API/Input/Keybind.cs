@@ -41,7 +41,14 @@ public enum KeybindId
 
 public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) : IDescribable
 {
-    public KeybindId Id => id;
+    public KeybindId Id
+    {
+        get
+        {
+            return id;
+        }
+    }
+
     public Keys Key = key;
     public Buttons Button = button;
 
