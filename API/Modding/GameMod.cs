@@ -1,5 +1,4 @@
 using System;
-using System.Resources;
 using API.Extensions;
 using API.Graphics;
 using API.Name;

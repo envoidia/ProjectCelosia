@@ -5,15 +5,18 @@ using Microsoft.Xna.Framework;
 namespace API.Graphics;
 
 /// <summary>
-/// A line with slanted edges. Can only be horizontal or vertical, not arbitrary angles (todo: currently only supports horizontal)
+/// A line with slanted edges. Can only be horizontal or vertical, not arbitrary angles 
+/// todo: currently only supports horizontal
 /// </summary>
-public class ALine : IActor
+public class ASlantedLine : IActor
 {
     // todo public LineDir LineDir;
 
     public ActorData Data { get; }
 
-    public ALine(Vector2 pos, Point size, RenderPriority renderPriority = RenderPriority.B2Med)
+    /// <param name="pos">Start pos</param>
+    /// <param name="size">End pos</param>
+    public ASlantedLine(Vector2 pos, Point size, RenderPriority renderPriority = RenderPriority.B2Med)
     {
         this.Data = new(this, renderPriority);
 
@@ -27,9 +30,8 @@ public class ALine : IActor
 
     public void Draw(GameTime gt)
     {
-        Vector2 pos = new(MathHelper.SmoothStep(this.AnimFrom.X, this.X, (float) this.Prog), this.Y);
-
-        RenderLib.DrawParallelogram(pos, this.Size, this.Origin, Settings.Theme.Fg,
+        RenderLib.DrawParallelogram(new Vector2(MathHelper.SmoothStep(this.AnimFrom.X, this.X,
+            (float) this.Prog), this.Y), this.Size, this.Origin, Settings.Theme.Fg,
             Color.Red, 0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant, Progress.One);
     }
 }

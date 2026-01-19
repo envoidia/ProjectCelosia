@@ -53,6 +53,7 @@ public sealed class ListRightWidget : ListWidget
             this.LabelsRight[i].IsVisible = false;
             this.LabelsRight[i].Padding = Padding.Zero;
         }
+
         // New list longer, add more LabelsRight
         for (; i < rightText.Length; i++)
         {

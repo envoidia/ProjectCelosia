@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using API.Graphics;
-using API.Modding;
 using API.Save;
 using API.Util;
 using Jeffijoe.MessageFormat;

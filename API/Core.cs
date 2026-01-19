@@ -12,7 +12,6 @@ using FontStashSharp;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Graphics;
 using ResolutionBuddy;
 
@@ -44,6 +43,11 @@ public class Core : Game
     /// </summary>
     public static readonly string[] ReservedIds = [Id, BaseModId];
 
+    /// <summary>
+    /// Actions to execute after this' instance is created
+    /// </summary>
+    public static event Action? PostCoreInit;
+
     #region Rendering
 
     public static GraphicsDeviceManager Graphics { get; private set; } = null!;
@@ -63,6 +67,8 @@ public class Core : Game
 
     // temp debug
     public static Battle.Battle Battle = null!;
+
+    #region Init
 
     static Core()
     {
@@ -161,6 +167,8 @@ public class Core : Game
 #if DEBUG
         this.IsMouseVisible = true;
 #endif
+
+        PostCoreInit?.Invoke();
     }
 
     protected override void Initialize()
@@ -176,6 +184,17 @@ public class Core : Game
 
         StateMachine.Add(States.MainMenu);
     }
+
+    protected override void LoadContent()
+    {
+        _iconsAtlas = this.Content.Load<Texture2DAtlas>("img/icons");
+
+        base.LoadContent();
+    }
+
+    #endregion
+
+    #region Per-Frame
 
     // Update is called before Draw
     protected override void Update(GameTime gt)
@@ -199,13 +218,6 @@ public class Core : Game
         DebugUtil.Stopwatch.Reset();
     }
 
-    protected override void LoadContent()
-    {
-        _iconsAtlas = this.Content.Load<Texture2DAtlas>("img/icons");
-
-        base.LoadContent();
-    }
-
     protected override void Draw(GameTime gt)
     {
         DebugUtil.Stopwatch.Start();
@@ -223,4 +235,6 @@ public class Core : Game
         DebugUtil.LastDrawTime = DebugUtil.Stopwatch.Elapsed;
         DebugUtil.Stopwatch.Reset();
     }
+
+    #endregion
 }

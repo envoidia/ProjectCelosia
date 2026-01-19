@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

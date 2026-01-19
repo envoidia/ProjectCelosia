@@ -33,6 +33,16 @@ public static class InputLib
     private static readonly TimeSpan[] _Held = new TimeSpan[Keybinds.StdKeybindCount];
 
     /// <summary>
+    /// The last held key. Used for <c>TextInput</c>. Ignored by <c>Check</c>
+    /// </summary>
+    private static Keys _lastHeldKey;
+
+    /// <summary>
+    /// How long the last held key has been held down for
+    /// </summary>
+    private static TimeSpan _lastHeldKeyTime = TimeSpan.Zero;
+
+    /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds
     /// </summary>
     private const float _DefaultHoldDelayS = 0.25f;
@@ -112,7 +122,7 @@ public static class InputLib
     }
 
     /// <summary>
-    /// Doesn't account for remapping. Prefer <c>Check()</c>
+    /// Doesn't account for remapping or buttons. Prefer <c>Check()</c>
     /// </summary>
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame
@@ -123,17 +133,18 @@ public static class InputLib
     }
 
     /// <summary>
-    /// Doesn't account for remapping. Prefer <c>Check()</c>
+    /// Doesn't account for remapping or buttons. Prefer <c>Check()</c>
     /// </summary>
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame and not the previous frame
     /// </returns>
+    // todo
     public static bool IsKeyJustPressed(Keys key)
     {
         return KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
     }
 
-    #region CheckInput
+    #region Check
 
     /// <summary>
     /// Check for input from 1 <c>Keybind</c>
@@ -183,18 +194,21 @@ public static class InputLib
         }
 
         // Normal keybinds
+        // Not held
         if (!_CheckKeybind(keybind))
         {
             _Held[(int) keybind.Id] = TimeSpan.Zero;
             return false;
         }
 
+        // Held for 0t
         if (_Held[(int) keybind.Id] == TimeSpan.Zero && _CheckKeybind(keybind))
         {
             _Held[(int) keybind.Id] += _elapsedTime;
             return true;
         }
 
+        // Held for long enough to re-tick
         if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && _CheckKeybind(keybind))
         {
             _Held[(int) keybind.Id] = _HoldInitDelay - (_CheckKeybind(Keybinds.Hotkey1)
@@ -203,6 +217,7 @@ public static class InputLib
             return true;
         }
 
+        // Not long enough yet
         _Held[(int) keybind.Id] += _elapsedTime;
         return false;
     }

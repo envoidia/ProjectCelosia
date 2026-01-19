@@ -2,7 +2,6 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using API.Menu;
 
 using static API.Input.InputPrompts;
@@ -10,7 +9,6 @@ using static API.Battle.State.BattleLib;
 using System.Linq;
 using API.Extensions;
 using API.Name;
-using System;
 using API.Util;
 
 namespace API.Battle.State;
@@ -86,8 +84,8 @@ internal sealed class _InspectLib
         OnChangeIndex = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
     };
 
-    private static readonly ALine _PageDivL = new(new(35, 590), new(635, 20));
-    private static readonly ALine _PageDivR = new(new(1600, 590), new(635, 20));
+    private static readonly ASlantedLine _PageDivL = new(new(35, 590), new(635, 20));
+    private static readonly ASlantedLine _PageDivR = new(new(1600, 590), new(635, 20));
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Unit tabs
@@ -304,7 +302,7 @@ internal sealed class _InspectLib
     {
         // Stat types
         string[] names = ["InfoMult", "InfoMod", "InfoOther"];
-        
+
         for (int i = 0; i < _StatTypeCount; i++)
         {
             _StatCategoryHeaders[i].Text = names[i].GetLang();

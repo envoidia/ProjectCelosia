@@ -806,7 +806,7 @@ public class Theme : IDescribable, IRegistrable
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
         {
-            sb.Append($"{tc}: {this.Get(tc).ToRgbaStr()}");
+            sb.Append($"{tc}={this.Get(tc).ToRgbaStr()}");
         }
 
         return sb.ToString();

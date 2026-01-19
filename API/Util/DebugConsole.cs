@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
@@ -22,6 +20,7 @@ public static class DebugConsole
             field = value;
 
             _Command.IsVisible = value;
+            _Cursor.IsVisible = value;
             _History.IsVisible = value;
             _Line.IsVisible = value;
 
@@ -35,18 +34,19 @@ public static class DebugConsole
         set
         {
             field = value;
+            _input.CheckInput = value;
 
-            if (value && (StateMachine.State.Menus.Count == 0 || StateMachine.State.Menus[^1] != _Menu))
+            if (value && (StateMachine.State.Menus.Count == 0 || StateMachine.State.Menus[^1] != _menu))
             {
-                StateMachine.State.AddMenu(_Menu);
+                StateMachine.State.AddMenu(_menu);
                 _color = ThemeColor.Imp;
-                _Input.OnChangeText!.Invoke();
+                _input.OnChangeText!.Invoke();
             }
-            else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
+            else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _menu)
             {
                 StateMachine.State.RemoveMenu();
                 _color = ThemeColor.Gray;
-                _Input.OnChangeText!.Invoke();
+                _input.OnChangeText!.Invoke();
             }
         }
     } = false;
@@ -55,11 +55,15 @@ public static class DebugConsole
 
     private static readonly Label _Command = new(RenderPriority.B3High, Core.Koruri40)
     {
-        Text = ">",
         Position = new(10, World.H - 5),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
+        IsVisible = false
+    };
+
+    private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.B3High)
+    {
         IsVisible = false
     };
 
@@ -83,16 +87,8 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    private static readonly TextInput _Input = new(_Command,
-        ExecuteCommand)
-    {
-        OnChangeText = () => _Command.Text = $"{_color.Str}>{_Input!.Text}   {(_Focused ? "" : "([esc] to focus)")}"
-    };
-
-    private static readonly Menu.Menu _Menu = new("DbgConsole")
-    {
-        InputWidgets = [_Input]
-    };
+    private static TextInput _input = null!;
+    private static Menu.Menu _menu = null!;
 
     private static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
     {
@@ -104,8 +100,30 @@ public static class DebugConsole
     static DebugConsole()
     {
         Stage.Add(_Command);
+        Console.WriteLine("dc" + _Command.Width);
+        _Command.Text = $"{_color.Str}>";
+        Console.WriteLine("dc2:" + _Command.Width);
+
+        Stage.Add(_Cursor);
         Stage.Add(_History);
         Stage.Add(_Line);
+
+        Core.PostCoreInit += _PostCoreInit;
+    }
+
+    // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
+    internal static void _PostCoreInit()
+    {
+        _input = new(_Command, _Cursor,
+        ExecuteCommand)
+        {
+            OnChangeText = () => _Command.Text = $"{_color.Str}>{_input!.Text}{(_Focused ? "" : "   ([esc] to focus)")}"
+        };
+
+        _menu = new("DbgConsole")
+        {
+            InputWidgets = [_input]
+        };
     }
 
     internal static void Update(GameTime gt)
@@ -126,7 +144,7 @@ public static class DebugConsole
 
     private static bool ExecuteCommand()
     {
-        string t = _Input.Text;
+        string t = _input.Text;
 
         if (t.Length == 0)
         {
