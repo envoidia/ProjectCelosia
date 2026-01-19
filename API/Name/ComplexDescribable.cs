@@ -71,13 +71,14 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     protected string _GetFormattedDescInclusions()
     {
         StringBuilder formattedInclusions = new(this.GetDesc());
+        HashSet<IDescribable> di = this._GetDescInclusions();
 
-        if (this.DescInclusions.Count > 0)
+        if (di.Count > 0)
         {
             formattedInclusions.Append('\n');
         }
 
-        foreach (IDescribable inclusion in this._GetDescInclusions())
+        foreach (IDescribable inclusion in di)
         {
             formattedInclusions.Append('\n').Append(ThemeColor.White.Str).Append('(')
                 .Append(inclusion.GetName()).Append(ThemeColor.White.Str).Append(": ")

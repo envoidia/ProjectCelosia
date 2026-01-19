@@ -37,6 +37,7 @@ public sealed class Buff : ComplexDescribable, IRegistrable
     }
 
     // Todo use stack amount to show multiplied values
+    // todo show stacks + (de)buff in the truncated desc too
     public override string GetFullDesc()
     {
         return "BuffDesc".FormatLang([this.BuffType.GetName(),

@@ -44,12 +44,13 @@ public interface IInputWidget
 
 }
 
-public static class InputAcceptorExtensions
+public static class InputWidgetExtensions
 {
     extension(IInputWidget @this)
     {
         public int CheckInput()
         {
+            // todo fix -1 list
             Assert.InRange(@this.Index, 0, @this.OptCount - 1);
 
             if (@this.CheckInput)
