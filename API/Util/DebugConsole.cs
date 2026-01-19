@@ -55,6 +55,7 @@ public static class DebugConsole
 
     private static readonly Label _Command = new(RenderPriority.B3High, Core.Koruri40)
     {
+        Text = "X", // Must be init with some text or cursor never shows (why?? probably some weird FSS internals)
         Position = new(10, World.H - 5),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,

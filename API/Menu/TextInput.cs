@@ -191,6 +191,7 @@ public sealed class TextInput : IInputWidget
                 this.OptCount = this.Sb.Length;
                 this.OnChangeText?.Invoke();
                 this.Index++;
+                
                 return;
         }
     }
@@ -198,11 +199,6 @@ public sealed class TextInput : IInputWidget
     // OS doesn't handle nav input
     public void Input(GameTime gt)
     {
-        if (InputLib.IsKeyJustPressed(Keys.Insert))
-        {
-            Console.WriteLine($"{Index}/{OptCount}");
-        }
-
         if (InputLib.Check(Keybinds.Left, true, _MoveDelay))
         {
             // Word jump
