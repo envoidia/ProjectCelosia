@@ -100,10 +100,6 @@ public static class DebugConsole
     static DebugConsole()
     {
         Stage.Add(_Command);
-        Console.WriteLine("dc" + _Command.Width);
-        _Command.Text = $"{_color.Str}>";
-        Console.WriteLine("dc2:" + _Command.Width);
-
         Stage.Add(_Cursor);
         Stage.Add(_History);
         Stage.Add(_Line);

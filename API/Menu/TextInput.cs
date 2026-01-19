@@ -97,7 +97,6 @@ public sealed class TextInput : IInputWidget
         Core.Instance.Window.TextInput += this._Input;
 
         this._UpdateCursor();
-        Console.WriteLine("ti" + this.Label.Width);
     }
 
     /// <summary>
@@ -267,8 +266,6 @@ public sealed class TextInput : IInputWidget
         int x = Index == OptCount
             ? this.Label.Width
             : ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs[this.Index + 1].Bounds.X;
-
-        Console.WriteLine("uc" + this.Label.Width);
 
         this.Cursor.Position = new(this.Label.X + 1 + x, this.Label.Y - this.Label.Height + 4);
     }
