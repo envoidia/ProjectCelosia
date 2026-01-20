@@ -1,24 +1,24 @@
 using System;
 using System.Collections.Generic;
+using API.Debug;
+using API.Graphics;
 using API.Input;
-using API.Menu;
-using API.Util;
 using Microsoft.Xna.Framework;
 
-namespace API.Graphics;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// A line graph. Only intended for the FPS debug graph, so missing functionality
 /// (doesn't support origin changes or varying point amounts/colors)
 /// </summary>
 /// todo draw background
-public sealed class FrameGraph : ILayoutWidget, IActor
+public sealed class GraphWidget : ILayoutWidget, IActor
 {
     public readonly Label LabelX = new();
     public readonly Label LabelY = new();
 
     private const int _UnitCount = 10;
-    public readonly Label[] LabelsUnit = new Label[_UnitCount];
+    public readonly Label[] LabelsUnit = new Label[_UnitCount]; // todo fix
 
     private const int _MaxPoints = 256;
     private const int _PxPerMs = 50;
@@ -44,7 +44,7 @@ public sealed class FrameGraph : ILayoutWidget, IActor
 
     public ActorData Data { get; }
 
-    public FrameGraph(Vector2 pos, Point size, string textX, string textY, RenderPriority priority)
+    public GraphWidget(Vector2 pos, Point size, string textX, string textY, RenderPriority priority)
     {
         this.Data = new(this, priority);
 

@@ -99,8 +99,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
             unit.BuffInstances.Add(new BuffInstance(buff, turnsMod, stacksMod));
             buffInstance = unit.BuffInstances[^1];
 
-            IBuffEffect[] buffEffects = buffInstance.Buff.BuffEffects;
-            foreach (IBuffEffect buffEffect in buffEffects)
+            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
             {
                 buffEffect.OnGive(unit, buffInstance.Stacks);
             }

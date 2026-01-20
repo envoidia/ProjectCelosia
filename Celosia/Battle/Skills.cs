@@ -16,4 +16,14 @@ public static class Skills
 
         DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "2"]
     };
+
+    public static readonly Skill ChainLightning = new(Core.BaseModId, "SkillChainLightning",
+    "__Celosia:SkillChainLightningDesc", Ranges.Other1R, 160)
+    {
+        SkillEffects = [new Damage(50, SkillTypes.Mag, Elements.Fulgur),
+            new GiveBuff(Buffs.Shock, 3)
+        ],
+
+        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Shock, "2"]
+    };
 }

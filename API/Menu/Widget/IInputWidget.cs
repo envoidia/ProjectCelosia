@@ -1,8 +1,8 @@
 using System;
-using API.Util;
+using API.Debug;
 using Microsoft.Xna.Framework;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// A widget that can accept inputs

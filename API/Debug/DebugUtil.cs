@@ -6,12 +6,14 @@ using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;
+using API.Menu.Widget;
 using API.Modding;
 using API.Save;
+using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace API.Util;
+namespace API.Debug;
 
 // todo dont even init any of this stuff until its used
 public static class DebugUtil
@@ -63,7 +65,7 @@ public static class DebugUtil
 
     private const int _KeyYOff = 927;
 
-    private static readonly FrameGraph _PerfGraph = new(new(700), new(1500, 500),
+    private static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
     {
         IsVisible = false

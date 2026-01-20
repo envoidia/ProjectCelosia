@@ -1,7 +1,7 @@
 using API.Input;
 using API.Util;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// The directions that an <c>IWidget</c> would like to use for input

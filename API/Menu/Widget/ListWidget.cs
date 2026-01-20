@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using API.Debug;
 using API.Graphics;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /* todo:
     - internal label alignment setting

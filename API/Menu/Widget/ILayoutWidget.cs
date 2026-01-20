@@ -1,4 +1,4 @@
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// A widget that has a layout

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using API.Debug;
 using API.Graphics;
-using API.Util;
 using Microsoft.Xna.Framework;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// ListWidget with a right-side element

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using API.Debug;
 using API.Graphics;
 using API.Input;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// A set of tabs
@@ -43,7 +44,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
         Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),
         Alignment = Alignment.Controlled
     };
-    
+
     public Label PromptR { get; } = new()
     {
         Padding = new(_DefaultLabelPaddingLR, _DefaultLabelPaddingTB),

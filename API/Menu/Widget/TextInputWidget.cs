@@ -1,19 +1,17 @@
 using System;
 using System.Text;
-using API.Extensions;
 using API.Graphics;
 using API.Input;
-using API.Util;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// Handles single-line text input. Cannot be constructed before <c>Core</c>
 /// </summary>
-public sealed class TextInput : IInputWidget
+public sealed class TextInputWidget : IInputWidget
 {
     /// <summary>
     /// Current text as a <c>StringBuilder</c>
@@ -82,10 +80,9 @@ public sealed class TextInput : IInputWidget
 
     private const float _MoveDelay = 0.05f;
 
-    public TextInput(Label label, ARectangle cursor, Func<bool> onEnter)
+    public TextInputWidget(Label label, ARectangle cursor, Func<bool> onEnter)
     {
         this.Label = label;
-        //this.Label.RichTextLayout.CalculateGlyphs = true;
         //this.Label.RichTextLayout.SupportsCommands = false; //todo fix
 
         this.Cursor = cursor;
@@ -191,7 +188,7 @@ public sealed class TextInput : IInputWidget
                 this.OptCount = this.Sb.Length;
                 this.OnChangeText?.Invoke();
                 this.Index++;
-                
+
                 return;
         }
     }
@@ -259,7 +256,7 @@ public sealed class TextInput : IInputWidget
 
     private void _UpdateCursor()
     {
-        int x = Index == OptCount
+        int x = this.Index == this.OptCount
             ? this.Label.Width
             : ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs[this.Index + 1].Bounds.X;
 

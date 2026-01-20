@@ -13,4 +13,11 @@ public static class Buffs
     {
         DescArgs = [$"{ThemeColor.Neg.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Neg.Str}-5% {ThemeColor.Stat.Str}{Stats.Str.GetName()}"]
     };
+
+    public static readonly Buff Shock = new(Core.BaseModId, "BuffShock", $"{ThemeColor.Fulgur.Str}/i[power-lightning]",
+        "__API:BuffDesc2PerStackHp", BuffType.Debuff, 5,
+        [new ChangeHp(-20), new ChangeStat(Stats.Agi, -50)])
+    {
+        DescArgs = [$"{ThemeColor.Neg.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Neg.Str}-5% {ThemeColor.Stat.Str}{Stats.Agi.GetName()}"]
+    };
 }

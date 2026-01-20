@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
-using API.Menu;
 using API.Menu.State;
+using API.Menu.Widget;
+using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace API.Util;
+namespace API.Debug;
 
 public static class DebugConsole
 {
@@ -88,7 +89,7 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    private static TextInput _input = null!;
+    private static TextInputWidget _input = null!;
     private static Menu.Menu _menu = null!;
 
     private static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)

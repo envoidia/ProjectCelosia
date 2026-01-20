@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using API.Debug;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using API.Modding;
-using API.Util;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
@@ -20,7 +20,6 @@ namespace API;
 /// <summary>
 /// Core of the game
 /// </summary>
-// todo internalify
 public class Core : Game
 {
     /// <summary>
@@ -133,7 +132,7 @@ public class Core : Game
     public Core(string title)
     {
         // Ensure that multiple cores are not created
-        Debug.Assert(Instance is null, "Only a single instance of Core should be created");
+        System.Diagnostics.Debug.Assert(Instance is null, "Only a single instance of Core should be created");
 
         // Store reference to engine for global member access
         Instance = this;

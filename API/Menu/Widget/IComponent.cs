@@ -1,6 +1,6 @@
 using System;
 
-namespace API.Menu;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// todo should ListWidget and etc just take this instead of strings

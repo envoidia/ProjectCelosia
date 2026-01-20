@@ -1,10 +1,12 @@
 using System;
+using API.Debug;
 using API.Extensions;
+using API.Graphics;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
-namespace API.Graphics;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// Layered bars representing HP, Shield, and HP over max
@@ -63,7 +65,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         {
             drawBar(this._layers[2], this._barLens[1], this._barLens[2] - this._barLens[1]);
         }
-        
+
         if (this._barLens[2] != 1)
         {
             drawBar(Settings.Theme.Neg, this._barLens[2], 1 - this._barLens[2]);

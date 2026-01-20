@@ -2,7 +2,6 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
-using API.Menu;
 
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
@@ -10,6 +9,7 @@ using System.Linq;
 using API.Extensions;
 using API.Name;
 using API.Util;
+using API.Menu.Widget;
 
 namespace API.Battle.State;
 

@@ -1,10 +1,12 @@
 using System;
+using API.Debug;
 using API.Extensions;
+using API.Graphics;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
-namespace API.Graphics;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// Layered bars representing a numerical amount, with text

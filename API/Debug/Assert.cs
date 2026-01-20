@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Diagnostics;
 
-namespace API.Util;
+namespace API.Debug;
 
 /// <summary>
-/// Helper wrappers for <c>Debug.Assert()</c>
+/// Helper wrappers for <c>Debug.Assert</c>
 /// </summary>
 public static class Assert
 {
@@ -14,7 +14,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void Zero(object v)
     {
-        Debug.Assert(v.Equals(0), $"{v} must be 0");
+        System.Diagnostics.Debug.Assert(v.Equals(0), $"{v} must be 0");
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void One(object v)
     {
-        Debug.Assert(v.Equals(1), $"{v} must be 1");
+        System.Diagnostics.Debug.Assert(v.Equals(1), $"{v} must be 1");
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void NotZero(object v)
     {
-        Debug.Assert(!v.Equals(0), $"{v} must not be 0");
+        System.Diagnostics.Debug.Assert(!v.Equals(0), $"{v} must not be 0");
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void LessThan(int i1, int i2)
     {
-        Debug.Assert(i1 < i2, $"{i1} must be less than {i2}");
+        System.Diagnostics.Debug.Assert(i1 < i2, $"{i1} must be less than {i2}");
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void InRange(int i, int min, int max)
     {
-        Debug.Assert(i <= max && i >= min, $"{i} must between {min} and {max} (inclusive)");
+        System.Diagnostics.Debug.Assert(i <= max && i >= min, $"{i} must between {min} and {max} (inclusive)");
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void InRangeOr(int i, int min, int max, int exception)
     {
-        Debug.Assert((i <= max && i >= min) || i == exception,
+        System.Diagnostics.Debug.Assert((i <= max && i >= min) || i == exception,
             $"{i} must between {min} and {max} (inclusive), or must be {exception}");
     }
 
@@ -69,7 +69,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void Is<T>(object v)
     {
-        Debug.Assert(v is T, $"{v} must be type {typeof(T)}");
+        System.Diagnostics.Debug.Assert(v is T, $"{v} must be type {typeof(T)}");
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void LenIs(IList c, int s)
     {
-        Debug.Assert(c.Count == s, $"Size of {c} must be {s}, was {c.Count}");
+        System.Diagnostics.Debug.Assert(c.Count == s, $"Size of {c} must be {s}, was {c.Count}");
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void LenNotZero(object?[] c)
     {
-        Debug.Assert(c.Length != 0, $"Size of {c} must not be 0");
+        System.Diagnostics.Debug.Assert(c.Length != 0, $"Size of {c} must not be 0");
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void DoesntContain(IList c, object v)
     {
-        Debug.Assert(!c.Contains(v), $"{c} must not contain {v}");
+        System.Diagnostics.Debug.Assert(!c.Contains(v), $"{c} must not contain {v}");
     }
 }
 

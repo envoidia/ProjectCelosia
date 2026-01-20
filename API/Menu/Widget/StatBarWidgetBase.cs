@@ -1,8 +1,8 @@
 using System;
-using API.Menu;
+using API.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace API.Graphics;
+namespace API.Menu.Widget;
 
 /// <summary>
 /// Base class for StatBarWidget and HpBarWidget.
