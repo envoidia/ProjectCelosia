@@ -33,7 +33,7 @@ public sealed class Command
     /// <summary>
     /// Creates a <c>Command</c> with the specified name and adds it to the command registry, unless the name is already used
     /// </summary>
-    /// <returns>Whether the Command was created and registered</returns>
+    /// <returns>An error if any, otherwise null</returns>
     public static CommandRegistrationError? Create(string name, Action<string[]> action, string[] hints)
     {
         if (_Commands.ContainsKey(name))
@@ -50,6 +50,11 @@ public sealed class Command
 
         return null;
     }
+
+    /// <summary>
+    /// Adds an alias to the alias registry, unless the name is already used
+    /// </summary>
+    /// <returns>An error if any, otherwise null</returns>
 
     public static AliasRegistrationError? AddAlias(string alias, string cmd)
     {
@@ -74,12 +79,18 @@ public sealed class Command
     }
 }
 
+/// <summary>
+/// A reason why a command couldn't be registered
+/// </summary>
 public enum CommandRegistrationError
 {
     AlreadyExists,
     NameUsedByAlias,
 }
 
+/// <summary>
+/// A reason why an alias couldn't be registered
+/// </summary>
 public enum AliasRegistrationError
 {
     AlreadyExists,
