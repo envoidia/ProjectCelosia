@@ -15,7 +15,7 @@ namespace API.Graphics;
 /// Color theme
 /// </summary>
 // todo load themes from props
-public class Theme : IDescribable, IRegistrable
+public sealed class Theme : IDescribable, IRegistrable
 {
     /// <summary>
     /// Notified when the current <c>Theme</c> changes

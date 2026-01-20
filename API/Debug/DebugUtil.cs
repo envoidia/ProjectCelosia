@@ -9,7 +9,6 @@ using API.Menu.State;
 using API.Menu.Widget;
 using API.Modding;
 using API.Save;
-using API.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 

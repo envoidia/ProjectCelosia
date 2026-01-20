@@ -13,8 +13,9 @@ namespace API.Debug;
 
 public static class DebugConsole
 {
+    // todo wait for compiler update (hint is incorrect)
     private static bool _Show
-    { // todo
+    {
         get;
         set
         {
@@ -112,8 +113,7 @@ public static class DebugConsole
     // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
     internal static void _PostCoreInit()
     {
-        _input = new(_Command, _Cursor,
-        ExecuteCommand)
+        _input = new(_Command, _Cursor, ExecuteCommand, false)
         {
             OnChangeText = () => _Command.Text = $"{_color.Str}>{_input!.Text}{(_Focused ? "" : "   ([esc] to focus)")}"
         };

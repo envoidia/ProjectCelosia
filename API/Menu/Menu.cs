@@ -241,6 +241,7 @@ public sealed class Menu
         }
     }
 
-    private class _MenuAssignException() :
-        Exception("Could not assign controls to Menu widgets because all directions were used. If you got this from requesting a GridWidget, try requesting it first");
+    private sealed class _MenuAssignException() :
+        Exception("Could not assign controls to Menu widgets because all directions were used."
+            + $"If you got this from requesting a {nameof(GridWidget)}, try requesting it first in the list");
 }

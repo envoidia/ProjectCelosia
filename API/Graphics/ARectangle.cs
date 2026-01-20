@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
 
-public class ARectangle : IActor
+public sealed class ARectangle : IActor
 {
     public ActorData Data { get; }
 

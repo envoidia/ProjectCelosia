@@ -49,6 +49,11 @@ public sealed class TextInputWidget : IInputWidget
     /// </summary>
     public Action? OnChangeText;
 
+    /// <summary>
+    /// Whether up/down should be aliases for home/end
+    /// </summary>
+    public bool UseUpDown;
+
     public bool CheckInput { get; set; }
 
     /// <summary>
@@ -80,7 +85,7 @@ public sealed class TextInputWidget : IInputWidget
 
     private const float _MoveDelay = 0.05f;
 
-    public TextInputWidget(Label label, ARectangle cursor, Func<bool> onEnter)
+    public TextInputWidget(Label label, ARectangle cursor, Func<bool> onEnter, bool useUpDown = true)
     {
         this.Label = label;
         //this.Label.RichTextLayout.SupportsCommands = false; //todo fix
@@ -90,6 +95,7 @@ public sealed class TextInputWidget : IInputWidget
 
         this.Label.RichTextLayout.CalculateGlyphs = true;
         this.OnEnter = onEnter;
+        this.UseUpDown = useUpDown;
 
         Core.Instance.Window.TextInput += this._Input;
 
@@ -243,12 +249,12 @@ public sealed class TextInputWidget : IInputWidget
             }
         }
 
-        if (InputLib.Check(Keybinds.Up) || InputLib.IsKeyJustPressed(Keys.Home))
+        if (InputLib.IsKeyJustPressed(Keys.Home) || (this.UseUpDown && InputLib.Check(Keybinds.Up)))
         {
             this.Index = 0;
         }
 
-        if (InputLib.Check(Keybinds.Down) || InputLib.IsKeyJustPressed(Keys.End))
+        if (InputLib.IsKeyJustPressed(Keys.End) || (this.UseUpDown && InputLib.Check(Keybinds.Down)))
         {
             this.Index = this.OptCount;
         }

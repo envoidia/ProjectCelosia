@@ -9,7 +9,7 @@ namespace API.Util;
 /// Array that tracks its length and cannot be resized
 /// </summary>
 [CollectionBuilder(typeof(SizedArrBuilder), "Create")]
-public class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
+public sealed class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
 {
     private readonly T[] _arr = new T[capacity];
 

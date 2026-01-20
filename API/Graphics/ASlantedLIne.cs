@@ -8,7 +8,7 @@ namespace API.Graphics;
 /// A line with slanted edges. Can only be horizontal or vertical, not arbitrary angles 
 /// todo: currently only supports horizontal
 /// </summary>
-public class ASlantedLine : IActor
+public sealed class ASlantedLine : IActor
 {
     // todo public LineDir LineDir;
 

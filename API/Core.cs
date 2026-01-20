@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using API.Debug;
 using API.Graphics;
@@ -20,7 +19,7 @@ namespace API;
 /// <summary>
 /// Core of the game
 /// </summary>
-public class Core : Game
+public sealed class Core : Game
 {
     /// <summary>
     /// Global instance of Core
@@ -166,8 +165,6 @@ public class Core : Game
 #if DEBUG
         this.IsMouseVisible = true;
 #endif
-
-        PostCoreInit?.Invoke();
     }
 
     protected override void Initialize()
@@ -182,6 +179,8 @@ public class Core : Game
         ShapeBatch = new ShapeBatch(GraphicsDevice, this.Content);
 
         StateMachine.Add(States.MainMenu);
+
+        PostCoreInit?.Invoke();
     }
 
     protected override void LoadContent()
