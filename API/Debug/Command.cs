@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using API.Menu.Widget;
+using API.Util;
 
 namespace API.Debug;
 
@@ -9,6 +11,7 @@ namespace API.Debug;
 public sealed class Command
 {
     internal static readonly Dictionary<string, Command> _Commands = [];
+    internal static readonly Dictionary<string, string> _Aliases = [];
 
     /// <summary>
     /// Function this should execute
@@ -31,14 +34,55 @@ public sealed class Command
     /// Creates a <c>Command</c> with the specified name and adds it to the command registry, unless the name is already used
     /// </summary>
     /// <returns>Whether the Command was created and registered</returns>
-    public static bool Create(string name, Action<string[]> action, string[] hints)
+    public static Result<CommandRegistrationError> Create(string name, Action<string[]> action, string[] hints)
     {
         if (_Commands.ContainsKey(name))
         {
-            return false;
+            return new(CommandRegistrationError.AlreadyExists);
+        }
+
+        if (_Aliases.ContainsKey(name))
+        {
+            return new(CommandRegistrationError.NameUsedByAlias);
         }
 
         _Commands.Add(name, new(action, hints));
-        return true;
+
+        return new();
     }
+
+    public static Result<AliasRegistrationError> AddAlias(string alias, string cmd)
+    {
+        if (_Aliases.ContainsKey(alias))
+        {
+            return new(AliasRegistrationError.AlreadyExists);
+        }
+
+        if (_Commands.ContainsKey(alias))
+        {
+            return new(AliasRegistrationError.NameUsedByCommand);
+        }
+
+        if (!_Commands.ContainsKey(cmd))
+        {
+            return new(AliasRegistrationError.CommandDoesntExist);
+        }
+
+        _Aliases.Add(alias, cmd);
+
+        return new();
+    }
+}
+
+public enum CommandRegistrationError
+{
+    AlreadyExists,
+    NameUsedByAlias,
+}
+
+public enum AliasRegistrationError
+{
+    AlreadyExists,
+    NameUsedByCommand,
+    CommandDoesntExist
 }
