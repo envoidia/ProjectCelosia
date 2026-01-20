@@ -34,43 +34,43 @@ public sealed class Command
     /// Creates a <c>Command</c> with the specified name and adds it to the command registry, unless the name is already used
     /// </summary>
     /// <returns>Whether the Command was created and registered</returns>
-    public static Result<CommandRegistrationError> Create(string name, Action<string[]> action, string[] hints)
+    public static CommandRegistrationError? Create(string name, Action<string[]> action, string[] hints)
     {
         if (_Commands.ContainsKey(name))
         {
-            return new(CommandRegistrationError.AlreadyExists);
+            return CommandRegistrationError.AlreadyExists;
         }
 
         if (_Aliases.ContainsKey(name))
         {
-            return new(CommandRegistrationError.NameUsedByAlias);
+            return CommandRegistrationError.NameUsedByAlias;
         }
 
         _Commands.Add(name, new(action, hints));
 
-        return new();
+        return null;
     }
 
-    public static Result<AliasRegistrationError> AddAlias(string alias, string cmd)
+    public static AliasRegistrationError? AddAlias(string alias, string cmd)
     {
         if (_Aliases.ContainsKey(alias))
         {
-            return new(AliasRegistrationError.AlreadyExists);
+            return AliasRegistrationError.AlreadyExists;
         }
 
         if (_Commands.ContainsKey(alias))
         {
-            return new(AliasRegistrationError.NameUsedByCommand);
+            return AliasRegistrationError.NameUsedByCommand;
         }
 
         if (!_Commands.ContainsKey(cmd))
         {
-            return new(AliasRegistrationError.CommandDoesntExist);
+            return AliasRegistrationError.CommandDoesntExist;
         }
 
         _Aliases.Add(alias, cmd);
 
-        return new();
+        return null;
     }
 }
 

@@ -4,7 +4,7 @@ namespace API.Battle.SkillEffects;
 
 public sealed class ChangeBloom(int change) : SkillEffect
 {
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    public override SkillResultType Apply(Unit self, Unit target, bool isMainTarget, SkillResultType prevResultType)
     {
         if (!this.MainTargetOnly || isMainTarget)
         {
@@ -14,6 +14,6 @@ public sealed class ChangeBloom(int change) : SkillEffect
             LogLib.Add(CalcLib.ChangeBloom(team, unit.GetSide(), change));
         }
 
-        return ResultType.PseudoSuccess;
+        return SkillResultType.PseudoSuccess;
     }
 }

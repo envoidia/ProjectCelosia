@@ -8,11 +8,11 @@ namespace API.Battle.SkillEffects;
 
 public sealed class ChangeStage(StageType stageType, int turns, int stacks) : SkillEffect(descInclusion: stageType)
 {
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    public override SkillResultType Apply(Unit self, Unit target, bool isMainTarget, SkillResultType prevResultType)
     {
         if (this.MainTargetOnly && !isMainTarget)
         {
-            return ResultType.PseudoSuccess;
+            return SkillResultType.PseudoSuccess;
         }
 
         List<string> msg = [];
@@ -70,6 +70,6 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             LogLib.Add(msg);
         }
 
-        return ResultType.PseudoSuccess;
+        return SkillResultType.PseudoSuccess;
     }
 }

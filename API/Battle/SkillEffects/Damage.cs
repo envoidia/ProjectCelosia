@@ -4,7 +4,7 @@ namespace API.Battle.SkillEffects;
 
 public sealed class Damage : SkillEffect
 {
-    public ResultType MinResultType { get; init; } = ResultType.HitEffectBlock;
+    public SkillResultType MinResultType { get; init; } = SkillResultType.HitEffectBlock;
     public bool IsPierce { get; init; } = false;
     public bool IsFollowUp { get; init; } = false;
 
@@ -13,14 +13,14 @@ public sealed class Damage : SkillEffect
         this.Element = element;
     }
 
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    public override SkillResultType Apply(Unit self, Unit target, bool isMainTarget, SkillResultType prevResultType)
     {
         // If the previous hit failed entirely, this one wouldn't have been reached. If this return statement is ever
         // reached, it's under special circumstances (such as a main target only effect), so let the attack continue
         // just to be safe
         if (((int) prevResultType < (int) this.MinResultType) || (this.MainTargetOnly && !isMainTarget))
         {
-            return ResultType.PseudoSuccess;
+            return SkillResultType.PseudoSuccess;
         }
 
         int aksdfjhsdkf;
@@ -30,7 +30,8 @@ public sealed class Damage : SkillEffect
         {
             aksdfjhsdkf = self.GetStat(Stats.Str);
             def = target.GetStat(Stats.Amr);
-        } else
+        }
+        else
         {
             aksdfjhsdkf = self.GetStat(Stats.Mag);
             def = target.GetStat(Stats.Res);
@@ -63,7 +64,8 @@ public sealed class Damage : SkillEffect
         if (affMultDmgTaken == 0)
         {
             dmg = 0;
-        } else
+        }
+        else
         {
             float mdd = this.Element.MultDmgDealt is null ? 1f : self.GetMult(this.Element.MultDmgDealt);
             float mdt = this.Element.MultDmgTaken is null ? 1f : target.GetMult(this.Element.MultDmgTaken);
@@ -77,7 +79,7 @@ public sealed class Damage : SkillEffect
         }
 
         // Deal damage
-        Result result = target.Damage(dmg, this.IsPierce);
+        SkillResult result = target.Damage(dmg, this.IsPierce);
         LogLib.Add(result.Messages);
 
         return result.ResultType;

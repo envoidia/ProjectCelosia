@@ -639,7 +639,7 @@ public sealed class Unit
         }
     }
 
-    public Result Damage(int dmg, bool pierce = false, bool useName = true)
+    public SkillResult Damage(int dmg, bool pierce = false, bool useName = true)
     {
         int dmgFull = dmg;
         int defendOld = this.Defend;
@@ -663,7 +663,7 @@ public sealed class Unit
                 if (this.Defend > dmg)
                 {
                     this.Defend -= dmg;
-                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang([nameS,
+                    return new SkillResult(SkillResultType.HitEffectBlock, "LogChangeShield".FormatLang([nameS,
                         (defendOld + this.Shield).Format(ThemeColor.Shield),
                         (this.Defend + this.Shield).Format(ThemeColor.Shield),
                         this.GetStat(Stats.Hp).Format(ThemeColor.Hp), dmgFull.Format()]));
@@ -687,7 +687,7 @@ public sealed class Unit
                 {
                     int shieldOld = this.Shield;
                     this.Shield -= dmg;
-                    return new Result(ResultType.HitEffectBlock, "LogChangeShield".FormatLang([
+                    return new SkillResult(SkillResultType.HitEffectBlock, "LogChangeShield".FormatLang([
                         nameS, (defendOld + shieldOld).Format(ThemeColor.Shield), this.Shield.Format(ThemeColor.Shield),
                         this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-dmgFull).Format()]));
                 }
@@ -719,12 +719,12 @@ public sealed class Unit
         // todo should this be a separate result from hitting shield
         if (this.GetBoolStat(BoolStats.EffectBlock) > 0)
         {
-            return new Result(ResultType.HitEffectBlock, msg);
+            return new SkillResult(SkillResultType.HitEffectBlock, msg);
         }
 
         return dmg > 0
-            ? new Result(ResultType.Success, msg)
-            : new Result(ResultType.Fail, "LogNoEffect".FormatLang(name));
+            ? new SkillResult(SkillResultType.Success, msg)
+            : new SkillResult(SkillResultType.Fail, "LogNoEffect".FormatLang(name));
     }
 
     // todo support other langs (+ nicknames?)

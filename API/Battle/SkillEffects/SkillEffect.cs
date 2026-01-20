@@ -28,5 +28,5 @@ public abstract class SkillEffect(int pow = 0, SkillType? skillType = null, IDes
     public bool IsInstant { get; init; } = false;
     public Element Element { get; init; } = Element.Vis;
 
-    public abstract ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType);
+    public abstract SkillResultType Apply(Unit self, Unit target, bool isMainTarget, SkillResultType prevResultType);
 }

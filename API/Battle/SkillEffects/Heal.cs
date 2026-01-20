@@ -10,11 +10,11 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth)
 {
     public int Overheal { get; init; } = 0;
 
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    public override SkillResultType Apply(Unit self, Unit target, bool isMainTarget, SkillResultType prevResultType)
     {
         if (this.MainTargetOnly && !isMainTarget)
         {
-            return ResultType.PseudoSuccess;
+            return SkillResultType.PseudoSuccess;
         }
 
         List<string> msg = [];
@@ -45,6 +45,6 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth)
         }
 
         LogLib.Add(msg);
-        return ResultType.PseudoSuccess;
+        return SkillResultType.PseudoSuccess;
     }
 }

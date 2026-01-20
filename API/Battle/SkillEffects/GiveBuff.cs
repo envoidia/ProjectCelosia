@@ -10,13 +10,13 @@ namespace API.Battle.SkillEffects;
 // todo special case for shield
 public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect(descInclusion: buff)
 {
-    public ResultType MinResultType { get; init; } = ResultType.Success;
+    public SkillResultType MinResultType { get; init; } = SkillResultType.Success;
 
-    public override ResultType Apply(Unit self, Unit target, bool isMainTarget, ResultType prevResultType)
+    public override SkillResultType Apply(Unit self, Unit target, bool isMainTarget, SkillResultType prevResultType)
     {
         if ((this.MainTargetOnly && !isMainTarget) || ((int) prevResultType > (int) this.MinResultType))
         {
-            return ResultType.PseudoSuccess;
+            return SkillResultType.PseudoSuccess;
         }
 
         Unit unit = this.GiveToSelf ? self : target;
@@ -81,7 +81,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
 
             if (stacksAdded <= 0)
             {
-                return ResultType.PseudoSuccess;
+                return SkillResultType.PseudoSuccess;
             }
 
             foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
@@ -105,6 +105,6 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
             }
         }
 
-        return ResultType.PseudoSuccess;
+        return SkillResultType.PseudoSuccess;
     }
 }

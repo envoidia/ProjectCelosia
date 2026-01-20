@@ -102,7 +102,7 @@ public static class BattleLib
     /// <summary>
     /// Previous SkillEffect resultTypes for each pos
     /// </summary>
-    private static ResultType[] _prevResults = new ResultType[UnitCount];
+    private static SkillResultType[] _prevResults = new SkillResultType[UnitCount];
 
     /// <summary>
     /// Amount of non-fail results for the current Move so far
@@ -613,7 +613,7 @@ public static class BattleLib
                     //moves[i].Color = (self.Pos == i) ? Color.Pink : Color.White;
                 }
 
-                _prevResults = new ResultType[UnitCount];
+                _prevResults = new SkillResultType[UnitCount];
             }
         }
 
@@ -641,19 +641,19 @@ public static class BattleLib
             Unit targetCur = Battle.GetUnitAtPos(targetPos);
             if (_applyingEffect == 0)
             {
-                _prevResults[targetPos] = ResultType.Success;
+                _prevResults[targetPos] = SkillResultType.Success;
 
                 targetCur.OnTargetedBySkill(self, skill);
             }
 
-            if (_prevResults[targetPos] == ResultType.Fail)
+            if (_prevResults[targetPos] == SkillResultType.Fail)
             {
                 continue;
             }
 
             _nonFails++;
 
-            ResultType resultType = skillEffects[_applyingEffect]
+            SkillResultType resultType = skillEffects[_applyingEffect]
                 .Apply(self, targetCur, targetCur == targetMain, _prevResults[targetPos]);
             _prevResults[targetPos] = resultType;
         }
