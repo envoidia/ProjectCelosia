@@ -94,7 +94,7 @@ public sealed class TextInputWidget : IInputWidget
         this.Label.RichTextLayout.CalculateGlyphs = true;
 
         this.Cursor = cursor;
-        this.Cursor.Size = new(1, label.Height - 8); // todo height init + relative width
+        this.Cursor.Size = new(1, label.Height - 8); // todo height init + relative width(?) (is that supposed to say height?)
 
         this.OnEnter = onEnter;
         this.UseUpDown = useUpDown;
@@ -284,15 +284,15 @@ public sealed class TextInputWidget : IInputWidget
 
     private void _UpdateCursor()
     {
-        List<TextChunkGlyph> g = ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs;
+        List<TextChunkGlyph> glyphs = ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs;
 
         int i = this.Index + 1;
-        if (i >= g.Count)
+        if (i >= glyphs.Count)
         {
             return;
         }
 
-        int x = g[i].Bounds.X;
+        int x = glyphs[i].Bounds.X;
 
         this.Cursor.Position = new(this.Label.X + 1 + x, this.Label.Y - this.Label.Height + 4);
     }

@@ -212,7 +212,6 @@ public static class DebugConsole
                 ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
 
                 // Hints
-                // todo fix hints shifting as you type
                 string? hints = null;
 
                 if (args.Length != 0 && Command._Commands.TryGetValue(args[0], out Command? cmd))
@@ -226,7 +225,7 @@ public static class DebugConsole
                 }
 
                 // Autocomplete
-                string? match = args.Length == 1 ? $"{_GetAutocompleteMatch(_input.Text)}" : null;
+                string? match = args.Length == 1 ? _GetAutocompleteMatch(_input.Text) : null;
 
                 // Trailing space fixes cursor pos bug
                 _Command.Text = $"{_color.Str}>{_input.Text} ";
