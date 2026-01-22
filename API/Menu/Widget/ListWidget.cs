@@ -163,6 +163,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
             this.Height += l.Padding.T;
             l.Position = this.Position + new Vector2(l.Padding.L, this.Height);
             this.Height += l.Height + l.Padding.B;
+
             if (l.Width + l.Padding.LR > this.Width)
             {
                 this.Width = l.Width + l.Padding.LR;

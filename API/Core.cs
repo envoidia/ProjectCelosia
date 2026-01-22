@@ -6,7 +6,6 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using API.Modding;
-using API.Util;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;

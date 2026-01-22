@@ -18,7 +18,7 @@ public sealed class Buff : ComplexDescribable, IRegistrable
     public string ItemId { get; init; }
 
     public Buff(string modId, string keyName, string icon, string keyDesc, BuffType buffType,
-        int maxStacks, IBuffEffect[] buffEffects, string? itemId = null)
+    int maxStacks, IBuffEffect[] buffEffects, string? itemId = null)
         : base(keyName, icon, keyDesc)
     {
         this.BuffType = buffType;
@@ -34,6 +34,11 @@ public sealed class Buff : ComplexDescribable, IRegistrable
     public override string GetName()
     {
         return this.GetName(ThemeColor.Buff);
+    }
+
+    public string GetNameWithoutIcon()
+    {
+        return $"{ThemeColor.Buff.Str}{this.KeyName.GetLang(this.ModId)}";
     }
 
     // Todo use stack amount to show multiplied values

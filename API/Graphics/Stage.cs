@@ -61,7 +61,7 @@ public static class Stage
             _Actors[i].Data.Act(gt);
         }
 
-        if (DebugUtil.DrawPalette)
+        if (DebugUtil.DrawTheme)
         {
             Settings.Theme._DrawPalette(); // todo how is it possible that this draws between f1 bg and text
         }

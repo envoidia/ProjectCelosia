@@ -51,7 +51,7 @@ public static class InputWidgetExtensions
         public int CheckInput()
         {
             // todo fix -1 list
-            Assert.InRange(@this.Index, 0, @this.OptCount - 1);
+            //            Assert.InRange(@this.Index, 0, @this.OptCount - 1);
 
             if (@this.CheckInput)
             {

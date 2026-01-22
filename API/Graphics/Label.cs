@@ -77,15 +77,15 @@ public sealed class Label : IActor
 
     public void Draw(GameTime gt)
     {
+        if (this.HasBackground)
+        {
+            this.Data.DrawBackground(this._bgC, this.MinBackgroundSize);
+        }
+
         // todo is this return good
         if (string.IsNullOrWhiteSpace(this.Text))
         {
             return;
-        }
-
-        if (this.HasBackground)
-        {
-            this.Data.DrawBackground(this._bgC, this.MinBackgroundSize);
         }
 
         this.RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,

@@ -28,8 +28,8 @@ public static class DebugUtil
     /// </summary>
     public static bool DrawDebugInfo { get; private set; } = false;
     public static bool DrawDebugInfoHelp { get; private set; } = false;
-    public static bool DrawActorOutlines { get; private set; } = false;
-    public static bool DrawPalette { get; private set; } = false;
+    public static bool DrawActorOutlines { get; set; } = false;
+    public static bool DrawTheme { get; set; } = false;
 
     public static Stopwatch Stopwatch = new();
     public static TimeSpan LastUpdateTime = TimeSpan.Zero;
@@ -64,7 +64,7 @@ public static class DebugUtil
 
     private const int _KeyYOff = 927;
 
-    private static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
+    internal static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
     {
         IsVisible = false
@@ -130,7 +130,7 @@ public static class DebugUtil
             return;
         }
 
-        DebugConsole.Update(gt);
+        DebugConsole._Update(gt);
         _CheckInputs();
 
 
@@ -175,90 +175,33 @@ public static class DebugUtil
         _timeSinceUpdateInfoR = TimeSpan.Zero;
     }
 
+    // todo remove most of this
     private static void _CheckInputs()
     {
         if (InputLib.Check(Keybinds.DebugInfo))
         {
-            // temp
-            _Test();
-
-            if (InputLib.Check(Keybinds.Hotkey1))
-            {
-                DrawDebugInfoHelp ^= true;
-                _DebugInfoL.Text = _GetInfoLText();
-            }
-            else
-            {
-                _DebugInfoL.IsVisible ^= true;
-                _DebugInfoR.IsVisible ^= true;
-            }
+            _ToggleShowDebugInfo();
         }
 
         DrawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
 
         if (InputLib.IsKeyJustPressed(Keys.F4))
         {
-            _DebugInfoKeyNames.IsVisible ^= true;
-            _DebugInfoKeyHeld.IsVisible ^= true;
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F5))
-        {
-            Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
-            DebugConsole.Log("Output LoadedMods to console", _ClassName);
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F6))
-        {
-            Console.WriteLine(Registry.ToString());
-            DebugConsole.Log("Output Registry to console", _ClassName);
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F7))
-        {
-            Console.WriteLine(Settings.Language.ToString());
-            DebugConsole.Log("Output current language to console", _ClassName);
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F8))
-        {
-            Console.WriteLine(Stage.ToString());
-            DebugConsole.Log("Output Stage to console", _ClassName);
+            _ToggleShowInputView();
         }
 
         _PerfGraph.IsVisible ^= InputLib.IsKeyJustPressed(Keys.Q);
 
-        if (InputLib.IsKeyJustPressed(Keys.F9))
-        {
-            string str = string.Join('\n', LogLib._LogText);
-
-            if (InputLib.Check(Keybinds.Hotkey1))
-            {
-                Console.WriteLine(str);
-                DebugConsole.Log("Output raw battle log to console", _ClassName);
-            }
-            else
-            {
-                Console.WriteLine(str.RemoveFormattingCodes());
-                DebugConsole.Log("Output battle log to console", _ClassName);
-            }
-        }
 
         if (InputLib.IsKeyJustPressed(Keys.F10))
         {
             if (InputLib.Check(Keybinds.Hotkey1))
             {
-                _CyclePalette();
-            }
-
-            else if (InputLib.Check(Keybinds.Hotkey2))
-            {
-                Console.WriteLine(Settings.Theme.ToDetailedString());
-                DebugConsole.Log("Output Theme to console", _ClassName);
+                _CycleTheme();
             }
             else
             {
-                DrawPalette ^= true;
+                DrawTheme ^= true;
             }
         }
 
@@ -277,10 +220,44 @@ public static class DebugUtil
         }
     }
 
+    internal static void _SetShowDebugInfo(bool show)
+    {
+        // temp
+        _Test();
+
+        if (InputLib.Check(Keybinds.Hotkey1))
+        {
+            DrawDebugInfoHelp = show;
+            _DebugInfoL.Text = _GetInfoLText();
+        }
+        else
+        {
+            _DebugInfoL.IsVisible = show;
+            _DebugInfoR.IsVisible = show;
+        }
+    }
+
+    internal static void _ToggleShowDebugInfo()
+    {
+        _SetShowDebugInfo(!_DebugInfoL.IsVisible);
+    }
+
+    internal static void _SetShowInputView(bool show)
+    {
+        _DebugInfoKeyNames.IsVisible = show;
+        _DebugInfoKeyHeld.IsVisible = show;
+    }
+
+    internal static void _ToggleShowInputView()
+    {
+        _DebugInfoKeyNames.IsVisible ^= true;
+        _DebugInfoKeyHeld.IsVisible ^= true;
+    }
+
     /// <summary>
-    /// Increase current palette index by 1 or loop around
+    /// Increase current theme index by 1 or loop around
     /// </summary>
-    private static void _CyclePalette()
+    private static void _CycleTheme()
     {
         Theme[] themes = [.. Registry.Of<Theme>()];
         int i = themes.IndexOf(Settings.Theme);

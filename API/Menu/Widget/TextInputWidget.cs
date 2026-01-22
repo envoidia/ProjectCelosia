@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using API.Graphics;
 using API.Input;
@@ -9,23 +11,23 @@ using Microsoft.Xna.Framework.Input;
 namespace API.Menu.Widget;
 
 /// <summary>
-/// Handles single-line text input. Cannot be constructed before <c>Core</c>
+/// Handles single-line text input. Cannot be constructed before <c>Core</c>.
+/// Receives text input from the OS. Should support all keyboards well.
+/// Supports cursor movement, Home/End, BkSp/Del, and Hotkey2 for per-word actions.
+/// Does not support tab, history, selection, clipboard, overwrite mode, or multiple lines
 /// </summary>
 public sealed class TextInputWidget : IInputWidget
 {
-    /// <summary>
-    /// Current text as a <c>StringBuilder</c>
-    /// </summary>
-    public readonly StringBuilder Sb = new();
+    private readonly StringBuilder _Sb = new();
 
     /// <summary>
-    /// Current text as a <c>string</c>
+    /// Current text as a <c>string</c>. Allocates
     /// </summary>
     public string Text
     {
         get
         {
-            return this.Sb.ToString();
+            return this._Sb.ToString();
         }
     }
 
@@ -83,23 +85,45 @@ public sealed class TextInputWidget : IInputWidget
 
     public SelectionType CurDir { get; set; } = SelectionType.TextInput;
 
-    private const float _MoveDelay = 0.05f;
+    internal const float _MoveDelay = 0.05f;
 
     public TextInputWidget(Label label, ARectangle cursor, Func<bool> onEnter, bool useUpDown = true)
     {
         this.Label = label;
         //this.Label.RichTextLayout.SupportsCommands = false; //todo fix
+        this.Label.RichTextLayout.CalculateGlyphs = true;
 
         this.Cursor = cursor;
         this.Cursor.Size = new(1, label.Height - 8); // todo height init + relative width
 
-        this.Label.RichTextLayout.CalculateGlyphs = true;
         this.OnEnter = onEnter;
         this.UseUpDown = useUpDown;
 
         Core.Instance.Window.TextInput += this._Input;
 
         this._UpdateCursor();
+    }
+
+    public void Append(string str)
+    {
+        this._Sb.Append(str);
+        this.OptCount = this._Sb.Length;
+        this.OnChangeText?.Invoke();
+        this.Index = this.OptCount;
+    }
+
+    public void Clear()
+    {
+        this._Sb.Clear();
+        this.OptCount = 0;
+        this.OnChangeText?.Invoke();
+        this.Index = 0;
+    }
+
+    public void SetText(string str)
+    {
+        this._Sb.Clear();
+        this.Append(str);
     }
 
     /// <summary>
@@ -135,26 +159,26 @@ public sealed class TextInputWidget : IInputWidget
                 {
                     if (InputLib.Check(Keybinds.Hotkey2))
                     {
-                        while (this.Index > 0 && char.IsWhiteSpace(this.Sb[this.Index - 1]))
+                        while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
                         {
-                            this.Sb.Remove(this.Index - 1, 1);
+                            this._Sb.Remove(this.Index - 1, 1);
                             this.Index--;
                         }
 
-                        while (this.Index > 0 && !char.IsWhiteSpace(this.Sb[this.Index - 1]))
+                        while (this.Index > 0 && !char.IsWhiteSpace(this._Sb[this.Index - 1]))
                         {
-                            this.Sb.Remove(this.Index - 1, 1);
+                            this._Sb.Remove(this.Index - 1, 1);
                             this.Index--;
                         }
 
-                        this.OptCount = this.Sb.Length;
+                        this.OptCount = this._Sb.Length;
                         this.OnChangeText?.Invoke();
 
                         return;
                     }
 
-                    this.Sb.Remove(this.Index - 1, 1);
-                    this.OptCount = this.Sb.Length;
+                    this._Sb.Remove(this.Index - 1, 1);
+                    this.OptCount = this._Sb.Length;
                     this.OnChangeText?.Invoke();
                     this.Index--;
                 }
@@ -166,32 +190,32 @@ public sealed class TextInputWidget : IInputWidget
                 {
                     if (InputLib.Check(Keybinds.Hotkey2))
                     {
-                        while (this.Sb.Length > this.Index && char.IsWhiteSpace(this.Sb[this.Index]))
+                        while (this._Sb.Length > this.Index && char.IsWhiteSpace(this._Sb[this.Index]))
                         {
-                            this.Sb.Remove(this.Index, 1);
+                            this._Sb.Remove(this.Index, 1);
                         }
 
-                        while (this.Sb.Length > this.Index && !char.IsWhiteSpace(this.Sb[this.Index]))
+                        while (this._Sb.Length > this.Index && !char.IsWhiteSpace(this._Sb[this.Index]))
                         {
-                            this.Sb.Remove(this.Index, 1);
+                            this._Sb.Remove(this.Index, 1);
                         }
 
-                        this.OptCount = this.Sb.Length;
+                        this.OptCount = this._Sb.Length;
                         this.OnChangeText?.Invoke();
 
                         return;
                     }
 
-                    this.Sb.Remove(this.Index, 1);
-                    this.OptCount = this.Sb.Length;
+                    this._Sb.Remove(this.Index, 1);
+                    this.OptCount = this._Sb.Length;
                     this.OnChangeText?.Invoke();
                 }
 
                 return;
 
             default:
-                this.Sb.Insert(this.Index, args.Character);
-                this.OptCount = this.Sb.Length;
+                this._Sb.Insert(this.Index, args.Character);
+                this.OptCount = this._Sb.Length;
                 this.OnChangeText?.Invoke();
                 this.Index++;
 
@@ -207,12 +231,12 @@ public sealed class TextInputWidget : IInputWidget
             // Word jump
             if (InputLib.Check(Keybinds.Hotkey2))
             {
-                while (this.Index > 0 && char.IsWhiteSpace(this.Sb[this.Index - 1]))
+                while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
                 {
                     this.Index--;
                 }
 
-                while (this.Index > 0 && !char.IsWhiteSpace(this.Sb[this.Index - 1]))
+                while (this.Index > 0 && !char.IsWhiteSpace(this._Sb[this.Index - 1]))
                 {
                     this.Index--;
                 }
@@ -225,17 +249,16 @@ public sealed class TextInputWidget : IInputWidget
                 this.Index--;
             }
         }
-
-        if (InputLib.Check(Keybinds.Right, true, _MoveDelay))
+        else if (InputLib.Check(Keybinds.Right, true, _MoveDelay))
         {
             if (InputLib.Check(Keybinds.Hotkey2))
             {
-                while (this.Index < this.OptCount && char.IsWhiteSpace(this.Sb[this.Index]))
+                while (this.Index < this.OptCount && char.IsWhiteSpace(this._Sb[this.Index]))
                 {
                     this.Index++;
                 }
 
-                while (this.Index < this.OptCount && !char.IsWhiteSpace(this.Sb[this.Index]))
+                while (this.Index < this.OptCount && !char.IsWhiteSpace(this._Sb[this.Index]))
                 {
                     this.Index++;
                 }
@@ -253,8 +276,7 @@ public sealed class TextInputWidget : IInputWidget
         {
             this.Index = 0;
         }
-
-        if (InputLib.IsKeyJustPressed(Keys.End) || (this.UseUpDown && InputLib.Check(Keybinds.Down)))
+        else if (InputLib.IsKeyJustPressed(Keys.End) || (this.UseUpDown && InputLib.Check(Keybinds.Down)))
         {
             this.Index = this.OptCount;
         }
@@ -262,18 +284,16 @@ public sealed class TextInputWidget : IInputWidget
 
     private void _UpdateCursor()
     {
-        int x = this.Index == this.OptCount
-            ? this.Label.Width
-            : ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs[this.Index + 1].Bounds.X;
+        List<TextChunkGlyph> g = ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs;
+
+        int i = this.Index + 1;
+        if (i >= g.Count)
+        {
+            return;
+        }
+
+        int x = g[i].Bounds.X;
 
         this.Cursor.Position = new(this.Label.X + 1 + x, this.Label.Y - this.Label.Height + 4);
-    }
-
-    public void Clear()
-    {
-        this.Sb.Clear();
-        this.OptCount = 0;
-        this.OnChangeText?.Invoke();
-        this.Index = 0;
     }
 }

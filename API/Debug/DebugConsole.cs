@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using API.Menu.Widget;
 using API.Util;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -13,6 +15,8 @@ namespace API.Debug;
 
 public static class DebugConsole
 {
+    #region Props/Fields
+
     // todo wait for compiler update (hint is incorrect)
     private static bool _Show
     {
@@ -22,8 +26,9 @@ public static class DebugConsole
             field = value;
 
             _Command.IsVisible = value;
+            _CommandHint.IsVisible = value;
             _Cursor.IsVisible = value;
-            _History.IsVisible = value;
+            _Log.IsVisible = value;
             _Line.IsVisible = value;
 
             _Focused = value;
@@ -65,6 +70,18 @@ public static class DebugConsole
         IsVisible = false
     };
 
+    /// <summary>
+    /// Autocomplete/hint portion of the command
+    /// </summary>
+    private static readonly Label _CommandHint = new(RenderPriority.B3Med, Core.Koruri40)
+    {
+        Position = new(10, World.H - 5),
+        Padding = new(10),
+        Alignment = Alignment.BottomLeft,
+        AnimType = AnimType.None,
+        IsVisible = false
+    };
+
     private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.B3High)
     {
         IsVisible = false
@@ -75,15 +92,37 @@ public static class DebugConsole
     private static readonly List<string> _Hist = new(_HistLimit);
 
     private const int _DisplayedCount = 24;
-    private static readonly List<string> _LogText = new(_DisplayedCount);
+    internal static readonly List<string> _LogText = new(_DisplayedCount);
 
-    private const int _MinBgWidth = 500;
+    private static int _histIndex = -1;
 
-    internal static readonly Label _History = new(RenderPriority.B3High, Core.Koruri40)
+    /// <summary>
+    /// History depth. -1 = not in history. 0 = _Hist[^1], etc
+    /// </summary>
+    private static int _HistIndex // todo same compiler update
+    {
+        get => _histIndex;
+        set
+        {
+            _histIndex = Math.Clamp(value, -1, _Hist.Count - 1);
+
+            if (_histIndex != -1)
+            {
+                _input.SetText(_Hist[^(_histIndex + 1)]);
+                return;
+            }
+
+            _input.Clear();
+        }
+    }
+
+    internal const int _MinBgWidth = 1500;
+
+    internal static readonly Label _Log = new(RenderPriority.B3High, Core.Koruri40)
     {
         Position = new(10, World.H - 20),
         Padding = new(10, 10, 10, 20),
-        HasBackground = true,
+        HasBackground = true, // todo also use current command width for this
         MinBackgroundSize = new(_MinBgWidth, 0),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
@@ -93,67 +132,27 @@ public static class DebugConsole
     private static TextInputWidget _input = null!;
     private static Menu.Menu _menu = null!;
 
-    private static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
+    internal static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
     {
         Position = new(0, World.H - 50),
         Size = new(_MinBgWidth, 1),
         IsVisible = false
     };
 
+    #endregion
+
     static DebugConsole()
     {
         Stage.Add(_Command);
+        Stage.Add(_CommandHint);
         Stage.Add(_Cursor);
-        Stage.Add(_History);
+        Stage.Add(_Log);
         Stage.Add(_Line);
 
         Core.PostCoreInit += _PostCoreInit;
     }
 
-    // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
-    internal static void _PostCoreInit()
-    {
-        _input = new(_Command, _Cursor, ExecuteCommand, false)
-        {
-            OnChangeText = () => _Command.Text = $"{_color.Str}>{_input!.Text}{(_Focused ? "" : "   ([esc] to focus)")}"
-        };
-
-        _menu = new("DbgConsole")
-        {
-            InputWidgets = [_input]
-        };
-    }
-
-    internal static void Update(GameTime gt)
-    {
-        if (InputLib.IsKeyJustPressed(Keys.F2))
-        {
-            _Show ^= true;
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.Escape))
-        {
-            _Focused ^= true;
-        }
-
-        //Console.WriteLine(RenderPriority.B3High.ToString() + " " + RenderPriority.Highest.ToString() + " " + _Command.Priority.ToString());
-        //_Command.Priority = RenderPriority.B3High;
-    }
-
-    private static bool ExecuteCommand()
-    {
-        string t = _input.Text;
-
-        if (t.Length == 0)
-        {
-            return false;
-        }
-
-        _Hist.Add(t);
-        Log(t, nameof(DebugConsole));
-
-        return true;
-    }
+    #region Logging
 
     /// <summary>
     /// Write a message to the ingame debug log and the attached OS console
@@ -177,8 +176,8 @@ public static class DebugConsole
             _ => throw new ClosedEnumsWhenException()
         }}[{source}] {msg}");
 
-        _History.Text = string.Join('\n', _LogText) + '\n';
-        _Line.Width = Math.Max(_MinBgWidth, _History.Width + 20);
+        _Log.Text = string.Join('\n', _LogText) + '\n';
+        _Line.Width = Math.Max(_MinBgWidth, _Log.Width + 20);
 
         Console.WriteLine($"{logLevel switch
         {
@@ -198,4 +197,174 @@ public static class DebugConsole
         Warning,
         Error
     }
+
+    #endregion
+
+    #region Internals
+
+    // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
+    internal static void _PostCoreInit()
+    {
+        _input = new(_Command, _Cursor, _ExecuteCommand, false)
+        {
+            OnChangeText = () =>
+            {
+                ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
+
+                // Hints
+                // todo fix hints shifting as you type
+                string? hints = null;
+
+                if (args.Length != 0 && Command._Commands.TryGetValue(args[0], out Command? cmd))
+                {
+                    int skip = args.Length - 1;
+                    if (skip < cmd.Hints.Length)
+                    {
+                        hints = $"{(_input.Text.EndsWith(' ') ? null : ' ')}{string.Join(' ',
+                            cmd.Hints.Skip(skip).Select(s => $"[{s}]"))}";
+                    }
+                }
+
+                // Autocomplete
+                string? match = args.Length == 1 ? $"{_GetAutocompleteMatch(_input.Text)}" : null;
+
+                // Trailing space fixes cursor pos bug
+                _Command.Text = $"{_color.Str}>{_input.Text} ";
+
+                _CommandHint.X = _Command.X + _Command.Width - 7;
+                _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
+            }
+        };
+
+        _menu = new("DbgConsole")
+        {
+            InputWidgets = [_input]
+        };
+    }
+
+    internal static void _Update(GameTime gt)
+    {
+        if (InputLib.IsKeyJustPressed(Keys.F2))
+        {
+            _ToggleShowDebugConsole();
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.Escape))
+        {
+            _Focused ^= true;
+        }
+
+        if (!_Focused)
+        {
+            return;
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.Tab))
+        {
+            ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
+
+            if (args.Length == 1)
+            {
+                string? match = _GetAutocompleteMatch(args[0]);
+                if (match is not null)
+                {
+                    _input.Append(match);
+                }
+            }
+        }
+
+        if (InputLib.Check(Keybinds.Up, true, TextInputWidget._MoveDelay))
+        {
+            _HistIndex++;
+        }
+        else if (InputLib.Check(Keybinds.Down, true, TextInputWidget._MoveDelay))
+        {
+            _HistIndex--;
+        }
+    }
+
+    internal static void _SetShowDebugConsole(bool show)
+    {
+        _Show = show;
+    }
+
+    internal static void _ToggleShowDebugConsole()
+    {
+        _Show ^= true;
+    }
+
+    /// <summary>
+    /// Executes the specified command
+    /// </summary>
+    public static void ExecuteCommand(string t)
+    {
+        if (_Hist.Count == 0 || _Hist[^1] != t)
+        {
+            _Hist.Add(t);
+        }
+
+        ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
+
+        if (!Command._Commands.TryGetValue(args[0], out Command? cmd))
+        {
+            Log($"{args[0]} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
+                nameof(DebugConsole), LogLevel.Error);
+            // todo suggest close matches
+            return;
+        }
+
+        cmd.Action(args);
+    }
+
+    private static bool _ExecuteCommand()
+    {
+        if (_input.Text.Length == 0)
+        {
+            return false;
+        }
+
+        _histIndex = -1;
+        ExecuteCommand(_input.Text);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Splits a string by whitespace and returns a ReadOnlySpan without empty entries or whitespace
+    /// </summary>
+    private static ReadOnlySpan<string> _TokenizeCommand(string str)
+    {
+        return str.Split((char[]) null!,
+            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    }
+
+    /// <returns>The non-shared part of the closest autocomplete match for the currently typed command, or null</returns>
+    private static string? _GetAutocompleteMatch(string str)
+    {
+        string? match = Command._Commands.Keys
+                    .Where(k => k.StartsWith(str, StringComparison.OrdinalIgnoreCase))
+                    .OrderByDescending(k => getCommonPrefixLength(k, str))
+                    .FirstOrDefault();
+
+        if (match is null)
+        {
+            return null;
+        }
+
+        return match[getCommonPrefixLength(match, str)..];
+
+        static int getCommonPrefixLength(string a, string b)
+        {
+            int len = Math.Min(a.Length, b.Length);
+            for (int i = 0; i < len; i++)
+            {
+                if (a[i] != b[i]) return i;
+            }
+
+            return len;
+        }
+
+    }
+
+    #endregion
 }

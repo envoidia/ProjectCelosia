@@ -96,13 +96,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 buffName, buff.MaxStacks, ThemeColor.Imp.Str + stacksMod, stacksMod,
                 ThemeColor.Imp.Str + turnsMod, turnsMod]));
 
-            unit.BuffInstances.Add(new BuffInstance(buff, turnsMod, stacksMod));
-            buffInstance = unit.BuffInstances[^1];
-
-            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
-            {
-                buffEffect.OnGive(unit, buffInstance.Stacks);
-            }
+            unit.GiveBuffInstances(new BuffInstance(buff, turnsMod, stacksMod));
         }
 
         return SkillResultType.PseudoSuccess;

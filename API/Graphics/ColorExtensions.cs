@@ -79,13 +79,13 @@ public static class ColorExtensions
         /// <returns>
         /// A <c>Color</c> made from the given hex (<c>0xRRGGBB</c>)
         /// </returns>
-        // Xna.Framework.Color is stored as AGBR, so we need to reverse the bit order
+        // Color is stored as AGBR (WHY???), so we need to swap around some bits
         public static Color FromRgb(uint rgb)
         {
-            return new(0xff000000  // A
-            | ((rgb & 0xff) << 16)       // R
-            | (((rgb >> 8) & 0xff) << 8) // G
-            | ((rgb >> 16) & 0xff));     // B
+            return new(0xff000000 // A
+            | ((rgb & 0xff) << 16)             // R
+            | (((rgb >> 8) & 0xff) << 8)       // G
+            | ((rgb >> 16) & 0xff));           // B
         }
 
         /// <returns>
@@ -94,7 +94,7 @@ public static class ColorExtensions
         public static Color[] FromRgbs(params uint[] hexes)
         {
             Color[] colors = new Color[hexes.Length];
-            
+
             for (int i = 0; i < hexes.Length; i++)
             {
                 colors[i] = Color.FromRgb(hexes[i]);

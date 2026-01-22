@@ -101,6 +101,9 @@ public sealed class Unit
         this.Equipped?.Equip(this);
     }
 
+    #region Add/Remove
+
+    // todo add non params versions
     public void AddSkills(params Skill[] skills)
     {
         foreach (Skill skill in skills)
@@ -109,6 +112,7 @@ public sealed class Unit
         }
     }
 
+    // todo fix cooldown error
     public void RemoveSkills(params Skill[] skills)
     {
         foreach (Skill skill in skills)
@@ -142,6 +146,39 @@ public sealed class Unit
             }
         }
     }
+
+    public void GiveBuffInstances(params BuffInstance[] buffInstances)
+    {
+        foreach (BuffInstance buffInstance in buffInstances)
+        {
+            this.BuffInstances.Add(buffInstance);
+
+            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+            {
+                buffEffect.OnGive(this, buffInstance.Stacks);
+            }
+        }
+    }
+
+    public void RemoveBuffs(params Buff[] buffs)
+    {
+        foreach (Buff buff in buffs)
+        {
+            BuffInstance? buffInstance = this.BuffInstances.FirstOrDefault(bi => bi.Buff == buff);
+            if (buffInstance is not null)
+            {
+                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+                {
+                    buffEffect.OnRemove(this, 1);
+                }
+
+                this.BuffInstances.Remove(buffInstance);
+
+            }
+        }
+    }
+
+    #endregion
 
     #region Stats
 

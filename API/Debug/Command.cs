@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using API.Menu.Widget;
-using API.Util;
 
 namespace API.Debug;
 
@@ -11,12 +9,11 @@ namespace API.Debug;
 public sealed class Command
 {
     internal static readonly Dictionary<string, Command> _Commands = [];
-    internal static readonly Dictionary<string, string> _Aliases = [];
 
     /// <summary>
     /// Function this should execute
     /// </summary>
-    public readonly Action<string[]> Action;
+    public readonly Action<ReadOnlySpan<string>> Action;
 
     /// <summary>
     /// Hints for this' arguments.
@@ -24,76 +21,36 @@ public sealed class Command
     /// </summary>
     public readonly string[] Hints;
 
-    private Command(Action<string[]> action, string[] hints)
+    /// <summary>
+    /// Description of this
+    /// </summary>
+    public readonly string Desc;
+
+    static Command()
+    {
+        Commands._Init();
+    }
+
+    private Command(Action<ReadOnlySpan<string>> action, string[] hints, string desc)
     {
         this.Action = action;
         this.Hints = hints;
+        this.Desc = desc;
     }
 
     /// <summary>
     /// Creates a <c>Command</c> with the specified name and adds it to the command registry, unless the name is already used
     /// </summary>
-    /// <returns>An error if any, otherwise null</returns>
-    public static CommandRegistrationError? Create(string name, Action<string[]> action, string[] hints)
+    /// <returns>Whether the command was created sucessfully</returns>
+    public static bool Register(string name, Action<ReadOnlySpan<string>> action, string[] hints, string desc)
     {
         if (_Commands.ContainsKey(name))
         {
-            return CommandRegistrationError.AlreadyExists;
+            return false;
         }
 
-        if (_Aliases.ContainsKey(name))
-        {
-            return CommandRegistrationError.NameUsedByAlias;
-        }
+        _Commands.Add(name, new(action, hints, desc));
 
-        _Commands.Add(name, new(action, hints));
-
-        return null;
+        return true;
     }
-
-    /// <summary>
-    /// Adds an alias to the alias registry, unless the name is already used
-    /// </summary>
-    /// <returns>An error if any, otherwise null</returns>
-
-    public static AliasRegistrationError? AddAlias(string alias, string cmd)
-    {
-        if (_Aliases.ContainsKey(alias))
-        {
-            return AliasRegistrationError.AlreadyExists;
-        }
-
-        if (_Commands.ContainsKey(alias))
-        {
-            return AliasRegistrationError.NameUsedByCommand;
-        }
-
-        if (!_Commands.ContainsKey(cmd))
-        {
-            return AliasRegistrationError.CommandDoesntExist;
-        }
-
-        _Aliases.Add(alias, cmd);
-
-        return null;
-    }
-}
-
-/// <summary>
-/// A reason why a command couldn't be registered
-/// </summary>
-public enum CommandRegistrationError
-{
-    AlreadyExists,
-    NameUsedByAlias,
-}
-
-/// <summary>
-/// A reason why an alias couldn't be registered
-/// </summary>
-public enum AliasRegistrationError
-{
-    AlreadyExists,
-    NameUsedByCommand,
-    CommandDoesntExist
 }
