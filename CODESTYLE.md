@@ -50,8 +50,8 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
   - When using `throw`, the intention should be that the program crashes, not that the exception is caught
 - Prefer expression-bodied members
 - Prefer readonly fields over computed properties over fields over auto-properties
-- Prefer Array over List
-- Pre-allocate collections when possible. For lists, assert that the size doesn't change
+- Collection preference: ReadOnlySpan, Span, Array, SizedArr, List
+- Pre-allocate collections when possible
 - Early returns are usually **but not always** better
 - Use the most restrictive possible access modifier, keeping moddability in mind
 - Large functions should be split apart when possible
