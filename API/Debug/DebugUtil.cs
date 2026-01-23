@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-using API.Extensions;
 using API.Graphics;
 using API.Input;
 using API.Menu.State;

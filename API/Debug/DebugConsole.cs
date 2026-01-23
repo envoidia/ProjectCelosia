@@ -7,7 +7,6 @@ using API.Input;
 using API.Menu.State;
 using API.Menu.Widget;
 using API.Util;
-using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -27,7 +26,7 @@ public static class DebugConsole
             {
                 return;
             }
-            
+
             field = value;
 
             _Command.IsVisible = value;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using API.Debug;
 using API.Graphics;
-using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.Widget;
