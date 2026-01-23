@@ -375,7 +375,7 @@ public static class BattleLib
 
     internal static Unit[] _GetUnitsSortedByAgi()
     {
-        Unit[] units = Battle.GetAllUnits();// todo this might need to not copy
+        Unit[] units = Battle.GetAllUnits();
         SortByAgi(units);
         return units;
     }
@@ -477,6 +477,7 @@ public static class BattleLib
             return;
         }
 
+        // todo fix: crashes if selectopponentmoves is enabled
         _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_indexSkill];
         _Moves[_selectingMove].Text = _selectedSkillInstance.Skill.GetName();
 

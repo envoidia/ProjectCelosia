@@ -176,7 +176,7 @@ public sealed class Core : Game
 
         // Must be after Language and Theme and before any use of Label
         Settings._Init();
-        
+
         StateMachine._Init();
 
         BattleLib._Init();
@@ -189,6 +189,7 @@ public sealed class Core : Game
         // Must be after Settings
         StatBarWidget._Init();
 
+        // Must be after inits
         StateMachine.Add(States.MainMenu);
 
 #if !NATIVE_AOT

@@ -17,8 +17,6 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth)
             return SkillResultType.PseudoSuccess;
         }
 
-        List<string> msg = [];
-
         Unit unit = this.GiveToSelf ? self : target;
 
         // Heals by pow% of user's Fth
@@ -39,12 +37,11 @@ public sealed class Heal(int pow) : SkillEffect(pow, SkillTypes.Fth)
         {
             unit.Hp = hpNew;
 
-            msg.Add("LogChangeHp".FormatLang([unit.FormatName(), hpOld.Format(ThemeColor.Hp),
+            LogLib.Add("LogChangeHp".FormatLang([unit.FormatName(), hpOld.Format(ThemeColor.Hp),
                 hpNew.Format(ThemeColor.Hp), hpMax.Format(ThemeColor.Hp),
                 (hpNew - hpOld).Format(ThemeColor.Hp)]));
         }
 
-        LogLib.Add(msg);
         return SkillResultType.PseudoSuccess;
     }
 }

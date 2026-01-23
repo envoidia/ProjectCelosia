@@ -53,8 +53,7 @@ public static class Commands
 
         Command.Register("echo",
             static args => DebugConsole.Log(string.Join(' ', args.ToArray(),
-                1, args.Length - 1),
-            args[0]), ["text"], "Prints text");
+            1, args.Length - 1), args[0]), ["text"], "Prints text");
 
         // Basic utilities
 
@@ -68,14 +67,13 @@ public static class Commands
         Command.Register("reload", _Cmd_reload, [_Reloadable], "Reload various assets");
 
         Command.Register("gc", static args =>
-        {
-            long memory = GC.GetTotalMemory(false);
-            DebugConsole.Log(
-                $"Forced GC collect, memory usage went from {memory} to {GC.GetTotalMemory(true)}",
-                args[0]);
-        }, [], "Forces GC collection and reports memory");
+            DebugConsole.Log($"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
+                / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}", args[0]),
+            [], "Forces GC collection and reports memory");
 
-        Command.Register("setting", _Cmd_setting, ["setting", "value"], "Alter settings");
+        Command.Register("setting", _Cmd_setting, ["setting key/reload/reset", "value"], "Alter settings");
+
+        Command.Register("cycletheme", _Cmd_cycletheme, [], "Cycles the current theme");
 
         // Battle commands
 
@@ -192,15 +190,15 @@ public static class Commands
                 switch (ch)
                 {
                     case _OverlayChange.Show:
-                        DebugConsole._SetShowDebugConsole(true);
+                        DebugConsole._Show = true;
                         return;
 
                     case _OverlayChange.Hide:
-                        DebugConsole._SetShowDebugConsole(false);
+                        DebugConsole._Show = false;
                         return;
 
                     case _OverlayChange.Toggle:
-                        DebugConsole._ToggleShowDebugConsole();
+                        DebugConsole._Show ^= true;
                         return;
                 }
 
@@ -305,8 +303,16 @@ public static class Commands
         switch (args[1])
         {
             case "modlist":
-                Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+                StringBuilder sb = new("Modlist: ");
+                foreach (GameMod mod in ModLoader._LoadedMods)
+                {
+                    sb.Append($"{mod.GetName()}\n");
+                }
+
+                Console.WriteLine(sb.ToString());
+
                 DebugConsole.Log("Wrote mod list to OS console", args[0]);
+
                 return;
 
             case "registry":
@@ -328,7 +334,7 @@ public static class Commands
                 return;
 
             case "battlelog":
-                Console.WriteLine(string.Join('\n', LogLib._LogText).RemoveFormattingCodes());
+                Console.WriteLine($"Battle Log: {string.Join('\n', LogLib._LogText).RemoveFormattingCodes()}");
                 DebugConsole.Log("Wrote battle log to OS console", args[0]);
 
                 return;
@@ -336,11 +342,13 @@ public static class Commands
             case "theme":
                 Console.WriteLine(Settings.Theme.ToDetailedString());
                 DebugConsole.Log("Wrote current theme to OS console", args[0]);
+
                 return;
 
             default:
                 DebugConsole.Log($"Valid items: {_Writable}",
                     args[0], DebugConsole.LogLevel.Error);
+
                 return;
         }
     }
@@ -372,7 +380,6 @@ public static class Commands
         }
     }
 
-    // todo
     private static void _Cmd_reload(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
@@ -386,13 +393,17 @@ public static class Commands
         {
             case "lang":
                 Language.Reload();
+                Console.WriteLine("Reloaded language");
                 return;
 
             case "settings":
                 Settings.Reload();
+                Console.WriteLine("Reloaded settings");
                 return;
 
             case "themes":
+                // todo
+                Console.WriteLine("Reloaded themes (NYI)");
                 return;
 
             default:
@@ -405,15 +416,28 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            DebugConsole.Log("Usage: `setting [setting] [value]`. Omit value to print the current value",
+            DebugConsole.Log("Usage: `setting [setting] [value]`. Omit value to print the current value\n`setting reload` to reload from file, `setting reset` to reset to default\nIf a value is invalid, the default will be used instead",
             args[0], DebugConsole.LogLevel.Error);
 
             return;
         }
 
+        if (args[1] == "reload")
+        {
+            Settings.Reload();
+            return;
+        }
+
+        if (args[1] == "reset")
+        {
+            Settings.Create();
+            Settings.Reload();
+            return;
+        }
+
         if (!File.Exists(Settings.FilePath))
         {
-            Settings.CreateWith();
+            Settings.Create();
         }
 
         Dictionary<string, string> settings = Properties.Parse(Settings.FilePath);
@@ -438,59 +462,59 @@ public static class Commands
         switch (args[1])
         {
             case "Language":
-                Settings.CreateWith(language: args[2]);
+                Settings.Create(language: args[2]);
                 break;
 
             case "BattleSpeed":
-                Settings.CreateWith(battleSpeed: float.ParseOrDefault(args[2], 1f));
+                Settings.Create(battleSpeed: float.ParseOrDefault(args[2], 1f));
                 break;
 
             case "ShowInvalidMoveWarning":
-                Settings.CreateWith(showInvalidMoveWarning: bool.ParseOrDefault(args[2], true));
+                Settings.Create(showInvalidMoveWarning: bool.ParseOrDefault(args[2], true));
                 break;
 
             case "Resolution":
-                Settings.CreateWith(resolution: int.ParseOrDefault(args[2], -1));
+                Settings.Create(resolution: int.ParseOrDefault(args[2], -1));
                 break;
 
             case "Fullscreen":
-                Settings.CreateWith(fullscreen: bool.ParseOrDefault(args[2], true));
+                Settings.Create(fullscreen: bool.ParseOrDefault(args[2], true));
                 break;
 
             case "EnableVsync":
-                Settings.CreateWith(enableVsync: bool.ParseOrDefault(args[2], true));
+                Settings.Create(enableVsync: bool.ParseOrDefault(args[2], true));
                 break;
 
             case "TargetFps":
-                Settings.CreateWith(targetFps: int.ParseOrDefault(args[2], -1));
+                Settings.Create(targetFps: int.ParseOrDefault(args[2], -1));
                 break;
 
             case "Theme":
-                Settings.CreateWith(theme: args[2]);
+                Settings.Create(theme: args[2]);
                 break;
 
             case "MusicVolume":
-                Settings.CreateWith(musicVolume: float.ParseOrDefault(args[2], 0.75f));
+                Settings.Create(musicVolume: float.ParseOrDefault(args[2], 0.75f));
                 break;
 
             case "SfxVolume":
-                Settings.CreateWith(sfxVolume: float.ParseOrDefault(args[2], 0.75f));
+                Settings.Create(sfxVolume: float.ParseOrDefault(args[2], 0.75f));
                 break;
 
             case "ShowInputGuide":
-                Settings.CreateWith(showInputGuide: bool.ParseOrDefault(args[2], true));
+                Settings.Create(showInputGuide: bool.ParseOrDefault(args[2], true));
                 break;
 
             case "DetectNintendoController":
-                Settings.CreateWith(detectNintendoController: bool.ParseOrDefault(args[2], true));
+                Settings.Create(detectNintendoController: bool.ParseOrDefault(args[2], true));
                 break;
 
             case "EnableDebugFeatures":
-                Settings.CreateWith(enableDebugFeatures: bool.ParseOrDefault(args[2], false));
+                Settings.Create(enableDebugFeatures: bool.ParseOrDefault(args[2], false));
                 break;
 
             case "SelectOpponentMoves":
-                Settings.CreateWith(selectOpponentMoves: bool.ParseOrDefault(args[2], false));
+                Settings.Create(selectOpponentMoves: bool.ParseOrDefault(args[2], false));
                 break;
 
             default:
@@ -501,6 +525,14 @@ public static class Commands
 
         DebugConsole.Log($"Changed setting `{args[1]}` to `{args[2]}`", args[0]);
         Settings.Reload();
+    }
+
+    private static void _Cmd_cycletheme(ReadOnlySpan<string> args)
+    {
+        ReadOnlySpan<Theme> themes = [.. Registry.Of<Theme>()];
+        int i = themes.IndexOf(Settings.Theme);
+        Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
+        DebugConsole.Log($"Theme changed to {Settings.Theme.GetName().RemoveFormattingCodes()}", args[0]);
     }
 
     #endregion

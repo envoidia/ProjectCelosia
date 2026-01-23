@@ -14,13 +14,21 @@ public sealed class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
     private readonly T[] _arr = new T[capacity];
 
     public int Capacity = capacity;
-    public int Count = 0;
+
+    private int _c = 0;
+    public int Count
+    {
+        get
+        {
+            return this._c;
+        }
+    }
 
     public T this[int index]
     {
         get
         {
-            if (index >= this.Count)
+            if (index >= this._c)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -38,14 +46,13 @@ public sealed class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(T item)
     {
-        if (this.Count == this.Capacity)
+        if (this._c == this.Capacity)
         {
             throw new ArgumentOutOfRangeException(
                 $"Cannot add {item} to SizedArr<{typeof(T)}> that has met capacity of {this.Capacity}");
         }
 
-        this._arr[this.Count] = item;
-        this.Count++;
+        this._arr[this._c++] = item;
     }
 
     public void AddRange(params ReadOnlySpan<T> source)
@@ -55,20 +62,20 @@ public sealed class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
             return;
         }
 
-        if (this.Count + source.Length > this.Capacity)
+        if (this._c + source.Length > this.Capacity)
         {
             throw new ArgumentOutOfRangeException(nameof(source),
                 $"Cannot add collection to SizedArr<{typeof(T)}> because collection length " +
-                $"{source.Length} + current length {this.Count} exceeds capacity {this.Capacity}");
+                $"{source.Length} + current length {this._c} exceeds capacity {this.Capacity}");
         }
 
-        source.CopyTo(this._arr.AsSpan(this.Count));
-        this.Count += source.Length;
+        source.CopyTo(this._arr.AsSpan(this._c));
+        this._c += source.Length;
     }
 
     public IEnumerator<T> GetEnumerator()
     {
-        for (int i = 0; i < this.Count; i++)
+        for (int i = 0; i < this._c; i++)
         {
             yield return this._arr[i];
         }

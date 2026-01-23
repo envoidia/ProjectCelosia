@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using API.Debug;
 using API.Graphics;
@@ -51,19 +52,19 @@ public static class StringExtensions
         /// </returns>
         /// <para>Asserts > 0 args passed</para>
         /// <param name="args">The formatting arguments to apply</param>
-        public string FormatLang(string modId, object[] args)
+        public string FormatLang(string modId, ReadOnlySpan<object> args)
         {
             // todo Assert.LenNotZero(args);
             return string.Format(@this.GetLang(modId), args);
         }
 
-        /// <inheritdoc cref="FormatLang(string, string, object[])" />
-        public string FormatLang(object[] args)
+        /// <inheritdoc cref="FormatLang(string, string, ReadOnlySpan&lt;object&gt;)" />
+        public string FormatLang(ReadOnlySpan<object> args)
         {
             return @this.FormatLang(Core.Id, args);
         }
 
-        /// <inheritdoc cref="FormatLang(string, string, object[])" />
+        /// <inheritdoc cref="FormatLang(string, string, ReadOnlySpan&lt;object&gt;)" />
         public string FormatLang(object args)
         {
             return @this.FormatLang(Core.Id, [args]);
@@ -78,7 +79,7 @@ public static class StringExtensions
         /// <para>Asserts > 0 args passed</para>
         /// </summary>
         /// <param name="args">The formatting arguments to apply</param>
-        public string IcuFormatLang(string modId, object[] args)
+        public string IcuFormatLang(string modId, ReadOnlySpan<object> args)
         {
             // todo Assert.LenNotZero(args);
 
@@ -92,13 +93,13 @@ public static class StringExtensions
             return _Formatter.FormatMessage(@this.GetLang(modId), dict);
         }
 
-        /// <inheritdoc cref="IcuFormatLang(string, string, object[])" />
-        public string IcuFormatLang(object[] args)
+        /// <inheritdoc cref="IcuFormatLang(string, string, ReadOnlySpan&lt;object&gt;)" />
+        public string IcuFormatLang(ReadOnlySpan<object> args)
         {
             return @this.IcuFormatLang(Core.Id, args);
         }
 
-        /// <inheritdoc cref="IcuFormatLang(string, string, object[])" />
+        /// <inheritdoc cref="IcuFormatLang(string, string, ReadOnlySpan&lt;object&gt;)" />
         public string IcuFormatLang(object args)
         {
             return @this.IcuFormatLang(Core.Id, [args]);

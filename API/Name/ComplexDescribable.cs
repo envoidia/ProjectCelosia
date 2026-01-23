@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using API.Extensions;
@@ -26,9 +27,9 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
     /// </summary>
     public string ModId { get; protected init; } = Core.Id;
 
-    private string[] _GetDescArgs()
+    private ReadOnlySpan<string> _GetDescArgs()
     {
-        string[] args = new string[this.DescArgs.Length];
+        Span<string> args = new string[this.DescArgs.Length];
 
         for (int i = 0; i < this.DescArgs.Length; i++)
         {

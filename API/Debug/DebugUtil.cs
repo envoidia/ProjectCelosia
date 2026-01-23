@@ -16,13 +16,6 @@ namespace API.Debug;
 // todo dont even init any of this stuff until its used
 public static class DebugUtil
 {
-    public const bool IsDebug =
-#if DEBUG
-    true;
-#else
-    false;
-#endif
-
     private const string _ClassName = nameof(DebugUtil);
 
     internal const int _Mb = 1024 * 1024;
@@ -33,7 +26,6 @@ public static class DebugUtil
     /// todo docs
     /// </summary>
     public static bool DrawDebugInfo { get; private set; } = false;
-    public static bool DrawDebugInfoHelp { get; private set; } = false;
     public static bool DrawActorOutlines { get; set; } = false;
     public static bool DrawTheme { get; set; } = false;
 
@@ -73,7 +65,8 @@ public static class DebugUtil
     internal static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
     {
-        IsVisible = false
+        IsVisible = false,
+        AnimType = AnimType.None
     };
 
     private const float _GraphUpdateRateS = 0.025f;
@@ -122,7 +115,7 @@ public static class DebugUtil
         };
     }
 
-    // todo for some reason, setting this in the static ctor started to throw a nullreference exception wrt FSS text size
+    // todo for some reason, setting this at init started to throw a nullreference exception wrt FSS text size
     private static void _Test()
     {
         _DebugInfoL.Text = _GetInfoLText();
@@ -137,16 +130,15 @@ public static class DebugUtil
         }
 
         DebugConsole._Update(gt);
-        _CheckInputs();
 
+        _CheckInputs();
 
         // todo update text if lang changed
 
-        // Lerped FPS counter
+        // Smoothed FPS counter
         _avgFrameTime += (gt.ElapsedGameTime - _avgFrameTime) * 0.01f;
 
         _timeSinceUpdateInfoR += gt.ElapsedGameTime;
-
         _timeSinceUpdateGraph += gt.ElapsedGameTime;
 
         // Update performance graph
@@ -163,20 +155,12 @@ public static class DebugUtil
         }
 
         // Update timed text
-        if (_timeSinceUpdateInfoR < TimeSpan.FromSeconds(_InfoRUpdateRateS))
+        if (!_DebugInfoR.IsVisible || _timeSinceUpdateInfoR < TimeSpan.FromSeconds(_InfoRUpdateRateS))
         {
             return;
         }
 
-        _DebugInfoR.Text = string.Format("DebugInfoR".GetLang(),
-           $"{(int) (1 / _avgFrameTime.TotalSeconds)}",
-           GC.GetTotalMemory(false) / _Mb,
-           "todo",
-           StateMachine.ToString(),
-           StateMachine.State.GetMenuString(),
-           Stage.ActorCount(),
-           "todo",
-           ModLoader._LoadedMods.Count);
+        _DebugInfoR.Text = $"FPS: {(int) (1 / _avgFrameTime.TotalSeconds)}\nRAM: {GC.GetTotalMemory(false) / _Mb}MB\nResolution: {2}\nStates: {StateMachine.ToString()}\nMenus: {StateMachine.State.GetMenuString()}\nActors on Stage: {Stage.ActorCount()}\nOverworld Location: {6}\nLoaded Mods: {ModLoader._LoadedMods.Count}";
 
         _timeSinceUpdateInfoR = TimeSpan.Zero;
     }
@@ -189,41 +173,8 @@ public static class DebugUtil
             _ToggleShowDebugInfo();
         }
 
+        DebugConsole._Show ^= InputLib.IsKeyJustPressed(Keys.F2);
         DrawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
-
-        if (InputLib.IsKeyJustPressed(Keys.F4))
-        {
-            _ToggleShowInputView();
-        }
-
-        _PerfGraph.IsVisible ^= InputLib.IsKeyJustPressed(Keys.Q);
-
-
-        if (InputLib.IsKeyJustPressed(Keys.F10))
-        {
-            if (InputLib.Check(Keybinds.Hotkey1))
-            {
-                _CycleTheme();
-            }
-            else
-            {
-                DrawTheme ^= true;
-            }
-        }
-
-        // todo remove functions after this? theyre not rly used
-
-        if (InputLib.IsKeyJustPressed(Keys.F11))
-        {
-            Stage._RecalcLayoutWidgets();
-            DebugConsole.Log("Recalculated ILayoutWidgets", _ClassName);
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.F12))
-        {
-            Stage.Sort();
-            DebugConsole.Log("Cleaned up Stage", _ClassName);
-        }
     }
 
     internal static void _SetShowDebugInfo(bool show)
@@ -231,16 +182,8 @@ public static class DebugUtil
         // temp
         _Test();
 
-        if (InputLib.Check(Keybinds.Hotkey1))
-        {
-            DrawDebugInfoHelp = show;
-            _DebugInfoL.Text = _GetInfoLText();
-        }
-        else
-        {
-            _DebugInfoL.IsVisible = show;
-            _DebugInfoR.IsVisible = show;
-        }
+        _DebugInfoL.IsVisible = show;
+        _DebugInfoR.IsVisible = show;
     }
 
     internal static void _ToggleShowDebugInfo()
@@ -260,28 +203,10 @@ public static class DebugUtil
         _DebugInfoKeyHeld.IsVisible ^= true;
     }
 
-    /// <summary>
-    /// Increase current theme index by 1 or loop around
-    /// </summary>
-    private static void _CycleTheme()
-    {
-        Theme[] themes = [.. Registry.Of<Theme>()];
-        int i = themes.IndexOf(Settings.Theme);
-        Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
-        DebugConsole.Log($"Theme changed to {Settings.Theme.GetName().RemoveFormattingCodes()}", _ClassName);
-    }
-
     // todo cleanup
     private static string _GetInfoLText()
     {
-        return string.Format("DebugInfoL".GetLang(), Keybinds.DebugInfo.GetCurrentGlyph(),
-            Keybinds.Hotkey1.GetCurrentGlyph(), BuildInfo.BuildDate) +
-            (DrawDebugInfoHelp ? $"\n{_GetInfoHelpText()}" : "");
-    }
-
-    private static string _GetInfoHelpText()
-    {
-        return string.Format("DebugInfoHelp".GetLang(), Keybinds.Hotkey1.GetCurrentGlyph(), Keybinds.Hotkey2.GetCurrentGlyph());
+        return $"{Keybinds.DebugInfo.GetCurrentGlyph()} Close, /i[KF2] Console, /i[KF3] Outlines\nVersion: {BuildInfo.BuildDate}";
     }
 
     private static string _GetKeyNameText()

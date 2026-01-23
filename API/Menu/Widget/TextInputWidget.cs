@@ -11,6 +11,7 @@ namespace API.Menu.Widget;
 
 /// <summary>
 /// Handles single-line text input. Cannot be constructed before <c>Core</c>.
+/// After construction, call <c>SubscribeToInput</c> exactly once.
 /// Receives text input from the OS. Should support all keyboards well.
 /// Supports cursor movement, Home/End, BkSp/Del, and Hotkey2 for per-word actions.
 /// Does not support tab, history, selection, clipboard, overwrite mode, or multiple lines
@@ -98,9 +99,15 @@ public sealed class TextInputWidget : IInputWidget
         this.OnEnter = onEnter;
         this.UseUpDown = useUpDown;
 
-        Core.Instance.Window.TextInput += this._Input;
-
         this._UpdateCursor();
+    }
+
+    /// <summary>
+    /// Subscribes to OS text input. Call exactly once after construction
+    /// </summary>
+    public void SubscribeToInput()
+    {
+        Core.Instance.Window.TextInput += this._Input;
     }
 
     public void Append(string str)

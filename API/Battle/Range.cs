@@ -42,7 +42,7 @@ public sealed class Range : IDescribable, IRegistrable
         Registry.Register(this);
     }
 
-    public int[] GetTargetPositions(int posSelf, int posTarget)
+    public List<int> GetTargetPositions(int posSelf, int posTarget)
     {
         List<int> pos = [];
 
@@ -86,7 +86,7 @@ public sealed class Range : IDescribable, IRegistrable
             }
         }
 
-        return [.. pos];
+        return pos;
     }
 
     public override string ToString()

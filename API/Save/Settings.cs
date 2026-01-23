@@ -78,8 +78,8 @@ public static class Settings
 
     #region Debug
 
-    public static bool EnableDebugFeatures = false;
-    public static bool SelectOpponentMoves = false;
+    public static bool EnableDebugFeatures;
+    public static bool SelectOpponentMoves;
 
     #endregion
 
@@ -95,7 +95,7 @@ public static class Settings
     {
         if (!File.Exists(FilePath))
         {
-            CreateWith();
+            Create();
         }
 
         Dictionary<string, string> settings = Properties.Parse(FilePath);
@@ -125,11 +125,11 @@ public static class Settings
         DetectNintendoController = bool.ParseOrDefault(settings.GetValueOrDefault("DetectNintendoController"), true);
 
         // Debug
-        EnableDebugFeatures = bool.ParseOrDefault(settings.GetValueOrDefault("EnableDebugFeatures"), DebugUtil.IsDebug);
-        SelectOpponentMoves = bool.ParseOrDefault(settings.GetValueOrDefault("SelectOpponentMoves"), DebugUtil.IsDebug);
+        EnableDebugFeatures = bool.ParseOrDefault(settings.GetValueOrDefault("EnableDebugFeatures"), true);
+        SelectOpponentMoves = bool.ParseOrDefault(settings.GetValueOrDefault("SelectOpponentMoves"), false);
     }
 
-    public static void CreateWith(
+    public static void Create(
         string language = Lang.Language.EnUS,
         float battleSpeed = 1f,
         bool showInvalidMoveWarning = true,
@@ -142,12 +142,13 @@ public static class Settings
         float sfxVolume = 0.75f,
         bool showInputGuide = true,
         bool detectNintendoController = true,
-        bool enableDebugFeatures = DebugUtil.IsDebug,
+        bool enableDebugFeatures = true,
         bool selectOpponentMoves = false)
     {
         File.WriteAllText(FilePath, $"""
         ### Settings
         # If this file is deleted, it will be regenerated with default settings
+        # Invalid values will default
 
         ### Gameplay
 
@@ -198,7 +199,7 @@ public static class Settings
 
         ### Debug
 
-        # Default: False
+        # Default: True
         EnableDebugFeatures={enableDebugFeatures}
 
         # Default: False

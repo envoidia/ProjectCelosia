@@ -18,11 +18,16 @@ public static class DebugConsole
     #region Props/Fields
 
     // todo wait for compiler update (hint is incorrect)
-    private static bool _Show
+    internal static bool _Show
     {
         get;
         set
         {
+            if(field == value)
+            {
+                return;
+            }
+            
             field = value;
 
             _Command.IsVisible = value;
@@ -41,19 +46,19 @@ public static class DebugConsole
         set
         {
             field = value;
-            _input.CheckInput = value;
+            _Input.CheckInput = value;
 
-            if (value && (StateMachine.State.Menus.Count == 0 || StateMachine.State.Menus[^1] != _menu))
+            if (value && (StateMachine.State.Menus.Count == 0 || StateMachine.State.Menus[^1] != _Menu))
             {
-                StateMachine.State.AddMenu(_menu);
+                StateMachine.State.AddMenu(_Menu);
                 _color = ThemeColor.Imp;
-                _input.OnChangeText!.Invoke();
+                _Input.OnChangeText!.Invoke();
             }
-            else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _menu)
+            else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
             {
                 StateMachine.State.RemoveMenu();
                 _color = ThemeColor.Gray;
-                _input.OnChangeText!.Invoke();
+                _Input.OnChangeText!.Invoke();
             }
         }
     } = false;
@@ -109,11 +114,11 @@ public static class DebugConsole
 
             if (_histIndex != -1)
             {
-                _input.SetText(_Hist[^(_histIndex + 1)]);
+                _Input.SetText(_Hist[^(_histIndex + 1)]);
                 return;
             }
 
-            _input.Clear();
+            _Input.Clear();
         }
     }
 
@@ -129,8 +134,42 @@ public static class DebugConsole
         AnimType = AnimType.None,
         IsVisible = false
     };
-    private static TextInputWidget _input = null!;
-    private static Menu.Menu _menu = null!;
+
+    private static readonly TextInputWidget _Input = new(_Command, _Cursor, _ExecuteCommand, false)
+    {
+        OnChangeText = () =>
+        {
+            string text = _Input!.Text;
+            ReadOnlySpan<string> args = _TokenizeCommand(text);
+
+            // Hints
+            string? hints = null;
+
+            if (args.Length != 0 && Command._Commands.TryGetValue(args[0], out Command? cmd))
+            {
+                int skip = args.Length - 1;
+                if (skip < cmd.Hints.Length)
+                {
+                    hints = $"{(text.EndsWith(' ') ? null : ' ')}{string.Join(' ',
+                        cmd.Hints.Skip(skip).Select(s => $"[{s}]"))}";
+                }
+            }
+
+            // Autocomplete
+            string? match = args.Length == 1 ? _GetAutocompleteMatch(text) : null;
+
+            // Trailing space fixes cursor pos bug
+            _Command.Text = $"{_color.Str}>{text} ";
+
+            _CommandHint.X = _Command.X + _Command.Width - 7;
+            _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
+        }
+    };
+
+    private static readonly Menu.Menu _Menu = new("DbgConsole")
+    {
+        InputWidgets = [_Input]
+    };
 
     internal static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
     {
@@ -194,41 +233,7 @@ public static class DebugConsole
     // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
     internal static void _Init()
     {
-        _input = new(_Command, _Cursor, _ExecuteCommand, false)
-        {
-            OnChangeText = () =>
-            {
-                string text = _input.Text;
-                ReadOnlySpan<string> args = _TokenizeCommand(text);
-
-                // Hints
-                string? hints = null;
-
-                if (args.Length != 0 && Command._Commands.TryGetValue(args[0], out Command? cmd))
-                {
-                    int skip = args.Length - 1;
-                    if (skip < cmd.Hints.Length)
-                    {
-                        hints = $"{(text.EndsWith(' ') ? null : ' ')}{string.Join(' ',
-                            cmd.Hints.Skip(skip).Select(s => $"[{s}]"))}";
-                    }
-                }
-
-                // Autocomplete
-                string? match = args.Length == 1 ? _GetAutocompleteMatch(text) : null;
-
-                // Trailing space fixes cursor pos bug
-                _Command.Text = $"{_color.Str}>{text} ";
-
-                _CommandHint.X = _Command.X + _Command.Width - 7;
-                _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
-            }
-        };
-
-        _menu = new("DbgConsole")
-        {
-            InputWidgets = [_input]
-        };
+        _Input.SubscribeToInput();
 
         Stage.Add(_Command);
         Stage.Add(_CommandHint);
@@ -239,11 +244,6 @@ public static class DebugConsole
 
     internal static void _Update(GameTime gt)
     {
-        if (InputLib.IsKeyJustPressed(Keys.F2))
-        {
-            _ToggleShowDebugConsole();
-        }
-
         if (InputLib.IsKeyJustPressed(Keys.Escape))
         {
             _Focused ^= true;
@@ -256,14 +256,14 @@ public static class DebugConsole
 
         if (InputLib.IsKeyJustPressed(Keys.Tab))
         {
-            ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
+            ReadOnlySpan<string> args = _TokenizeCommand(_Input.Text);
 
             if (args.Length == 1)
             {
                 string? match = _GetAutocompleteMatch(args[0]);
                 if (match is not null)
                 {
-                    _input.Append(match);
+                    _Input.Append(match);
                 }
             }
         }
@@ -278,16 +278,6 @@ public static class DebugConsole
         }
     }
 
-    internal static void _SetShowDebugConsole(bool show)
-    {
-        _Show = show;
-    }
-
-    internal static void _ToggleShowDebugConsole()
-    {
-        _Show ^= true;
-    }
-
     /// <summary>
     /// Executes the specified command
     /// </summary>
@@ -298,7 +288,7 @@ public static class DebugConsole
             _Hist.Add(t);
         }
 
-        ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
+        ReadOnlySpan<string> args = _TokenizeCommand(_Input.Text);
 
         if (!Command._Commands.TryGetValue(args[0], out Command? cmd))
         {
@@ -313,7 +303,7 @@ public static class DebugConsole
 
     private static bool _ExecuteCommand()
     {
-        string text = _input.Text;
+        string text = _Input.Text;
         if (text.Length == 0)
         {
             return false;

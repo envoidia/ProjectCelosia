@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using API.Graphics;
 
@@ -21,15 +22,15 @@ public static class LogLib
     /// <summary>
     /// Add to the battle log
     /// </summary>
-    public static void Add(params List<string> str)
+    public static void Add(params ReadOnlySpan<string> str)
     {
         _LogText.AddRange(str);
         _logScroll = 0;
         _UpdateLog();
     }
 
-    /// <inheritdoc cref="Add(List&lt;string&gt;)" />
-    public static void Add(string[] str)
+    /// <inheritdoc cref="Add(ReadOnlySpan&lt;string&gt;)" />
+    public static void Add(List<string> str)
     {
         _LogText.AddRange(str);
         _logScroll = 0;

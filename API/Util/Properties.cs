@@ -20,7 +20,7 @@ public static class Properties
     public static Dictionary<string, string> Parse(string path)
     {
         Dictionary<string, string> dict = [];
-        string[] lines = File.ReadAllLines(path);
+        ReadOnlySpan<string> lines = File.ReadAllLines(path);
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -31,7 +31,7 @@ public static class Properties
             }
 
             // Split key and value
-            string[] parts = lines[i].Split('=', 2);
+            ReadOnlySpan<string> parts = lines[i].Split('=', 2);
 
             if (parts.Length == 2)
             {
@@ -39,8 +39,8 @@ public static class Properties
             }
             else
             {
-                throw new FormatException(
-                $"Exception parsing properties file {path}: line {i}, \"{lines[i]}\" is not a comment and is missing separator =");
+                throw new FormatException($"Malformed properties file {path}: line {i
+                    + 1}, \"{lines[i]}\" is not a comment and is missing separator =");
             }
         }
 

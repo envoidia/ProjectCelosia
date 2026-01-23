@@ -89,7 +89,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         this._Setup(pos, capacity);
     }
 
-    public ListWidget(Vector2 pos, params string[] optionText)
+    public ListWidget(Vector2 pos, params ReadOnlySpan<string> optionText)
     {
         this._Setup(pos, optionText.Length);
 
@@ -119,7 +119,7 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         this.OptCount = capacity;
     }
 
-    public void SetText(params string[] optionText)
+    public void SetText(params ReadOnlySpan<string> optionText)
     {
         int i = 0;
         for (; i < optionText.Length && i < this.Labels.Count; i++)

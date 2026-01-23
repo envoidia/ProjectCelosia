@@ -87,7 +87,7 @@ public static class ModLoader
             $"Could not find a static class marked with ModEntryPointAttribute");
 
         // Find all mods in the entry point class
-        GameMod[] mods = [.. entryPoint
+        ReadOnlySpan<GameMod> mods = [.. entryPoint
             .GetProperties(BindingFlags.Static | BindingFlags.Public)
             .Where(prop =>
             {

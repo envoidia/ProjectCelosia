@@ -12,10 +12,10 @@ public static class ButtonsExtensions
             return inputDevice.FormatSingleGlyph(@this._GetSingleGlyph());
         }
 
-        public string[] GetGlyphs()
-        {
-            return _FormatGlyphArray(@this._GetSingleGlyph());
-        }
+        // public string[] GetGlyphs()
+        // {
+        //     return _FormatGlyphArray(@this._GetSingleGlyph());
+        // }
 
         private string _GetSingleGlyph()
         {
@@ -40,8 +40,8 @@ public static class ButtonsExtensions
         }
     }
 
-    private static string[] _FormatGlyphArray(string name)
-    {
-        return [$"/i[N{name}]", $"/i[P{name}]", $"/i[X{name}]"];
-    }
+    // private static string[] _FormatGlyphArray(string name)
+    // {
+    //     return [$"/i[N{name}]", $"/i[P{name}]", $"/i[X{name}]"];
+    // }
 }

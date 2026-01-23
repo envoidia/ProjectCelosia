@@ -23,7 +23,7 @@ public sealed class Label : IActor
 
         set
         {
-            this.RichTextLayout.Text = value; //$"{ThemeColor.White.Str}{value}"; // todo idt this is needed
+            this.RichTextLayout.Text = value;
             this.Size = this.RichTextLayout.Size;
             this.Origin = this.Data.CalcOrigin();
         }
@@ -54,8 +54,6 @@ public sealed class Label : IActor
         {
             Font = font ?? Core.Koruri60
         };
-
-        Console.WriteLine("label ctor, theme is null?: " + Settings.Theme is null);
 
         this._bgC = Settings.Theme.Get(this.BackgroundColor);
 

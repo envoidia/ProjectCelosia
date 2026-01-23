@@ -106,7 +106,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
         return string.Join(", ", [.. this.Menus.Select(static m => m.DbgName)]);
     }
 
-    public static string GetInputPromptString(params InputPrompt[] inputPrompts)
+    public static string GetInputPromptString(params ReadOnlySpan<InputPrompt> inputPrompts)
     {
         StringBuilder inputs = new();
 

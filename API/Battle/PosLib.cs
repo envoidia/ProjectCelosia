@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using API.Battle.State;
+using API.Util;
 
 namespace API.Battle;
 
@@ -50,16 +52,18 @@ public static class PosLib
             upper = HighestOpp;
         }
 
-        List<int> result = [];
+        int[] result = new int[HighestAlly];
+        int c = 0;
+
         for (int i = lower; i <= upper; i++)
         {
             if (i != pos)
             {
-                result.Add(i);
+                result[c++] = i;
             }
         }
 
-        return [.. result];
+        return result;
     }
 
     /// <returns>

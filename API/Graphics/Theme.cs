@@ -60,14 +60,14 @@ public sealed class Theme : IDescribable, IRegistrable
         #region Apollo
 
         {
-            Color[] blues = Color.FromRgbs(0x172038, 0x253a5e, 0x3c5e8b, 0x4f8fba, 0x73bed3, 0xa4dddb);
-            Color[] greens = Color.FromRgbs(0x19332d, 0x25562e, 0x468232, 0x75a743, 0xa8ca58, 0xd0da91);
-            Color[] beiges = Color.FromRgbs(0x4d2b32, 0x7a4841, 0xad7757, 0xc09473, 0xd7b594, 0xe7d5b3);
-            Color[] oranges = Color.FromRgbs(0x341c27, 0x602c2c, 0x884b2b, 0xbe772b, 0xde9e41, 0xe8c170);
-            Color[] redOranges = Color.FromRgbs(0x241627, 0x411d31, 0x752438, 0xa53030, 0xcf573c, 0xda863e);
-            Color[] pinks = Color.FromRgbs(0x1e1d39, 0x402751, 0x7a367b, 0xa23e8c, 0xc65197, 0xdf84a5);
-            Color[] grayBlues = Color.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
-            Color[] whites = Color.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
+            Span<Color> blues = Color.FromRgbs(0x172038, 0x253a5e, 0x3c5e8b, 0x4f8fba, 0x73bed3, 0xa4dddb);
+            Span<Color> greens = Color.FromRgbs(0x19332d, 0x25562e, 0x468232, 0x75a743, 0xa8ca58, 0xd0da91);
+            Span<Color> beiges = Color.FromRgbs(0x4d2b32, 0x7a4841, 0xad7757, 0xc09473, 0xd7b594, 0xe7d5b3);
+            Span<Color> oranges = Color.FromRgbs(0x341c27, 0x602c2c, 0x884b2b, 0xbe772b, 0xde9e41, 0xe8c170);
+            Span<Color> redOranges = Color.FromRgbs(0x241627, 0x411d31, 0x752438, 0xa53030, 0xcf573c, 0xda863e);
+            Span<Color> pinks = Color.FromRgbs(0x1e1d39, 0x402751, 0x7a367b, 0xa23e8c, 0xc65197, 0xdf84a5);
+            Span<Color> grayBlues = Color.FromRgbs(0x090a14, 0x10141f, 0x151d28, 0x202e37, 0x394a50, 0x577277);
+            Span<Color> whites = Color.FromRgbs(0x819796, 0xa8b5b2, 0xc7cfcc, 0xedede9);
 
             Apollo = new(Core.Id, "ThemeApollo")
             {
@@ -342,7 +342,7 @@ public sealed class Theme : IDescribable, IRegistrable
             Color darkBeige = Color.FromRgb(0x9f9294);
 
             Color paleGreen = Color.FromRgb(0xb6dbca);
-            Color[] hair = Color.FromRgbs(0x89cdc6, 0x51acb6, 0x338397);
+            Span<Color> hair = Color.FromRgbs(0x89cdc6, 0x51acb6, 0x338397);
 
             Color paleBlue = Color.FromRgb(0xd6ecf9);
             Color darkBlue = Color.FromRgb(0x336699);
@@ -405,7 +405,7 @@ public sealed class Theme : IDescribable, IRegistrable
         #region RED MODE!!!
 
         {
-            Color[] r = new Color[10];
+            Span<Color> r = new Color[10];
             for (int i = 0; i < r.Length; i++)
             {
                 r[i] = new((i * 23) + 26, 0, 0);
@@ -806,7 +806,7 @@ public sealed class Theme : IDescribable, IRegistrable
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
         {
-            sb.Append($"{tc}={this.Get(tc).ToRgbaStr()}");
+            sb.Append($"{tc} = {this.Get(tc).ToRgbaStr()}\n");
         }
 
         return sb.ToString();

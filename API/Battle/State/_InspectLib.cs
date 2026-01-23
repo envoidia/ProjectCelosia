@@ -10,6 +10,7 @@ using API.Extensions;
 using API.Name;
 using API.Util;
 using API.Menu.Widget;
+using System;
 
 namespace API.Battle.State;
 
@@ -277,8 +278,8 @@ internal sealed class _InspectLib
         // Input prompts
         // Stat, Equip, Affinity, Mult, Mod,
         // Other, LT, RT, L, R
-        Vector2[] promptPos = [new(1290, 170), new(700, 245), new(300, 245), new(300, 385), new(750, 385),
-            new(1125, 385), new(310, 52), new(0, 52), new(385, 320), new(857, 320)];
+        //ReadOnlySpan<Vector2> promptPos = [new(1290, 170), new(700, 245), new(300, 245), new(300, 385), new(750, 385),
+        //   new(1125, 385), new(310, 52), new(0, 52), new(385, 320), new(857, 320)];
 
         for (int i = 0; i < _PromptCount; i++)
         {
@@ -301,7 +302,7 @@ internal sealed class _InspectLib
     internal static void _Translate()
     {
         // Stat types
-        string[] names = ["InfoMult", "InfoMod", "InfoOther"];
+        ReadOnlySpan<string> names = ["InfoMult", "InfoMod", "InfoOther"];
 
         for (int i = 0; i < _StatTypeCount; i++)
         {

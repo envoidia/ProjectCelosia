@@ -14,8 +14,15 @@ namespace API.Menu.Widget;
 /// todo draw background
 public sealed class GraphWidget : ILayoutWidget, IActor
 {
-    public readonly Label LabelX = new();
-    public readonly Label LabelY = new();
+    public readonly Label LabelX = new()
+    {
+        AnimType = AnimType.None
+    };
+
+    public readonly Label LabelY = new()
+    {
+        AnimType = AnimType.None
+    };
 
     private const int _UnitCount = 10;
     public readonly Label[] LabelsUnit = new Label[_UnitCount]; // todo fix
@@ -95,7 +102,8 @@ public sealed class GraphWidget : ILayoutWidget, IActor
                 Position = new(this.X - this.Padding.L - _MetaPadding - _MetaPaddingHalf,
                     this.Y - _MetaPadding2 + (i * _PxPerMs)),
                 Text = (_UnitCount - i).ToString(),
-                Alignment = Alignment.TopRight
+                Alignment = Alignment.TopRight,
+                AnimType = AnimType.None
             };
         }
     }
@@ -134,11 +142,6 @@ public sealed class GraphWidget : ILayoutWidget, IActor
                     2.5f, c);
                 xOff += (this.Width - _MetaPaddingHalf) / (float) _MaxPoints;
             }
-        }
-
-        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.E))
-        {
-            Console.WriteLine("[{0}]", string.Join(", ", this._Points0));
         }
 
         // Labels

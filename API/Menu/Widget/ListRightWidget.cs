@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using API.Debug;
 using API.Graphics;
@@ -18,7 +19,7 @@ public sealed class ListRightWidget : ListWidget
 
     public ListRightWidget(Vector2 pos, int capacity) : base(pos, capacity) { }
 
-    public ListRightWidget(Vector2 pos, params string[] rightText) : base(pos, rightText) { }
+    public ListRightWidget(Vector2 pos, params ReadOnlySpan<string> rightText) : base(pos, rightText) { }
 
     protected override void _Setup(Vector2 pos, int capacity)
     {
@@ -37,7 +38,7 @@ public sealed class ListRightWidget : ListWidget
     /// <summary>
     /// Sets the text of the right-side element
     /// </summary>
-    public void SetRightText(params string[] rightText)
+    public void SetRightText(params ReadOnlySpan<string> rightText)
     {
         int i = 0;
         for (; i < rightText.Length && i < this.LabelsRight.Count; i++)

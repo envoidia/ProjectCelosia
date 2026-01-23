@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 
 namespace API.Graphics;
@@ -91,9 +92,9 @@ public static class ColorExtensions
         /// <returns>
         /// A array of <c>Color</c>s made from the given hexes (<c>0xRRGGBB</c>)
         /// </returns>
-        public static Color[] FromRgbs(params uint[] hexes)
+        public static Span<Color> FromRgbs(params ReadOnlySpan<uint> hexes)
         {
-            Color[] colors = new Color[hexes.Length];
+            Span<Color> colors = new Color[hexes.Length];
 
             for (int i = 0; i < hexes.Length; i++)
             {

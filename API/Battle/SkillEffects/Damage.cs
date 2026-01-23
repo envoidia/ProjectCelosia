@@ -23,17 +23,17 @@ public sealed class Damage : SkillEffect
             return SkillResultType.PseudoSuccess;
         }
 
-        int aksdfjhsdkf;
+        int atk;
         int def;
 
         if (this.SkillType == SkillTypes.Str)
         {
-            aksdfjhsdkf = self.GetStat(Stats.Str);
+            atk = self.GetStat(Stats.Str);
             def = target.GetStat(Stats.Amr);
         }
         else
         {
-            aksdfjhsdkf = self.GetStat(Stats.Mag);
+            atk = self.GetStat(Stats.Mag);
             def = target.GetStat(Stats.Res);
         }
 
@@ -70,7 +70,7 @@ public sealed class Damage : SkillEffect
             float mdd = this.Element.MultDmgDealt is null ? 1f : self.GetMult(this.Element.MultDmgDealt);
             float mdt = this.Element.MultDmgTaken is null ? 1f : target.GetMult(this.Element.MultDmgTaken);
 
-            dmg = BattleLib.StatMult * (int) (((float) aksdfjhsdkf / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
+            dmg = BattleLib.StatMult * (int) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
                 self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) * mdd * mdt * multWeakDmgDealt *
                 multWeakDmgTaken * multFollowUpDmgDealt * multFollowUpDmgTaken);
 

@@ -115,7 +115,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
         InputLib.OnDeviceChange += this._UpdateInputPrompt;
     }
 
-    public TabBarWidget(Vector2 pos, params string[] optionText) : this(pos, optionText.Length)
+    public TabBarWidget(Vector2 pos, params ReadOnlySpan<string> optionText) : this(pos, optionText.Length)
     {
         for (int i = 0; i < optionText.Length; i++)
         {
@@ -129,7 +129,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
         this.CalcLayout();
     }
 
-    public void SetText(params string[] optionText)
+    public void SetText(params ReadOnlySpan<string> optionText)
     {
         int i = 0;
         for (; i < optionText.Length && i < this.Labels.Count; i++)

@@ -119,8 +119,6 @@ public sealed class Skill : ComplexDescribable, IRegistrable
             ? string.Join(", ", skillTypes)
             : SkillTypes.Stat.GetName() + ThemeColor.White.Str;
 
-        Console.WriteLine(this._GetFormattedDescInclusions());
-
         return "SkillDesc".FormatLang([skillTypesStr, this.GetElement().GetName(),
             this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str}{pow} {ThemeColor.White.Str}{"Pow".GetLang()}",
             this.Prio == 0

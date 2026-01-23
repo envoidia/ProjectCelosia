@@ -21,6 +21,8 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - If a file contains multiple classes (usually recommended against), order them by dependency (eg `KeybindId`, then `Keybind`, then `Keybinds`)
 - Use file-scoped `namespace` and `using` directives rather than block-scoped
 - Do not have >1 nested classes
+- Prefer static init methods over static ctors due to the unpredictable nature of the latter
+  - For the same reason, avoid complex logic in static field initializers
 
 ## Documentation
 - Comment as needed, but don't over-comment self-explanatory code
