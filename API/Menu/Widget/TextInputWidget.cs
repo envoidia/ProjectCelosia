@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using API.Graphics;
 using API.Input;
@@ -282,7 +281,7 @@ public sealed class TextInputWidget : IInputWidget
         }
     }
 
-    private void _UpdateCursor()
+    internal void _UpdateCursor()
     {
         List<TextChunkGlyph> glyphs = ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs;
 

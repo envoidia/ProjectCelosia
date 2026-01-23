@@ -222,7 +222,7 @@ internal sealed class _InspectLib
 
     #region Setup Methods
 
-    static _InspectLib()
+    internal static void _Init()
     {
         // Add preinitialized actors
         _Actors.AddRange(_UnitBounds, _Equip, _Affinities, _Lvl, _Hp, _Sp,

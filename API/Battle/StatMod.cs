@@ -26,6 +26,8 @@ public sealed class StatMod : INameable, IRegistrable
 
         this.ModId = modId;
         this.ItemId = itemId ?? keyName;
+
+        Registry.Register(this);
     }
 
     // todo use NE.Format

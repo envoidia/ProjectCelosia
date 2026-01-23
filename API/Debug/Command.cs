@@ -26,11 +26,6 @@ public sealed class Command
     /// </summary>
     public readonly string Desc;
 
-    static Command()
-    {
-        Commands._Init();
-    }
-
     private Command(Action<ReadOnlySpan<string>> action, string[] hints, string desc)
     {
         this.Action = action;

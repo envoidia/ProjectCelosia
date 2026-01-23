@@ -13,9 +13,12 @@ public static class Main
     /// <summary>
     /// <c>GameMod</c> instance
     /// </summary>
-    public static GameMod Mod { get; } = new(Core.BaseModId, new Version(0, 1));
+    public static GameMod Mod { get; } = new(Core.BaseModId, new Version(0, 1))
+    {
+        OnInit = _Init
+    };
 
-    static Main()
+    private static void _Init()
     {
         // Really gross temporary initialize for testing battles
         Core.Battle = new API.Battle.Battle(new Team(
@@ -28,7 +31,13 @@ public static class Main
                 new Unit(CBattle.UnitTypes.Johny, 19, null, Skills.Nothing, Skills.Defend),
                 new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend)));
 
-        // Add lang file
-        API.Lang.Language.AddLangFile(API.Lang.Language.EnUS, Core.BaseModId, "Lang/CelosiaLang.en-US.properties");
+        _ReloadLang();
+        API.Lang.Language.OnReload += _ReloadLang;
+    }
+
+    private static void _ReloadLang()
+    {
+        API.Lang.Language.AddLangFile(API.Lang.Language.EnUS, Core.BaseModId,
+            "Lang/CelosiaLang.en-US.properties", false);
     }
 }

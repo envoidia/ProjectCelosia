@@ -1,4 +1,5 @@
 using System;
+using API.Extensions;
 
 namespace API.Util;
 
@@ -198,5 +199,15 @@ public readonly struct Progress(float p = 0)
     public static Progress Max(Progress a, Progress b)
     {
         return a._p > b._p ? a : b;
+    }
+
+    public static Progress ParseOrDefault(string? str, Progress defaultValue = default)
+    {
+        if(str is null)
+        {
+            return defaultValue;
+        }
+
+        return new(float.ParseOrDefault(str, defaultValue._p));
     }
 }

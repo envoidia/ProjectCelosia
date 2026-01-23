@@ -26,6 +26,11 @@ public sealed class GameMod(string id, Version version) : IDescribable
     public Version Version { get; } = version;
 
     /// <summary>
+    /// Called when the mod is loaded
+    /// </summary>
+    public Action? OnInit { get; init; } = null;
+
+    /// <summary>
     /// Called every frame
     /// </summary>
     public Action<GameTime>? OnUpdate { get; init; } = null;

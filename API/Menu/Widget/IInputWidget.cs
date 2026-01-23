@@ -1,5 +1,4 @@
 using System;
-using API.Debug;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.Widget;

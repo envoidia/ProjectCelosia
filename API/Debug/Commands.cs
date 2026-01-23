@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using System.IO;
 using System.Text;
 using API.Battle;
 using API.Battle.State;
+using API.Extensions;
 using API.Graphics;
-using API.Input;
+using API.Lang;
 using API.Modding;
 using API.Save;
+using API.Util;
 
 namespace API.Debug;
 
@@ -18,6 +19,8 @@ namespace API.Debug;
 /// </summary>
 public static class Commands
 {
+    public const string All = "all";
+
     public const string Show = "show";
     public const string Hide = "hide";
 
@@ -27,17 +30,19 @@ public static class Commands
     private const string _LsDesc = "`ls cmd` to list all commands, `ls kb` to list all keybinds";
     private const string _Overlays = "info/console/outline/theme/input/perf";
     private const string _Writable = "modlist/registry/lang/stage/battlelog/theme";
+    private const string _Cleanable = "stage/layout";
+    private const string _Reloadable = "lang/settings/themes";
 
     internal static void _Init()
     {
-        const string Help = "help";
-        Command.Register(Help, static _ => DebugConsole.Log($"""
+        // Basic commands
+        Command.Register("help", static args => DebugConsole.Log($"""
             This console can be used for entering commands. It is for developers, and not part of gameplay. Misuse can brick your save
             Each command takes a certain number of arguments, separated by spaces
             {_LsDesc}
-            """, Help), [], "Basic help info");
+            """, args[0]), [], "Basic help info");
 
-        Command.Register("clear", _ =>
+        Command.Register("clear", static _ =>
         {
             DebugConsole._LogText.Clear();
             DebugConsole._Log.Text = "\n";
@@ -47,17 +52,44 @@ public static class Commands
         Command.Register("ls", _Cmd_ls, ["cmd/kb"], _LsDesc);
 
         Command.Register("echo",
-            static args => DebugConsole.Log(string.Join(' ', args.ToArray(), 1, args.Length - 1),
+            static args => DebugConsole.Log(string.Join(' ', args.ToArray(),
+                1, args.Length - 1),
             args[0]), ["text"], "Prints text");
+
+        // Basic utilities
 
         Command.Register("overlay", _Cmd_overlay, [_Overlays,
             "show/hide/blank to toggle"], "Enable/disable/toggle overlays");
 
         Command.Register("write", _Cmd_write, [_Writable], "Write various things to the console");
 
+        Command.Register("cleanup", _Cmd_cleanup, [_Cleanable], "Sort and cleanup various things");
+
+        Command.Register("reload", _Cmd_reload, [_Reloadable], "Reload various assets");
+
+        Command.Register("gc", static args =>
+        {
+            long memory = GC.GetTotalMemory(false);
+            DebugConsole.Log(
+                $"Forced GC collect, memory usage went from {memory} to {GC.GetTotalMemory(true)}",
+                args[0]);
+        }, [], "Forces GC collection and reports memory");
+
+        Command.Register("setting", _Cmd_setting, ["setting", "value"], "Alter settings");
+
+        // Battle commands
+
         Command.Register("buff", _Cmd_buff,
-            ["unit index 0-7", "buff ID", "give/remove", "turns", "stacks"], "Give/remove buffs in battle");
+            ["unit index 0-7", "give/remove", "buff ID", "turns", "stacks"], "Give/remove buffs in battle");
+
+        // todo passive
+
+        // todo equip
+
+        // todo stat statmult/affinity/stage/stageturns/mult/boolstat/statmod
     }
+
+    #region Basic utilities
 
     private static void _Cmd_ls(ReadOnlySpan<string> args)
     {
@@ -264,33 +296,46 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            DebugConsole.Log($"Must pass the item to write ({_Writable})", args[0], DebugConsole.LogLevel.Error);
+            DebugConsole.Log($"Must pass the item to write ({_Writable})",
+                args[0], DebugConsole.LogLevel.Error);
+
+            return;
         }
 
         switch (args[1])
         {
             case "modlist":
                 Console.WriteLine(string.Join(", ", ModLoader._LoadedMods));
+                DebugConsole.Log("Wrote mod list to OS console", args[0]);
                 return;
 
             case "registry":
                 Console.WriteLine(Registry.ToString());
+                DebugConsole.Log("Wrote registry to OS console", args[0]);
+
                 return;
 
             case "lang":
                 Console.WriteLine(Settings.Language.ToString());
+                DebugConsole.Log("Wrote lang to OS console", args[0]);
+
                 return;
 
             case "stage":
                 Console.WriteLine(Stage.ToString());
+                DebugConsole.Log("Wrote stage to OS console", args[0]);
+
                 return;
 
             case "battlelog":
                 Console.WriteLine(string.Join('\n', LogLib._LogText).RemoveFormattingCodes());
+                DebugConsole.Log("Wrote battle log to OS console", args[0]);
+
                 return;
 
             case "theme":
                 Console.WriteLine(Settings.Theme.ToDetailedString());
+                DebugConsole.Log("Wrote current theme to OS console", args[0]);
                 return;
 
             default:
@@ -300,6 +345,168 @@ public static class Commands
         }
     }
 
+    private static void _Cmd_cleanup(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            DebugConsole.Log($"Must pass the item to cleanup ({_Cleanable})",
+                args[0], DebugConsole.LogLevel.Error);
+            return;
+        }
+
+        switch (args[1])
+        {
+            case "stage":
+                Stage.Sort();
+                DebugConsole.Log("Sorted Stage", args[0]);
+                return;
+
+            case "layout":
+                Stage._RecalcLayoutWidgets();
+                DebugConsole.Log("Recalculated ILayoutWidgets", args[0]);
+                return;
+
+            default:
+                DebugConsole.Log($"Valid items: {_Cleanable}", args[0], DebugConsole.LogLevel.Error);
+                return;
+        }
+    }
+
+    // todo
+    private static void _Cmd_reload(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            DebugConsole.Log($"Must pass the item to reload ({_Reloadable})",
+            args[0], DebugConsole.LogLevel.Error);
+            return;
+        }
+
+        switch (args[1])
+        {
+            case "lang":
+                Language.Reload();
+                return;
+
+            case "settings":
+                Settings.Reload();
+                return;
+
+            case "themes":
+                return;
+
+            default:
+                DebugConsole.Log($"Valid items: {_Reloadable}", args[0], DebugConsole.LogLevel.Error);
+                return;
+        }
+    }
+
+    private static void _Cmd_setting(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            DebugConsole.Log("Usage: `setting [setting] [value]`. Omit value to print the current value",
+            args[0], DebugConsole.LogLevel.Error);
+
+            return;
+        }
+
+        if (!File.Exists(Settings.FilePath))
+        {
+            Settings.CreateWith();
+        }
+
+        Dictionary<string, string> settings = Properties.Parse(Settings.FilePath);
+
+        if (args.Length == 2)
+        {
+#pragma warning disable CS8600
+            if (!settings.TryGetValue(args[1], out string val))
+            {
+                DebugConsole.Log($"Setting `{args[1]}` couldn't be found",
+                args[0], DebugConsole.LogLevel.Error);
+
+                return;
+            }
+#pragma warning restore CS8600
+
+            DebugConsole.Log($"{args[1]}={val}", args[0]);
+
+            return;
+        }
+
+        switch (args[1])
+        {
+            case "Language":
+                Settings.CreateWith(language: args[2]);
+                break;
+
+            case "BattleSpeed":
+                Settings.CreateWith(battleSpeed: float.ParseOrDefault(args[2], 1f));
+                break;
+
+            case "ShowInvalidMoveWarning":
+                Settings.CreateWith(showInvalidMoveWarning: bool.ParseOrDefault(args[2], true));
+                break;
+
+            case "Resolution":
+                Settings.CreateWith(resolution: int.ParseOrDefault(args[2], -1));
+                break;
+
+            case "Fullscreen":
+                Settings.CreateWith(fullscreen: bool.ParseOrDefault(args[2], true));
+                break;
+
+            case "EnableVsync":
+                Settings.CreateWith(enableVsync: bool.ParseOrDefault(args[2], true));
+                break;
+
+            case "TargetFps":
+                Settings.CreateWith(targetFps: int.ParseOrDefault(args[2], -1));
+                break;
+
+            case "Theme":
+                Settings.CreateWith(theme: args[2]);
+                break;
+
+            case "MusicVolume":
+                Settings.CreateWith(musicVolume: float.ParseOrDefault(args[2], 0.75f));
+                break;
+
+            case "SfxVolume":
+                Settings.CreateWith(sfxVolume: float.ParseOrDefault(args[2], 0.75f));
+                break;
+
+            case "ShowInputGuide":
+                Settings.CreateWith(showInputGuide: bool.ParseOrDefault(args[2], true));
+                break;
+
+            case "DetectNintendoController":
+                Settings.CreateWith(detectNintendoController: bool.ParseOrDefault(args[2], true));
+                break;
+
+            case "EnableDebugFeatures":
+                Settings.CreateWith(enableDebugFeatures: bool.ParseOrDefault(args[2], false));
+                break;
+
+            case "SelectOpponentMoves":
+                Settings.CreateWith(selectOpponentMoves: bool.ParseOrDefault(args[2], false));
+                break;
+
+            default:
+                DebugConsole.Log($"Setting `{args[1]}` couldn't be found",
+                    args[0], DebugConsole.LogLevel.Error);
+                return;
+        }
+
+        DebugConsole.Log($"Changed setting `{args[1]}` to `{args[2]}`", args[0]);
+        Settings.Reload();
+    }
+
+    #endregion
+
+    #region Battle commands
+
     private const string _UnitIndexError = "unitindex (args[1]) must be an int 0-{0}";
     private const string _TurnsError = "turns (args[4]) must be an int > 0";
     private const string _StacksError = "stacks (args[5]) must be an int > 0";
@@ -308,7 +515,10 @@ public static class Commands
     {
         if (args.Length < 4)
         {
-            DebugConsole.Log("Usage: `buff [unit index 0-7] [buff ID] [give/remove] [turns] [stacks]`\nCan omit turns and stacks if removing", args[0], DebugConsole.LogLevel.Error);
+            DebugConsole.Log(
+                "Usage: `buff [unit index 0-7] [give/remove] [buff ID] [turns] [stacks]`. Can omit turns and stacks if removing",
+                args[0], DebugConsole.LogLevel.Error);
+
             return;
         }
 
@@ -337,18 +547,19 @@ public static class Commands
         Unit unit = BattleLib.Battle.GetUnitAtPos(unitIndex);
 
         // Find Buff
-        IRegistrable? registrable = Registry.Get(args[2]);
+        IRegistrable? registrable = Registry.Get(args[3]);
         if (registrable is not Buff)
         {
-            DebugConsole.Log($"buff ID (args[2]) `{args[2]}` is not a valid buff",
+            DebugConsole.Log($"buff ID (args[3]) `{args[3]}` is not a valid buff",
                 args[0], DebugConsole.LogLevel.Error);
+
             return;
         }
 
         Buff buff = (Buff) registrable!;
 
         // Determine give/remove
-        switch (args[3])
+        switch (args[2])
         {
             case Give:
                 // Find turns
@@ -393,22 +604,28 @@ public static class Commands
 
                 unit.GiveBuffInstances(new BuffInstance(buff, turns, Math.Min(stacks, buff.MaxStacks)));
 
-                DebugConsole.Log($"Gave {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit.FormatName(false)}", args[0]);
+                DebugConsole.Log(
+                    $"Gave {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit.FormatName(false)}",
+                    args[0]);
 
                 return;
 
             case Remove:
                 unit.RemoveBuffs(buff);
 
-                // todo differentiate between removal and lack thereof?
-                DebugConsole.Log($"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} from {unit.FormatName(false)}", args[0]);
+                // todo differentiate between removal and lack thereof? allow removal of x turns/stacks?
+                DebugConsole.Log(
+                    $"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} from {unit.FormatName(false)}",
+                    args[0]);
 
                 return;
 
             default:
-                DebugConsole.Log("args[3] must be `give` or `remove`",
+                DebugConsole.Log("args[2] must be `give` or `remove`",
                     args[0], DebugConsole.LogLevel.Error);
                 return;
         }
     }
+
+    #endregion
 }

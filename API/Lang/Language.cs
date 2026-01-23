@@ -39,21 +39,42 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
     };
 
     /// <summary>
+    /// Notified when <c>Language</c> files should be reloaded
+    /// </summary>
+    public static event Action? OnReload;
+
+    /// <summary>
     /// Notified when the current <c>Language</c> changes
     /// </summary>
     public static event Action? OnChange;
 
-    static Language()
+    internal static void _Init()
     {
-        AddLangFile(EnUS, Core.Id, "Lang/Lang.en-US.properties");
+        _Reload();
+        OnReload += _Reload;
+    }
+
+    private static void _Reload()
+    {
+        AddLangFile(EnUS, Core.Id, "Lang/Lang.en-US.properties", true);
+    }
+
+    public static void Reload()
+    {
+        OnReload?.Invoke();
     }
 
     /// <summary>
     /// Parses a .properties file and adds its entries to the lang dictionary for the given locale code under the given mod ID
     /// </summary>
-    public static void AddLangFile(string localeCode, string modId, string file)
+    public static void AddLangFile(string localeCode, string modId, string file, bool clear = false)
     {
         Dictionary<string, string> entries = Langs[localeCode].Entries;
+
+        if (clear)
+        {
+            entries.Clear();
+        }
 
         foreach (KeyValuePair<string, string> kvp in Properties.Parse(file))
         {
@@ -63,6 +84,7 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
                     $"Language {localeCode} already has a value at {modId}:{kvp.Key} ({entries[kvp.Key]}), overwriting with {kvp.Value}",
                     nameof(Language), DebugConsole.LogLevel.Warning);
             }
+
             entries[$"{modId}:{kvp.Key}"] = kvp.Value;
         }
     }

@@ -47,14 +47,14 @@ public sealed class Theme : IDescribable, IRegistrable
 
     #region Default Themes
 
-    public static Theme Apollo { get; }
-    public static Theme Void { get; }
-    public static Theme VSCode { get; }
-    public static Theme HighContrast { get; }
-    public static Theme MikuMikuTheme { get; }
-    public static Theme RedMode { get; }
+    public static Theme Apollo { get; set; } = null!;
+    public static Theme Void { get; set; } = null!;
+    public static Theme VSCode { get; set; } = null!;
+    public static Theme HighContrast { get; set; } = null!;
+    public static Theme MikuMikuTheme { get; set; } = null!;
+    public static Theme RedMode { get; set; } = null!;
 
-    static Theme()
+    internal static void _Init()
     {
         // https://lospec.com/palette-list/apollo
         #region Apollo

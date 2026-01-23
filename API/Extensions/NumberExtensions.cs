@@ -3,6 +3,7 @@ using API.Util;
 
 namespace API.Extensions;
 
+// todo split
 public static class NumberExtensions
 {
     public const string NumberFormat = "N";
@@ -65,6 +66,17 @@ public static class NumberExtensions
         {
             return @this.Format(TextLib.GetColor(@this, threshold, isPositive), useSign, '%', divisor);
         }
+
+        /// <returns>The given <c>string</c> parsed as an <c>int</c>, or the provided default if there was an error</returns>
+        public static int ParseOrDefault(string? str, int defaultValue = default)
+        {
+            if (!int.TryParse(str, out int res))
+            {
+                return defaultValue;
+            }
+
+            return res;
+        }
     }
 
     extension(float @this)
@@ -89,6 +101,17 @@ public static class NumberExtensions
         public string FormatPerc(bool useSign = false, int threshold = 1, bool isPositive = true, float divisor = 1f)
         {
             return @this.Format(threshold, isPositive, useSign, '%', divisor);
+        }
+
+        /// <returns>The given <c>string</c> parsed as a <c>float</c>, or the provided default if there was an error</returns>
+        public static float ParseOrDefault(string? str, float defaultValue = default)
+        {
+            if (!float.TryParse(str, out float res))
+            {
+                return defaultValue;
+            }
+
+            return res;
         }
     }
 }

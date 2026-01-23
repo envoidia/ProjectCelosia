@@ -10,7 +10,6 @@ namespace API.Input;
 
 public static class InputLib
 {
-
     #region Fields
 
     // todo docs
@@ -31,16 +30,6 @@ public static class InputLib
     /// How long each standard <c>Keybind</c> has been held down for
     /// </summary>
     private static readonly TimeSpan[] _Held = new TimeSpan[Keybinds.StdKeybindCount];
-
-    /// <summary>
-    /// The last held key. Used for <c>TextInput</c>. Ignored by <c>Check</c>
-    /// </summary>
-    private static Keys _lastHeldKey;
-
-    /// <summary>
-    /// How long the last held key has been held down for
-    /// </summary>
-    private static TimeSpan _lastHeldKeyTime = TimeSpan.Zero;
 
     /// <summary>
     /// Default time between triggers when holding <c>Keybind</c> down, in seconds

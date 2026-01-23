@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using API.Battle.State;
 using API.Debug;
 using API.Graphics;
 using API.Input;
+using API.Lang;
 using API.Menu.State;
+using API.Menu.Widget;
 using API.Modding;
+using API.Save;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
@@ -41,11 +45,6 @@ public sealed class Core : Game
     /// </summary>
     public static readonly string[] ReservedIds = [Id, BaseModId];
 
-    /// <summary>
-    /// Actions to execute after this' instance is created
-    /// </summary>
-    public static event Action? PostCoreInit;
-
     #region Rendering
 
     public static GraphicsDeviceManager Graphics { get; private set; } = null!;
@@ -57,9 +56,9 @@ public sealed class Core : Game
     private static Texture2DAtlas _iconsAtlas = null!;
 
     // Fonts
-    public static readonly FontSystem KoruriSystem;
-    public static readonly DynamicSpriteFont Koruri60;
-    public static readonly DynamicSpriteFont Koruri40;
+    public static FontSystem KoruriSystem = null!;
+    public static DynamicSpriteFont Koruri60 = null!;
+    public static DynamicSpriteFont Koruri40 = null!;
 
     #endregion
 
@@ -68,15 +67,24 @@ public sealed class Core : Game
 
     #region Init
 
-    static Core()
+    /// <summary>
+    /// Creates a new Core instance.
+    /// </summary>
+    /// <param name="title">The title to display in the title bar of the game window.</param>
+    public Core(string title)
     {
+        // Ensure that multiple cores are not created
+        System.Diagnostics.Debug.Assert(Instance is null, "Only a single instance of Core should be created");
+
+        // Store reference to engine for global member access
+        Instance = this;
+
         // Setup font
         // todo
         //FontSystemDefaults.TextureWidth = 4096;
         //FontSystemDefaults.TextureHeight = 4096;
 
         // todo try bold font? diff font entirely?
-        KoruriSystem = new FontSystem();
         FontSystemDefaults.FontResolutionFactor = 2f;
         FontSystemDefaults.KernelWidth = 2;
         FontSystemDefaults.KernelHeight = 2;
@@ -102,9 +110,7 @@ public sealed class Core : Game
             return new TextureFragmentColored(region.Texture, region.Bounds);
         };
 
-#if !NATIVE_AOT
-        ModLoader._LoadAllMods();
-#else
+#if NATIVE_AOT
         // Prevent crash caused by reflection in the atlas reader
         // Make sure to change this after updating MGE
         // todo can i write it without ()
@@ -122,19 +128,6 @@ public sealed class Core : Game
         // todo: Force Celosia.Main to be loaded
         // The easy way is to call a dummy method from it
 #endif
-    }
-
-    /// <summary>
-    /// Creates a new Core instance.
-    /// </summary>
-    /// <param name="title">The title to display in the title bar of the game window.</param>
-    public Core(string title)
-    {
-        // Ensure that multiple cores are not created
-        System.Diagnostics.Debug.Assert(Instance is null, "Only a single instance of Core should be created");
-
-        // Store reference to engine for global member access
-        Instance = this;
 
         // Create a new graphics device manager
         Graphics = new GraphicsDeviceManager(this)
@@ -178,9 +171,29 @@ public sealed class Core : Game
         SpriteBatch = new SpriteBatch(GraphicsDevice);
         ShapeBatch = new ShapeBatch(GraphicsDevice, this.Content);
 
+        Language._Init();
+        Theme._Init();
+
+        // Must be after Language and Theme and before any use of Label
+        Settings._Init();
+        
+        StateMachine._Init();
+
+        BattleLib._Init();
+        _InspectLib._Init();
+
+        DebugUtil._Init();
+        DebugConsole._Init();
+        Commands._Init();
+
+        // Must be after Settings
+        StatBarWidget._Init();
+
         StateMachine.Add(States.MainMenu);
 
-        PostCoreInit?.Invoke();
+#if !NATIVE_AOT
+        ModLoader._LoadAllMods();
+#endif
     }
 
     protected override void LoadContent()

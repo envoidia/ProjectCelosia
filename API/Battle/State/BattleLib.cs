@@ -118,7 +118,7 @@ public static class BattleLib
 
     #region Setup Methods
 
-    static BattleLib()
+    internal static void _Init()
     {
         // Add preinitialized actors
         _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL);
@@ -168,7 +168,6 @@ public static class BattleLib
 
         Assert.LenIs(_Actors, _ActorCount);
     }
-
     internal static void _Create()
     {
         // temp setup teams

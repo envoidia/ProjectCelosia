@@ -67,7 +67,7 @@ public sealed class StatBarWidget : StatBarWidgetBase
     private Color _c0;
     private Color _c1;
 
-    static StatBarWidget()
+    internal static void _Init()
     {
         ThemeChangeStatic();
         Theme.OnChange += ThemeChangeStatic;

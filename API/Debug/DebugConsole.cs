@@ -62,7 +62,7 @@ public static class DebugConsole
 
     private static readonly Label _Command = new(RenderPriority.B3High, Core.Koruri40)
     {
-        Text = "X", // Must be init with some text or cursor never shows (why?? probably some weird FSS internals)
+        Text = ">",
         Position = new(10, World.H - 5),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,
@@ -84,6 +84,7 @@ public static class DebugConsole
 
     private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.B3High)
     {
+        Position = new(27, World.H - 45),
         IsVisible = false
     };
 
@@ -128,7 +129,6 @@ public static class DebugConsole
         AnimType = AnimType.None,
         IsVisible = false
     };
-
     private static TextInputWidget _input = null!;
     private static Menu.Menu _menu = null!;
 
@@ -140,17 +140,6 @@ public static class DebugConsole
     };
 
     #endregion
-
-    static DebugConsole()
-    {
-        Stage.Add(_Command);
-        Stage.Add(_CommandHint);
-        Stage.Add(_Cursor);
-        Stage.Add(_Log);
-        Stage.Add(_Line);
-
-        Core.PostCoreInit += _PostCoreInit;
-    }
 
     #region Logging
 
@@ -203,13 +192,14 @@ public static class DebugConsole
     #region Internals
 
     // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
-    internal static void _PostCoreInit()
+    internal static void _Init()
     {
         _input = new(_Command, _Cursor, _ExecuteCommand, false)
         {
             OnChangeText = () =>
             {
-                ReadOnlySpan<string> args = _TokenizeCommand(_input.Text);
+                string text = _input.Text;
+                ReadOnlySpan<string> args = _TokenizeCommand(text);
 
                 // Hints
                 string? hints = null;
@@ -219,16 +209,16 @@ public static class DebugConsole
                     int skip = args.Length - 1;
                     if (skip < cmd.Hints.Length)
                     {
-                        hints = $"{(_input.Text.EndsWith(' ') ? null : ' ')}{string.Join(' ',
+                        hints = $"{(text.EndsWith(' ') ? null : ' ')}{string.Join(' ',
                             cmd.Hints.Skip(skip).Select(s => $"[{s}]"))}";
                     }
                 }
 
                 // Autocomplete
-                string? match = args.Length == 1 ? _GetAutocompleteMatch(_input.Text) : null;
+                string? match = args.Length == 1 ? _GetAutocompleteMatch(text) : null;
 
                 // Trailing space fixes cursor pos bug
-                _Command.Text = $"{_color.Str}>{_input.Text} ";
+                _Command.Text = $"{_color.Str}>{text} ";
 
                 _CommandHint.X = _Command.X + _Command.Width - 7;
                 _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
@@ -239,6 +229,12 @@ public static class DebugConsole
         {
             InputWidgets = [_input]
         };
+
+        Stage.Add(_Command);
+        Stage.Add(_CommandHint);
+        Stage.Add(_Cursor);
+        Stage.Add(_Log);
+        Stage.Add(_Line);
     }
 
     internal static void _Update(GameTime gt)
@@ -317,13 +313,14 @@ public static class DebugConsole
 
     private static bool _ExecuteCommand()
     {
-        if (_input.Text.Length == 0)
+        string text = _input.Text;
+        if (text.Length == 0)
         {
             return false;
         }
 
         _histIndex = -1;
-        ExecuteCommand(_input.Text);
+        ExecuteCommand(text);
 
         return true;
     }

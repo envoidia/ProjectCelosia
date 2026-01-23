@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
@@ -17,9 +16,16 @@ namespace API.Debug;
 // todo dont even init any of this stuff until its used
 public static class DebugUtil
 {
+    public const bool IsDebug =
+#if DEBUG
+    true;
+#else
+    false;
+#endif
+
     private const string _ClassName = nameof(DebugUtil);
 
-    private const int _Mb = 1024 * 1024;
+    internal const int _Mb = 1024 * 1024;
 
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
 
@@ -96,7 +102,7 @@ public static class DebugUtil
 
     #endregion
 
-    static DebugUtil()
+    internal static void _Init()
     {
         Stage.Add(_DebugInfoL);
         Stage.Add(_DebugInfoR);

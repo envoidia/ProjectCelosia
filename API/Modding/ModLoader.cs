@@ -143,7 +143,11 @@ public static class ModLoader
                     " Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one");
         }
 
-        _LoadedMods.AddRange(mods);
+        foreach (GameMod mod in mods)
+        {
+            mod.OnInit?.Invoke();
+            _LoadedMods.Add(mod);
+        }
     }
 
     internal static void _UpdateAllMods(GameTime gt)

@@ -23,10 +23,9 @@ public static class StateMachine
         AnimFromDir = Dir.Down
     };
 
-    static StateMachine()
+    internal static void _Init()
     {
         Stage.Add(_InputPrompt);
-
         InputLib.OnDeviceChange += UpdateInputPrompt;
     }
 

@@ -5,7 +5,7 @@ namespace API.Input;
 
 public sealed class InputPrompt(string keyName, params Keybind[] keybinds)
 {
-    public MultiInputType multiInputType = MultiInputType.Or;
+    public MultiInputType MultiInputType = MultiInputType.Or;
 
     public string GetText()
     {
@@ -18,7 +18,7 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds)
             // Divider
             if (i != keybinds.Length - 1)
             {
-                builder.Append(this.multiInputType == MultiInputType.Or ? "//" : '+');
+                builder.Append(this.MultiInputType == MultiInputType.Or ? "//" : '+');
             }
         }
 
@@ -47,7 +47,7 @@ public static class InputPrompts
     public static readonly InputPrompt Inspect = new("InputInspect", Keybinds.Menu2);
     public static readonly InputPrompt InspectHere = new("InputInspectHere", Keybinds.Menu2, Keybinds.Hotkey1)
     {
-        multiInputType = MultiInputType.And
+        MultiInputType = MultiInputType.And
     };
 
     // todo

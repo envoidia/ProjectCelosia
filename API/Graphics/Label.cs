@@ -1,3 +1,4 @@
+using System;
 using API.Save;
 using API.Util;
 using FontStashSharp;
@@ -53,6 +54,8 @@ public sealed class Label : IActor
         {
             Font = font ?? Core.Koruri60
         };
+
+        Console.WriteLine("label ctor, theme is null?: " + Settings.Theme is null);
 
         this._bgC = Settings.Theme.Get(this.BackgroundColor);
 

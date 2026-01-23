@@ -9,7 +9,6 @@ namespace API.Graphics;
 /// <param name="OnUpdate">Executes every frame</param>
 public sealed record Routine(Routine.Start? OnStart, Routine.Update OnUpdate)
 {
-
     /// <summary>
     /// Executes on start
     /// </summary>
