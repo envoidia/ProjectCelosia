@@ -52,14 +52,13 @@ public static class PosLib
             upper = HighestOpp;
         }
 
-        int[] result = new int[HighestAlly];
-        int c = 0;
+        SizedArr<int> result = new(3);
 
         for (int i = lower; i <= upper; i++)
         {
             if (i != pos)
             {
-                result[c++] = i;
+                result.Add(i);
             }
         }
 

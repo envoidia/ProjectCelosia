@@ -13,7 +13,13 @@ public sealed class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
 {
     private readonly T[] _arr = new T[capacity];
 
-    public int Capacity = capacity;
+    public int Capacity
+    {
+        get
+        {
+            return this._arr.Length;
+        }
+    }
 
     private int _c = 0;
     public int Count
@@ -49,7 +55,7 @@ public sealed class SizedArr<T>(int capacity) : IEnumerable, IEnumerable<T>
         if (this._c == this.Capacity)
         {
             throw new ArgumentOutOfRangeException(
-                $"Cannot add {item} to SizedArr<{typeof(T)}> that has met capacity of {this.Capacity}");
+                $"Cannot add {item} to {nameof(SizedArr<>)}<{typeof(T)}> that has met capacity of {this.Capacity}");
         }
 
         this._arr[this._c++] = item;
