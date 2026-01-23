@@ -15,7 +15,7 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             return SkillResultType.PseudoSuccess;
         }
 
-        List<string> msg = [];
+        string? msg = null;
         string str = "";
         string str2 = "";
 
@@ -51,21 +51,21 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             unit.SetStageTurns(stageType, turnsMod);
             if (stageNew != stageOld)
             {
-                msg.Add(str + "LogTurnsNameless".FormatLang([ThemeColor.Imp.Str + turnsOld,
-                    ThemeColor.Imp.Str + turnsMod]) + str2);
+                msg = str + "LogTurnsNameless".FormatLang([ThemeColor.Imp.Str + turnsOld,
+                    ThemeColor.Imp.Str + turnsMod]) + str2;
             }
             else
             {
-                msg.Add("LogChangeStageTurns".FormatLang([unit.FormatName(), stageName,
-                    ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]));
+                msg = "LogChangeStageTurns".FormatLang([unit.FormatName(), stageName,
+                    ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]);
             }
         }
         else if (stageNew != stageOld)
         {
-            msg.Add(str + str2);
+            msg = str + str2;
         }
 
-        if (msg.Count > 0)
+        if (msg is not null)
         {
             LogLib.Add(msg);
         }
