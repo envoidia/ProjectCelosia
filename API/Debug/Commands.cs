@@ -765,13 +765,7 @@ public static class Commands
         switch (args[2])
         {
             case Give:
-                // Find turns
-                int turns;
-                try
-                {
-                    turns = int.Parse(args[4]);
-                }
-                catch
+                if (!int.TryParse(args[4], out int turns))
                 {
                     return new(ExitCode.Err, _TurnsError);
                 }
@@ -782,12 +776,7 @@ public static class Commands
                 }
 
                 // Find stacks
-                int stacks;
-                try
-                {
-                    stacks = int.Parse(args[5]);
-                }
-                catch
+                if (!int.TryParse(args[5], out int stacks))
                 {
                     return new(ExitCode.Err, _StacksError);
                 }

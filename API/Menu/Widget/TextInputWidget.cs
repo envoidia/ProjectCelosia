@@ -223,9 +223,6 @@ public sealed class TextInputWidget : IInputWidget
 
                 return;
 
-            case Keys.V:
-                return;
-
             default:
                 this._Sb.Insert(this.Index, args.Character);
                 this.OptCount = this._Sb.Length;
