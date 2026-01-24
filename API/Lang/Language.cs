@@ -104,7 +104,7 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
 
     public override string ToString()
     {
-        return $"Language {this.Name}, {this.LocaleCode}:\n{string.Join('\n', this.Entries.OrderBy(kvp => kvp.Key)
-            .Select(kvp => $"{kvp.Key} = {kvp.Value}"))}";
+        return string.Join('\n', this.Entries.OrderBy(kvp => kvp.Key)
+            .Select(kvp => $"{kvp.Key} = {kvp.Value}"));
     }
 }

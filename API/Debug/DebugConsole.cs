@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using API.Extensions;
@@ -22,7 +23,7 @@ public static class DebugConsole
         get;
         set
         {
-            if(field == value)
+            if (field == value)
             {
                 return;
             }
@@ -139,29 +140,21 @@ public static class DebugConsole
         OnChangeText = () =>
         {
             string text = _Input!.Text;
-            ReadOnlySpan<string> args = _TokenizeCommand(text);
+            ReadOnlySpan<string> args = CommandParser.TokenizeWithoutPipelines(text);
 
             // Hints
-            string? hints = null;
-
-            if (args.Length != 0 && Command._Commands.TryGetValue(args[0], out Command? cmd))
-            {
-                int skip = args.Length - 1;
-                if (skip < cmd.Hints.Length)
-                {
-                    hints = $"{(text.EndsWith(' ') ? null : ' ')}{string.Join(' ',
-                        cmd.Hints.Skip(skip).Select(s => $"[{s}]"))}";
-                }
-            }
+            string? hints = CommandParser.GetHintText(args);
 
             // Autocomplete
-            string? match = args.Length == 1 ? _GetAutocompleteMatch(text) : null;
+            string? match = args.Length == 1 ? CommandParser.GetAutocompleteMatch(text) : null;
 
             // Trailing space fixes cursor pos bug
             _Command.Text = $"{_color.Str}>{text} ";
 
             _CommandHint.X = _Command.X + _Command.Width - 7;
-            _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
+
+            _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{(text.EndsWith(' ')
+                ? null : ' ')}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
         }
     };
 
@@ -255,11 +248,11 @@ public static class DebugConsole
 
         if (InputLib.IsKeyJustPressed(Keys.Tab))
         {
-            ReadOnlySpan<string> args = _TokenizeCommand(_Input.Text);
+            ReadOnlySpan<string> args = CommandParser.TokenizeWithoutPipelines(_Input.Text);
 
             if (args.Length == 1)
             {
-                string? match = _GetAutocompleteMatch(args[0]);
+                string? match = CommandParser.GetAutocompleteMatch(args[0]);
                 if (match is not null)
                 {
                     _Input.Append(match);
@@ -277,29 +270,6 @@ public static class DebugConsole
         }
     }
 
-    /// <summary>
-    /// Executes the specified command
-    /// </summary>
-    public static void ExecuteCommand(string t)
-    {
-        if (_Hist.Count == 0 || _Hist[^1] != t)
-        {
-            _Hist.Add(t);
-        }
-
-        ReadOnlySpan<string> args = _TokenizeCommand(_Input.Text);
-
-        if (!Command._Commands.TryGetValue(args[0], out Command? cmd))
-        {
-            Log($"{args[0]} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
-                nameof(DebugConsole), LogLevel.Error);
-            // todo suggest close matches
-            return;
-        }
-
-        cmd.Action(args);
-    }
-
     private static bool _ExecuteCommand()
     {
         string text = _Input.Text;
@@ -309,46 +279,15 @@ public static class DebugConsole
         }
 
         _histIndex = -1;
-        ExecuteCommand(text);
+
+        if (_Hist.Count == 0 || _Hist[^1] != text)
+        {
+            _Hist.Add(text);
+        }
+
+        CommandParser.ExecuteCommand(text);
 
         return true;
-    }
-
-    /// <summary>
-    /// Splits a string by whitespace and returns a ReadOnlySpan without empty entries or whitespace
-    /// </summary>
-    private static ReadOnlySpan<string> _TokenizeCommand(string str)
-    {
-        return str.Split((char[]) null!,
-            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-    }
-
-    /// <returns>The non-shared part of the closest autocomplete match for the currently typed command, or null</returns>
-    private static string? _GetAutocompleteMatch(string str)
-    {
-        string? match = Command._Commands.Keys
-                    .Where(k => k.StartsWith(str, StringComparison.OrdinalIgnoreCase))
-                    .OrderByDescending(k => getCommonPrefixLength(k, str))
-                    .FirstOrDefault();
-
-        if (match is null)
-        {
-            return null;
-        }
-
-        return match[getCommonPrefixLength(match, str)..];
-
-        static int getCommonPrefixLength(string a, string b)
-        {
-            int len = Math.Min(a.Length, b.Length);
-            for (int i = 0; i < len; i++)
-            {
-                if (a[i] != b[i]) return i;
-            }
-
-            return len;
-        }
-
     }
 
     #endregion

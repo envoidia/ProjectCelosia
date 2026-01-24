@@ -9,6 +9,24 @@ namespace API.Debug;
 public static class Assert
 {
     /// <summary>
+    /// Asserts that a value is null
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void Null(object v)
+    {
+        System.Diagnostics.Debug.Assert(v is null, $"{v} must be null");
+    }
+
+    /// <summary>
+    /// Asserts that a value is not null
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void NotNull(object v)
+    {
+        System.Diagnostics.Debug.Assert(v is not null, $"{v} cannot be null");
+    }
+
+    /// <summary>
     /// Asserts that a value is 0
     /// </summary>
     [Conditional("DEBUG")]

@@ -59,7 +59,7 @@ public static class Registry
 
     public new static string ToString()
     {
-        return $"Registry:\n{string.Join('\n', _Reg.OrderBy(kvp => kvp.Key)
+        return $"Registry: {string.Join('\n', _Reg.OrderBy(kvp => kvp.Key)
         .Select(kvp => $"{kvp.Key} = {kvp.Value}"))}";
     }
 }

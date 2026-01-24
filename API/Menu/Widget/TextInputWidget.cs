@@ -1,23 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using API.Debug;
 using API.Graphics;
 using API.Input;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using TextCopy;
 
 namespace API.Menu.Widget;
 
 /// <summary>
-/// Handles single-line text input. Cannot be constructed before <c>Core</c>.
-/// After construction, call <c>SubscribeToInput</c> exactly once.
+/// Handles single-line text input.
+/// After construction, call <c>SubscribeToInput</c> exactly once, after construction of <c>Core</c>.
 /// Receives text input from the OS. Should support all keyboards well.
 /// Supports cursor movement, Home/End, BkSp/Del, and Hotkey2 for per-word actions.
 /// Does not support tab, history, selection, clipboard, overwrite mode, or multiple lines
 /// </summary>
 public sealed class TextInputWidget : IInputWidget
 {
+    public const string ClipboardError = "Failed to access clipboard! If on Linux, is xsel installed?";
+
     private readonly StringBuilder _Sb = new();
 
     /// <summary>
@@ -219,6 +223,9 @@ public sealed class TextInputWidget : IInputWidget
 
                 return;
 
+            case Keys.V:
+                return;
+
             default:
                 this._Sb.Insert(this.Index, args.Character);
                 this.OptCount = this._Sb.Length;
@@ -232,10 +239,12 @@ public sealed class TextInputWidget : IInputWidget
     // OS doesn't handle nav input
     public void Input(GameTime gt)
     {
+        bool ctrlPressed = InputLib.IsKeyPressed(Keys.LeftControl) || InputLib.IsKeyPressed(Keys.RightControl);
+
         if (InputLib.Check(Keybinds.Left, true, _MoveDelay))
         {
             // Word jump
-            if (InputLib.Check(Keybinds.Hotkey2))
+            if (ctrlPressed)
             {
                 while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
                 {
@@ -257,7 +266,7 @@ public sealed class TextInputWidget : IInputWidget
         }
         else if (InputLib.Check(Keybinds.Right, true, _MoveDelay))
         {
-            if (InputLib.Check(Keybinds.Hotkey2))
+            if (ctrlPressed)
             {
                 while (this.Index < this.OptCount && char.IsWhiteSpace(this._Sb[this.Index]))
                 {
@@ -285,6 +294,65 @@ public sealed class TextInputWidget : IInputWidget
         else if (InputLib.IsKeyJustPressed(Keys.End) || (this.UseUpDown && InputLib.Check(Keybinds.Down)))
         {
             this.Index = this.OptCount;
+        }
+
+        if (!ctrlPressed)
+        {
+            return;
+        }
+
+        if (InputLib.IsKeyPressed(Keys.C))
+        {
+            try
+            {
+                ClipboardService.SetText(this.Text);
+            }
+            catch (Exception e)
+            {
+                DebugConsole.Log(ClipboardError, nameof(TextInputWidget), DebugConsole.LogLevel.Error);
+                Console.WriteLine(e);
+            }
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.X))
+        {
+            try
+            {
+                ClipboardService.SetText(this.Text);
+            }
+            catch (Exception e)
+            {
+                DebugConsole.Log(ClipboardError, nameof(TextInputWidget), DebugConsole.LogLevel.Error);
+                Console.WriteLine(e);
+            }
+
+            this.Clear();
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.V))
+        {
+            string? str;
+            try
+            {
+                str = ClipboardService.GetText();
+            }
+            catch (Exception e)
+            {
+                DebugConsole.Log(ClipboardError, nameof(TextInputWidget), DebugConsole.LogLevel.Error);
+                Console.WriteLine(e);
+
+                return;
+            }
+
+            if (str is null)
+            {
+                return;
+            }
+
+            this._Sb.Insert(this.Index, str);
+            this.OptCount += str.Length;
+            this.OnChangeText?.Invoke();
+            this.Index += str.Length;
         }
     }
 

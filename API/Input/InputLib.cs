@@ -221,7 +221,7 @@ public static class InputLib
 
         if (_IsButtonDown(keybind.Button))
         {
-            LastInputSource = InputDevice.XboxController; // todo
+            LastInputSource = InputDevice.XboxController; // todo controller types
             return true;
         }
 

@@ -20,6 +20,7 @@
         </PackageReference>
         <PackageReference Include="OneOf" Version="3.0.271" />
         <PackageReference Include="ResolutionBuddy" Version="5.0.0" />
+        <PackageReference Include="TextCopy" Version="6.2.1" />
         <!-- <Analyzer Include="..\..\ImplementsAnalyzer.dll" /> -->
     </ItemGroup>
     <ItemGroup>

@@ -8,16 +8,16 @@ namespace API.Debug;
 /// </summary>
 public sealed class Command
 {
-    internal static readonly Dictionary<string, Command> _Commands = [];
+    public static readonly Dictionary<string, Command> Cmds = [];
 
     /// <summary>
     /// Function this should execute
     /// </summary>
-    public readonly Action<ReadOnlySpan<string>> Action;
+    public readonly Func<ReadOnlySpan<string>, CommandResult> Fn;
 
     /// <summary>
     /// Hints for this' arguments.
-    /// Eg hints of <c>[foo, bar, lorem]</c> would display <c>commandname| [foo] [bar] [lorem]</c> as you type
+    /// Eg hints of <c>[foo, bar, lorem]</c> would display <c>commandname [foo] [bar] [lorem]</c> as you type
     /// </summary>
     public readonly string[] Hints;
 
@@ -26,25 +26,32 @@ public sealed class Command
     /// </summary>
     public readonly string Desc;
 
-    private Command(Action<ReadOnlySpan<string>> action, string[] hints, string desc)
+    /// <summary>
+    /// ID of the mod this is from
+    /// </summary>
+    public readonly string ModId;
+
+    private Command(Func<ReadOnlySpan<string>, CommandResult> fn, string[] hints, string desc, string modId)
     {
-        this.Action = action;
+        this.Fn = fn;
         this.Hints = hints;
         this.Desc = desc;
+        this.ModId = modId;
     }
 
     /// <summary>
     /// Creates a <c>Command</c> with the specified name and adds it to the command registry, unless the name is already used
     /// </summary>
-    /// <returns>Whether the command was created sucessfully</returns>
-    public static bool Register(string name, Action<ReadOnlySpan<string>> action, string[] hints, string desc)
+    /// <returns>Whether the <c>Command</c> was created sucessfully</returns>
+    public static bool Register(string name, Func<ReadOnlySpan<string>,
+        CommandResult> fn, string[] hints, string desc, string modId)
     {
-        if (_Commands.ContainsKey(name))
+        if (Cmds.ContainsKey(name))
         {
             return false;
         }
 
-        _Commands.Add(name, new(action, hints, desc));
+        Cmds.Add(name, new(fn, hints, desc, modId));
 
         return true;
     }
