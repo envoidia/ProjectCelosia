@@ -140,13 +140,29 @@ public static class DebugConsole
         OnChangeText = () =>
         {
             string text = _Input!.Text;
-            ReadOnlySpan<string> args = CommandParser.TokenizeWithoutPipelines(text);
+            Span<string[]> args = CommandParser.TokenizeCommand(text);
 
-            // Hints
-            string? hints = CommandParser.GetHintText(args);
+            // Hints and autocomplete
+            string? hints = null;
+            string? match = null;
 
-            // Autocomplete
-            string? match = args.Length == 1 ? CommandParser.GetAutocompleteMatch(text) : null;
+            if (args.Length > 0)
+            {
+                if (args[^1].Length > 0)
+                {
+                    hints = CommandParser.GetHintText(args[^1], args.Length > 1);
+
+                    if (args[^1].Length == 1)
+                    {
+                        string str = args[^1][^1];
+
+                        if (!string.IsNullOrWhiteSpace(str))
+                        {
+                            match = CommandParser.GetAutocompleteMatch(str);
+                        }
+                    }
+                }
+            }
 
             // Trailing space fixes cursor pos bug
             _Command.Text = $"{_color.Str}>{text} ";
@@ -248,15 +264,17 @@ public static class DebugConsole
 
         if (InputLib.IsKeyJustPressed(Keys.Tab))
         {
-            ReadOnlySpan<string> args = CommandParser.TokenizeWithoutPipelines(_Input.Text);
+            string text = _Input.Text.Split('|', StringSplitOptions.TrimEntries)[^1];
 
-            if (args.Length == 1)
+            if (string.IsNullOrWhiteSpace(text))
             {
-                string? match = CommandParser.GetAutocompleteMatch(args[0]);
-                if (match is not null)
-                {
-                    _Input.Append(match);
-                }
+                return;
+            }
+
+            string? match = CommandParser.GetAutocompleteMatch(text);
+            if (match is not null)
+            {
+                _Input.Append(match);
             }
         }
 

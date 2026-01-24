@@ -213,7 +213,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, "Usage: `wc [text] [l/w/c]` or `[command] | wc [l/w/c]`");
+            return new(ExitCode.Err, "Usage: `wc [text] [l/w/c]`");
         }
 
         bool usingFormat = args[^1] is "l" or "w" or "c";

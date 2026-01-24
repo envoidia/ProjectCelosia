@@ -127,7 +127,7 @@ public static class CommandParser
     }
 
     /// <returns>
-    /// The non-shared part of the closest autocomplete match for the currently typed command, or null
+    /// The closest autocomplete match for the currently typed command, or null
     /// </returns>
     public static string? GetAutocompleteMatch(string str)
     {
@@ -159,11 +159,17 @@ public static class CommandParser
     /// <returns>
     /// Hint text for the current command
     /// </returns>
-    public static string? GetHintText(ReadOnlySpan<string> args)
+    public static string? GetHintText(ReadOnlySpan<string> args, bool skipFirst)
     {
         if (args.Length != 0 && Command.Cmds.TryGetValue(args[0], out Command? cmd))
         {
             int skip = args.Length - 1;
+            
+            if(skipFirst)
+            {
+                skip++;
+            }
+
             if (skip < cmd.Hints.Length)
             {
                 return string.Join(' ', cmd.Hints.Skip(skip).Select(s => $"[{s}]"));
