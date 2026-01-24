@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Linq;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
@@ -215,13 +213,13 @@ public static class DebugConsole
         _Log.Text = string.Join('\n', _LogText) + '\n';
         _Line.Width = Math.Max(_MinBgWidth, _Log.Width + 20);
 
-        Console.WriteLine($"{logLevel switch
-        {
-            LogLevel.Info => "",
-            LogLevel.Warning => "\e[0;33m",
-            LogLevel.Error => "\e[0;31m",
-            _ => throw new ClosedEnumsWhenException()
-        }}[{source}] {msg}");
+        // Console.WriteLine($"{logLevel switch
+        // {
+        //     LogLevel.Info => "",
+        //     LogLevel.Warning => "\e[0;33m",
+        //     LogLevel.Error => "\e[0;31m",
+        //     _ => throw new ClosedEnumsWhenException()
+        // }}[{source}] {msg}");
     }
 
     /// <summary>

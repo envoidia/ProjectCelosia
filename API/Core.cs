@@ -191,6 +191,8 @@ public sealed class Core : Game
         // Must be after inits
         StateMachine.Add(States.MainMenu);
 
+        // todo should i gc after init?
+
 #if !NATIVE_AOT
         ModLoader._LoadAllMods();
 #endif

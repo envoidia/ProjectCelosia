@@ -1,5 +1,3 @@
-using System;
-
 namespace API.Debug;
 
 public readonly struct CommandResult(ExitCode exitCode, string? msg)

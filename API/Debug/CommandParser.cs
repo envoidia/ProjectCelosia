@@ -68,6 +68,7 @@ public static class CommandParser
                 {
                     DebugConsole.Log(res.Msg, source, DebugConsole.LogLevel.Error);
                 }
+
                 return;
             }
         }
@@ -164,8 +165,8 @@ public static class CommandParser
         if (args.Length != 0 && Command.Cmds.TryGetValue(args[0], out Command? cmd))
         {
             int skip = args.Length - 1;
-            
-            if(skipFirst)
+
+            if (skipFirst)
             {
                 skip++;
             }

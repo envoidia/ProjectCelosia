@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using API.Battle;
@@ -12,7 +11,6 @@ using API.Menu.Widget;
 using API.Modding;
 using API.Save;
 using API.Util;
-using Microsoft.Xna.Framework;
 using TextCopy;
 
 namespace API.Debug;
@@ -759,7 +757,7 @@ public static class Commands
             return new(ExitCode.Err, $"buff ID (args[3]) `{args[3]}` is not a valid buff");
         }
 
-        Buff buff = (Buff) registrable!;
+        Buff buff = (Buff) registrable;
 
         // Determine give/remove
         switch (args[2])

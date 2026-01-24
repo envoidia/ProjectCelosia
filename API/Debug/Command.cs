@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace API.Debug;
 
@@ -40,19 +41,31 @@ public sealed class Command
     }
 
     /// <summary>
-    /// Creates a <c>Command</c> with the specified name and adds it to the command registry, unless the name is already used
+    /// Creates a <c>Command</c> with the specified name and adds it to the command registry,
+    /// unless the name is already used or invalid
     /// </summary>
-    /// <returns>Whether the <c>Command</c> was created sucessfully</returns>
-    public static bool Register(string name, Func<ReadOnlySpan<string>,
+    /// <returns>The error, if any</returns>
+    public static CommandRegistrationError? Register(string name, Func<ReadOnlySpan<string>,
         CommandResult> fn, string[] hints, string desc, string modId)
     {
+        if (name.Contains('|') || name.Any(char.IsWhiteSpace))
+        {
+            return CommandRegistrationError.InvalidName;
+        }
+
         if (Cmds.ContainsKey(name))
         {
-            return false;
+            return CommandRegistrationError.AlreadyUsed;
         }
 
         Cmds.Add(name, new(fn, hints, desc, modId));
 
-        return true;
+        return null;
+    }
+
+    public enum CommandRegistrationError
+    {
+        AlreadyUsed,
+        InvalidName
     }
 }
