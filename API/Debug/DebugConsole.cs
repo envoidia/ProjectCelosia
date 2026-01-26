@@ -298,6 +298,11 @@ public static class DebugConsole
 
         if (_Hist.Count == 0 || _Hist[^1] != text)
         {
+            if (_Hist.Count > _HistLimit)
+            {
+                _Hist.RemoveFirst();
+            }
+
             _Hist.Add(text);
         }
 
