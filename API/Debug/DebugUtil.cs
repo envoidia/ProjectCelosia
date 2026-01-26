@@ -159,7 +159,7 @@ public static class DebugUtil
             return;
         }
 
-        _DebugInfoR.Text = $"FPS: {(int) (1 / _avgFrameTime.TotalSeconds)}\nRAM: {GC.GetTotalMemory(false) / _Mb}MB\nResolution: {2}\nStates: {StateMachine.ToString()}\nMenus: {StateMachine.State.GetMenuString()}\nActors on Stage: {Stage.ActorCount()}\nOverworld Location: {6}\nLoaded Mods: {ModLoader._LoadedMods.Count}";
+        _DebugInfoR.Text = $"FPS: {(int) (1 / _avgFrameTime.TotalSeconds)}\nRAM: {GC.GetTotalMemory(false) / _Mb}MB\nResolution: NYI\nStates: {StateMachine.ToString()}\nMenus: {StateMachine.State.GetMenuString()}\nActors on Stage: {Stage.ActorCount()}\nOverworld Location: NYI\nLoaded Mods: {ModLoader._LoadedMods.Count}";
 
         _timeSinceUpdateInfoR = TimeSpan.Zero;
     }

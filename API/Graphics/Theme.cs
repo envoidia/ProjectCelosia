@@ -167,7 +167,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 Shield = electricBlue,
                 Bloom = lightPink,
                 Buff = lightPurple,
-                Skill = blue,
+                Skill = blueGreen,
                 Element = blue,
                 Passive = lightPurple,
                 Stat = paleBlueGreen,

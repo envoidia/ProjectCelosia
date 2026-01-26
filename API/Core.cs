@@ -152,7 +152,7 @@ public sealed class Core : Game
 
         // Scaling
         Resolution.Init(new ResolutionComponent(this, Graphics, new(World.W, World.H),
-            new(2560, 1440), true, false, false));
+            new(1920, 1080), false, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;

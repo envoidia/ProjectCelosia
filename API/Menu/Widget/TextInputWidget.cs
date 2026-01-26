@@ -41,6 +41,12 @@ public sealed class TextInputWidget : IInputWidget
     public readonly Label Label;
 
     /// <summary>
+    /// Max length of text input. -1 for no limit
+    /// </summary>
+    // todo
+    //public int MaxLength = -1;
+
+    /// <summary>
     /// Cursor display
     /// </summary>
     public readonly ARectangle Cursor;

@@ -64,9 +64,14 @@ public static class Commands
             return new(null);
         }, [], "Clears the console", Core.Id);
 
+        Command.Register("history", static _ =>
+        {
+            return new(string.Join('\n', DebugConsole._Hist));
+        }, [], "Returns command history", Core.Id);
+
         Command.Register("echo", args =>
             new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
-            TextArr, "Prints text", Core.Id);
+            TextArr, "Returns its input", Core.Id);
 
         Command.Register("grep", _Cmd_grep, [Text, "search"],
             "Searches through text", Core.Id);
@@ -91,7 +96,7 @@ public static class Commands
                 1, args.Length - 1)}");
 
             return new(null);
-        }, TextArr, "Writes text to OS console", Core.Id);
+        }, TextArr, "Writes text to stdout", Core.Id);
 
         Command.Register("gc", static args =>
         {
@@ -100,7 +105,7 @@ public static class Commands
         }, [], "Forces GC collection and reports memory", Core.Id);
 
         Command.Register("copy", _Cmd_copy, TextArr, "Writes to clipboard", Core.Id);
-        Command.Register("paste", _Cmd_paste, TextArr, "Reads from clipboard", Core.Id);
+        Command.Register("paste", _Cmd_paste, [], "Reads from clipboard", Core.Id);
 
         #endregion
 

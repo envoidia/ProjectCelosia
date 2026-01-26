@@ -20,6 +20,8 @@ public static class InputDeviceExtensions
         {
             return @this switch
             {
+                InputDevice.Keyboard => throw new ArgumentOutOfRangeException(nameof(@this), @this,
+                    "Keys don't have glyph identifiers"),
                 InputDevice.SwitchController => "S",
                 InputDevice.PlaystationController => "P",
                 InputDevice.XboxController => "X",
@@ -66,7 +68,7 @@ public static class InputDeviceExtensions
                             $"/i[{@this.GetGlyphIdentifier()}D]");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(id), id,
-                        $"The only KeybindIds with merged glyphs are LeftRight, UpDown, and LeftRightUpDown");
+                        "The only KeybindIds with merged glyphs are LeftRight, UpDown, and LeftRightUpDown");
             }
         }
     }

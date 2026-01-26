@@ -91,9 +91,9 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    // todo impl
+    // todo impl histlimit
     private const int _HistLimit = 128;
-    private static readonly List<string> _Hist = new(_HistLimit);
+    internal static readonly List<string> _Hist = new(_HistLimit);
 
     private const int _DisplayedCount = 24;
     internal static readonly List<string> _LogText = new(_DisplayedCount);
@@ -189,7 +189,7 @@ public static class DebugConsole
     #region Logging
 
     /// <summary>
-    /// Write a message to the ingame debug log and the attached OS console
+    /// Write a message to the ingame console
     /// </summary>
     /// <param name="msg">Message</param>
     /// <param name="source">Origin to display for the message. API uses the name of the current class, but mods should

@@ -25,6 +25,8 @@ public static partial class Regexes
         }
     }
 
+    // Errors only show in the editor and do not prevent compilation
+
     [GeneratedRegex(@"\/c\[.*?]|\/i\[.*?]|\/\/")]
     private static partial Regex _RemoveFormattingCodes();
 
