@@ -65,6 +65,9 @@ public sealed class GraphWidget : ILayoutWidget, IActor
 
         this.LabelY.Rotation = -MathHelper.PiOver2;
 
+        this.Data.OnCreate = this.OnCreate;
+        this.Data.OnDestroy = this.OnDestroy;
+
         this.CalcLayout();
     }
 

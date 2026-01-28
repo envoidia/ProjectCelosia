@@ -106,7 +106,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
 
     /// <summary>
-    /// Padding to apply to this when calling <c>DrawBackground()</c> and arranging it inside of an <c>ILayoutWidget</c>
+    /// Padding to apply to this when calling <c>DrawBackground</c> and arranging it inside of an <c>ILayoutWidget</c>
     /// </summary>
     public Padding Padding;
 
@@ -158,6 +158,16 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// </summary>
     public float Speed = IActor.DefaultSpeed;
 
+    /// <summary>
+    /// Called by <c>Create</c>. Do not call directly
+    /// </summary>
+    public Action? OnCreate;
+
+    /// <summary>
+    /// Called by <c>Destroy</c>. Do not call directly
+    /// </summary>
+    public Action? OnDestroy;
+
     internal readonly List<Routine> _routines = [];
 
     /// <summary>
@@ -165,7 +175,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// </summary>
     public void Create()
     {
-        actor.OnCreate();
+        this.OnCreate?.Invoke();
 
         if (this.AnimType != AnimType.None)
         {
@@ -182,7 +192,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// </summary>
     public void Destroy()
     {
-        actor.OnDestroy();
+        this.OnDestroy?.Invoke();
 
         if (this.AnimType != AnimType.None)
         {

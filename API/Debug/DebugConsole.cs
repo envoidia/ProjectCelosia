@@ -91,10 +91,10 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    // todo impl histlimit
     private const int _HistLimit = 128;
     internal static readonly List<string> _Hist = new(_HistLimit);
 
+    // todo scroll output
     private const int _DisplayedCount = 24;
     internal static readonly List<string> _LogText = new(_DisplayedCount);
 

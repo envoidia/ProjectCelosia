@@ -72,9 +72,6 @@ public sealed class Label : IActor
         return $"{base.ToString()}: {this.RichTextLayout.Text}";
     }
 
-    public void OnCreate() { }
-    public void OnDestroy() { }
-
     public void Draw(GameTime gt)
     {
         if (this.HasBackground)

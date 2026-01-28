@@ -15,18 +15,6 @@ public interface IActor
     ActorData Data { get; }
 
     /// <summary>
-    /// Called when this is added to the stage. Should only be called from <c>ActorData.Create()</c>
-    /// In most cases, will be blank
-    /// </summary>
-    void OnCreate();
-
-    /// <summary>
-    /// Called when this should be removed from the stage. Should only be called from <c>ActorData.Create()</c>
-    /// In most cases, will be blank
-    /// </summary>
-    void OnDestroy();
-
-    /// <summary>
     /// Draws this
     /// </summary>
     void Draw(GameTime gt);

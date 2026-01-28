@@ -40,7 +40,4 @@ public sealed class Path : IActor
     {
         Core.ShapeBatch.DrawLine(this.Start, this.End, this.Thickness, Settings.Theme.Fg, Color.Red, 0);
     }
-
-    public void OnCreate() { }
-    public void OnDestroy() { }
 }

@@ -32,9 +32,6 @@ public sealed class ARectangle : IActor
         this._color = Settings.Theme.Get(this.Color);
     }
 
-    public void OnCreate() { }
-    public void OnDestroy() { }
-
     public void Draw(GameTime gt)
     {
         Core.ShapeBatch.DrawRectangle(

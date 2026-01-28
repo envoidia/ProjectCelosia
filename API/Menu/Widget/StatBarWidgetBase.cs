@@ -51,6 +51,9 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor
         Theme.OnChange += this.ThemeChange;
 
         this.CalcLayout();
+
+        this.Data.OnCreate = this.OnCreate;
+        this.Data.OnDestroy = this.OnDestroy;
     }
 
     public void CalcLayout()

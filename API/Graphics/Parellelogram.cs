@@ -63,9 +63,6 @@ public class Parellelogram : IActor
         RenderLib.DrawParallelogram(this.L, this.R, this.T, this.B, Settings.Theme.Bg, Settings.Theme.Fg,
             this.OutlineThickness, this.SlantL, this.SlantR, this.Prog);
     }
-
-    public void OnCreate() { }
-    public void OnDestroy() { }
 }
 
 public static class Parellelograms

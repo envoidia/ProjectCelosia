@@ -87,6 +87,9 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
     public ListWidget(Vector2 pos, int capacity)
     {
         this._Setup(pos, capacity);
+
+        this.Data.OnCreate = this.OnCreate;
+        this.Data.OnDestroy = this.OnDestroy;
     }
 
     public ListWidget(Vector2 pos, params ReadOnlySpan<string> optionText)
@@ -99,6 +102,9 @@ public class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
 
         this.CalcLayout();
+
+        this.Data.OnCreate = this.OnCreate;
+        this.Data.OnDestroy = this.OnDestroy;
     }
 
     protected virtual void _Setup(Vector2 pos, int capacity)

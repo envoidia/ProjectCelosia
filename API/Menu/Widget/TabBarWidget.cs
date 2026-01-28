@@ -113,6 +113,9 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
         this.OptCount = capacity;
 
         InputLib.OnDeviceChange += this._UpdateInputPrompt;
+
+        this.Data.OnCreate = this.OnCreate;
+        this.Data.OnDestroy = this.OnDestroy;
     }
 
     public TabBarWidget(Vector2 pos, params ReadOnlySpan<string> optionText) : this(pos, optionText.Length)
@@ -127,6 +130,9 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
         }
 
         this.CalcLayout();
+
+        this.Data.OnCreate = this.OnCreate;
+        this.Data.OnDestroy = this.OnDestroy;
     }
 
     public void SetText(params ReadOnlySpan<string> optionText)

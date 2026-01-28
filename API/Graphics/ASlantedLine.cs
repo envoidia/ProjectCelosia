@@ -25,9 +25,6 @@ public sealed class ASlantedLine : IActor
         //this.LineDir = pos.Y == size.Y ? LineDir.Horiz : LineDir.Vert;
     }
 
-    public void OnCreate() { }
-    public void OnDestroy() { }
-
     public void Draw(GameTime gt)
     {
         RenderLib.DrawParallelogram(new Vector2(MathHelper.SmoothStep(this.AnimFrom.X, this.X,
