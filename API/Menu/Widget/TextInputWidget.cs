@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using API.Debug;
 using API.Graphics;
 using API.Input;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using TextCopy;
 
 namespace API.Menu.Widget;
 
@@ -20,8 +18,6 @@ namespace API.Menu.Widget;
 /// </summary>
 public sealed class TextInputWidget : IInputWidget
 {
-    public const string ClipboardError = "Failed to access clipboard! If on Linux, is xsel installed?";
-
     private readonly StringBuilder _Sb = new();
 
     /// <summary>
@@ -306,51 +302,18 @@ public sealed class TextInputWidget : IInputWidget
 
         if (InputLib.IsKeyPressed(Keys.C))
         {
-            try
-            {
-                ClipboardService.SetText(this.Text);
-            }
-            catch (Exception e)
-            {
-                DebugConsole.Log(ClipboardError, nameof(TextInputWidget), DebugConsole.LogLevel.Error);
-                Console.WriteLine(e);
-            }
+            Util.Clipboard.Text = this.Text;
         }
 
         if (InputLib.IsKeyJustPressed(Keys.X))
         {
-            try
-            {
-                ClipboardService.SetText(this.Text);
-            }
-            catch (Exception e)
-            {
-                DebugConsole.Log(ClipboardError, nameof(TextInputWidget), DebugConsole.LogLevel.Error);
-                Console.WriteLine(e);
-            }
-
+            Util.Clipboard.Text = this.Text;
             this.Clear();
         }
 
         if (InputLib.IsKeyJustPressed(Keys.V))
         {
-            string? str;
-            try
-            {
-                str = ClipboardService.GetText();
-            }
-            catch (Exception e)
-            {
-                DebugConsole.Log(ClipboardError, nameof(TextInputWidget), DebugConsole.LogLevel.Error);
-                Console.WriteLine(e);
-
-                return;
-            }
-
-            if (str is null)
-            {
-                return;
-            }
+            string str = Util.Clipboard.Text;
 
             this._Sb.Insert(this.Index, str);
             this.OptCount += str.Length;

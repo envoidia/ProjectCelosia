@@ -128,6 +128,7 @@ public static class Settings
         SelectOpponentMoves = bool.ParseOrDefault(settings.GetValueOrDefault("SelectOpponentMoves"), false);
     }
 
+    // todo rewrite to not bother with comments and whitespace
     public static void Create(
         string language = Lang.Language.EnUS,
         float battleSpeed = 1f,

@@ -141,6 +141,7 @@ public static class Keybinds
     /// </summary>
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
 
+    // todo remove
     public static readonly Keybind DebugInfo = new("KeyDebugInfo", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
 
     /// <summary>

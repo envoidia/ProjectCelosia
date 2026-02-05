@@ -1,6 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using API.Battle.State;
 using API.Debug;
 using API.Graphics;
@@ -10,6 +11,7 @@ using API.Menu.State;
 using API.Menu.Widget;
 using API.Modding;
 using API.Save;
+using API.Util;
 using Apos.Shapes;
 using FontStashSharp;
 using FontStashSharp.RichText;
@@ -191,6 +193,8 @@ public sealed class Core : Game
 
         // Must be after inits
         StateMachine.Add(States.MainMenu);
+
+        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SdlNative.SdlResolver);
 
         // todo should i gc after init?
 

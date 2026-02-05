@@ -7,11 +7,9 @@ using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 using API.Lang;
-using API.Menu.Widget;
 using API.Modding;
 using API.Save;
 using API.Util;
-using TextCopy;
 
 namespace API.Debug;
 
@@ -302,29 +300,14 @@ public static class Commands
             return new(ExitCode.Err, "Must pass the text to copy");
         }
 
-        try
-        {
-            ClipboardService.SetText(string.Join(' ', args.ToArray(), 1, args.Length - 1));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return new(ExitCode.Err, TextInputWidget.ClipboardError);
-        }
+        Util.Clipboard.Text = string.Join(' ', args.ToArray(), 1, args.Length - 1);
 
         return new(null);
     }
 
     private static CommandResult _Cmd_paste(ReadOnlySpan<string> args)
     {
-        try
-        {
-            return new(ClipboardService.GetText());
-        }
-        catch
-        {
-            return new(ExitCode.Err, TextInputWidget.ClipboardError);
-        }
+        return new(Util.Clipboard.Text);
     }
 
     #endregion
@@ -653,6 +636,7 @@ public static class Commands
             return new($"{args[1]}={val}");
         }
 
+        // todo dont default all others when setting one
         switch (args[1])
         {
             case "Language":
