@@ -5,6 +5,16 @@ namespace API.Util;
 
 public static partial class Clipboard
 {
+    private const string _Sdl2 =
+#if WINDOWS
+        "SDL2.dll"
+#elif MACOS
+        "libSDL2-2.0.0.dylib"
+#else
+        "libSDL2-2.0.so.0"
+#endif
+    ;
+
     /// <summary>
     /// Gets/sets OS clipboard text
     /// </summary>
@@ -27,17 +37,17 @@ public static partial class Clipboard
         }
     }
 
-    [LibraryImport("SDL2")]
+    [LibraryImport(_Sdl2)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void SDL_SetClipboardText(nint text);
 
-    [LibraryImport("SDL2")]
+    [LibraryImport(_Sdl2)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint SDL_GetClipboardText();
 
-    [LibraryImport("SDL2")]
+    [LibraryImport(_Sdl2)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void SDL_free(nint ptr);

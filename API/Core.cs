@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -194,9 +195,15 @@ public sealed class Core : Game
         // Must be after inits
         StateMachine.Add(States.MainMenu);
 
-        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SdlNative.SdlResolver);
-
         // todo should i gc after init?
+
+#if WINDOWS
+        Console.WriteLine("windows");
+#elif MACOS
+        Console.WriteLine("macos");
+#else
+        Console.WriteLine("linux (probably)");
+#endif
 
 #if !NATIVE_AOT
         ModLoader._LoadAllMods();
