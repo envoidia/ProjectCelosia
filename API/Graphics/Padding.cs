@@ -1,6 +1,6 @@
 namespace API.Graphics;
 
-public readonly record struct Padding(int L = 0, int R = 0, int T = 0, int B = 0)
+public readonly record struct Padding(int L, int R, int T, int B)
 {
     public static readonly Padding Zero = new(0);
 
