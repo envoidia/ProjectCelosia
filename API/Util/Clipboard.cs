@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using API.Debug;
 
@@ -5,15 +6,7 @@ namespace API.Util;
 
 public static partial class Clipboard
 {
-    private const string _Sdl2 =
-#if WINDOWS
-        "SDL2.dll"
-#elif MACOS
-        "libSDL2-2.0.0.dylib"
-#else
-        "libSDL2-2.0.so.0"
-#endif
-    ;
+    private const string _Sdl2 = "SDL2";
 
     /// <summary>
     /// Gets/sets OS clipboard text

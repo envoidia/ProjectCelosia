@@ -174,6 +174,10 @@ public sealed class Core : Game
         SpriteBatch = new SpriteBatch(GraphicsDevice);
         ShapeBatch = new ShapeBatch(GraphicsDevice, this.Content);
 
+#if !NATIVE_AOT
+        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SdlNative.SdlResolver);
+#endif
+
         Language._Init();
         Theme._Init();
 
@@ -196,14 +200,6 @@ public sealed class Core : Game
         StateMachine.Add(States.MainMenu);
 
         // todo should i gc after init?
-
-#if WINDOWS
-        Console.WriteLine("windows");
-#elif MACOS
-        Console.WriteLine("macos");
-#else
-        Console.WriteLine("linux (probably)");
-#endif
 
 #if !NATIVE_AOT
         ModLoader._LoadAllMods();
