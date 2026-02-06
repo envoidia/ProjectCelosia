@@ -6,8 +6,7 @@ namespace API.Util;
 
 public static partial class Clipboard
 {
-    private const string _Sdl2 = "SDL2";
-
+#if !NATIVE_AOT
     /// <summary>
     /// Gets/sets OS clipboard text
     /// </summary>
@@ -30,18 +29,19 @@ public static partial class Clipboard
         }
     }
 
-    [LibraryImport(_Sdl2)]
+    [LibraryImport(SdlNative._SDL2)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void SDL_SetClipboardText(nint text);
 
-    [LibraryImport(_Sdl2)]
+    [LibraryImport(SdlNative._SDL2)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint SDL_GetClipboardText();
 
-    [LibraryImport(_Sdl2)]
+    [LibraryImport(SdlNative._SDL2)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void SDL_free(nint ptr);
+#endif
 }
