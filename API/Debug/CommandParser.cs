@@ -87,8 +87,9 @@ public static class CommandParser
 #pragma warning disable CS8600
         if (!Command.Cmds.TryGetValue(cmdKey, out Command cmd))
         {
-            DebugConsole.Log($"{cmd} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
+            DebugConsole.Log($"{cmdKey} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
             nameof(DebugConsole), DebugConsole.LogLevel.Error);
+
             // todo suggest close matches
 
             return null;
@@ -133,9 +134,9 @@ public static class CommandParser
     public static string? GetAutocompleteMatch(string str)
     {
         string? match = Command.Cmds.Keys
-                    .Where(k => k.StartsWith(str, StringComparison.OrdinalIgnoreCase))
-                    .OrderByDescending(k => getCommonPrefixLength(k, str))
-                    .FirstOrDefault();
+            .Where(k => k.StartsWith(str, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(k => getCommonPrefixLength(k, str))
+            .FirstOrDefault();
 
         if (match is null)
         {
