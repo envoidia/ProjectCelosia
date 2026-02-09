@@ -163,11 +163,12 @@ public static class Commands
                 return new(sb.ToString());
 
             case "kb":
-                // todo resizable glyphs
                 return new($"""
                     {ThemeColor.Imp.Str}[Left/Right]{ThemeColor.White.Str} Move cursor. Hold {ThemeColor.Imp.Str}[Shift]{ThemeColor.White.Str} to move faster
                     {ThemeColor.Imp.Str}[BkSp/Del]{ThemeColor.White.Str} Delete to left/right
-                    {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word
+                    {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space-separated)
+                    {ThemeColor.Imp.Str}[Alt]{ThemeColor.White.Str} Move and delete by word part (case- or space-separated)
+                    {ThemeColor.Imp.Str}[Ctrl+Shift+BkSp/Del]{ThemeColor.White.Str} Delete all to left/right
                     {ThemeColor.Imp.Str}[Home/End]{ThemeColor.White.Str} Cursor to start/end
                     {ThemeColor.Imp.Str}[Up/Down]{ThemeColor.White.Str} Move through command history
                     {ThemeColor.Imp.Str}[Tab]{ThemeColor.White.Str} Accept autocomplete
