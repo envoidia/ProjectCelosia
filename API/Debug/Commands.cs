@@ -91,7 +91,7 @@ public static class Commands
         Command.Register("export", args =>
         {
             Console.WriteLine($"[{args[0]}] {string.Join(' ', args.ToArray(),
-                1, args.Length - 1)}");
+                1, args.Length - 1).Replace('［', '[')}");
 
             return new(null);
         }, TextArr, "Writes text to stdout", Core.Id);
@@ -301,14 +301,15 @@ public static class Commands
             return new(ExitCode.Err, "Must pass the text to copy");
         }
 
-        Util.Clipboard.Text = string.Join(' ', args.ToArray(), 1, args.Length - 1);
+        Clipboard.Text = string.Join(' ', args.ToArray(), 1, args.Length - 1)
+            .Replace('［', '[');
 
         return new(null);
     }
 
     private static CommandResult _Cmd_paste(ReadOnlySpan<string> args)
     {
-        return new(Util.Clipboard.Text);
+        return new(Clipboard.Text);
     }
 
     #endregion

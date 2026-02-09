@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using API.Graphics;
 using API.Input;
+using API.Util;
 using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -480,18 +481,18 @@ public sealed class TextInputWidget : IInputWidget
 
         if (InputLib.IsKeyPressed(Keys.C))
         {
-            Util.Clipboard.Text = this.Text;
+            Clipboard.Text = this.Text.Replace('［', '[');
         }
 
         if (InputLib.IsKeyJustPressed(Keys.X))
         {
-            Util.Clipboard.Text = this.Text;
+            Clipboard.Text = this.Text;
             this.Clear();
         }
 
         if (InputLib.IsKeyJustPressed(Keys.V))
         {
-            StringBuilder sb = new(Util.Clipboard.Text);
+            StringBuilder sb = new(Clipboard.Text);
 
             for (int i = 0; i < sb.Length; i++)
             {

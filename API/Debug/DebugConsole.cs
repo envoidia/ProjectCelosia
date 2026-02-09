@@ -210,6 +210,7 @@ public static class DebugConsole
         _Log.Text = string.Join('\n', _LogText) + '\n';
         _Line.Width = Math.Max(_MinBgWidth, _Log.Width + 20);
 
+        // If mirroring to external log/console, must sanitize '［', '['
         // Console.WriteLine($"{logLevel switch
         // {
         //     LogLevel.Info => "",
