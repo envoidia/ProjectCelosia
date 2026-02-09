@@ -61,7 +61,8 @@ public static class InputLib
                 Color c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
                     ? Settings.Theme.Cooldown : Settings.Theme.White;
 
-                sb.Append(_CheckKeybind(Keybinds.UniqueKeybinds[i]) ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
+                sb.Append(_CheckKeybind(Keybinds.UniqueKeybinds[i])
+                    ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
                     .Append(s.ToString("0.##")).Append('\n');
             }
 

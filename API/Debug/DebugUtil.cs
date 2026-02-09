@@ -34,24 +34,22 @@ public static class DebugUtil
 
     #region Labels
 
-    private static readonly Label _DebugInfoL = new()
+    private static readonly Label _DebugInfoL = new(RenderPriority.Highest, Core.Mono40)
     {
-        Text = "_GetInfoLText()",
+        Text = "_GetInfoLText()", // todo
         Position = new(10, 10),
         Padding = new(10),
         HasBackground = true,
-        Priority = RenderPriority.Highest,
         AnimType = AnimType.None,
         IsVisible = false
     };
 
-    private static readonly Label _DebugInfoR = new()
+    private static readonly Label _DebugInfoR = new(RenderPriority.Highest, Core.Mono40)
     {
         Position = new(World.W - 10, 10),
         Padding = new(10),
         HasBackground = true,
         Alignment = Alignment.TopRight,
-        Priority = RenderPriority.Highest,
         AnimType = AnimType.None,
         IsVisible = false
     };
@@ -59,7 +57,7 @@ public static class DebugUtil
     private const int _InfoRUpdateRateS = 1;
     private static TimeSpan _timeSinceUpdateInfoR = TimeSpan.FromSeconds(_InfoRUpdateRateS);
 
-    private const int _KeyYOff = 927;
+    private const int _KeyYOff = 576;
 
     internal static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
@@ -71,23 +69,21 @@ public static class DebugUtil
     private const float _GraphUpdateRateS = 0.025f;
     private static TimeSpan _timeSinceUpdateGraph = TimeSpan.FromSeconds(_GraphUpdateRateS);
 
-    private static readonly Label _DebugInfoKeyNames = new()
+    private static readonly Label _DebugInfoKeyNames = new(RenderPriority.Highest, Core.Mono40)
     {
         Text = "_GetKeyNameText()",
         Position = World.Vec - new Vector2(412, _KeyYOff),
         Padding = new(10),
         HasBackground = true,
-        Priority = RenderPriority.Highest,
         AnimType = AnimType.None,
         IsVisible = false
     };
 
-    private static readonly Label _DebugInfoKeyHeld = new()
+    private static readonly Label _DebugInfoKeyHeld = new(RenderPriority.Highest, Core.Mono40)
     {
         Position = World.Vec - new Vector2(112, _KeyYOff),
         Padding = new(10, 120, 10, 10),
         HasBackground = true,
-        Priority = RenderPriority.Highest,
         AnimType = AnimType.None,
         IsVisible = false
     };
@@ -164,10 +160,9 @@ public static class DebugUtil
         _timeSinceUpdateInfoR = TimeSpan.Zero;
     }
 
-    // todo remove most of this
     private static void _CheckInputs()
     {
-        if (InputLib.Check(Keybinds.DebugInfo))
+        if (InputLib.IsKeyJustPressed(Keys.F1))
         {
             _ToggleShowDebugInfo();
         }
@@ -205,7 +200,7 @@ public static class DebugUtil
     // todo cleanup
     private static string _GetInfoLText()
     {
-        return $"{Keybinds.DebugInfo.GetCurrentGlyph()} Close, /i[KF2] Console, /i[KF3] Outlines\nVersion: {BuildInfo.BuildDate}";
+        return $"[F1] Close, [F2] Console, [F3] Outlines\nVersion: {BuildInfo.BuildDate}";
     }
 
     private static string _GetKeyNameText()
@@ -214,7 +209,7 @@ public static class DebugUtil
         for (int i = 0; i < Keybinds.UniqueKeybinds.Count; i++)
         {
             Keybind kb = Keybinds.UniqueKeybinds[i];
-            sb.Append(kb.GetCurrentGlyph()).Append(kb.GetName());
+            sb.Append($"{ThemeColor.Imp.Str}[{kb.GetCurrentGlyphName()}]{ThemeColor.White.Str} {kb.GetName()}");
 
             if (i != Keybinds.UniqueKeybinds.Count - 1)
             {

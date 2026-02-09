@@ -100,7 +100,7 @@ public sealed class TextInputWidget : IInputWidget
         this.Label.RichTextLayout.CalculateGlyphs = true;
 
         this.Cursor = cursor;
-        this.Cursor.Size = new(1, label.Height - 8); // todo height init + relative width(?) (is that supposed to say height?)
+        this.Cursor.Size = new(2, label.Height - 8); // todo height init + relative width(?) (is that supposed to say height?)
 
         this.OnEnter = onEnter;
         this.UseUpDown = useUpDown;
@@ -225,14 +225,24 @@ public sealed class TextInputWidget : IInputWidget
 
                 return;
 
-            default:
-                this._Sb.Insert(this.Index, args.Character);
-                this.OptCount = this._Sb.Length;
-                this.OnChangeText?.Invoke();
-                this.Index++;
+            // Replace open brackets with fullwidth counterparts. They look the same and FSS doesn't parse them
+            // If shift is held to type {, the key is instead None) (todo: test on other OSes)
+            case Keys.OemOpenBrackets:
+                this.InsertChar('［');
+                return;
 
+            default:
+                this.InsertChar(args.Character);
                 return;
         }
+    }
+
+    public void InsertChar(char c)
+    {
+        this._Sb.Insert(this.Index, c);
+        this.OptCount = this._Sb.Length;
+        this.OnChangeText?.Invoke();
+        this.Index++;
     }
 
     // OS doesn't handle nav input
@@ -295,6 +305,7 @@ public sealed class TextInputWidget : IInputWidget
             this.Index = this.OptCount;
         }
 
+#if !CONSOLE
         if (!ctrlPressed)
         {
             return;
@@ -320,6 +331,7 @@ public sealed class TextInputWidget : IInputWidget
             this.OnChangeText?.Invoke();
             this.Index += str.Length;
         }
+#endif
     }
 
     internal void _UpdateCursor()
@@ -334,6 +346,6 @@ public sealed class TextInputWidget : IInputWidget
 
         int x = glyphs[i].Bounds.X;
 
-        this.Cursor.Position = new(this.Label.X + 1 + x, this.Label.Y - this.Label.Height + 4);
+        this.Cursor.Position = new(this.Label.X + x - 2, this.Label.Y - this.Label.Height);
     }
 }

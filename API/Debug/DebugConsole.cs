@@ -63,10 +63,10 @@ public static class DebugConsole
 
     private static ThemeColor _color;
 
-    private static readonly Label _Command = new(RenderPriority.B3High, Core.Koruri40)
+    private static readonly Label _Command = new(RenderPriority.B3High, Core.Mono40)
     {
         Text = ">",
-        Position = new(10, World.H - 5),
+        Position = new(10, World.H - 10),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
@@ -76,9 +76,9 @@ public static class DebugConsole
     /// <summary>
     /// Autocomplete/hint portion of the command
     /// </summary>
-    private static readonly Label _CommandHint = new(RenderPriority.B3Med, Core.Koruri40)
+    private static readonly Label _CommandHint = new(RenderPriority.B3Med, Core.Mono40)
     {
-        Position = new(10, World.H - 5),
+        Position = new(10, World.H - 10),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
@@ -87,7 +87,7 @@ public static class DebugConsole
 
     private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.B3High)
     {
-        Position = new(27, World.H - 45),
+        Position = new(27, World.H - 50),
         IsVisible = false
     };
 
@@ -122,10 +122,10 @@ public static class DebugConsole
 
     internal const int _MinBgWidth = 1500;
 
-    internal static readonly Label _Log = new(RenderPriority.B3High, Core.Koruri40)
+    internal static readonly Label _Log = new(RenderPriority.B3High, Core.Mono40)
     {
-        Position = new(10, World.H - 20),
-        Padding = new(10, 10, 10, 20),
+        Position = new(10, World.H - 35),
+        Padding = new(10, 10, 10, 30),
         HasBackground = true, // todo also use current command width for this
         MinBackgroundSize = new(_MinBgWidth, 0),
         Alignment = Alignment.BottomLeft,
@@ -144,20 +144,17 @@ public static class DebugConsole
             string? hints = null;
             string? match = null;
 
-            if (args.Length > 0)
+            if (args.Length > 0 && args[^1].Length > 0)
             {
-                if (args[^1].Length > 0)
+                hints = CommandParser.GetHintText(args[^1], args.Length > 1);
+
+                if (args[^1].Length == 1)
                 {
-                    hints = CommandParser.GetHintText(args[^1], args.Length > 1);
+                    string str = args[^1][^1];
 
-                    if (args[^1].Length == 1)
+                    if (!string.IsNullOrWhiteSpace(str))
                     {
-                        string str = args[^1][^1];
-
-                        if (!string.IsNullOrWhiteSpace(str))
-                        {
-                            match = CommandParser.GetAutocompleteMatch(str);
-                        }
+                        match = CommandParser.GetAutocompleteMatch(str);
                     }
                 }
             }
@@ -165,10 +162,10 @@ public static class DebugConsole
             // Trailing space fixes cursor pos bug
             _Command.Text = $"{_color.Str}>{text} ";
 
-            _CommandHint.X = _Command.X + _Command.Width - 7;
+            _CommandHint.X = _Command.X + _Command.Width - 18;
 
             _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{(text.EndsWith(' ')
-                ? null : ' ')}{hints}{(_Focused ? "" : "   ([esc] to focus)")}";
+                ? null : ' ')}{hints}{(_Focused ? "" : " ([esc] to focus)")}";
         }
     };
 
@@ -179,7 +176,7 @@ public static class DebugConsole
 
     internal static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
     {
-        Position = new(0, World.H - 50),
+        Position = new(0, World.H - 60),
         Size = new(_MinBgWidth, 1),
         IsVisible = false
     };

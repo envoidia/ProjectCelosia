@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework.Input;
 
 namespace API.Input;
@@ -9,7 +10,12 @@ public static class KeysExtensions
     {
         public string GetGlyph()
         {
-            return FormatGlyph(@this switch
+            return FormatGlyph(@this.GetGlyphName());
+        }
+
+        public string GetGlyphName()
+        {
+            return @this switch
             {
                 Keys.Back => "Backspace",
                 Keys.Enter => "Enter",
@@ -76,7 +82,7 @@ public static class KeysExtensions
                 Keys.OemCloseBrackets => "]",
                 Keys.OemQuotes => "Quot",
                 _ => throw new ArgumentOutOfRangeException(nameof(@this), @this, "") // todo
-            });
+            };
         }
     }
 

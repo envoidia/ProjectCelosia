@@ -1,4 +1,3 @@
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using API.Debug;
 
@@ -6,7 +5,7 @@ namespace API.Util;
 
 public static partial class Clipboard
 {
-#if !NATIVE_AOT
+#if !CONSOLE
     /// <summary>
     /// Gets/sets OS clipboard text
     /// </summary>

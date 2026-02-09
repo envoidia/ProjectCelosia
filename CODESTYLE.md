@@ -65,12 +65,12 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Only use `float` if floating-point values are needed
 - Only use larger or unsigned types if needed
 - Only use smaller types if performance is critical
-- Avoid storing data as floating-point to prevent compounding error. Prefer fixed-point storage and dividing on-site
+- Avoid storing data as floating-point to prevent compounding error (unless it truly has no chance of making any visible difference). Prefer fixed-point storage and dividing on-site
 
 # Extensions
 - Use `extension` blocks
-- Only use when the original class' source cannot be modified
-- Only use for core features that would be appropriate in the source of the original class
+- Only use for core features that would be appropriate in the source of the original class, but cannot be for some reason
+- Use over interface default methods
 
 # Performance
 - Avoid heap allocation during the game loop
@@ -78,7 +78,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Be careful when using LINQ
 
 # Compatibility
-- Place NativeAOT-incompatible code behind `#if !NATIVE_AOT`
+- Place potentially incompatible code behind preprocessor directives. `NATIVE_AOT` for AoT-incompatible (such as most reflection), and `CONSOLE` for console-incompatible (such as SDL2 and OS interop)
 - Store lang keys rather than translated strings so that a lang change does not necessitate a full restart
 
 # Modding

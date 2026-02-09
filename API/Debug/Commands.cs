@@ -45,10 +45,7 @@ public static class Commands
 
         Command.Register("help", static args =>
         {
-            return new($"""
-            This console can be used for entering commands. It is for developers, and not part of gameplay. Misuse can brick your save
-            {_ManDesc}
-            """);
+            return new(_ManDesc);
         }, [], _BasicInfo, Core.Id);
 
         Command.Register("man", _Cmd_man, ["cmd/kb"], _BasicInfo, Core.Id);

@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <!-- todo should this be just Exe -->
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
         <RollForward>Major</RollForward>
@@ -24,7 +25,12 @@
     <ItemGroup>
         <None Remove="Icon.ico" />
         <None Remove="Icon.bmp" />
+
         <None Update="Font\koruri.ttf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        
+        <None Update="Font\droid_sans_mono.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
 

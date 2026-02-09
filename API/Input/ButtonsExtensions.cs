@@ -9,7 +9,7 @@ public static class ButtonsExtensions
     {
         public string GetGlyph(InputDevice inputDevice)
         {
-            return inputDevice.FormatSingleGlyph(@this._GetSingleGlyph());
+            return inputDevice.FormatSingleGlyph(@this.GetGlyphName());
         }
 
         // public string[] GetGlyphs()
@@ -17,7 +17,7 @@ public static class ButtonsExtensions
         //     return _FormatGlyphArray(@this._GetSingleGlyph());
         // }
 
-        private string _GetSingleGlyph()
+        public string GetGlyphName()
         {
             return @this switch
             {

@@ -20,7 +20,6 @@ public enum KeybindId
     Right,
     Up,
     Down,
-    DebugInfo,
 
     /// <summary>
     /// Marker. Always add non-merged, non-hotkey keybinds above this
@@ -72,6 +71,13 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
         return InputLib.LastInputSource == InputDevice.Keyboard
             ? key.GetGlyph()
             : button.GetGlyph(InputLib.LastInputSource);
+    }
+
+    public string GetCurrentGlyphName()
+    {
+        return InputLib.LastInputSource == InputDevice.Keyboard
+            ? this.Key.GetGlyphName()
+            : this.Button.GetGlyphName();
     }
 
     public override string ToString()
@@ -140,15 +146,11 @@ public static class Keybinds
     /// Used for various hotkeys, including jump to start/end. Ignores held time restrictions
     /// </summary>
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
-
-    // todo remove
-    public static readonly Keybind DebugInfo = new("KeyDebugInfo", KeybindId.DebugInfo, Keys.F1, Buttons.Back);
-
     /// <summary>
     /// Keybinds that don't call other keybinds
     /// </summary>
     public static readonly List<Keybind> UniqueKeybinds =
-        [Confirm, Back, Menu1, Menu2, PageL, PageR, Left, Right, Up, Down, DebugInfo, Hotkey1, Hotkey2];
+        [Confirm, Back, Menu1, Menu2, PageL, PageR, Left, Right, Up, Down, Hotkey1, Hotkey2];
 
     // Merged
     // Acceptable for InputLib.Check(), has no glyph (defers to left/right):

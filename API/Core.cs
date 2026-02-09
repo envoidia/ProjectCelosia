@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -60,8 +59,9 @@ public sealed class Core : Game
 
     // Fonts
     public static FontSystem KoruriSystem = null!;
+    public static FontSystem MonoSystem = null!;
     public static DynamicSpriteFont Koruri60 = null!;
-    public static DynamicSpriteFont Koruri40 = null!;
+    public static DynamicSpriteFont Mono40 = null!;
 
     #endregion
 
@@ -95,7 +95,10 @@ public sealed class Core : Game
         KoruriSystem = new FontSystem();
         KoruriSystem.AddFont(File.ReadAllBytes("Font/koruri.ttf"));
         Koruri60 = KoruriSystem.GetFont(60);
-        Koruri40 = KoruriSystem.GetFont(40);
+
+        MonoSystem = new FontSystem();
+        MonoSystem.AddFont(File.ReadAllBytes("Font/droid_sans_mono.ttf"));
+        Mono40 = MonoSystem.GetFont(40);
 
         // Images in text
         RichTextDefaults.ImageResolver = static str =>
@@ -112,6 +115,10 @@ public sealed class Core : Game
 
             return new TextureFragmentColored(region.Texture, region.Bounds);
         };
+
+#if !CONSOLE
+        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SdlNative.SdlResolver);
+#endif
 
 #if NATIVE_AOT
         // Prevent crash caused by reflection in the atlas reader
@@ -156,7 +163,7 @@ public sealed class Core : Game
 
         // Scaling
         Resolution.Init(new ResolutionComponent(this, Graphics, new(World.W, World.H),
-            new(1920, 1080), false, false, false));
+            new(2560, 1440), false, false, false));
 
 #if DEBUG
         this.IsMouseVisible = true;
@@ -173,10 +180,6 @@ public sealed class Core : Game
         // Create sprite and shape batches
         SpriteBatch = new SpriteBatch(GraphicsDevice);
         ShapeBatch = new ShapeBatch(GraphicsDevice, this.Content);
-
-#if !NATIVE_AOT
-        NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), SdlNative.SdlResolver);
-#endif
 
         Language._Init();
         Theme._Init();
@@ -199,11 +202,16 @@ public sealed class Core : Game
         // Must be after inits
         StateMachine.Add(States.MainMenu);
 
-        // todo should i gc after init?
 
 #if !NATIVE_AOT
         ModLoader._LoadAllMods();
 #endif
+
+        DebugConsole.Log(
+            "This console is for developers, and not part of gameplay. Misuse can brick your save",
+            nameof(DebugConsole), DebugConsole.LogLevel.Error);
+            
+        // todo should i gc after init?
     }
 
     protected override void LoadContent()
