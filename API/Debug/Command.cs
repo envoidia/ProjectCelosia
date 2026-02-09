@@ -32,12 +32,19 @@ public sealed class Command
     /// </summary>
     public readonly string ModId;
 
-    private Command(Func<ReadOnlySpan<string>, CommandResult> fn, string[] hints, string desc, string modId)
+    /// <summary>
+    /// Whether this command should be listed in `man cmd`
+    /// </summary>
+    public readonly bool IsHidden;
+
+    private Command(Func<ReadOnlySpan<string>, CommandResult> fn,
+        string[] hints, string desc, string modId, bool isHidden)
     {
         this.Fn = fn;
         this.Hints = hints;
         this.Desc = desc;
         this.ModId = modId;
+        this.IsHidden = isHidden;
     }
 
     /// <summary>
@@ -46,9 +53,9 @@ public sealed class Command
     /// </summary>
     /// <returns>The error, if any</returns>
     public static CommandRegistrationError? Register(string name, Func<ReadOnlySpan<string>,
-        CommandResult> fn, string[] hints, string desc, string modId)
+        CommandResult> fn, string[] hints, string desc, string modId, bool isHidden = false)
     {
-        if (name.Contains('|') || name.Any(char.IsWhiteSpace))
+        if (name.Any(c => char.IsWhiteSpace(c) || c == '|'))
         {
             return CommandRegistrationError.InvalidName;
         }
@@ -58,7 +65,7 @@ public sealed class Command
             return CommandRegistrationError.AlreadyUsed;
         }
 
-        Cmds.Add(name, new(fn, hints, desc, modId));
+        Cmds.Add(name, new(fn, hints, desc, modId, isHidden));
 
         return null;
     }

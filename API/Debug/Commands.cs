@@ -68,8 +68,11 @@ public static class Commands
             new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
             TextArr, "Returns its input", Core.Id);
 
-        Command.Register("grep", _Cmd_grep, [Text, "search"],
-            "Searches through text", Core.Id);
+        const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
+        string[] GrepArr = [Text, "search"];
+
+        Command.Register("grep", _Cmd_grep, GrepArr, GrepDesc, Core.Id);
+        Command.Register("rg", _Cmd_grep, GrepArr, GrepDesc, Core.Id);
 
         Command.Register("wc", _Cmd_wc, [Text, "l/w/c"],
             "Counts lines, words, and chars", Core.Id);
@@ -633,69 +636,69 @@ public static class Commands
             return new($"{args[1]}={val}");
         }
 
-        // todo dont default all others when setting one
         switch (args[1])
         {
             case "Language":
-                Settings.Create(language: args[2]);
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "BattleSpeed":
-                Settings.Create(battleSpeed: float.ParseOrDefault(args[2], 1f));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "ShowInvalidMoveWarning":
-                Settings.Create(showInvalidMoveWarning: bool.ParseOrDefault(args[2], true));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "Resolution":
-                Settings.Create(resolution: int.ParseOrDefault(args[2], -1));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "Fulmancreen":
-                Settings.Create(fullscreen: bool.ParseOrDefault(args[2], true));
+            case "Fullscreen":
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "EnableVsync":
-                Settings.Create(enableVsync: bool.ParseOrDefault(args[2], true));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "TargetFps":
-                Settings.Create(targetFps: int.ParseOrDefault(args[2], -1));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "Theme":
-                Settings.Create(theme: args[2]);
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "MusicVolume":
-                Settings.Create(musicVolume: float.ParseOrDefault(args[2], 0.75f));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "SfxVolume":
-                Settings.Create(sfxVolume: float.ParseOrDefault(args[2], 0.75f));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "ShowInputGuide":
-                Settings.Create(showInputGuide: bool.ParseOrDefault(args[2], true));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "DetectNintendoController":
-                Settings.Create(detectNintendoController: bool.ParseOrDefault(args[2], true));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "EnableDebugFeatures":
-                Settings.Create(enableDebugFeatures: bool.ParseOrDefault(args[2], false));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "SelectOpponentMoves":
-                Settings.Create(selectOpponentMoves: bool.ParseOrDefault(args[2], false));
+                Settings.AllSettings[args[1]] = args[2];
                 break;
 
             default:
                 return new(ExitCode.Err, $"Setting `{args[1]}` couldn't be found");
         }
 
+        Settings.Write();
         Settings.Reload();
         return new($"Changed setting `{args[1]}` to `{args[2]}`");
     }
