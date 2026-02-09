@@ -491,12 +491,31 @@ public sealed class TextInputWidget : IInputWidget
 
         if (InputLib.IsKeyJustPressed(Keys.V))
         {
-            string str = Util.Clipboard.Text;
+            StringBuilder sb = new(Util.Clipboard.Text);
 
-            this._Sb.Insert(this.Index, str);
-            this.OptCount += str.Length;
+            for (int i = 0; i < sb.Length; i++)
+            {
+                switch (sb[i])
+                {
+                    case '\n':
+                        sb[i] = ' ';
+                        continue;
+
+                    case '[':
+                        sb[i] = '［';
+                        continue;
+                }
+
+                if (char.IsSurrogate(sb[i]))
+                {
+                    sb[i] = '�';
+                }
+            }
+
+            this._Sb.Insert(this.Index, sb);
+            this.OptCount += sb.Length;
             this.OnChangeText?.Invoke();
-            this.Index += str.Length;
+            this.Index += sb.Length;
         }
 #endif
     }
