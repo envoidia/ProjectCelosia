@@ -172,9 +172,23 @@ public sealed class TextInputWidget : IInputWidget
                     return;
                 }
 
-                // Word nav
                 if (InputLib.IsKeyPressed(Keys.LeftControl) || InputLib.IsKeyPressed(Keys.RightControl))
                 {
+                    // Delete all left
+                    if (InputLib.IsKeyPressed(Keys.LeftShift) || InputLib.IsKeyPressed(Keys.RightShift))
+                    {
+                        while (this.Index > 0)
+                        {
+                            this._Sb.Remove(this.Index - 1, 1);
+                            this.Index--;
+                        }
+
+                        this.UpdateText();
+
+                        return;
+                    }
+
+                    // Word nav
                     while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
                     {
                         this._Sb.Remove(this.Index - 1, 1);
@@ -241,6 +255,18 @@ public sealed class TextInputWidget : IInputWidget
                 {
                     if (InputLib.IsKeyPressed(Keys.LeftControl) || InputLib.IsKeyPressed(Keys.RightControl))
                     {
+                        if (InputLib.IsKeyPressed(Keys.LeftShift) || InputLib.IsKeyPressed(Keys.RightShift))
+                        {
+                            while (this._Sb.Length > this.Index)
+                            {
+                                this._Sb.Remove(this.Index, 1);
+                            }
+
+                            this.UpdateText();
+
+                            return;
+                        }
+
                         while (this._Sb.Length > this.Index && char.IsWhiteSpace(this._Sb[this.Index]))
                         {
                             this._Sb.Remove(this.Index, 1);
