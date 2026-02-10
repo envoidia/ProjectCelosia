@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using API.Battle;
 using API.Battle.State;
-using API.Extensions;
 using API.Graphics;
 using API.Lang;
 using API.Modding;

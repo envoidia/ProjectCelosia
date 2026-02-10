@@ -1,4 +1,3 @@
-using API.Extensions;
 using API.Util;
 
 namespace API.Graphics;
