@@ -165,7 +165,7 @@ public static class DebugConsole
             _CommandHint.X = _Command.X + _Command.Width - 18;
 
             _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{(text.EndsWith(' ')
-                ? null : ' ')}{hints}{(_Focused ? "" : " ([esc] to focus)")}";
+                ? null : ' ')}{hints}{(_Focused ? "" : "([Esc] to focus)")}";
         }
     };
 

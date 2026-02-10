@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using API.Battle;
 using API.Battle.State;
@@ -72,7 +73,7 @@ public static class Commands
         string[] GrepArr = [Text, "search"];
 
         Command.Register("grep", _Cmd_grep, GrepArr, GrepDesc, Core.Id);
-        Command.Register("rg", _Cmd_grep, GrepArr, GrepDesc, Core.Id);
+        Command.Register("rg", _Cmd_grep, GrepArr, GrepDesc, Core.Id, false);
 
         Command.Register("wc", _Cmd_wc, [Text, "l/w/c"],
             "Counts lines, words, and chars", Core.Id);
@@ -80,7 +81,7 @@ public static class Commands
         Command.Register("which", _Cmd_which, ["command"],
             "Returns the ID and description of a command", Core.Id);
 
-        Command.Register("whoami", _Cmd_whoami, [], "Loaded save name", Core.Id);
+        Command.Register("whoami", _Cmd_whoami, [], "Returns the name of the loaded save", Core.Id);
 
         Command.Register("kill", _ =>
         {
@@ -155,9 +156,10 @@ public static class Commands
         {
             case "cmd":
                 StringBuilder sb = new("Command list:");
-                foreach (KeyValuePair<string, Command> kvp in Command.Cmds)
+                foreach (KeyValuePair<string, Command> kvp in
+                    Command.Cmds.Where(kvp => kvp.Value.IsVisible))
                 {
-                    sb.Append($"\n{ThemeColor.Imp.Str}{kvp.Key}:{ThemeColor.White.Str} {kvp.Value.Desc}");
+                    sb.Append($"\n{ThemeColor.Imp.Str}[{kvp.Key}]{ThemeColor.White.Str} {kvp.Value.Desc}");
                 }
 
                 return new(sb.ToString());

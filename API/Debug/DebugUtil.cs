@@ -72,7 +72,7 @@ public static class DebugUtil
     private static readonly Label _DebugInfoKeyNames = new(RenderPriority.Highest, Core.Mono40)
     {
         Text = "_GetKeyNameText()",
-        Position = World.Vec - new Vector2(412, _KeyYOff),
+        Position = World.Vec - new Vector2(422, _KeyYOff),
         Padding = new(10),
         HasBackground = true,
         AnimType = AnimType.None,

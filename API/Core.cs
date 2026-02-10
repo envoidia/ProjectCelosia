@@ -208,10 +208,10 @@ public sealed class Core : Game
 #endif
 
         DebugConsole.Log(
-            "This console is for developers, and not part of gameplay. Misuse can brick your save",
+            "This console is for developers. Misuse can brick your save. Use `help` for help",
             nameof(DebugConsole), DebugConsole.LogLevel.Error);
-            
-        // todo should i gc after init?
+
+        // todo should i gc after init/load?
     }
 
     protected override void LoadContent()
