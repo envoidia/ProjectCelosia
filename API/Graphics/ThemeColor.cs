@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Util;
 
 namespace API.Graphics;
 
@@ -62,13 +63,50 @@ public static class ThemeColorExtensions
         {
             get
             {
-                return _Wrap(@this.ToString().FirstToLower());
+                return @this switch
+                {
+                    ThemeColor.White => "/c[white]",
+                    ThemeColor.Gray => "/c[gray]",
+                    ThemeColor.Black => "/c[black]",
+                    ThemeColor.TransBlack => "/c[transBlack]",
+                    ThemeColor.Fg => "/c[fg]",
+                    ThemeColor.Bg => "/c[bg]",
+                    ThemeColor.Accent => "/c[accent]",
+                    ThemeColor.Pos => "/c[pos]",
+                    ThemeColor.Neg => "/c[neg]",
+                    ThemeColor.Imp => "/c[imp]",
+                    ThemeColor.Ally => "/c[ally]",
+                    ThemeColor.Opp => "/c[opp]",
+                    ThemeColor.Turn => "/c[turn]",
+                    ThemeColor.Hp => "/c[hp]",
+                    ThemeColor.Sp => "/c[sp]",
+                    ThemeColor.Shield => "/c[shield]",
+                    ThemeColor.Bloom => "/c[bloom]",
+                    ThemeColor.Buff => "/c[buff]",
+                    ThemeColor.Skill => "/c[skill]",
+                    ThemeColor.Element => "/c[element]",
+                    ThemeColor.Passive => "/c[passive]",
+                    ThemeColor.Stat => "/c[stat]",
+                    ThemeColor.Cooldown => "/c[cooldown]",
+                    ThemeColor.SpBack => "/c[spBack]",
+                    ThemeColor.Overheal => "/c[overheal]",
+                    ThemeColor.StatBarLayer4 => "/c[statBarLayer4]",
+                    ThemeColor.StatBarLayer5 => "/c[statBarLayer5]",
+                    ThemeColor.Atk => "/c[atk]",
+                    ThemeColor.Def => "/c[def]",
+                    ThemeColor.Fth => "/c[fth]",
+                    ThemeColor.Agi => "/c[agi]",
+                    ThemeColor.Vis => "/c[vis]",
+                    ThemeColor.Ignis => "/c[ignis]",
+                    ThemeColor.Glacies => "/c[glacies]",
+                    ThemeColor.Fulgur => "/c[fulgur]",
+                    ThemeColor.Ventus => "/c[ventus]",
+                    ThemeColor.Terra => "/c[terra]",
+                    ThemeColor.Lux => "/c[lux]",
+                    ThemeColor.Malum => "/c[malum]",
+                    _ => throw new ClosedEnumsWhenException()
+                };
             }
         }
-    }
-
-    private static string _Wrap(string str)
-    {
-        return $"/c[{str}]";
     }
 }

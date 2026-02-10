@@ -199,13 +199,17 @@ public static class DebugConsole
             _LogText.RemoveFirst();
         }
 
-        _LogText.Add($"{logLevel switch
+        string color1 = logLevel switch
         {
-            LogLevel.Info => ThemeColor.White.Str,
+            LogLevel.Info => ThemeColor.Accent.Str,
             LogLevel.Warning => ThemeColor.Imp.Str,
             LogLevel.Error => ThemeColor.Neg.Str,
             _ => throw new ClosedEnumsWhenException()
-        }}[{source}] {msg}");
+        };
+
+        string color2 = logLevel == LogLevel.Info ? ThemeColor.White.Str : color1;
+
+        _LogText.Add($"{color1}[{source}]{color2} {msg}");
 
         _Log.Text = string.Join('\n', _LogText) + '\n';
         _Line.Width = Math.Max(_MinBgWidth, _Log.Width + 20);
