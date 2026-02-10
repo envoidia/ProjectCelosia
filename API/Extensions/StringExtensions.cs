@@ -32,7 +32,7 @@ public static class StringExtensions
             // Fall back to en-US
             DebugConsole.Log(
                 $"Lang entry {key} not found in language {Settings.Language.Name}: {Settings.Language.LocaleCode}, falling back to en-US",
-                nameof(StringExtensions), DebugConsole.LogLevel.Warning);
+                nameof(StringExtensions), LogLevel.Warning);
 
             if ((lang = Lang.Language.English.Entries.GetValueOrDefault(key)) is not null)
             {
@@ -41,7 +41,7 @@ public static class StringExtensions
 
             // Default to ID
             DebugConsole.Log($"Lang entry {key} not found", nameof(StringExtensions),
-                DebugConsole.LogLevel.Warning);
+                LogLevel.Warning);
             return $"{ThemeColor.Neg.Str}MISSING LANG ENTRY: {key}";
         }
 

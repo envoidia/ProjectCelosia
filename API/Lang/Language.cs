@@ -82,7 +82,7 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
             {
                 DebugConsole.Log(
                     $"Language {localeCode} already has a value at {modId}:{kvp.Key} ({entries[kvp.Key]}), overwriting with {kvp.Value}",
-                    nameof(Language), DebugConsole.LogLevel.Warning);
+                    nameof(Language), LogLevel.Warning);
             }
 
             entries[$"{modId}:{kvp.Key}"] = kvp.Value;

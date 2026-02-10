@@ -31,7 +31,7 @@ public static class CommandParser
         {
             if (res.Msg is not null)
             {
-                DebugConsole.Log(res.Msg, source, DebugConsole.LogLevel.Error);
+                DebugConsole.Log(res.Msg, source, LogLevel.Error);
             }
 
             return;
@@ -66,7 +66,7 @@ public static class CommandParser
             {
                 if (res.Msg is not null)
                 {
-                    DebugConsole.Log(res.Msg, source, DebugConsole.LogLevel.Error);
+                    DebugConsole.Log(res.Msg, source, LogLevel.Error);
                 }
 
                 return;
@@ -88,7 +88,7 @@ public static class CommandParser
         if (!Command.Cmds.TryGetValue(cmdKey, out Command cmd))
         {
             DebugConsole.Log($"{cmdKey} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
-            nameof(DebugConsole), DebugConsole.LogLevel.Error);
+            nameof(DebugConsole), LogLevel.Error);
 
             // todo suggest close matches
 

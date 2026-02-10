@@ -209,7 +209,7 @@ public sealed class Core : Game
 
         DebugConsole.Log(
             "This console is for developers. Misuse can brick your save. Use `help` for help",
-            nameof(DebugConsole), DebugConsole.LogLevel.Error);
+            nameof(DebugConsole), LogLevel.Error);
 
         // todo should i gc after init/load?
     }

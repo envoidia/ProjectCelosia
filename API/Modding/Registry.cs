@@ -24,7 +24,7 @@ public static class Registry
         if (_Reg.ContainsKey(key))
         {
             DebugConsole.Log($"Key {key} already contains {Get(key)}. Overwriting with {val}",
-            nameof(Registry), DebugConsole.LogLevel.Warning);
+            nameof(Registry), LogLevel.Warning);
         }
 
         _Reg[key] = val;
