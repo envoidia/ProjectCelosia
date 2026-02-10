@@ -25,9 +25,3 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds)
         return builder.Append(' ').Append(keyName.GetLang()).ToString();
     }
 }
-
-public enum MultiInputType
-{
-    Or,
-    And
-}

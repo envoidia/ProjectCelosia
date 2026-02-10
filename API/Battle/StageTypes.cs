@@ -1,3 +1,5 @@
+using API.Graphics;
+
 namespace API.Battle;
 
 public static class StageTypes

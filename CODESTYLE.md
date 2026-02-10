@@ -18,7 +18,7 @@ Make sure to enable the [.editorconfig](.editorconfig) file in your IDE. Your ID
 - Property/field order: set by primary constructor, init required, init non-required, overrides, implementations
 - Ordering exceptions can be made when it makes sense
 - Use regions when appropriate to organize larger files
-- If a file contains multiple classes (usually recommended against), order them by dependency (eg `KeybindId`, then `Keybind`, then `Keybinds`)
+- Files should not contain multiple classes with the exception of small private classes or extensions for enums/interfaces
 - Use file-scoped `namespace` and `using` directives rather than block-scoped
 - Do not have >1 nested classes
 - Prefer static init methods over static ctors due to the unpredictable nature of the latter

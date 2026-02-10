@@ -69,10 +69,4 @@ public sealed class Command
 
         return null;
     }
-
-    public enum CommandRegistrationError
-    {
-        AlreadyUsed,
-        InvalidName
-    }
 }

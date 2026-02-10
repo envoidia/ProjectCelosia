@@ -224,16 +224,6 @@ public static class DebugConsole
         // }}[{source}] {msg}");
     }
 
-    /// <summary>
-    /// Determines the color of log messages
-    /// </summary>
-    public enum LogLevel
-    {
-        Info,
-        Warning,
-        Error
-    }
-
     #endregion
 
     #region Internals
