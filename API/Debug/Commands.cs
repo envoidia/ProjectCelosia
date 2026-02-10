@@ -171,6 +171,7 @@ public static class Commands
                     {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space-separated)
                     {ThemeColor.Imp.Str}[Alt]{ThemeColor.White.Str} Move and delete by word part (case- or space-separated)
                     {ThemeColor.Imp.Str}[Ctrl+Shift+BkSp/Del]{ThemeColor.White.Str} Delete all to left/right
+                    {ThemeColor.Imp.Str}[Ctrl+Shift+K]{ThemeColor.White.Str} Delete all
                     {ThemeColor.Imp.Str}[Home/End]{ThemeColor.White.Str} Cursor to start/end
                     {ThemeColor.Imp.Str}[Up/Down]{ThemeColor.White.Str} Move through command history
                     {ThemeColor.Imp.Str}[Tab]{ThemeColor.White.Str} Accept autocomplete

@@ -111,8 +111,10 @@ public static class InputLib
 
     }
 
+    #region Input Checks
+
     /// <summary>
-    /// Doesn't account for remapping or buttons. Prefer <c>Check()</c>
+    /// Doesn't account for remapping or buttons. Prefer <c>Check</c>
     /// </summary>
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame
@@ -123,31 +125,51 @@ public static class InputLib
     }
 
     /// <summary>
-    /// Doesn't account for remapping or buttons. Prefer <c>Check()</c>
+    /// Doesn't account for remapping or buttons. Prefer <c>Check</c>
     /// </summary>
     /// <returns>
     /// Whether a <c>Keys</c> was pressed this frame and not the previous frame
     /// </returns>
-    // todo
     public static bool IsKeyJustPressed(Keys key)
     {
         return KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
     }
 
-    #region Check
+    /// <returns>
+    /// Whether either shift key is pressed
+    /// </returns>
+    public static bool IsShiftPressed()
+    {
+        return IsKeyPressed(Keys.LeftShift) || IsKeyPressed(Keys.RightShift);
+    }
+
+    /// <returns>
+    /// Whether either ctrl key is pressed
+    /// </returns>
+    public static bool IsCtrlPressed()
+    {
+        return IsKeyPressed(Keys.LeftControl) || IsKeyPressed(Keys.RightControl);
+    }
+
+    /// <returns>
+    /// Whether either alt key is pressed
+    /// </returns>
+    public static bool IsAltPressed()
+    {
+        return IsKeyPressed(Keys.LeftAlt) || IsKeyPressed(Keys.RightAlt);
+    }
 
     /// <summary>
-    /// Check for input from 1 <c>Keybind</c>
+    /// Check for <c>Keybind</c> input across any keyboard or controller.
+    /// Left/Right Shift/Ctrl/Alt are treated as the same
     /// </summary>
     public static bool Check(Keybind? keybind, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS)
     {
         return _IsKeybindPressed(allowHold, holdDelayS, keybind);
     }
 
-    /// <summary>
-    /// Check for input from either of 2 <c>Keybind</c>s
-    /// </summary>
-    public static bool Check(Keybind keybind1, Keybind keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS)
+    /// <inheritdoc cref="Check(Keybind?, bool, float)" />
+    public static bool Check(Keybind? keybind1, Keybind? keybind2, bool allowHold = false, float holdDelayS = _DefaultHoldDelayS)
     {
         return _IsKeybindPressed(allowHold, holdDelayS, keybind1) ||
         _IsKeybindPressed(allowHold, holdDelayS, keybind2);
@@ -233,14 +255,9 @@ public static class InputLib
     {
         return key switch
         {
-            Keys.LeftShift or Keys.RightShift => KeyboardState.IsKeyDown(Keys.LeftShift) ||
-                KeyboardState.IsKeyDown(Keys.RightShift),
-            Keys.LeftControl or Keys.RightControl => KeyboardState.IsKeyDown(Keys.LeftControl) ||
-                KeyboardState.IsKeyDown(Keys.RightControl),
-            Keys.LeftAlt or Keys.RightAlt => KeyboardState.IsKeyDown(Keys.LeftAlt) ||
-                KeyboardState.IsKeyDown(Keys.RightAlt),
-            Keys.LeftWindows or Keys.RightWindows => KeyboardState.IsKeyDown(Keys.LeftWindows) ||
-                KeyboardState.IsKeyDown(Keys.RightWindows),
+            Keys.LeftShift or Keys.RightShift => IsShiftPressed(),
+            Keys.LeftControl or Keys.RightControl => IsCtrlPressed(),
+            Keys.LeftAlt or Keys.RightAlt => IsAltPressed(),
             _ => KeyboardState.IsKeyDown(key),
         };
     }

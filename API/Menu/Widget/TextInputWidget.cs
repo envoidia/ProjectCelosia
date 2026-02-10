@@ -17,6 +17,7 @@ namespace API.Menu.Widget;
 /// Supports cursor movement, Home/End, BkSp/Del, and Hotkey2 for per-word actions.
 /// Does not support tab, history, selection, clipboard, overwrite mode, or multiple lines
 /// </summary>
+// todo onscreen keyboard
 public sealed class TextInputWidget : IInputWidget
 {
     private readonly StringBuilder _Sb = new();
@@ -120,16 +121,21 @@ public sealed class TextInputWidget : IInputWidget
     public void Append(string str)
     {
         this._Sb.Append(str);
-        this.OptCount = this._Sb.Length;
-        this.OnChangeText?.Invoke();
+        this.Update();
         this.Index = this.OptCount;
+    }
+
+    public void Insert(char c)
+    {
+        this._Sb.Insert(this.Index, c);
+        this.Update();
+        this.Index++;
     }
 
     public void Clear()
     {
         this._Sb.Clear();
-        this.OptCount = 0;
-        this.OnChangeText?.Invoke();
+        this.Update();
         this.Index = 0;
     }
 
@@ -137,6 +143,16 @@ public sealed class TextInputWidget : IInputWidget
     {
         this._Sb.Clear();
         this.Append(str);
+    }
+
+    /// <summary>
+    /// Call after changing the text.
+    /// Called automatically by <c>Append</c>, <c>Insert</c>, <c>SetText</c>, and <c>Clear</c>
+    /// </summary>
+    public void Update()
+    {
+        this.OptCount = this._Sb.Length;
+        this.OnChangeText?.Invoke();
     }
 
     /// <summary>
@@ -173,10 +189,10 @@ public sealed class TextInputWidget : IInputWidget
                     return;
                 }
 
-                if (InputLib.IsKeyPressed(Keys.LeftControl) || InputLib.IsKeyPressed(Keys.RightControl))
+                if (InputLib.IsCtrlPressed())
                 {
                     // Delete all left
-                    if (InputLib.IsKeyPressed(Keys.LeftShift) || InputLib.IsKeyPressed(Keys.RightShift))
+                    if (InputLib.IsShiftPressed())
                     {
                         while (this.Index > 0)
                         {
@@ -184,7 +200,7 @@ public sealed class TextInputWidget : IInputWidget
                             this.Index--;
                         }
 
-                        this.UpdateText();
+                        this.Update();
 
                         return;
                     }
@@ -202,13 +218,13 @@ public sealed class TextInputWidget : IInputWidget
                         this.Index--;
                     }
 
-                    this.UpdateText();
+                    this.Update();
 
                     return;
                 }
 
                 // Word part nav
-                if (InputLib.IsKeyPressed(Keys.LeftAlt) || InputLib.IsKeyPressed(Keys.RightAlt))
+                if (InputLib.IsAltPressed())
                 {
                     while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
                     {
@@ -218,14 +234,14 @@ public sealed class TextInputWidget : IInputWidget
 
                     if (this.Index == 0)
                     {
-                        this.UpdateText();
+                        this.Update();
                         return;
                     }
 
                     if (char.IsUpper(this._Sb[this.Index - 1]))
                     {
                         this._Sb.Remove(this.Index - 1, 1);
-                        this.UpdateText();
+                        this.Update();
                         this.Index--;
 
                         return;
@@ -245,7 +261,7 @@ public sealed class TextInputWidget : IInputWidget
                 if (this.Index > 0)
                 {
                     this._Sb.Remove(this.Index - 1, 1);
-                    this.UpdateText();
+                    this.Update();
                     this.Index--;
                 }
 
@@ -254,16 +270,16 @@ public sealed class TextInputWidget : IInputWidget
             case Keys.Delete:
                 if (this.Index < this.OptCount)
                 {
-                    if (InputLib.IsKeyPressed(Keys.LeftControl) || InputLib.IsKeyPressed(Keys.RightControl))
+                    if (InputLib.IsCtrlPressed())
                     {
-                        if (InputLib.IsKeyPressed(Keys.LeftShift) || InputLib.IsKeyPressed(Keys.RightShift))
+                        if (InputLib.IsShiftPressed())
                         {
                             while (this._Sb.Length > this.Index)
                             {
                                 this._Sb.Remove(this.Index, 1);
                             }
 
-                            this.UpdateText();
+                            this.Update();
 
                             return;
                         }
@@ -278,12 +294,12 @@ public sealed class TextInputWidget : IInputWidget
                             this._Sb.Remove(this.Index, 1);
                         }
 
-                        this.UpdateText();
+                        this.Update();
 
                         return;
                     }
 
-                    if (InputLib.IsKeyPressed(Keys.LeftAlt) || InputLib.IsKeyPressed(Keys.RightAlt))
+                    if (InputLib.IsAltPressed())
                     {
                         while (this._Sb.Length > this.Index && char.IsWhiteSpace(this._Sb[this.Index]))
                         {
@@ -292,14 +308,14 @@ public sealed class TextInputWidget : IInputWidget
 
                         if (this._Sb.Length == 0)
                         {
-                            this.UpdateText();
+                            this.Update();
                             return;
                         }
 
                         if (this._Sb.Length == this.Index + 1 || char.IsUpper(this._Sb[this.Index + 1]))
                         {
                             this._Sb.Remove(this.Index, 1);
-                            this.UpdateText();
+                            this.Update();
                             return;
                         }
 
@@ -314,7 +330,7 @@ public sealed class TextInputWidget : IInputWidget
                     }
 
                     this._Sb.Remove(this.Index, 1);
-                    this.UpdateText();
+                    this.Update();
 
                 }
 
@@ -324,34 +340,20 @@ public sealed class TextInputWidget : IInputWidget
             // If shift is held to type {, the key is instead None) (todo: test on other OSes)
             // (todo use real brackets when logging)
             case Keys.OemOpenBrackets:
-                this.InsertChar('［');
+                this.Insert('［');
                 return;
 
             default:
-                this.InsertChar(args.Character);
+                this.Insert(args.Character);
                 return;
         }
-    }
-
-    public void InsertChar(char c)
-    {
-        this._Sb.Insert(this.Index, c);
-        this.OptCount = this._Sb.Length;
-        this.OnChangeText?.Invoke();
-        this.Index++;
-    }
-
-    public void UpdateText()
-    {
-        this.OptCount = this._Sb.Length;
-        this.OnChangeText?.Invoke();
     }
 
     // OS doesn't handle nav input
     public void Input(GameTime gt)
     {
-        bool ctrlPressed = InputLib.IsKeyPressed(Keys.LeftControl) || InputLib.IsKeyPressed(Keys.RightControl);
-        bool altPressed = InputLib.IsKeyPressed(Keys.LeftAlt) || InputLib.IsKeyPressed(Keys.RightAlt);
+        bool ctrlPressed = InputLib.IsCtrlPressed();
+        bool altPressed = InputLib.IsAltPressed();
 
         if (InputLib.Check(Keybinds.Left, true, _MoveDelay))
         {
@@ -473,21 +475,29 @@ public sealed class TextInputWidget : IInputWidget
             return;
         }
 
-#if !CONSOLE
         if (!ctrlPressed)
         {
             return;
         }
 
+        if (InputLib.IsKeyJustPressed(Keys.K) && InputLib.IsCtrlPressed() && InputLib.IsShiftPressed())
+        {
+            this.Clear();
+            return;
+        }
+
+#if !CONSOLE
         if (InputLib.IsKeyPressed(Keys.C))
         {
             Clipboard.Text = this.Text.Replace('［', '[');
+            return;
         }
 
         if (InputLib.IsKeyJustPressed(Keys.X))
         {
             Clipboard.Text = this.Text;
             this.Clear();
+            return;
         }
 
         if (InputLib.IsKeyJustPressed(Keys.V))
@@ -514,8 +524,7 @@ public sealed class TextInputWidget : IInputWidget
             }
 
             this._Sb.Insert(this.Index, sb);
-            this.OptCount += sb.Length;
-            this.OnChangeText?.Invoke();
+            this.Update();
             this.Index += sb.Length;
         }
 #endif
