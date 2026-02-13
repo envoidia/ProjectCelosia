@@ -800,13 +800,15 @@ public sealed class Theme : IDescribable, IRegistrable
         return $"{base.ToString()}: {this.GetName()} -- {this.GetDesc()}";
     }
 
-    public string ToDetailedString()
+    public string ToDetailedString(bool renderColor)
     {
         StringBuilder sb = new(this.ToString());
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
         {
-            sb.Append($"{tc} = {this.Get(tc).ToRgbaStr()}\n");
+
+            sb.Append($"{tc} = {(renderColor ? tc.Str : null)}{this.Get(tc).ToRgbaStr()}{(renderColor
+                ? ThemeColor.White.Str : null)}\n");
         }
 
         return sb.ToString();

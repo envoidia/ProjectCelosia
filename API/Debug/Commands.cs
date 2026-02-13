@@ -530,7 +530,7 @@ public static class Commands
                 return new(format($"Battle Log: {string.Join('\n', LogLib._LogText)}", fmt));
 
             case "theme":
-                return new(Settings.Theme.ToDetailedString());
+                return new(Settings.Theme.ToDetailedString(fmt != _Preserve.False));
 
             default:
                 return new(ExitCode.Err, $"Valid items: {_Writable}");

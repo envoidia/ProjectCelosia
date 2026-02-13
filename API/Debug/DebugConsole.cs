@@ -148,7 +148,7 @@ public static class DebugConsole
             string? match = CommandParser.GetCurrentAutocompleteMatch(args);
 
             // Trailing space fixes cursor pos bug
-            _Command.Text = $"{_color.Str}>{(match == "" ? "" : _colorErr.Str)}{text} ";
+            _Command.Text = $"{_color.Str}>{(match == "" ? null : _colorErr.Str)}{text} ";
 
             _CommandHint.X = _Command.X + _Command.Width - 18;
 
