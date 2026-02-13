@@ -84,7 +84,6 @@ public static class CommandParser
     /// </returns>
     public static Command? GetCommand(string cmdKey)
     {
-#pragma warning disable CS8600
         if (!Command.Cmds.TryGetValue(cmdKey, out Command cmd))
         {
             DebugConsole.Log($"{cmdKey} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
@@ -94,7 +93,6 @@ public static class CommandParser
 
             return null;
         }
-#pragma warning restore CS8600
 
         Assert.NotNull(cmd);
 
@@ -107,7 +105,7 @@ public static class CommandParser
     public static Span<string[]> TokenizeCommand(string str)
     {
         ReadOnlySpan<string> cmds = str.Split('|',
-            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            StringSplitOptions.TrimEntries);
 
         Span<string[]> cmdArgs = new string[cmds.Length][];
         for (int i = 0; i < cmds.Length; i++)
@@ -120,30 +118,55 @@ public static class CommandParser
     }
 
     /// <returns>
-    /// The input string split by whitespace and filtered
+    /// The closest autocomplete match for the input args, or null
     /// </returns>
-    public static ReadOnlySpan<string> TokenizeWithoutPipelines(string str)
+    public static string? GetCurrentAutocompleteMatch(Span<string[]> args)
     {
-        return str.Split((char[]) null!,
-            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (args.Length > 0 && args[^1].Length > 0 && args[^1].Length > 0)
+        {
+            string str = args[^1][^1];
+
+            if (!string.IsNullOrWhiteSpace(str))
+            {
+                return GetAutocompleteMatch(args[^1].Length - 1, args[^1][0], str);
+            }
+        }
+
+        return null;
     }
 
     /// <returns>
-    /// The closest autocomplete match for the currently typed command, or null
+    /// The closest autocomplete match for the specified param of the currently typed command, or null
     /// </returns>
-    public static string? GetAutocompleteMatch(string str)
+    public static string? GetAutocompleteMatch(int paramNum, string param0, string str)
     {
-        string? match = Command.Cmds.Keys
+        string[] matchAgainst;
+
+        if (paramNum == 0)
+        {
+            matchAgainst = [.. Command.Cmds.Keys];
+        }
+        else
+        {
+            if (!Command.Cmds.TryGetValue(param0, out Command cmd))
+            {
+                return null;
+            }
+
+            matchAgainst = cmd.Params[paramNum - 1].GetValidInputs();
+
+            if (matchAgainst.Length == 0)
+            {
+                return null;
+            }
+        }
+
+        string? match = matchAgainst
             .Where(k => k.StartsWith(str, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(k => getCommonPrefixLength(k, str))
             .FirstOrDefault();
 
-        if (match is null)
-        {
-            return null;
-        }
-
-        return match[getCommonPrefixLength(match, str)..];
+        return match?[getCommonPrefixLength(match, str)..];
 
         static int getCommonPrefixLength(string a, string b)
         {
@@ -155,7 +178,16 @@ public static class CommandParser
 
             return len;
         }
+    }
 
+    public static string? GetCurrentHintText(Span<string[]> args)
+    {
+        if (args.Length > 0 && args[^1].Length > 0)
+        {
+            return GetHintText(args[^1], args.Length > 1);
+        }
+
+        return null;
     }
 
     /// <returns>
@@ -172,9 +204,10 @@ public static class CommandParser
                 skip++;
             }
 
-            if (skip < cmd.Hints.Length)
+            if (skip < cmd.Params.Length)
             {
-                return string.Join(' ', cmd.Hints.Skip(skip).Select(s => $"[{s}]"));
+                return string.Join(' ', cmd.Params.Skip(skip)
+                    .Select(s => $"[{s.Hint}]"));
             }
         }
 

@@ -17,10 +17,9 @@ public sealed class Command
     public readonly Func<ReadOnlySpan<string>, CommandResult> Fn;
 
     /// <summary>
-    /// Hints for this' arguments.
-    /// Eg hints of <c>[foo, bar, lorem]</c> would display <c>commandname [foo] [bar] [lorem]</c> as you type
+    /// The parameters for this
     /// </summary>
-    public readonly string[] Hints;
+    public readonly CommandParam[] Params;
 
     /// <summary>
     /// Description of this
@@ -38,10 +37,10 @@ public sealed class Command
     public readonly bool IsVisible;
 
     private Command(Func<ReadOnlySpan<string>, CommandResult> fn,
-        string[] hints, string desc, string modId, bool isVisible)
+        CommandParam[] @params, string desc, string modId, bool isVisible)
     {
         this.Fn = fn;
-        this.Hints = hints;
+        this.Params = @params;
         this.Desc = desc;
         this.ModId = modId;
         this.IsVisible = isVisible;
@@ -53,7 +52,7 @@ public sealed class Command
     /// </summary>
     /// <returns>The error, if any</returns>
     public static CommandRegistrationError? Register(string name, Func<ReadOnlySpan<string>,
-        CommandResult> fn, string[] hints, string desc, string modId, bool isVisible = true)
+        CommandResult> fn, CommandParam[] @params, string desc, string modId, bool isVisible = true)
     {
         if (name.Any(c => char.IsWhiteSpace(c) || c == '|'))
         {
@@ -65,7 +64,7 @@ public sealed class Command
             return CommandRegistrationError.AlreadyUsed;
         }
 
-        Cmds.Add(name, new(fn, hints, desc, modId, isVisible));
+        Cmds.Add(name, new(fn, @params, desc, modId, isVisible));
 
         return null;
     }

@@ -20,7 +20,8 @@ namespace API.Debug;
 public static class Commands
 {
     public const string Text = "text";
-    public static readonly string[] TextArr = [Text];
+    public static readonly CommandParam TextParam = new(Text);
+    public static readonly CommandParam[] TextParamArr = [TextParam];
 
     public const string All = "all";
 
@@ -34,10 +35,10 @@ public static class Commands
 
     private const string _ManDesc = "Enter a command followed by its arguments with a space between each.\n| pipes the output of a command into the next\n`man cmd` to list all commands, `man kb` to list all keybinds";
 
-    private const string _Overlays = "info/console/outline/theme/input/perf";
-    private const string _Writable = "modlist/registry/lang/stage/battlelog/theme";
-    private const string _Cleanable = "stage/layout";
-    private const string _Reloadable = "lang/settings/themes";
+    private static readonly string[] _Overlays = ["info", "console", "outline", "theme", "input", "perf"];
+    private static readonly string[] _Writable = ["modlist", "registry", "lang", "stage", "battlelog", "theme"];
+    private static readonly string[] _Cleanable = ["stage", "layout"];
+    private static readonly string[] _Reloadable = ["lang", "settings", "themes"];
 
     internal static void _Init()
     {
@@ -48,7 +49,9 @@ public static class Commands
             return new(_ManDesc);
         }, [], _BasicInfo, Core.Id);
 
-        Command.Register("man", _Cmd_man, ["cmd/kb"], _BasicInfo, Core.Id);
+        string[] manArgs = ["cmd", "kb"];
+        Command.Register("man", _Cmd_man, [new(manArgs)],
+            _BasicInfo, Core.Id);
 
         Command.Register("clear", static _ =>
         {
@@ -66,19 +69,22 @@ public static class Commands
 
         Command.Register("echo", args =>
             new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
-            TextArr, "Returns its input", Core.Id);
+            TextParamArr, "Returns its input", Core.Id);
 
         const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
-        string[] GrepArr = [Text, "search"];
+        const string Search = "Search";
 
-        Command.Register("grep", _Cmd_grep, GrepArr, GrepDesc, Core.Id);
-        Command.Register("rg", _Cmd_grep, GrepArr, GrepDesc, Core.Id, false);
+        Command.Register("grep", _Cmd_grep, [TextParam,
+            new(Search)], GrepDesc, Core.Id);
 
-        Command.Register("wc", _Cmd_wc, [Text, "l/w/c"],
+        Command.Register("rg", _Cmd_grep, [TextParam,
+            new(Search)], GrepDesc, Core.Id);
+
+        Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
             "Counts lines, words, and chars", Core.Id);
 
-        Command.Register("which", _Cmd_which, ["command"],
-            "Returns the ID and description of a command", Core.Id);
+        Command.Register("which", _Cmd_which, [new("command",
+            [.. Command.Cmds.Keys])], "Returns the ID and description of a command", Core.Id);
 
         Command.Register("whoami", _Cmd_whoami, [], "Returns the name of the loaded save", Core.Id);
 
@@ -94,7 +100,7 @@ public static class Commands
                 1, args.Length - 1).Replace('［', '[')}");
 
             return new(null);
-        }, TextArr, "Writes text to stdout", Core.Id);
+        }, TextParamArr, "Writes text to stdout", Core.Id);
 
         Command.Register("gc", static args =>
         {
@@ -102,35 +108,39 @@ public static class Commands
                 / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
         }, [], "Forces GC collection and reports memory", Core.Id);
 
-        Command.Register("copy", _Cmd_copy, TextArr, "Writes to clipboard", Core.Id);
+        Command.Register("copy", _Cmd_copy, TextParamArr, "Writes to clipboard", Core.Id);
         Command.Register("paste", _Cmd_paste, [], "Reads from clipboard", Core.Id);
 
         #endregion
 
         #region Domain-specific
 
-        Command.Register("overlay", _Cmd_overlay, [_Overlays,
-            "show/hide/blank to toggle"], "Enable/disable/toggle overlays", Core.Id);
+        Command.Register("overlay", _Cmd_overlay, [new(_Overlays),
+            new("show/hide/blank to toggle", ["show", "hide"])],
+            "Enable/disable/toggle overlays", Core.Id);
 
-        Command.Register("write", _Cmd_write, [_Writable, "preserve formatting?"],
-            "Write various things", Core.Id);
+        Command.Register("write", _Cmd_write, [new(_Writable),
+            new("preserve formatting?")], "Write various things", Core.Id);
 
-        Command.Register("cleanup", _Cmd_cleanup, [_Cleanable],
+        Command.Register("cleanup", _Cmd_cleanup, [new(_Cleanable)],
             "Sort and cleanup various things", Core.Id);
 
-        Command.Register("reload", _Cmd_reload, [_Reloadable],
+        Command.Register("reload", _Cmd_reload, [new(_Reloadable)],
             "Reload various assets", Core.Id);
 
         Command.Register("cycletheme", _Cmd_cycletheme, [], "Cycles the current theme", Core.Id);
 
-        Command.Register("setting", _Cmd_setting, ["setting key/reload/reset", "value"],
-            "Alter settings", Core.Id);
+        Command.Register("setting", _Cmd_setting,
+            [new("setting key/reload/reset", [.. Settings.AllSettings.Keys]),
+            new("value")], "Alter settings", Core.Id);
 
         #endregion
 
         #region Battle
 
-        Command.Register("buff", _Cmd_buff, ["unit index 0-7", "give/remove", "buff ID", "turns", "stacks"],
+        Command.Register("buff", _Cmd_buff, [new("unit index 0-7"),
+            new(["give", "remove"]), new("buff ID", [],
+            () => Registry.IdsOf<Buff>()), new("turns"), new("stacks")],
             "Give/remove buffs in battle", Core.Id);
 
         // todo passive
@@ -279,12 +289,10 @@ public static class Commands
             return new(ExitCode.Err, "Must pass the target command");
         }
 
-#pragma warning disable CS8600
         if (!Command.Cmds.TryGetValue(args[1], out Command cmd))
         {
             return new(ExitCode.Err, $"Command {args[1]} couldn't be found");
         }
-#pragma warning restore CS8600
 
         Assert.NotNull(cmd);
 
@@ -592,7 +600,7 @@ public static class Commands
 
     private static CommandResult _Cmd_cycletheme(ReadOnlySpan<string> args)
     {
-        ReadOnlySpan<Theme> themes = [.. Registry.Of<Theme>()];
+        Theme[] themes = Registry.Of<Theme>();
         int i = themes.IndexOf(Settings.Theme);
         Settings.Theme = themes[i == themes.Length - 1 ? 0 : i + 1];
 
@@ -628,12 +636,10 @@ public static class Commands
 
         if (args.Length == 2)
         {
-#pragma warning disable CS8600
             if (!settings.TryGetValue(args[1], out string val))
             {
                 return new(ExitCode.Err, $"Setting `{args[1]}` couldn't be found");
             }
-#pragma warning restore CS8600
 
             Assert.NotNull(val);
 
@@ -717,10 +723,12 @@ public static class Commands
 
     private static CommandResult _Cmd_buff(ReadOnlySpan<string> args)
     {
+        const string Usage = "Usage: `buff [unit index 0-7] [give/remove] [buff ID] [turns] [stacks]`."
+            + "Can omit turns and stacks if removing";
+
         if (args.Length < 4)
         {
-            return new(ExitCode.Err,
-                "Usage: `buff [unit index 0-7] [give/remove] [buff ID] [turns] [stacks]`. Can omit turns and stacks if removing");
+            return new(ExitCode.Err, Usage);
         }
 
         // todo fail if not in battle
@@ -756,6 +764,11 @@ public static class Commands
         switch (args[2])
         {
             case Give:
+                if (args.Length < 6)
+                {
+                    return new(ExitCode.Err, Usage);
+                }
+
                 if (!int.TryParse(args[4], out int turns))
                 {
                     return new(ExitCode.Err, _TurnsError);

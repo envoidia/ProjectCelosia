@@ -50,18 +50,21 @@ public static class DebugConsole
             {
                 StateMachine.State.AddMenu(_Menu);
                 _color = ThemeColor.Imp;
+                // _colorErr = ThemeColor.Neg;
                 _Input.OnChangeText!.Invoke();
             }
             else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
             {
                 StateMachine.State.RemoveMenu();
                 _color = ThemeColor.Gray;
+                // _colorErr = ThemeColor.Gray;
                 _Input.OnChangeText!.Invoke();
             }
         }
     } = false;
 
     private static ThemeColor _color;
+    // private static ThemeColor _colorErr;
 
     private static readonly Label _Command = new(RenderPriority.B3High, Core.Mono40)
     {
@@ -141,23 +144,8 @@ public static class DebugConsole
             Span<string[]> args = CommandParser.TokenizeCommand(text);
 
             // Hints and autocomplete
-            string? hints = null;
-            string? match = null;
-
-            if (args.Length > 0 && args[^1].Length > 0)
-            {
-                hints = CommandParser.GetHintText(args[^1], args.Length > 1);
-
-                if (args[^1].Length == 1)
-                {
-                    string str = args[^1][^1];
-
-                    if (!string.IsNullOrWhiteSpace(str))
-                    {
-                        match = CommandParser.GetAutocompleteMatch(str);
-                    }
-                }
-            }
+            string? hints = CommandParser.GetCurrentHintText(args);
+            string? match = CommandParser.GetCurrentAutocompleteMatch(args);
 
             // Trailing space fixes cursor pos bug
             _Command.Text = $"{_color.Str}>{text} ";
@@ -254,14 +242,9 @@ public static class DebugConsole
 
         if (InputLib.IsKeyJustPressed(Keys.Tab))
         {
-            string text = _Input.Text.Split('|', StringSplitOptions.TrimEntries)[^1];
+            Span<string[]> args = CommandParser.TokenizeCommand(_Input.Text);
 
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return;
-            }
-
-            string? match = CommandParser.GetAutocompleteMatch(text);
+            string? match = CommandParser.GetCurrentAutocompleteMatch(args);
             if (match is not null)
             {
                 _Input.Append(match);

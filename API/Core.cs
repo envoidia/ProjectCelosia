@@ -194,7 +194,6 @@ public sealed class Core : Game
 
         DebugUtil._Init();
         DebugConsole._Init();
-        Commands._Init();
 
         // Must be after Settings
         StatBarWidget._Init();
@@ -202,10 +201,12 @@ public sealed class Core : Game
         // Must be after inits
         StateMachine.Add(States.MainMenu);
 
-
 #if !NATIVE_AOT
         ModLoader._LoadAllMods();
 #endif
+
+        // Must be after settings, should be after all registry modifications (for autocomplete)
+        Commands._Init();
 
         DebugConsole.Log(
             "This console is for developers. Misuse can brick your save. Use `help` for help",

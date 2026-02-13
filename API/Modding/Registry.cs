@@ -11,7 +11,10 @@ namespace API.Modding;
 /// </summary>
 public static class Registry
 {
-    private static readonly Dictionary<string, IRegistrable> _Reg = new(StringComparer.Ordinal);
+    internal static readonly Dictionary<string, IRegistrable> _Reg = new(StringComparer.Ordinal);
+
+    private static readonly Dictionary<Type, object> _TypeCache = [];
+    private static readonly Dictionary<Type, string[]> _TypeIdCache = [];
 
     /// <summary>
     /// Registers an item. Call in ctor
@@ -52,9 +55,28 @@ public static class Registry
     /// <returns>
     /// All registered items of the given type
     /// </returns>
-    public static IEnumerable<T> Of<T>() where T : IRegistrable
+    public static T[] Of<T>() where T : IRegistrable
     {
-        return _Reg.Values.OfType<T>();
+        if (_TypeCache.TryGetValue(typeof(T), out object cachedItems))
+        {
+            return (T[]) cachedItems;
+        }
+
+        T[] items = [.. _Reg.Values.OfType<T>()];
+        _TypeCache[typeof(T)] = items;
+        return items;
+    }
+
+    public static string[] IdsOf<T>() where T : IRegistrable
+    {
+        if (_TypeIdCache.TryGetValue(typeof(T), out string[] cachedIds))
+        {
+            return cachedIds;
+        }
+
+        string[] ids = [.. Of<T>().Select(it => it.GetId())];
+        _TypeIdCache[typeof(T)] = ids;
+        return ids;
     }
 
     public new static string ToString()
