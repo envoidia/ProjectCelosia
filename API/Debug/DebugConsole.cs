@@ -50,21 +50,21 @@ public static class DebugConsole
             {
                 StateMachine.State.AddMenu(_Menu);
                 _color = ThemeColor.Imp;
-                // _colorErr = ThemeColor.Neg;
+                _colorErr = ThemeColor.Neg;
                 _Input.OnChangeText!.Invoke();
             }
             else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
             {
                 StateMachine.State.RemoveMenu();
                 _color = ThemeColor.Gray;
-                // _colorErr = ThemeColor.Gray;
+                _colorErr = ThemeColor.Gray;
                 _Input.OnChangeText!.Invoke();
             }
         }
     } = false;
 
     private static ThemeColor _color;
-    // private static ThemeColor _colorErr;
+    private static ThemeColor _colorErr;
 
     private static readonly Label _Command = new(RenderPriority.B3High, Core.Mono40)
     {
@@ -148,7 +148,7 @@ public static class DebugConsole
             string? match = CommandParser.GetCurrentAutocompleteMatch(args);
 
             // Trailing space fixes cursor pos bug
-            _Command.Text = $"{_color.Str}>{text} ";
+            _Command.Text = $"{_color.Str}>{(match == "" ? "" : _colorErr.Str)}{text} ";
 
             _CommandHint.X = _Command.X + _Command.Width - 18;
 

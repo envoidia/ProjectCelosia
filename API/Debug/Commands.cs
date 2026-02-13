@@ -86,7 +86,8 @@ public static class Commands
         Command.Register("which", _Cmd_which, [new("command",
             [.. Command.Cmds.Keys])], "Returns the ID and description of a command", Core.Id);
 
-        Command.Register("whoami", _Cmd_whoami, [], "Returns the name of the loaded save", Core.Id);
+        Command.Register("whoami", _Cmd_whoami, [],
+            "Returns the name of the loaded save", Core.Id);
 
         Command.Register("kill", _ =>
         {
@@ -120,7 +121,8 @@ public static class Commands
             "Enable/disable/toggle overlays", Core.Id);
 
         Command.Register("write", _Cmd_write, [new(_Writable),
-            new("preserve formatting?")], "Write various things", Core.Id);
+            new("preserve formatting?", CommandParam.InputBools)],
+            "Write various things", Core.Id);
 
         Command.Register("cleanup", _Cmd_cleanup, [new(_Cleanable)],
             "Sort and cleanup various things", Core.Id);
@@ -128,19 +130,23 @@ public static class Commands
         Command.Register("reload", _Cmd_reload, [new(_Reloadable)],
             "Reload various assets", Core.Id);
 
-        Command.Register("cycletheme", _Cmd_cycletheme, [], "Cycles the current theme", Core.Id);
+        Command.Register("cycletheme", _Cmd_cycletheme, [],
+            "Cycles the current theme", Core.Id);
 
         Command.Register("setting", _Cmd_setting,
-            [new("setting key/reload/reset", [.. Settings.AllSettings.Keys]),
+            [new("setting key/reload/reset",
+            [.. Settings.AllSettings.Keys, "reload", "reset"]),
             new("value")], "Alter settings", Core.Id);
 
         #endregion
 
         #region Battle
 
-        Command.Register("buff", _Cmd_buff, [new("unit index 0-7"),
-            new(["give", "remove"]), new("buff ID", [],
-            () => Registry.IdsOf<Buff>()), new("turns"), new("stacks")],
+        Command.Register("buff", _Cmd_buff, [new("unit index 0-7",
+            CommandParam.InputNumbers0To7), new(["give", "remove"]),
+            new("buff ID", [], () => Registry.IdsOf<Buff>()),
+            new("turns", CommandParam.InputNumbers1To9),
+            new("stacks", CommandParam.InputNumbers1To9)],
             "Give/remove buffs in battle", Core.Id);
 
         // todo passive
@@ -723,7 +729,7 @@ public static class Commands
 
     private static CommandResult _Cmd_buff(ReadOnlySpan<string> args)
     {
-        const string Usage = "Usage: `buff [unit index 0-7] [give/remove] [buff ID] [turns] [stacks]`."
+        const string Usage = "Usage: `buff [unit index 0-7] [give/remove] [buff ID] [turns] [stacks]`. "
             + "Can omit turns and stacks if removing";
 
         if (args.Length < 4)
@@ -793,7 +799,7 @@ public static class Commands
                 unit.GiveBuffInstances(new BuffInstance(buff, turns, Math.Min(stacks, buff.MaxStacks)));
 
                 return new(
-                    $"Gave {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit.FormatName(false)}");
+                    $"Gave {stacks}x {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit.FormatName(false)} for {turns} turns");
 
             case Remove:
                 unit.RemoveBuffs(buff);

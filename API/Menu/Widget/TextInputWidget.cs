@@ -532,9 +532,10 @@ public sealed class TextInputWidget : IInputWidget
 
     internal void _UpdateCursor()
     {
-        List<TextChunkGlyph> glyphs = ((TextChunk) this.Label.RichTextLayout.Lines[0].Chunks[0]).Glyphs;
+        List<BaseChunk> chunks = this.Label.RichTextLayout.Lines[0].Chunks;
+        List<TextChunkGlyph> glyphs = ((TextChunk) chunks[^1]).Glyphs;
 
-        int i = this.Index + 1;
+        int i = chunks.Count == 1 ? this.Index + 1 : this.Index;
         if (i >= glyphs.Count)
         {
             return;

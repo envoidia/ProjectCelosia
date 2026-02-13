@@ -136,7 +136,8 @@ public static class CommandParser
     }
 
     /// <returns>
-    /// The closest autocomplete match for the specified param of the currently typed command, or null
+    /// The closest autocomplete match for the specified param of the currently typed command, or null.
+    /// Returning an empty string makes syntax highlighting consider the input valid
     /// </returns>
     public static string? GetAutocompleteMatch(int paramNum, string param0, string str)
     {
@@ -157,12 +158,13 @@ public static class CommandParser
 
             if (matchAgainst.Length == 0)
             {
-                return null;
+                // Just assume it's valid since there are no rules for it
+                return "";
             }
         }
 
         string? match = matchAgainst
-            .Where(k => k.StartsWith(str, StringComparison.OrdinalIgnoreCase))
+            .Where(k => k.StartsWith(str, StringComparison.Ordinal))
             .OrderByDescending(k => getCommonPrefixLength(k, str))
             .FirstOrDefault();
 
