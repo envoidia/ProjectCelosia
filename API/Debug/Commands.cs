@@ -19,6 +19,8 @@ namespace API.Debug;
 /// </summary>
 public static class Commands
 {
+    #region Text
+
     public const string Text = "text";
     public static readonly CommandParam TextParam = new(Text);
     public static readonly CommandParam[] TextParamArr = [TextParam];
@@ -39,6 +41,8 @@ public static class Commands
     private static readonly string[] _Writable = ["modlist", "registry", "lang", "stage", "battlelog", "theme"];
     private static readonly string[] _Cleanable = ["stage", "layout"];
     private static readonly string[] _Reloadable = ["lang", "settings", "themes"];
+
+    #endregion
 
     internal static void _Init()
     {

@@ -79,7 +79,6 @@ public sealed class Label : IActor
             this.Data.DrawBackground(this._bgC, this.MinBackgroundSize);
         }
 
-        // todo is this return good
         if (string.IsNullOrWhiteSpace(this.Text))
         {
             return;

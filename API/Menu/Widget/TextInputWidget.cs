@@ -206,13 +206,13 @@ public sealed class TextInputWidget : IInputWidget
                     }
 
                     // Word nav
-                    while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
+                    while (this.Index > 0 && _IsWordSplitter(this._Sb[this.Index - 1]))
                     {
                         this._Sb.Remove(this.Index - 1, 1);
                         this.Index--;
                     }
 
-                    while (this.Index > 0 && !char.IsWhiteSpace(this._Sb[this.Index - 1]))
+                    while (this.Index > 0 && !_IsWordSplitter(this._Sb[this.Index - 1]))
                     {
                         this._Sb.Remove(this.Index - 1, 1);
                         this.Index--;
@@ -226,7 +226,7 @@ public sealed class TextInputWidget : IInputWidget
                 // Word part nav
                 if (InputLib.IsAltPressed())
                 {
-                    while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
+                    while (this.Index > 0 && _IsWordSplitter(this._Sb[this.Index - 1]))
                     {
                         this._Sb.Remove(this.Index - 1, 1);
                         this.Index--;
@@ -252,7 +252,7 @@ public sealed class TextInputWidget : IInputWidget
                         this._Sb.Remove(this.Index - 1, 1);
                         this.Index--;
                     }
-                    while (this.Index > 0 && !char.IsWhiteSpace(this._Sb[this.Index - 1])
+                    while (this.Index > 0 && !_IsWordSplitter(this._Sb[this.Index - 1])
                         && !char.IsUpper(this._Sb[this.Index - 1]));
 
                     // Do not return
@@ -284,12 +284,12 @@ public sealed class TextInputWidget : IInputWidget
                             return;
                         }
 
-                        while (this._Sb.Length > this.Index && char.IsWhiteSpace(this._Sb[this.Index]))
+                        while (this._Sb.Length > this.Index && _IsWordSplitter(this._Sb[this.Index]))
                         {
                             this._Sb.Remove(this.Index, 1);
                         }
 
-                        while (this._Sb.Length > this.Index && !char.IsWhiteSpace(this._Sb[this.Index]))
+                        while (this._Sb.Length > this.Index && !_IsWordSplitter(this._Sb[this.Index]))
                         {
                             this._Sb.Remove(this.Index, 1);
                         }
@@ -301,7 +301,7 @@ public sealed class TextInputWidget : IInputWidget
 
                     if (InputLib.IsAltPressed())
                     {
-                        while (this._Sb.Length > this.Index && char.IsWhiteSpace(this._Sb[this.Index]))
+                        while (this._Sb.Length > this.Index && _IsWordSplitter(this._Sb[this.Index]))
                         {
                             this._Sb.Remove(this.Index, 1);
                         }
@@ -323,7 +323,7 @@ public sealed class TextInputWidget : IInputWidget
                         {
                             this._Sb.Remove(this.Index, 1);
                         }
-                        while (this._Sb.Length > this.Index + 1 && !char.IsWhiteSpace(this._Sb[this.Index])
+                        while (this._Sb.Length > this.Index + 1 && !_IsWordSplitter(this._Sb[this.Index])
                             && !char.IsUpper(this._Sb[this.Index + 1]));
 
                         // Do not return
@@ -331,7 +331,6 @@ public sealed class TextInputWidget : IInputWidget
 
                     this._Sb.Remove(this.Index, 1);
                     this.Update();
-
                 }
 
                 return;
@@ -360,12 +359,17 @@ public sealed class TextInputWidget : IInputWidget
             // Word jump
             if (ctrlPressed)
             {
-                while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
+                if (this.Index == 0)
+                {
+                    return;
+                }
+
+                while (this.Index > 0 && _IsWordSplitter(this._Sb[this.Index - 1]))
                 {
                     this.Index--;
                 }
 
-                while (this.Index > 0 && !char.IsWhiteSpace(this._Sb[this.Index - 1]))
+                while (this.Index > 0 && !_IsWordSplitter(this._Sb[this.Index - 1]))
                 {
                     this.Index--;
                 }
@@ -376,7 +380,7 @@ public sealed class TextInputWidget : IInputWidget
             // Word part jump
             if (altPressed)
             {
-                while (this.Index > 0 && char.IsWhiteSpace(this._Sb[this.Index - 1]))
+                while (this.Index > 0 && _IsWordSplitter(this._Sb[this.Index - 1]))
                 {
                     this.Index--;
                 }
@@ -396,7 +400,7 @@ public sealed class TextInputWidget : IInputWidget
                 {
                     this.Index--;
                 }
-                while (this.Index > 0 && !char.IsWhiteSpace(this._Sb[this.Index - 1])
+                while (this.Index > 0 && !_IsWordSplitter(this._Sb[this.Index - 1])
                     && !char.IsUpper(this._Sb[this.Index - 1]));
 
                 // Do not return
@@ -414,12 +418,12 @@ public sealed class TextInputWidget : IInputWidget
         {
             if (ctrlPressed)
             {
-                while (this.Index < this.OptCount && char.IsWhiteSpace(this._Sb[this.Index]))
+                while (this.Index < this.OptCount && _IsWordSplitter(this._Sb[this.Index]))
                 {
                     this.Index++;
                 }
 
-                while (this.Index < this.OptCount && !char.IsWhiteSpace(this._Sb[this.Index]))
+                while (this.Index < this.OptCount && !_IsWordSplitter(this._Sb[this.Index]))
                 {
                     this.Index++;
                 }
@@ -429,7 +433,7 @@ public sealed class TextInputWidget : IInputWidget
 
             if (altPressed)
             {
-                while (this.Index < this.OptCount && char.IsWhiteSpace(this._Sb[this.Index]))
+                while (this.Index < this.OptCount && _IsWordSplitter(this._Sb[this.Index]))
                 {
                     this.Index++;
                 }
@@ -449,7 +453,7 @@ public sealed class TextInputWidget : IInputWidget
                 {
                     this.Index++;
                 }
-                while (this.Index < this.OptCount - 1 && !char.IsWhiteSpace(this._Sb[this.Index])
+                while (this.Index < this.OptCount - 1 && !_IsWordSplitter(this._Sb[this.Index])
                     && !char.IsUpper(this._Sb[this.Index + 1]));
 
                 // Do not return
@@ -544,5 +548,10 @@ public sealed class TextInputWidget : IInputWidget
         int x = glyphs[i].Bounds.X;
 
         this.Cursor.Position = new(this.Label.X + x - 2, this.Label.Y - this.Label.Height);
+    }
+
+    private static bool _IsWordSplitter(char c)
+    {
+        return char.IsWhiteSpace(c) || c == ':';
     }
 }

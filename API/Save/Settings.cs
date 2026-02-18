@@ -141,6 +141,7 @@ public static class Settings
 
     public static void Create()
     {
+        // todo should this just set the keys instead of remaking the dict
         AllSettings = new Dictionary<string, string>
         {
             ["Language"] = Lang.Language.EnUS,
