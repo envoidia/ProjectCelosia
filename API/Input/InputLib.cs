@@ -244,7 +244,7 @@ public static class InputLib
 
         if (_IsButtonDown(keybind.Button))
         {
-            LastInputSource = InputDevice.XboxController; // todo controller types
+            LastInputSource = _GetGamePadType();
             return true;
         }
 
@@ -266,14 +266,37 @@ public static class InputLib
     {
         return button switch
         {
-            Buttons.DPadLeft => _gamePadState.ThumbSticks.Left.X < -_MinAxisDist,
-            Buttons.DPadRight => _gamePadState.ThumbSticks.Left.X > _MinAxisDist,
-            Buttons.DPadUp => _gamePadState.ThumbSticks.Left.Y < -_MinAxisDist,
-            Buttons.DPadDown => _gamePadState.ThumbSticks.Left.Y > _MinAxisDist,
+            Buttons.DPadLeft => _gamePadState.IsButtonDown(Buttons.DPadLeft)
+                || _gamePadState.ThumbSticks.Left.X < -_MinAxisDist,
+            Buttons.DPadRight => _gamePadState.IsButtonDown(Buttons.DPadRight)
+                || _gamePadState.ThumbSticks.Left.X > _MinAxisDist,
+            Buttons.DPadUp => _gamePadState.IsButtonDown(Buttons.DPadUp)
+                || _gamePadState.ThumbSticks.Left.Y > _MinAxisDist,
+            Buttons.DPadDown => _gamePadState.IsButtonDown(Buttons.DPadDown)
+                || _gamePadState.ThumbSticks.Left.Y < -_MinAxisDist,
             Buttons.LeftTrigger => _gamePadState.Triggers.Left > _MinAxisDist,
             Buttons.RightTrigger => _gamePadState.Triggers.Right > _MinAxisDist,
             _ => _gamePadState.IsButtonDown(button)
         };
+    }
+
+    private static InputDevice _GetGamePadType()
+    {
+        GamePadCapabilities caps = GamePad.GetCapabilities(PlayerIndex.One);
+
+        string name = caps.DisplayName.ToLowerInvariant();
+
+        if (name.Contains("switch") || name.Contains("nintendo"))
+        {
+            return InputDevice.SwitchController;
+        }
+
+        if (name.Contains("ps") || name.Contains("playstation") || name.Contains("sony"))
+        {
+            return InputDevice.PlaystationController;
+        }
+
+        return InputDevice.XboxController;
     }
 
     #endregion
