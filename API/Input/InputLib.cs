@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Text;
 using API.Debug;
 using API.Graphics;
@@ -16,7 +17,7 @@ public static class InputLib
     public static KeyboardState PreviousKeyboardState { get; private set; }
     public static KeyboardState KeyboardState { get; private set; }
 
-    private static GamePadState _gamePadState; // todo
+    private static GamePadState _gamePadState;
 
     private static InputDevice _previousInputSource = InputDevice.Keyboard;
     public static InputDevice LastInputSource { get; private set; } = InputDevice.Keyboard;
@@ -98,7 +99,10 @@ public static class InputLib
     {
         PreviousKeyboardState = KeyboardState;
         KeyboardState = Keyboard.GetState();
-        _gamePadState = GamePad.GetState(PlayerIndex.One);
+
+        // todo check all
+        // _gamePadState = GamePad.GetState(PlayerIndex.One);
+        _gamePadState = _GetMergedGamePadState();
 
         _elapsedTime = gt.ElapsedGameTime;
 
@@ -178,6 +182,112 @@ public static class InputLib
     #endregion
 
     #region Internals
+
+    private static GamePadState _GetMergedGamePadState()
+    {
+        Vector2 stickL = Vector2.Zero;
+        Vector2 stickR = Vector2.Zero;
+
+        float trigL = 0f;
+        float trigR = 0f;
+
+        Buttons buttons = Buttons.None;
+
+        for (int i = 0; i < GamePad.MaximumGamePadCount; i++)
+        {
+            GamePadState state = GamePad.GetState((PlayerIndex) i);
+
+            if (!state.IsConnected)
+            {
+                continue;
+            }
+
+            stickL += state.ThumbSticks.Left;
+            stickR += state.ThumbSticks.Right;
+
+            trigL += state.Triggers.Left;
+            trigR += state.Triggers.Right;
+
+            GamePadButtons b = state.Buttons;
+
+            // Type t = typeof(GamePadButtons);
+            // FieldInfo? f = t.GetField("_buttons", BindingFlags.NonPublic | BindingFlags.Instance);
+            // object v = f.GetValue(b);
+            // Buttons rawButtons = (Buttons) v;
+
+            // buttons |= rawButtons;
+            // todo can we get public _buttons pl0x
+
+            if (b.A == ButtonState.Pressed)
+            {
+                buttons |= Buttons.A;
+            }
+            if (b.B == ButtonState.Pressed)
+            {
+                buttons |= Buttons.B;
+            }
+            if (b.X == ButtonState.Pressed)
+            {
+                buttons |= Buttons.X;
+            }
+            if (b.Y == ButtonState.Pressed)
+            {
+                buttons |= Buttons.Y;
+            }
+            if (b.LeftShoulder == ButtonState.Pressed)
+            {
+                buttons |= Buttons.LeftShoulder;
+            }
+            if (b.RightShoulder == ButtonState.Pressed)
+            {
+                buttons |= Buttons.RightShoulder;
+            }
+            if (b.LeftStick == ButtonState.Pressed)
+            {
+                buttons |= Buttons.LeftStick;
+            }
+            if (b.RightStick == ButtonState.Pressed)
+            {
+                buttons |= Buttons.RightStick;
+            }
+            if (b.Back == ButtonState.Pressed)
+            {
+                buttons |= Buttons.Back;
+            }
+            if (b.Start == ButtonState.Pressed)
+            {
+                buttons |= Buttons.Start;
+            }
+            if (b.BigButton == ButtonState.Pressed)
+            {
+                buttons |= Buttons.BigButton;
+            }
+
+            GamePadDPad d = state.DPad;
+            if (d.Up == ButtonState.Pressed)
+            {
+                buttons |= Buttons.DPadUp;
+            }
+            if (d.Down == ButtonState.Pressed)
+            {
+                buttons |= Buttons.DPadDown;
+            }
+            if (d.Left == ButtonState.Pressed)
+            {
+                buttons |= Buttons.DPadLeft;
+            }
+            if (d.Right == ButtonState.Pressed)
+            {
+                buttons |= Buttons.DPadRight;
+            }
+        }
+
+        return new(
+            new(stickL, stickR),
+            new(trigL, trigR),
+            new(buttons),
+            new());
+    }
 
     private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind? keybind)
     {
