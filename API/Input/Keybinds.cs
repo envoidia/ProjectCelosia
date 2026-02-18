@@ -8,7 +8,7 @@ public static class Keybinds
     /// <summary>
     /// Number of <c>Keybinds</c> with standard check behavior
     /// </summary>
-    public const int StdKeybindCount = (int) KeybindId.LastBeforeAbnormal;
+    public const int StdKeybindCount = (int) KeybindId.LastBeforeMerged;
 
     /// <summary>
     /// Confirm/Yes. Bottom face button
@@ -39,20 +39,20 @@ public static class Keybinds
     public static readonly Keybind Down = new("KeyDown", KeybindId.Down, Keys.Down, Buttons.DPadDown);
 
     /// <summary>
-    /// Used for various hotkeys, including doubling held input repeat speed. Ignores held time restrictions
+    /// Used for various hotkeys, including doubling held input repeat speed
     /// </summary>
-    // todo should it be more than double
+    // todo better names for these
     public static readonly Keybind Hotkey1 = new("KeyHotkey1", KeybindId.Hotkey1, Keys.LeftShift, Buttons.LeftTrigger);
 
     /// <summary>
-    /// Used for various hotkeys, including jump to start/end. Ignores held time restrictions
+    /// Used for various hotkeys, including jump to start of menu
     /// </summary>
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
 
     /// <summary>
     /// Keybinds that don't call other keybinds
     /// </summary>
-    public static readonly List<Keybind> UniqueKeybinds =
+    public static readonly List<Keybind> NonMergedKeybinds =
         [Confirm, Back, Menu1, Menu2, PageL, PageR, Left, Right, Up, Down, Hotkey1, Hotkey2];
 
     // Merged

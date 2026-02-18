@@ -59,22 +59,15 @@ public static class InputLib
                 TimeSpan held = _Held[i];
                 double s = held.TotalSeconds;
 
-                Color c = _CheckKeybind(Keybinds.UniqueKeybinds[i])
+                Color c = CheckRaw(Keybinds.NonMergedKeybinds[i])
                     ? Settings.Theme.Cooldown : Settings.Theme.White;
 
-                sb.Append(_CheckKeybind(Keybinds.UniqueKeybinds[i])
+                sb.Append(CheckRaw(Keybinds.NonMergedKeybinds[i])
                     ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
                     .Append(s.ToString("0.##")).Append('\n');
             }
 
-            bool check = _CheckKeybind(Keybinds.Hotkey1);
-            sb.Append(check ? ThemeColor.Pos.Str : ThemeColor.Neg.Str).Append(check).Append('\n');
-
-            check = _CheckKeybind(Keybinds.Hotkey2);
-            sb.Append(check ? ThemeColor.Pos.Str : ThemeColor.Neg.Str).Append(check);
-
             l.Text = sb.ToString();
-
             return false;
         });
 
@@ -177,6 +170,27 @@ public static class InputLib
     {
         return _IsKeybindPressed(allowHold, holdDelayS, keybind1) ||
         _IsKeybindPressed(allowHold, holdDelayS, keybind2);
+    }
+
+    /// <summary>
+    /// <inheritdoc cref="Check(Keybind?, bool, float)" />
+    /// <para>Does not account for held time or merged keybinds</para>
+    /// </summary>
+    public static bool CheckRaw(Keybind keybind)
+    {
+        if (_IsKeyDown(keybind.Key))
+        {
+            LastInputSource = InputDevice.Keyboard;
+            return true;
+        }
+
+        if (_IsButtonDown(keybind.Button))
+        {
+            LastInputSource = _GetGamePadType();
+            return true;
+        }
+
+        return false;
     }
 
     #endregion
@@ -296,12 +310,6 @@ public static class InputLib
             return false;
         }
 
-        // Bypasses held time checks
-        if (keybind.Id is KeybindId.Hotkey1 or KeybindId.Hotkey2)
-        {
-            return _CheckKeybind(keybind);
-        }
-
         // Merged keybinds
         if (keybind == Keybinds.LeftUp)
         {
@@ -317,23 +325,23 @@ public static class InputLib
 
         // Normal keybinds
         // Not held
-        if (!_CheckKeybind(keybind))
+        if (!CheckRaw(keybind))
         {
             _Held[(int) keybind.Id] = TimeSpan.Zero;
             return false;
         }
 
         // Held for 0t
-        if (_Held[(int) keybind.Id] == TimeSpan.Zero && _CheckKeybind(keybind))
+        if (_Held[(int) keybind.Id] == TimeSpan.Zero && CheckRaw(keybind))
         {
             _Held[(int) keybind.Id] += _elapsedTime;
             return true;
         }
 
         // Held for long enough to re-tick
-        if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && _CheckKeybind(keybind))
+        if (allowHold && _Held[(int) keybind.Id] >= _HoldInitDelay && CheckRaw(keybind))
         {
-            _Held[(int) keybind.Id] = _HoldInitDelay - (_CheckKeybind(Keybinds.Hotkey1)
+            _Held[(int) keybind.Id] = _HoldInitDelay - (CheckRaw(Keybinds.Hotkey1)
                 ? TimeSpan.FromSeconds(holdDelayS / 2)
                 : TimeSpan.FromSeconds(holdDelayS));
             return true;
@@ -341,23 +349,6 @@ public static class InputLib
 
         // Not long enough yet
         _Held[(int) keybind.Id] += _elapsedTime;
-        return false;
-    }
-
-    private static bool _CheckKeybind(Keybind keybind)
-    {
-        if (_IsKeyDown(keybind.Key))
-        {
-            LastInputSource = InputDevice.Keyboard;
-            return true;
-        }
-
-        if (_IsButtonDown(keybind.Button))
-        {
-            LastInputSource = _GetGamePadType();
-            return true;
-        }
-
         return false;
     }
 

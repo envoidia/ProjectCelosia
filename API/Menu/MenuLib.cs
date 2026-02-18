@@ -11,23 +11,18 @@ public static class MenuLib
 
     public static int CheckMovement1D(int index, int optCount, SelectionType dir = SelectionType.HorizVert)
     {
+        if (InputLib.CheckRaw(Keybinds.Hotkey2))
+        {
+            return 0;
+        }
+
         if (InputLib.Check(dir.GetDec(), true))
         {
-            if (InputLib.Check(Keybinds.Hotkey2))
-            {
-                return 0;
-            }
-
             return index == 0 ? optCount - 1 : index - 1;
         }
 
         if (InputLib.Check(dir.GetInc(), true))
         {
-            if (InputLib.Check(Keybinds.Hotkey2))
-            {
-                return optCount - 1;
-            }
-
             return index == (optCount - 1) ? 0 : index + 1;
         }
 
@@ -84,29 +79,30 @@ public static class MenuLib
         return index;
     }
 
+    /// <param name="logScroll">Amount of lines scrolled down? probably?</param>
+    /// <param name="lines">Total lines? i think?</param>
+    /// <param name="off">Amount of lines to show? maybe?</param>
+    // todo better docs
     public static int CheckLogScroll(int logScroll, int lines, int off)
     {
         // Up
         if (InputLib.Check(Keybinds.Up, true, _LogScrollDelayS))
         {
-            return Math.Min(++logScroll, Math.Max(lines - off, 0));
+            return Math.Min(logScroll + 1, Math.Max(lines - off, 0));
         }
 
         // Down
         if (InputLib.Check(Keybinds.Down, true, _LogScrollDelayS))
         {
-            return Math.Max(--logScroll, 0);
+            return Math.Max(logScroll - 1, 0);
         }
 
-        // To top
-        /*if (InputLib.Check(Keybinds.PageL2, false)) {
-            return Math.Max(lines - off, 0);
+        // To top/bottom
+        // todo test
+        if (InputLib.Check(Keybinds.Hotkey2, true))
+        {
+            return logScroll == lines - off ? Math.Max(lines - off, 0) : 0;
         }
-
-        // To bottom
-        if (InputLib.Check(Keybinds.PageR2, false)) {
-            return 0;
-        }*/
 
         return logScroll;
     }

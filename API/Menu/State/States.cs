@@ -8,11 +8,11 @@ using static API.Input.InputPrompts;
 public static class States
 {
     public static readonly State MainMenu = new("Main", _MainMenuLib._Update,
-    static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm));
+    static () => State.GetInputPromptString(ScrollUpDown, Faster, ToStart, Confirm));
 
     public static readonly State Battle = new("Battle", BattleLib._Update,
     static () =>
-        State.GetInputPromptString(ScrollUpDown, Faster, Jump, Confirm, Back, InputPrompts.Log, Inspect))
+        State.GetInputPromptString(ScrollUpDown, Faster, ToStart, Confirm, Back, InputPrompts.Log, Inspect))
     {
         OnCreate = BattleLib._Create, OnDestroy = BattleLib._Destroy
     };
@@ -27,5 +27,6 @@ public static class States
             }
         },
 
-        static () => State.GetInputPromptString(ScrollUpDown, Faster, Jump, Top, Bottom, BackLog));
+        // todo ToStart should be start/end
+        static () => State.GetInputPromptString(ScrollUpDown, Faster, ToStart, BackLog));
 }
