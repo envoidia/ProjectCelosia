@@ -15,7 +15,6 @@ public static class DebugConsole
 {
     #region Props/Fields
 
-    // todo wait for compiler update (hint is incorrect)
     internal static bool _Show
     {
         get;
@@ -106,7 +105,7 @@ public static class DebugConsole
     /// <summary>
     /// History depth. -1 = not in history. 0 = _Hist[^1], etc
     /// </summary>
-    private static int _HistIndex // todo same compiler update
+    private static int _HistIndex // todo compiler update (hint is wrong)
     {
         get => _histIndex;
         set
@@ -216,7 +215,6 @@ public static class DebugConsole
 
     #region Internals
 
-    // Must be set after core instance init due to <c>TextInput</c> ctor depending on <c>Core</c> ctor
     internal static void _Init()
     {
         _Input.SubscribeToInput();
@@ -230,7 +228,7 @@ public static class DebugConsole
 
     internal static void _Update(GameTime gt)
     {
-        if (InputLib.IsKeyJustPressed(Keys.Escape))
+        if (_Show && InputLib.IsKeyJustPressed(Keys.Escape))
         {
             _Focused ^= true;
         }
