@@ -359,11 +359,6 @@ public sealed class TextInputWidget : IInputWidget
             // Word jump
             if (ctrlPressed)
             {
-                if (this.Index == 0)
-                {
-                    return;
-                }
-
                 while (this.Index > 0 && _IsWordSplitter(this._Sb[this.Index - 1]))
                 {
                     this.Index--;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -20,16 +21,6 @@ public static class Settings
 
     #region Gameplay
 
-    public static Lang.Language Language
-    {
-        get;
-        set
-        {
-            field = value;
-            Lang.Language._Change();
-        }
-    } = null!;
-
     // Speed of battle animations
     // Duration of in-battle pauses relative to 100% (1 = 100%, 0.1 = 10%)
     public static float BattleSpeed;
@@ -39,6 +30,16 @@ public static class Settings
     #endregion
 
     #region Display
+
+    public static Lang.Language Language
+    {
+        get;
+        set
+        {
+            field = value;
+            Lang.Language._Change();
+        }
+    } = null!;
 
     /// <summary>
     /// Y resolution. -1 = auto
@@ -100,10 +101,13 @@ public static class Settings
     {
         if (!File.Exists(FilePath))
         {
-            Create();
+            Reset();
+            Write();
         }
-
-        AllSettings = Properties.Parse(FilePath);
+        else
+        {
+            AllSettings = Properties.Parse(FilePath);
+        }
 
         // Gameplay
         Language = Lang.Language.Langs.GetValueOrDefault(
@@ -139,25 +143,32 @@ public static class Settings
         Properties.Create(FilePath, AllSettings);
     }
 
-    public static void Create()
+    public static void Reset()
     {
-        // todo should this just set the keys instead of remaking the dict
-        AllSettings = new Dictionary<string, string>
-        {
-            ["Language"] = Lang.Language.EnUS,
-            ["BattleSpeed"] = "1",
-            ["ShowInvalidMoveWarning"] = "true",
-            ["Resolution"] = "-1",
-            ["Fullscreen"] = "true",
-            ["EnableVsync"] = "true",
-            ["TargetFps"] = "-1",
-            ["Theme"] = "__API:ThemeApollo",
-            ["MusicVolume"] = "0.75",
-            ["SfxVolume"] = "0.75",
-            ["ShowInputGuide"] = "true",
-            ["DetectNintendoController"] = "true",
-            ["EnableDebugFeatures"] = "true",
-            ["SelectOpponentMoves"] = "false",
-        };
+        AllSettings.Clear();
+
+        // Gameplay
+        AllSettings["BattleSpeed"] = "1";
+        AllSettings["ShowInvalidMoveWarning"] = "true";
+
+        // Display
+        AllSettings["Language"] = Lang.Language.EnUS;
+        AllSettings["Resolution"] = "-1";
+        AllSettings["Fullscreen"] = "true";
+        AllSettings["EnableVsync"] = "true";
+        AllSettings["TargetFps"] = "-1";
+        AllSettings["Theme"] = Theme.Apollo.GetId();
+
+        // Audio
+        AllSettings["MusicVolume"] = "0.75";
+        AllSettings["SfxVolume"] = "0.75";
+
+        // Controls
+        AllSettings["ShowInputGuide"] = "true";
+        AllSettings["DetectNintendoController"] = "true";
+
+        // Debug
+        AllSettings["EnableDebugFeatures"] = "true";
+        AllSettings["SelectOpponentMoves"] = "false";
     }
 }

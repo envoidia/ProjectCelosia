@@ -632,14 +632,15 @@ public static class Commands
 
         if (args[1] == "reset")
         {
-            Settings.Create();
-            Settings.Reload();
+            Settings.Reset();
+            Settings.Write();
             return new("Reset settings");
         }
 
         if (!File.Exists(Settings.FilePath))
         {
-            Settings.Create();
+            Settings.Reset();
+            Settings.Write();
         }
 
         Dictionary<string, string> settings = Properties.Parse(Settings.FilePath);
@@ -658,15 +659,17 @@ public static class Commands
 
         switch (args[1])
         {
-            case "Language":
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
+            // Gameplay
             case "BattleSpeed":
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
             case "ShowInvalidMoveWarning":
+                Settings.AllSettings[args[1]] = args[2];
+                break;
+
+            // Display
+            case "Language":
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
@@ -690,6 +693,7 @@ public static class Commands
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
+            // Audio
             case "MusicVolume":
                 Settings.AllSettings[args[1]] = args[2];
                 break;
@@ -698,6 +702,7 @@ public static class Commands
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
+            // Controls
             case "ShowInputGuide":
                 Settings.AllSettings[args[1]] = args[2];
                 break;
@@ -706,6 +711,7 @@ public static class Commands
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
+            // Debug
             case "EnableDebugFeatures":
                 Settings.AllSettings[args[1]] = args[2];
                 break;

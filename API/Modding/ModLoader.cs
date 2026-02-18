@@ -81,8 +81,8 @@ public static class ModLoader
 
         // Find entry point
         Type entryPoint = asm.GetTypes()
-            .FirstOrDefault(static t => _IsStatic(t) &&
-                t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
+            .FirstOrDefault(static t => _IsStatic(t)
+                && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
             ?? throw new _ModLoadException(dllPath,
             $"Could not find a static class marked with ModEntryPointAttribute");
 
@@ -109,8 +109,8 @@ public static class ModLoader
                 // Make sure it doesn't use _ ID prefix (unless it's the base mod)
                 if (id != Core.BaseModId && id.StartsWith('_'))
                 {
-                    throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be" +
-                        $" {id} because the _ prefix is reserved for the base mod");
+                    throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be"
+                        + $" {id} because the _ prefix is reserved for the base mod");
                 }
 
                 // Make sure its ID doesn't match base mod ID other than _
@@ -119,8 +119,8 @@ public static class ModLoader
                     if (string.Equals(id, str.Replace("_", ""),
                         StringComparison.OrdinalIgnoreCase))
                     {
-                        throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be" +
-                            $" {id} because {id} is a reserved name");
+                        throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be"
+                            + $" {id} because {id} is a reserved name");
                     }
                 }
 
@@ -139,8 +139,8 @@ public static class ModLoader
         if (mods.Length == 0)
         {
             throw new _ModLoadException(dllPath,
-                $"{entryPoint.FullName} does not contain any non-null public static properties of type GameMod." +
-                    " Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one");
+                $"{entryPoint.FullName} does not contain any non-null public static properties of type GameMod."
+                    + " Ensure that you placed ModEntryPointAttribute on only 1 class and that it is the correct one");
         }
 
         foreach (GameMod mod in mods)
