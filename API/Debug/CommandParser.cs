@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace API.Debug;
@@ -117,28 +119,52 @@ public static partial class CommandParser
         return cmdArgs;
     }
 
-    [GeneratedRegex(@"""(?:[^""\\]|\\.)*""|[^""\s]+", RegexOptions.None)]
-    private static partial Regex _Tokenize();
-
-    private static string[] _SplitUnquotedWhitespace(string input)
+    public static string[] _SplitUnquotedWhitespace(string input)
     {
-        MatchCollection matches = _Tokenize().Matches(input);
-        string[] tokens = new string[matches.Count];
+        List<string> result = new(8);
+        StringBuilder current = new(64);
+        bool inQuotes = false;
 
-        for (int i = 0; i < matches.Count; i++)
+        for (int i = 0; i < input.Length; i++)
         {
-            string arg = matches[i].Value;
+            char c = input[i];
 
-            // Remove enclosing quotes and replace \" with "
-            if (arg.Length >= 2 && arg[0] == '"' && arg[^1] == '"')
+            if (c == '\\' && i + 1 < input.Length)
             {
-                arg = arg[1..^1];
+                // Preserve the escaped character
+                current.Append(input[i + 1]);
+                i++;
+                continue;
             }
 
-            tokens[i] = arg.Replace(@"\""", "\"");
+            if (c == '"')
+            {
+                inQuotes = !inQuotes;
+            }
+
+            if (char.IsWhiteSpace(c) && !inQuotes)
+            {
+                if (current.Length > 0)
+                {
+                    result.Add(current.ToString());
+                    current.Clear();
+                }
+            }
+            else
+            {
+                current.Append(c);
+            }
         }
 
-        return tokens;
+        if (current.Length > 0)
+        {
+            result.Add(current.ToString());
+        }
+
+        Assert.CapIs(result, 8); // todo remove before final release
+        Assert.CapIs(current, 64); // todo remove before final release
+
+        return [.. result];
     }
 
     /// <returns>

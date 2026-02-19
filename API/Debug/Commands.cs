@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using API.Battle;
 using API.Battle.State;
 using API.Graphics;
@@ -174,13 +175,15 @@ public static class Commands
         switch (args[1])
         {
             case "cmd":
-                StringBuilder sb = new("Command list:");
+                const int Cap = 1500;
+                StringBuilder sb = new("Command list:", Cap);
                 foreach (KeyValuePair<string, Command> kvp in
                     Command.Cmds.Where(kvp => kvp.Value.IsVisible))
                 {
                     sb.Append($"\n{ThemeColor.Imp.Str}[{kvp.Key}]{ThemeColor.White.Str} {kvp.Value.Desc}");
                 }
 
+                Assert.CapIs(sb, Cap); // todo remove before final release
                 return new(sb.ToString());
 
             case "kb":
@@ -213,7 +216,7 @@ public static class Commands
         }
 
         string[] lines = args[1].Split('\n');
-        StringBuilder matches = new();
+        StringBuilder matches = new(256);
         foreach (string line in lines)
         {
             if (line.Contains(args[2]))
@@ -507,7 +510,7 @@ public static class Commands
         switch (args[1])
         {
             case "modlist":
-                StringBuilder sb = new("Modlist: ");
+                StringBuilder sb = new("Modlist: ", 256);
                 int iMax = ModLoader._LoadedMods.Count - 1;
                 for (int i = 0; i <= iMax; i++)
                 {

@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace API.Debug;
 
@@ -8,6 +10,24 @@ namespace API.Debug;
 /// </summary>
 public static class Assert
 {
+    /// <summary>
+    /// Asserts that this call is unreachable
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void Unreachable(object v)
+    {
+        System.Diagnostics.Debug.Assert(false, "Unreachable code was executed");
+    }
+
+    /// <summary>
+    /// Asserts that this call is unreachable with a custom message
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void Unreachable(object v, string msg)
+    {
+        System.Diagnostics.Debug.Assert(false, msg);
+    }
+
     /// <summary>
     /// Asserts that a value is null
     /// </summary>
@@ -97,6 +117,24 @@ public static class Assert
     public static void LenIs(IList c, int s)
     {
         System.Diagnostics.Debug.Assert(c.Count == s, $"Size of {c} must be {s}, was {c.Count}");
+    }
+
+    /// <summary>
+    /// Asserts that the given <c>List</c> has a specific capacity
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void CapIs<T>(List<T> c, int s)
+    {
+        System.Diagnostics.Debug.Assert(c.Capacity == s, $"Size of {c} must be {s}, was {c.Capacity}");
+    }
+
+    /// <summary>
+    /// Asserts that the given <c>StringBuilder</c> has a specific capacity
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void CapIs(StringBuilder c, int s)
+    {
+        System.Diagnostics.Debug.Assert(c.Capacity == s, $"Size of {c} must be {s}, was {c.Capacity}");
     }
 
     /// <summary>

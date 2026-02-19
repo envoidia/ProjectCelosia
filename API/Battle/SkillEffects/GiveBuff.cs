@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using API.Battle.BuffEffects;
 using API.Battle.State;
+using API.Debug;
 using API.Extensions;
 using API.Graphics;
 
@@ -45,7 +46,8 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
         // todo fix dupe buff bug
         if (buffInstance is not null)
         {
-            StringBuilder str = new();
+            const int Cap = 192;
+            StringBuilder str = new(Cap);
 
             int stacksOld = buffInstance.Stacks;
             int stacksNew = Math.Min(buff.MaxStacks, stacksOld + stacksMod);
@@ -70,11 +72,13 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 }
                 else
                 {
-                    str = new StringBuilder("LogGiveBuffTurns".FormatLang([unit.FormatName(),
+                    str.Clear();
+                    str.Append("LogGiveBuffTurns".FormatLang([unit.FormatName(),
                         buffName, ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]));
                 }
             }
 
+            Assert.CapIs(str, Cap); // todo remove before final release
             LogLib.Add(str.ToString());
 
             int stacksAdded = stacksNew - stacksOld;

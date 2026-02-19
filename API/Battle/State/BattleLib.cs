@@ -283,7 +283,9 @@ public static class BattleLib
         }
 
         Unit[] units = Battle.GetAllUnits();
-        StringBuilder sb = new();
+
+        const int Cap = 48;
+        StringBuilder sb = new(Cap);
 
         // Update nameplates
         for (int i = 0; i < units.Length; i++)
@@ -361,6 +363,7 @@ public static class BattleLib
                     sb.Append(") ");
                 }
 
+                Assert.CapIs(sb, Cap); // todo remove before final release
                 _Buffs[i].Text = sb.ToString();
             }
 
@@ -701,53 +704,51 @@ public static class BattleLib
         {
             unit.Sp = (int) Math.Min(unit.Sp + (100 * unit.GetMult(Mults.SpGain)), 1000);
 
+            const int Cap = 192;
+
             foreach (Passive passive in unit.Passives)
             {
-                StringBuilder turnEnd1 =
-                    new StringBuilder("LogTurnEndEffect".FormatLang([unit.FormatName(),
-                        ThemeColor.Passive + passive.GetName()])).Append(' ');
-
                 foreach (IBuffEffect buffEffect in passive.BuffEffects)
                 {
-                    StringBuilder turnEnd2 = new();
+                    StringBuilder turnEnd = new(Cap);
                     string[] effectMsgs = buffEffect.OnTurnEnd(unit, 1);
 
                     foreach (string effectMsg in effectMsgs)
                     {
                         if (!string.IsNullOrEmpty(effectMsg))
                         {
-                            turnEnd2.Append(effectMsg);
+                            turnEnd.Append(effectMsg);
                         }
                     }
 
-                    if (turnEnd2.Length > 0)
+                    if (turnEnd.Length > 0)
                     {
-                        LogLib.Add(turnEnd1 + turnEnd2.ToString());
+                        Assert.CapIs(turnEnd, Cap); // todo remove before final release
+                        LogLib.Add("LogTurnEndEffect".FormatLang([unit.FormatName(),
+                        ThemeColor.Passive + passive.GetName()]) + ' ' + turnEnd.ToString());
                     }
                 }
             }
 
             foreach (BuffInstance buffInstance in unit.BuffInstances)
             {
-                StringBuilder turnEnd1 =
-                    new StringBuilder("LogTurnEndEffect".FormatLang([unit.FormatName(),
-                    buffInstance.Buff.GetName()])).Append(' ');
-
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
                 {
-                    StringBuilder turnEnd2 = new();
+                    StringBuilder turnEnd = new(Cap);
                     string[] effectMsgs = buffEffect.OnTurnEnd(unit, buffInstance.Stacks);
                     foreach (string effectMsg in effectMsgs)
                     {
                         if (!string.IsNullOrEmpty(effectMsg))
                         {
-                            turnEnd2.Append(effectMsg);
+                            turnEnd.Append(effectMsg);
                         }
                     }
 
-                    if (turnEnd2.Length > 0)
+                    if (turnEnd.Length > 0)
                     {
-                        LogLib.Add(turnEnd1 + turnEnd2.ToString());
+                        Assert.CapIs(turnEnd, Cap); // todo remove before final release
+                        LogLib.Add("LogTurnEndEffect".FormatLang([unit.FormatName(),
+                    buffInstance.Buff.GetName()]) + ' ' + turnEnd.ToString());
                     }
                 }
             }

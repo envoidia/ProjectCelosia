@@ -45,6 +45,7 @@ public static class InputLib
     /// <inheritdoc cref="_HoldInitDelayS" />
     private static readonly TimeSpan _HoldInitDelay = TimeSpan.FromSeconds(_HoldInitDelayS);
 
+    private static readonly StringBuilder _InputSb = new(150);
     /// <summary>
     /// Tracks the status of input
     /// </summary>
@@ -53,7 +54,7 @@ public static class InputLib
         {
             Label l = (Label) a;
 
-            StringBuilder sb = new();
+            _InputSb.Clear();
             for (int i = 0; i < _Held.Length; i++)
             {
                 TimeSpan held = _Held[i];
@@ -62,12 +63,12 @@ public static class InputLib
                 Color c = CheckRaw(Keybinds.NonMergedKeybinds[i])
                     ? Settings.Theme.Cooldown : Settings.Theme.White;
 
-                sb.Append(CheckRaw(Keybinds.NonMergedKeybinds[i])
+                _InputSb.Append(CheckRaw(Keybinds.NonMergedKeybinds[i])
                     ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
                     .Append(s.ToString("0.##")).Append('\n');
             }
 
-            l.Text = sb.ToString();
+            l.Text = _InputSb.ToString();
             return false;
         });
 

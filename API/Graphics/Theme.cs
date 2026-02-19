@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using API.Debug;
 using API.Extensions;
 using API.Modding;
 using API.Name;
@@ -802,7 +803,8 @@ public sealed class Theme : IDescribable, IRegistrable
 
     public string ToDetailedString(bool renderColor)
     {
-        StringBuilder sb = new(this.ToString());
+        const int Cap = 1500;
+        StringBuilder sb = new(this.ToString(), Cap);
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
         {
@@ -811,6 +813,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 ? ThemeColor.White.Str : null)}\n");
         }
 
+        Assert.CapIs(sb, Cap); // todo remove before final release
         return sb.ToString();
     }
 

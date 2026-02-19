@@ -20,6 +20,7 @@ namespace API.Menu.Widget;
 // todo onscreen keyboard
 public sealed class TextInputWidget : IInputWidget
 {
+    // todo init with size of MaxLength or idk like 128
     private readonly StringBuilder _Sb = new();
 
     /// <summary>
@@ -501,30 +502,30 @@ public sealed class TextInputWidget : IInputWidget
 
         if (InputLib.IsKeyJustPressed(Keys.V))
         {
-            StringBuilder sb = new(Clipboard.Text);
+            char[] cb = Clipboard.Text.ToCharArray();
 
-            for (int i = 0; i < sb.Length; i++)
+            for (int i = 0; i < cb.Length; i++)
             {
-                switch (sb[i])
+                switch (cb[i])
                 {
                     case '\n':
-                        sb[i] = ' ';
+                        cb[i] = ' ';
                         continue;
 
                     case '[':
-                        sb[i] = '［';
+                        cb[i] = '［';
                         continue;
                 }
 
-                if (char.IsSurrogate(sb[i]))
+                if (char.IsSurrogate(cb[i]))
                 {
-                    sb[i] = '�';
+                    cb[i] = '�';
                 }
             }
 
-            this._Sb.Insert(this.Index, sb);
+            this._Sb.Insert(this.Index, cb);
             this.Update();
-            this.Index += sb.Length;
+            this.Index += cb.Length;
         }
 #endif
     }

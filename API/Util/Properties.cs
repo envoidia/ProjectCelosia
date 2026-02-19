@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using API.Debug;
 
 namespace API.Util;
 
@@ -52,7 +53,8 @@ public static class Properties
     /// </summary>
     public static void Create(string path, Dictionary<string, string> props)
     {
-        StringBuilder sb = new();
+        const int Cap = 274;
+        StringBuilder sb = new(Cap);
 
         foreach (KeyValuePair<string, string> kvp in props)
         {
@@ -60,5 +62,6 @@ public static class Properties
         }
 
         File.WriteAllText(path, sb.ToString());
+        Assert.CapIs(sb, Cap); // todo remove before final release
     }
 }

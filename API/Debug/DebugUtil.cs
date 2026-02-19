@@ -205,7 +205,8 @@ public static class DebugUtil
 
     private static string _GetKeyNameText()
     {
-        StringBuilder sb = new();
+        const int Cap = 450;
+        StringBuilder sb = new(Cap);
         for (int i = 0; i < Keybinds.NonMergedKeybinds.Count; i++)
         {
             Keybind kb = Keybinds.NonMergedKeybinds[i];
@@ -217,6 +218,7 @@ public static class DebugUtil
             }
         }
 
+        Assert.CapIs(sb, Cap);
         return sb.ToString();
     }
 

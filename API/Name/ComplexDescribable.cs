@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using API.Debug;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -70,7 +71,8 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
 
     protected string _GetFormattedDescInclusions()
     {
-        StringBuilder formattedInclusions = new(this.GetDesc());
+        const int Cap = 256;
+        StringBuilder formattedInclusions = new(this.GetDesc(), Cap);
         HashSet<IDescribable> di = this._GetDescInclusions();
 
         if (di.Count > 0)
@@ -85,6 +87,7 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
                 .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str).Append(')');
         }
 
+        Assert.CapIs(formattedInclusions, Cap); // todo remove before final release
         return formattedInclusions.ToString();
     }
 }

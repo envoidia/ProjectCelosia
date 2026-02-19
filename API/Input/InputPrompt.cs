@@ -9,7 +9,7 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds)
 
     public string GetText()
     {
-        StringBuilder builder = new();
+        StringBuilder builder = new(64);
 
         for (int i = 0; i < keybinds.Length; i++)
         {

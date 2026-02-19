@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using API.Battle.BuffEffects;
 using API.Battle.State;
+using API.Debug;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -302,7 +303,8 @@ public sealed class Unit
     {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
-        StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ");
+        const int Cap = 532;
+        StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ", Cap);
         foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible))
         {
             sb.Append(element.Icon).Append(' ')
@@ -317,6 +319,7 @@ public sealed class Unit
             sb.Append("   ");
         }
 
+        Assert.CapIs(sb, Cap); // todo remove before final release
         return sb.ToString();
     }
 
@@ -374,6 +377,7 @@ public sealed class Unit
             builder.Append(i == (statCount - 1) ? ")" : ", ");
         }
 
+        Assert.Unreachable("init the sb size");
         return builder.ToString();
     }
 
@@ -405,6 +409,7 @@ public sealed class Unit
             str.Append(mult.Format(curMult)).Append('\n');
         }
 
+        Assert.Unreachable("init the sb size");
         return str.ToString();
     }
 
@@ -458,6 +463,7 @@ public sealed class Unit
             }
         }
 
+        Assert.Unreachable("init the sb size");
         return str.Append(this.ExtraActions.Format()).ToString();
     }
 
@@ -520,6 +526,7 @@ public sealed class Unit
             str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
         }
 
+        Assert.Unreachable("init the sb size");
         return str.ToString();
     }
 

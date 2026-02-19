@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using API.Debug;
 using API.Extensions;
 using API.Input;
 using Microsoft.Xna.Framework;
@@ -108,7 +109,8 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
 
     public static string GetInputPromptString(params ReadOnlySpan<InputPrompt> inputPrompts)
     {
-        StringBuilder inputs = new();
+        const int Cap = 192;
+        StringBuilder inputs = new(Cap);
 
         for (int i = 0; i < inputPrompts.Length; i++)
         {
@@ -120,6 +122,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
             }
         }
 
+        Assert.CapIs(inputs, Cap); // todo remove before final release
         return inputs.ToString();
     }
 }
