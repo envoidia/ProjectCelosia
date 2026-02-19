@@ -20,8 +20,7 @@ namespace API.Menu.Widget;
 // todo onscreen keyboard
 public sealed class TextInputWidget : IInputWidget
 {
-    // todo init with size of MaxLength or idk like 128
-    private readonly StringBuilder _Sb = new();
+    private readonly StringBuilder _Sb;
 
     /// <summary>
     /// Current text as a <c>string</c>. Allocates
@@ -39,11 +38,13 @@ public sealed class TextInputWidget : IInputWidget
     /// </summary>
     public readonly Label Label;
 
+    public const int UnlimitedLength = -1;
+
     /// <summary>
-    /// Max length of text input. -1 for no limit
+    /// Max length of text input
     /// </summary>
-    // todo
-    //public int MaxLength = -1;
+    // todo impl
+    public int MaxLength = UnlimitedLength;
 
     /// <summary>
     /// Cursor display
@@ -96,10 +97,9 @@ public sealed class TextInputWidget : IInputWidget
 
     internal const float _MoveDelay = 0.05f;
 
-    public TextInputWidget(Label label, ARectangle cursor, Func<bool> onEnter, bool useUpDown = true)
+    public TextInputWidget(Label label, ARectangle cursor, Func<bool> onEnter, bool useUpDown = true, int maxLength = UnlimitedLength)
     {
         this.Label = label;
-        //this.Label.RichTextLayout.SupportsCommands = false; //todo fix
         this.Label.RichTextLayout.CalculateGlyphs = true;
 
         this.Cursor = cursor;
@@ -107,6 +107,9 @@ public sealed class TextInputWidget : IInputWidget
 
         this.OnEnter = onEnter;
         this.UseUpDown = useUpDown;
+
+        this.MaxLength = maxLength;
+        this._Sb = new(maxLength == UnlimitedLength ? 128 : maxLength);
 
         this._UpdateCursor();
     }
