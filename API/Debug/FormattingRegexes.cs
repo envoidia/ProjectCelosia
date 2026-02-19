@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace API.Debug;
 
-public static partial class Regexes
+public static partial class FormattingRegexes
 {
     extension(string @this)
     {
@@ -24,8 +24,6 @@ public static partial class Regexes
             return _RemoveImageCodes().Replace(@this, "");
         }
     }
-
-    // Errors only show in the editor and do not prevent compilation
 
     [GeneratedRegex(@"\/c\[.*?]|\/i\[.*?]|\/\/")]
     private static partial Regex _RemoveFormattingCodes();

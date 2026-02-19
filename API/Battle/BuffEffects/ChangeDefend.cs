@@ -36,7 +36,8 @@ public sealed class ChangeDefend(int change) : IBuffEffect
             LogLib.Add("LogChangeShield".FormatLang([self.FormatName(),
                 (shield + defendOld).Format(ThemeColor.Shield), shield.Format(ThemeColor.Shield),
                 self.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-defendOld).Format(ThemeColor.Shield)]));
-        } else
+        }
+        else
         { //# 0 = name, 1 = old shield, 2 = new shield, 3 = max HP, 4 = shield change
             LogLib.Add("LogChangeShield".FormatLang([self.FormatName(), defendOld, 0, self.GetBaseStat(Stats.Hp),
                 defendOld.Format(ThemeColor.Shield)]));

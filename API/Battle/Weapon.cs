@@ -51,7 +51,8 @@ public sealed class Weapon : ComplexDescribable, IRegistrable, IEquippable
         {
             unit.AddSkills(this.Skills);
             unit.AddPassives(this.Passives);
-        } else
+        }
+        else
         {
             unit.RemoveSkills(this.Skills);
             unit.RemovePassives(this.Passives);

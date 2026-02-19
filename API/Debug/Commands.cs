@@ -35,7 +35,7 @@ public static class Commands
 
     private const string _BasicInfo = "Basic info";
 
-    private const string _ManDesc = "Enter a command followed by its arguments with a space between each.\n| pipes the output of a command into the next\n`man cmd` to list all commands, `man kb` to list all keybinds";
+    private const string _Help = "Enter a command followed by its arguments with a space between each.\nWrap an argument in \" to include spaces. Inside of quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\n`man cmd` to list all commands, `man kb` to list all keybinds";
 
     private static readonly string[] _Overlays = ["info", "console", "outline", "theme", "input", "perf"];
     private static readonly string[] _Writable = ["modlist", "registry", "lang", "stage", "battlelog", "theme"];
@@ -50,7 +50,7 @@ public static class Commands
 
         Command.Register("help", static args =>
         {
-            return new(_ManDesc);
+            return new(_Help);
         }, [], _BasicInfo, Core.Id);
 
         string[] manArgs = ["cmd", "kb"];
@@ -82,7 +82,7 @@ public static class Commands
             new(Search)], GrepDesc, Core.Id);
 
         Command.Register("rg", _Cmd_grep, [TextParam,
-            new(Search)], GrepDesc, Core.Id);
+            new(Search)], GrepDesc, Core.Id, false);
 
         Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
             "Counts lines, words, and chars", Core.Id);
@@ -168,7 +168,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, _ManDesc);
+            return new(ExitCode.Err, _Help);
         }
 
         switch (args[1])
@@ -201,7 +201,7 @@ public static class Commands
                     """);
 
             default:
-                return new(ExitCode.Err, _ManDesc);
+                return new(ExitCode.Err, _Help);
         }
     }
 

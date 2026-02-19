@@ -222,15 +222,10 @@ public static class InputLib
             trigL += state.Triggers.Left;
             trigR += state.Triggers.Right;
 
+            // todo wait for public buttons
+            // buttons |= state.Buttons.Buttons;
+
             GamePadButtons b = state.Buttons;
-
-            // Type t = typeof(GamePadButtons);
-            // FieldInfo? f = t.GetField("_buttons", BindingFlags.NonPublic | BindingFlags.Instance);
-            // object v = f.GetValue(b);
-            // Buttons rawButtons = (Buttons) v;
-
-            // buttons |= rawButtons;
-            // todo can we get public _buttons pl0x
 
             if (b.A == ButtonState.Pressed)
             {

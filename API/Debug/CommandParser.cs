@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace API.Debug;
 
-public static class CommandParser
+public static partial class CommandParser
 {
     /// <summary>
     /// Executes the specified command string from left to right
@@ -100,7 +101,7 @@ public static class CommandParser
     }
 
     /// <returns>
-    /// The input string split into commands by |, then split into args by whitespace and filtered
+    /// The input string split into commands by |, then split into args by unquoted whitespace and filtered
     /// </returns>
     public static Span<string[]> TokenizeCommand(string str)
     {
@@ -110,11 +111,34 @@ public static class CommandParser
         Span<string[]> cmdArgs = new string[cmds.Length][];
         for (int i = 0; i < cmds.Length; i++)
         {
-            cmdArgs[i] = cmds[i].Split((char[]) null!,
-                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            cmdArgs[i] = _SplitUnquotedWhitespace(cmds[i]);
         }
 
         return cmdArgs;
+    }
+
+    [GeneratedRegex(@"""(?:[^""\\]|\\.)*""|[^""\s]+", RegexOptions.None)]
+    private static partial Regex _Tokenize();
+
+    private static string[] _SplitUnquotedWhitespace(string input)
+    {
+        MatchCollection matches = _Tokenize().Matches(input);
+        string[] tokens = new string[matches.Count];
+
+        for (int i = 0; i < matches.Count; i++)
+        {
+            string arg = matches[i].Value;
+
+            // Remove enclosing quotes and replace \" with "
+            if (arg.Length >= 2 && arg[0] == '"' && arg[^1] == '"')
+            {
+                arg = arg[1..^1];
+            }
+
+            tokens[i] = arg.Replace(@"\""", "\"");
+        }
+
+        return tokens;
     }
 
     /// <returns>
@@ -154,11 +178,16 @@ public static class CommandParser
                 return null;
             }
 
+            if (paramNum >= cmd.Params.Length)
+            {
+                // Just assume it's valid since there are no rules for it
+                return "";
+            }
+
             matchAgainst = cmd.Params[paramNum - 1].GetValidInputs();
 
             if (matchAgainst.Length == 0)
             {
-                // Just assume it's valid since there are no rules for it
                 return "";
             }
         }

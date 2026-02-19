@@ -99,14 +99,14 @@ public static class Settings
     /// </summary>
     public static void Reload()
     {
-        if (!File.Exists(FilePath))
+        if (File.Exists(FilePath))
         {
-            Reset();
-            Write();
+            AllSettings = Properties.Parse(FilePath);
         }
         else
         {
-            AllSettings = Properties.Parse(FilePath);
+            Reset();
+            Write();
         }
 
         // Gameplay
