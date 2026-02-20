@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace API.Debug;
 
@@ -108,7 +107,7 @@ public static partial class CommandParser
     public static Span<string[]> TokenizeCommand(string str)
     {
         ReadOnlySpan<string> cmds = str.Split('|',
-            StringSplitOptions.TrimEntries);
+            StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
         Span<string[]> cmdArgs = new string[cmds.Length][];
         for (int i = 0; i < cmds.Length; i++)

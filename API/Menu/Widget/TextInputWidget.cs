@@ -23,15 +23,9 @@ public sealed class TextInputWidget : IInputWidget
     private readonly StringBuilder _Sb;
 
     /// <summary>
-    /// Current text as a <c>string</c>. Allocates
+    /// Current text as a <c>string</c>
     /// </summary>
-    public string Text
-    {
-        get
-        {
-            return this._Sb.ToString();
-        }
-    }
+    public string Text = "";
 
     /// <summary>
     /// Text display
@@ -155,6 +149,7 @@ public sealed class TextInputWidget : IInputWidget
     /// </summary>
     public void Update()
     {
+        this.Text = this._Sb.ToString();
         this.OptCount = this._Sb.Length;
         this.OnChangeText?.Invoke();
     }

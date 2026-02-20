@@ -7,14 +7,7 @@ public sealed class BuffInstance(Buff buff, int turns, int stacks)
     /// </summary>
     public const int InfiniteTurns = 1000;
 
-    public Buff Buff
-    {
-        get
-        {
-            return buff;
-        }
-    }
-
+    public readonly Buff Buff = buff;
     public int Turns = turns;
     public int Stacks = stacks;
 

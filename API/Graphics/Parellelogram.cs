@@ -28,20 +28,6 @@ public class Parellelogram : IActor
 
     public ActorData Data { get; }
 
-    /// <inheritdoc cref="ActorData.Priority" />
-    public RenderPriority Priority
-    {
-        get
-        {
-            return this.Data.Priority;
-        }
-
-        set
-        {
-            this.Data.Priority = value;
-        }
-    }
-
     public Parellelogram(int l, int r, int t, int b, float outlineThickness = _DefaultOutlineThickness,
         RenderPriority renderPriority = RenderPriority.B1Med)
     {

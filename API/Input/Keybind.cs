@@ -8,14 +8,7 @@ namespace API.Input;
 
 public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons button) : IDescribable
 {
-    public KeybindId Id
-    {
-        get
-        {
-            return id;
-        }
-    }
-
+    public readonly KeybindId Id = id;
     public Keys Key = key;
     public Buttons Button = button;
 

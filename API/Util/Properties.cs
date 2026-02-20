@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using API.Debug;
 
 namespace API.Util;
 
 /// <summary>
-/// Utilities for working with .properties files. Based off of, but not fully adherent to, https://en.wikipedia.org/wiki/.properties
+/// Utilities for working with .properties files.
+/// Based off of, but not fully adherent to, https://en.wikipedia.org/wiki/.properties
 /// <para>Specification: Lines starting with # are comments and ignored.
 /// Each non-empty, non-comment line starts with a key, then has an =, then a value.
 /// The only supported escape sequence is \n</para>
@@ -53,7 +53,7 @@ public static class Properties
     /// </summary>
     public static void Create(string path, Dictionary<string, string> props)
     {
-        const int Cap = 274;
+        const int Cap = 300;
         StringBuilder sb = new(Cap);
 
         foreach (KeyValuePair<string, string> kvp in props)
@@ -62,6 +62,5 @@ public static class Properties
         }
 
         File.WriteAllText(path, sb.ToString());
-        Assert.CapIs(sb, Cap); // todo remove before final release
     }
 }

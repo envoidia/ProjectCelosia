@@ -59,14 +59,16 @@ public static class ModLoader
 
     internal static void _LoadAllMods()
     {
-        IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder, "*.dll", SearchOption.AllDirectories);
+        IEnumerable<string> dllFiles = Directory.EnumerateFiles(_ModsFolder,
+            "*.dll", SearchOption.AllDirectories);
 
         foreach (string dllPath in dllFiles)
         {
             _LoadSingleModAssembly(dllPath);
         }
 
-        DebugConsole.Log("AllModsLoaded".IcuFormatLang([_LoadedMods.Count, dllFiles.Count()]), _ClassName);
+        DebugConsole.Log("AllModsLoaded".IcuFormatLang(
+            [_LoadedMods.Count, dllFiles.Count()]), _ClassName);
     }
 
     private static void _LoadSingleModAssembly(string dllPath)

@@ -4,14 +4,7 @@ namespace API.Battle;
 
 public sealed class SkillInstance(Skill skill)
 {
-    public Skill Skill
-    {
-        get
-        {
-            return skill;
-        }
-    }
-
+    public readonly Skill Skill = skill;
     public int Cooldown = 0;
 
     public string GetCostCdFormatted()
@@ -20,7 +13,7 @@ public sealed class SkillInstance(Skill skill)
         {
             return this.Skill.GetCostFormatted();
         }
-        
+
         if (this.Cooldown == 0)
         {
             return $"{this.Skill.Cooldown} {"CD".GetLang()}, {this.Skill.GetCostFormatted()}";

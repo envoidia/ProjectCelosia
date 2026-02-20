@@ -43,6 +43,12 @@ public sealed class Theme : IDescribable, IRegistrable
         this.ModId = modId;
         this.ItemId = itemId ?? keyName;
 
+        this.AllColors = [this.White, this.Gray, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
+        this.Pos, this.Neg, this.Imp, this.Ally, this.Opp, this.Turn, this.Hp, this.Sp, this.Shield, this.Bloom,
+        this.Buff, this.Skill, this.Element, this.Passive, this.Stat, this.Cooldown, this.SpBack, this.Overheal,
+        this.StatBarLayer4, this.StatBarLayer5, this.Atk, this.Def, this.Fth, this.Agi, this.Vis, this.Ignis,
+        this.Glacies, this.Fulgur, this.Ventus, this.Terra, this.Lux, this.Malum];
+
         Registry.Register(this);
     }
 
@@ -472,17 +478,7 @@ public sealed class Theme : IDescribable, IRegistrable
 
     #region General
 
-    public Color[] AllColors
-    {
-        get
-        {
-            return [this.White, this.Gray, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
-        this.Pos, this.Neg, this.Imp, this.Ally, this.Opp, this.Turn, this.Hp, this.Sp, this.Shield, this.Bloom,
-        this.Buff, this.Skill, this.Element, this.Passive, this.Stat, this.Cooldown, this.SpBack, this.Overheal,
-        this.StatBarLayer4, this.StatBarLayer5, this.Atk, this.Def, this.Fth, this.Agi, this.Vis, this.Ignis,
-        this.Glacies, this.Fulgur, this.Ventus, this.Terra, this.Lux, this.Malum];
-        }
-    }
+    public readonly Color[] AllColors;
 
     /// <summary>
     /// Not necessarily actually white, but (probably) close
