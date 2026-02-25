@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 using API.Debug;
 using API.Graphics;
@@ -222,56 +223,13 @@ public static class InputLib
             trigL += state.Triggers.Left;
             trigR += state.Triggers.Right;
 
-            // todo wait for public buttons
-            // buttons |= state.Buttons.Buttons;
+            // tfw struct is just an existing type privately wrapped for no reason
+            // safety: single-field struct that hasnt been updated since probably like 2006
+            buttons |= Unsafe.BitCast<GamePadButtons, Buttons>(state.Buttons);
 
-            GamePadButtons b = state.Buttons;
-
-            if (b.A == ButtonState.Pressed)
-            {
-                buttons |= Buttons.A;
-            }
-            if (b.B == ButtonState.Pressed)
-            {
-                buttons |= Buttons.B;
-            }
-            if (b.X == ButtonState.Pressed)
-            {
-                buttons |= Buttons.X;
-            }
-            if (b.Y == ButtonState.Pressed)
-            {
-                buttons |= Buttons.Y;
-            }
-            if (b.LeftShoulder == ButtonState.Pressed)
-            {
-                buttons |= Buttons.LeftShoulder;
-            }
-            if (b.RightShoulder == ButtonState.Pressed)
-            {
-                buttons |= Buttons.RightShoulder;
-            }
-            if (b.LeftStick == ButtonState.Pressed)
-            {
-                buttons |= Buttons.LeftStick;
-            }
-            if (b.RightStick == ButtonState.Pressed)
-            {
-                buttons |= Buttons.RightStick;
-            }
-            if (b.Back == ButtonState.Pressed)
-            {
-                buttons |= Buttons.Back;
-            }
-            if (b.Start == ButtonState.Pressed)
-            {
-                buttons |= Buttons.Start;
-            }
-            if (b.BigButton == ButtonState.Pressed)
-            {
-                buttons |= Buttons.BigButton;
-            }
-
+            // why are GamePadButtons and GamePadDPad separate
+            // neither of these structs has an actual reason to exist it could have just been a button
+            // i hate this API
             GamePadDPad d = state.DPad;
             if (d.Up == ButtonState.Pressed)
             {

@@ -113,8 +113,8 @@ public static class Commands
                 / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
         }, [], "Forces GC collection and reports memory", Core.Id);
 
-        Command.Register("copy", _Cmd_copy, TextParamArr, "Writes to clipboard", Core.Id);
-        Command.Register("paste", _Cmd_paste, [], "Reads from clipboard", Core.Id);
+        Command.Register("cbc", _Cmd_cbc, TextParamArr, "Writes to clipboard", Core.Id);
+        Command.Register("cbp", _Cmd_cbp, [], "Reads from clipboard", Core.Id);
 
         #endregion
 
@@ -316,7 +316,7 @@ public static class Commands
         return new(ExitCode.Err, "NYI");
     }
 
-    private static CommandResult _Cmd_copy(ReadOnlySpan<string> args)
+    private static CommandResult _Cmd_cbc(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
         {
@@ -329,7 +329,7 @@ public static class Commands
         return new(null);
     }
 
-    private static CommandResult _Cmd_paste(ReadOnlySpan<string> args)
+    private static CommandResult _Cmd_cbp(ReadOnlySpan<string> args)
     {
         return new(Clipboard.Text);
     }
@@ -811,7 +811,8 @@ public static class Commands
                 unit.GiveBuffInstances(new BuffInstance(buff, turns, Math.Min(stacks, buff.MaxStacks)));
 
                 return new(
-                    $"Gave {stacks}x {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit.FormatName(false)} for {turns} turns");
+                    $"Gave {ThemeColor.Imp.Str}{stacks}x {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit
+                        .FormatName(false)} for {ThemeColor.Imp.Str}{turns}{ThemeColor.White.Str} turns");
 
             case Remove:
                 unit.RemoveBuffs(buff);

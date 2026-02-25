@@ -87,7 +87,12 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
                 .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str).Append(')');
         }
 
-        Assert.CapIs(formattedInclusions, Cap); // todo remove before final release
+        if (formattedInclusions.Capacity > Cap) // todo remove
+        {
+            DebugConsole.Log($"formattedInclusions with length of {formattedInclusions.Length} and capacity of {formattedInclusions.Capacity}",
+                nameof(ComplexDescribable), LogLevel.Warning);
+        }
+
         return formattedInclusions.ToString();
     }
 }
