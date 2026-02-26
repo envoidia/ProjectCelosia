@@ -228,7 +228,7 @@ public static class InputLib
             buttons |= Unsafe.BitCast<GamePadButtons, Buttons>(state.Buttons);
 
             // why are GamePadButtons and GamePadDPad separate
-            // neither of these structs has an actual reason to exist it could have just been a button
+            // neither of these structs has an actual reason to exist it could have just been a Buttons
             // i hate this API
             GamePadDPad d = state.DPad;
             if (d.Up == ButtonState.Pressed)
@@ -250,10 +250,9 @@ public static class InputLib
         }
 
         return new(
-            new(stickL, stickR),
-            new(trigL, trigR),
-            new(buttons),
-            new());
+            stickL, stickR,
+            trigL, trigR,
+            buttons);
     }
 
     private static bool _IsKeybindPressed(bool allowHold, float holdDelayS, Keybind? keybind)
