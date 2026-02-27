@@ -304,9 +304,7 @@ public static class BattleLib
                 {
                     if (buffCount > 0 && buffCount % 4 == 0)
                     {
-                        {
-                            sb.Append('\n');
-                        }
+                        sb.Append('\n');
                     }
 
                     buffCount++;
