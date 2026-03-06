@@ -120,7 +120,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 Fulgur = oranges[5],
                 Ventus = greens[2],
                 Terra = oranges[2],
-                Lux = beiges[2],
+                Lux = beiges[5],
                 Malum = redOranges[4]
             };
         }

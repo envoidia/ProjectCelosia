@@ -160,9 +160,6 @@ public static partial class CommandParser
             result.Add(current.ToString());
         }
 
-        Assert.CapIs(result, 8); // todo remove before final release
-        Assert.CapIs(current, 64); // todo remove before final release
-
         return [.. result];
     }
 

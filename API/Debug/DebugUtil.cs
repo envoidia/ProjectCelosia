@@ -124,7 +124,7 @@ public static class DebugUtil
             return;
         }
 
-        DebugConsole._Update(gt);
+        DebugConsole._Update();
 
         _CheckInputs();
 

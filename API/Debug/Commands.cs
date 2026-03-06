@@ -59,8 +59,8 @@ public static class Commands
 
         Command.Register("clear", static _ =>
         {
-            DebugConsole._LogText.Clear();
-            DebugConsole._Log.Text = "\n";
+            DebugConsole._OutHist.Clear();
+            DebugConsole._OutHistLabel.Text = "\n";
             DebugConsole._Line.Width = DebugConsole._MinBgWidth;
 
             return new(null);
@@ -68,7 +68,7 @@ public static class Commands
 
         Command.Register("history", static _ =>
         {
-            return new(string.Join('\n', DebugConsole._Hist));
+            return new(string.Join('\n', DebugConsole._InHist));
         }, [], "Returns command history", Core.Id);
 
         Command.Register("echo", args =>
@@ -187,18 +187,26 @@ public static class Commands
 
             case "kb":
                 return new($"""
-                    {ThemeColor.Imp.Str}[Left/Right]{ThemeColor.White.Str} Move cursor. Hold {ThemeColor.Imp.Str}[Shift]{ThemeColor.White.Str} to move faster
+                    {ThemeColor.Imp.Str}[Left/Right]{ThemeColor.White.Str} Move cursor
                     {ThemeColor.Imp.Str}[BkSp/Del]{ThemeColor.White.Str} Delete to left/right
                     {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space-separated)
                     {ThemeColor.Imp.Str}[Alt]{ThemeColor.White.Str} Move and delete by word part (case- or space-separated)
+                    {ThemeColor.Imp.Str}[Home/End]{ThemeColor.White.Str} Cursor to start/end
+
                     {ThemeColor.Imp.Str}[Ctrl+Shift+BkSp/Del]{ThemeColor.White.Str} Delete all to left/right
                     {ThemeColor.Imp.Str}[Ctrl+Shift+K]{ThemeColor.White.Str} Delete all
-                    {ThemeColor.Imp.Str}[Home/End]{ThemeColor.White.Str} Cursor to start/end
+
                     {ThemeColor.Imp.Str}[Up/Down]{ThemeColor.White.Str} Move through command history
+                    {ThemeColor.Imp.Str}[Ctrl+Up/Down]{ThemeColor.White.Str} Move through output history
+                    {ThemeColor.Imp.Str}[Ctrl+Home/End]{ThemeColor.White.Str} To top/bottom of output history
+                    
                     {ThemeColor.Imp.Str}[Tab]{ThemeColor.White.Str} Accept autocomplete
                     {ThemeColor.Imp.Str}[Ctrl+C/V/X]{ThemeColor.White.Str} Copy/paste/cut
                     {ThemeColor.Imp.Str}[Enter]{ThemeColor.White.Str} Execute command
                     {ThemeColor.Imp.Str}[Esc]{ThemeColor.White.Str} Toggle focus
+
+                    Hold {ThemeColor.Imp.Str}[Shift]{ThemeColor.White.Str} to move faster in all cases
+
                     Non-control keys are used to type
                     """);
 

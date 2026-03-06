@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
@@ -11,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace API.Debug;
 
+// todo scrollbar for outhist
 public static class DebugConsole
 {
     #region Props/Fields
@@ -30,7 +32,7 @@ public static class DebugConsole
             _Command.IsVisible = value;
             _CommandHint.IsVisible = value;
             _Cursor.IsVisible = value;
-            _Log.IsVisible = value;
+            _OutHistLabel.IsVisible = value;
             _Line.IsVisible = value;
 
             _Focused = value;
@@ -93,28 +95,47 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    private const int _HistLimit = 128;
-    internal static readonly List<string> _Hist = new(_HistLimit);
+    private const int _InHistLimit = 128;
+    internal static readonly List<string> _InHist = new(_InHistLimit);
 
     // todo scroll output
-    private const int _DisplayedCount = 24;
-    internal static readonly List<string> _LogText = new(_DisplayedCount);
+    private const int _DisplayedOutHistLines = 24;
+    internal static readonly List<string> _OutHist = new(_DisplayedOutHistLines);
 
-    private static int _histIndex = -1;
+    /// <summary>
+    /// Non-auto prop to avoid unneccessary update in <c>_ExecuteCommand</c>
+    /// </summary>
+    private static int _outHistIndex = 0;
+
+    /// <summary>
+    /// Lines scrolled up from the bottom of the output history
+    /// </summary>
+    private static int _OutHistIndex
+    {
+        get => _outHistIndex;
+        set
+        {
+            _outHistIndex = Math.Clamp(value, 0, _OutHist.Count - _DisplayedOutHistLines);
+            _UpdateOutHistText();
+        }
+    }
+
+    /// <inheritdoc cref="_outHistIndex" />
+    private static int _inHistIndex = -1;
 
     /// <summary>
     /// History depth. -1 = not in history. 0 = _Hist[^1], etc
     /// </summary>
-    private static int _HistIndex // todo compiler update (hint is wrong)
+    private static int _InHistIndex // todo compiler update (hint is wrong)
     {
-        get => _histIndex;
+        get => _inHistIndex;
         set
         {
-            _histIndex = Math.Clamp(value, -1, _Hist.Count - 1);
+            _inHistIndex = Math.Clamp(value, -1, _InHist.Count - 1);
 
-            if (_histIndex != -1)
+            if (_inHistIndex != -1)
             {
-                _Input.SetText(_Hist[^(_histIndex + 1)]);
+                _Input.SetText(_InHist[^(_inHistIndex + 1)]);
                 return;
             }
 
@@ -124,7 +145,7 @@ public static class DebugConsole
 
     internal const int _MinBgWidth = 1500;
 
-    internal static readonly Label _Log = new(RenderPriority.B3High, Core.Mono40)
+    internal static readonly Label _OutHistLabel = new(RenderPriority.B3High, Core.Mono40)
     {
         Position = new(10, World.H - 35),
         Padding = new(10, 10, 10, 30),
@@ -181,9 +202,9 @@ public static class DebugConsole
     /// <param name="logLevel">Color to use to indicate message severity</param>
     public static void Log(string msg, string source, LogLevel logLevel = LogLevel.Info)
     {
-        if (_LogText.Count == _DisplayedCount)
+        if (_OutHist.Count == _DisplayedOutHistLines)
         {
-            _LogText.RemoveFirst();
+            _OutHist.RemoveFirst();
         }
 
         string color1 = logLevel switch
@@ -196,10 +217,16 @@ public static class DebugConsole
 
         string color2 = logLevel == LogLevel.Info ? ThemeColor.White.Str : color1;
 
-        _LogText.Add($"{color1}[{source}]{color2} {msg}");
+        ReadOnlySpan<string> msgLines = msg.Split('\n');
 
-        _Log.Text = string.Join('\n', _LogText) + '\n';
-        _Line.Width = Math.Max(_MinBgWidth, _Log.Width + 20);
+        _OutHist.Add($"{color1}[{source}]{color2} {msgLines[0]}");
+
+        foreach (string line in msgLines)
+        {
+            _OutHist.Add(line);
+        }
+
+        _UpdateOutHistText();
 
         // If mirroring to external log/console, must sanitize '［', '['
         // Console.WriteLine($"{logLevel switch
@@ -222,15 +249,46 @@ public static class DebugConsole
         Stage.Add(_Command);
         Stage.Add(_CommandHint);
         Stage.Add(_Cursor);
-        Stage.Add(_Log);
+        Stage.Add(_OutHistLabel);
         Stage.Add(_Line);
+
+        _OutHist.Add("foo0");
+        _OutHist.Add("foo1");
+        _OutHist.Add("foo2");
+        _OutHist.Add("foo3");
+        _OutHist.Add("foo4");
+        _OutHist.Add("foo5");
+        _OutHist.Add("foo6");
+        _OutHist.Add("foo7");
+        _OutHist.Add("foo8");
+        _OutHist.Add("foo9");
+        _OutHist.Add("foo10");
+        _OutHist.Add("foo11");
+        _OutHist.Add("foo12");
+        _OutHist.Add("foo13");
+        _OutHist.Add("foo14");
+        _OutHist.Add("foo15");
+        _OutHist.Add("foo16");
+        _OutHist.Add("foo17");
+        _OutHist.Add("foo18");
+        _OutHist.Add("foo19");
+        _OutHist.Add("foo20");
+        _OutHist.Add("foo21");
+        _OutHist.Add("foo22");
+        _OutHist.Add("foo23");
+        _OutHist.Add("foo24");
+        _OutHist.Add("foo25");
+        _OutHist.Add("foo26");
+        _OutHist.Add("foo27");
+        _OutHist.Add("foo28");
     }
 
-    internal static void _Update(GameTime gt)
+    internal static void _Update()
     {
         if (_Show && InputLib.IsKeyJustPressed(Keys.Escape))
         {
             _Focused ^= true;
+            return;
         }
 
         if (!_Focused)
@@ -247,16 +305,60 @@ public static class DebugConsole
             {
                 _Input.Append(match);
             }
+
+            return;
         }
 
         if (InputLib.Check(Keybinds.Up, true, TextInputWidget._MoveDelay))
         {
-            _HistIndex++;
+            if (InputLib.IsCtrlPressed())
+            {
+                _OutHistIndex++;
+                return;
+            }
+
+            _InHistIndex++;
+            return;
         }
-        else if (InputLib.Check(Keybinds.Down, true, TextInputWidget._MoveDelay))
+
+        if (InputLib.Check(Keybinds.Down, true, TextInputWidget._MoveDelay))
         {
-            _HistIndex--;
+            if (InputLib.IsCtrlPressed())
+            {
+                _OutHistIndex--;
+                return;
+            }
+
+            _InHistIndex--;
+            return;
         }
+
+        if (!InputLib.IsCtrlPressed())
+        {
+            return;
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.Home))
+        {
+            _OutHistIndex = _OutHist.Count - _DisplayedOutHistLines;
+            return;
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.End))
+        {
+            _OutHistIndex = 0;
+            return;
+        }
+    }
+
+    private static void _UpdateOutHistText()
+    {
+        int start = Math.Max(0, _OutHist.Count - _DisplayedOutHistLines - _OutHistIndex);
+        int take = Math.Min(_DisplayedOutHistLines, _OutHist.Count - start);
+
+        _OutHistLabel.Text = string.Join("\n", _OutHist.Skip(start).Take(take)) + "\n";
+
+        _Line.Width = Math.Max(_MinBgWidth, _OutHistLabel.Width + 20);
     }
 
     private static bool _ExecuteCommand()
@@ -267,16 +369,17 @@ public static class DebugConsole
             return false;
         }
 
-        _histIndex = -1;
+        _inHistIndex = -1;
+        _outHistIndex = 0;
 
-        if (_Hist.Count == 0 || _Hist[^1] != text)
+        if (_InHist.Count == 0 || _InHist[^1] != text)
         {
-            if (_Hist.Count > _HistLimit)
+            if (_InHist.Count > _InHistLimit)
             {
-                _Hist.RemoveFirst();
+                _InHist.RemoveFirst();
             }
 
-            _Hist.Add(text);
+            _InHist.Add(text);
         }
 
         CommandParser.ExecuteCommand(text);
