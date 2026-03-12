@@ -143,17 +143,12 @@ public sealed class Core : Game
         // Create a new graphics device manager
         Graphics = new GraphicsDeviceManager(this)
         {
-            SynchronizeWithVerticalRetrace = false, // Vsync
+            SynchronizeWithVerticalRetrace = true, // Vsync
             GraphicsProfile = GraphicsProfile.HiDef
             //PreferMultiSampling = true
         };
 
-        // todo settings
         this.IsFixedTimeStep = true;
-        this.TargetElapsedTime = TimeSpan.FromMilliseconds(16.6f);
-        // todo TargetElapsedTime
-
-        // Apply the graphic presentation changes.
         //Graphics.PreferMultiSampling = true;
         Graphics.ApplyChanges();
 

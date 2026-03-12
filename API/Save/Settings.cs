@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -40,18 +42,24 @@ public static class Settings
         }
     } = null!;
 
+    public const int Auto = -1;
+
     /// <summary>
-    /// Y resolution. -1 = auto
+    /// Y resolution. <c>Auto</c> = auto
     /// </summary>
     public static int Resolution;
 
     public static bool Fullscreen;
-    public static bool EnableVsync;
 
-    /// <summary>
-    /// Target FPS. Only used when <c>EnableVsync</c> is <c>false</c>. -1 = auto
-    /// </summary>
-    public static int TargetFps;
+    public static bool EnableVsync
+    {
+        get;
+        set
+        {
+            field = value;
+            Core.Graphics.SynchronizeWithVerticalRetrace = value;
+        }
+    }
 
     public static Theme Theme
     {
@@ -111,31 +119,32 @@ public static class Settings
 
         // Gameplay
         Language = Lang.Language.Langs.GetValueOrDefault(
-            AllSettings.GetValueOrDefault("Language", Lang.Language.EnUS), Lang.Language.English);
+            AllSettings.GetValueOrDefault(nameof(Language), Lang.Language.EnUS), Lang.Language.English);
 
-        BattleSpeed = float.ParseOrDefault(AllSettings.GetValueOrDefault("BattleSpeed"), 1f);
-        ShowInvalidMoveWarning = bool.ParseOrDefault(AllSettings.GetValueOrDefault("ShowInvalidMoveWarning"), true);
+        BattleSpeed = float.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(BattleSpeed)), 1f);
+        ShowInvalidMoveWarning = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(ShowInvalidMoveWarning)), true);
 
         // Display
-        Resolution = int.ParseOrDefault(AllSettings.GetValueOrDefault("Resolution"), -1);
-        Fullscreen = bool.ParseOrDefault(AllSettings.GetValueOrDefault("Fullscreen"), true);
-        EnableVsync = bool.ParseOrDefault(AllSettings.GetValueOrDefault("EnableVsync"), true);
-        TargetFps = int.ParseOrDefault(AllSettings.GetValueOrDefault("TargetFps"), -1);
+        Resolution = int.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(Resolution)), Auto);
+        Fullscreen = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(Fullscreen)), true);
+        EnableVsync = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableVsync)), true);
 
-        IRegistrable? r = Registry.Get(AllSettings.GetValueOrDefault("Theme", Theme.Apollo.GetId()));
+        IRegistrable? r = Registry.Get(AllSettings.GetValueOrDefault(nameof(Theme), Theme.Apollo.GetId()));
         Theme = r is Theme t ? t : Theme.Apollo;
 
         // Audio
-        MusicVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault("MusicVolume"), new(0.75f));
-        SfxVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault("SfxVolume"), new(0.75f));
+        MusicVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(MusicVolume)), new(0.75f));
+        SfxVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(SfxVolume)), new(0.75f));
 
         // Controls
-        ShowInputGuide = bool.ParseOrDefault(AllSettings.GetValueOrDefault("ShowInputGuide"), true);
-        DetectNintendoController = bool.ParseOrDefault(AllSettings.GetValueOrDefault("DetectNintendoController"), true);
+        ShowInputGuide = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(ShowInputGuide)), true);
+        DetectNintendoController = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(DetectNintendoController)), true);
 
         // Debug
-        EnableDebugFeatures = bool.ParseOrDefault(AllSettings.GetValueOrDefault("EnableDebugFeatures"), true);
-        SelectOpponentMoves = bool.ParseOrDefault(AllSettings.GetValueOrDefault("SelectOpponentMoves"), false);
+        EnableDebugFeatures = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableDebugFeatures)), true);
+        SelectOpponentMoves = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(SelectOpponentMoves)), false);
+
+        Core.Graphics.ApplyChanges();
     }
 
     public static void Write()
@@ -148,27 +157,26 @@ public static class Settings
         AllSettings.Clear();
 
         // Gameplay
-        AllSettings["BattleSpeed"] = "1";
-        AllSettings["ShowInvalidMoveWarning"] = "true";
+        AllSettings[nameof(BattleSpeed)] = "1";
+        AllSettings[nameof(ShowInvalidMoveWarning)] = "true";
 
         // Display
-        AllSettings["Language"] = Lang.Language.EnUS;
-        AllSettings["Resolution"] = "-1";
-        AllSettings["Fullscreen"] = "true";
-        AllSettings["EnableVsync"] = "true";
-        AllSettings["TargetFps"] = "-1";
-        AllSettings["Theme"] = Theme.Apollo.GetId();
+        AllSettings[nameof(Language)] = Lang.Language.EnUS;
+        AllSettings[nameof(Resolution)] = Auto.ToString();
+        AllSettings[nameof(Fullscreen)] = "true";
+        AllSettings[nameof(EnableVsync)] = "true";
+        AllSettings[nameof(Theme)] = Theme.Apollo.GetId();
 
         // Audio
-        AllSettings["MusicVolume"] = "0.75";
-        AllSettings["SfxVolume"] = "0.75";
+        AllSettings[nameof(MusicVolume)] = "0.75";
+        AllSettings[nameof(SfxVolume)] = "0.75";
 
         // Controls
-        AllSettings["ShowInputGuide"] = "true";
-        AllSettings["DetectNintendoController"] = "true";
+        AllSettings[nameof(ShowInputGuide)] = "true";
+        AllSettings[nameof(DetectNintendoController)] = "true";
 
         // Debug
-        AllSettings["EnableDebugFeatures"] = "true";
-        AllSettings["SelectOpponentMoves"] = "false";
+        AllSettings[nameof(EnableDebugFeatures)] = "true";
+        AllSettings[nameof(SelectOpponentMoves)] = "false";
     }
 }

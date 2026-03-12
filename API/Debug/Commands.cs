@@ -671,63 +671,59 @@ public static class Commands
         switch (args[1])
         {
             // Gameplay
-            case "BattleSpeed":
+            case nameof(Settings.BattleSpeed):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "ShowInvalidMoveWarning":
+            case nameof(Settings.ShowInvalidMoveWarning):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
             // Display
-            case "Language":
+            case nameof(Settings.Language):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "Resolution":
+            case nameof(Settings.Resolution):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "Fullscreen":
+            case nameof(Settings.Fullscreen):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "EnableVsync":
+            case nameof(Settings.EnableVsync):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "TargetFps":
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case "Theme":
+            case nameof(Settings.Theme):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
             // Audio
-            case "MusicVolume":
+            case nameof(Settings.MusicVolume):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "SfxVolume":
+            case nameof(Settings.SfxVolume):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
             // Controls
-            case "ShowInputGuide":
+            case nameof(Settings.ShowInputGuide):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "DetectNintendoController":
+            case nameof(Settings.DetectNintendoController):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
             // Debug
-            case "EnableDebugFeatures":
+            case nameof(Settings.EnableDebugFeatures):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
-            case "SelectOpponentMoves":
+            case nameof(Settings.SelectOpponentMoves):
                 Settings.AllSettings[args[1]] = args[2];
                 break;
 
