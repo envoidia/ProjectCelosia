@@ -25,8 +25,15 @@ public static class DebugUtil
     /// todo docs
     /// </summary>
     public static bool DrawDebugInfo { get; private set; } = false;
-    public static bool DrawActorOutlines { get; set; } = false;
-    public static bool DrawTheme { get; set; } = false;
+
+    /// <summary>
+    /// <para>Yellow outline when prog 0, fuchsia when prog 1, blue otherwise. Cyan is padding</para>
+    /// <para>Lime square at origin</para>
+    /// <para>Red overlay if marked for removal, blue if <c>IInputWidget</c> with disabled input</para>
+    /// </summary>
+    public static bool DrawActorOutlines = false;
+
+    public static bool DrawTheme = false;
 
     public static Stopwatch Stopwatch = new();
     public static TimeSpan LastUpdateTime = TimeSpan.Zero;

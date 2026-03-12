@@ -252,6 +252,7 @@ public static class DebugConsole
         Stage.Add(_OutHistLabel);
         Stage.Add(_Line);
 
+        // todo
         _OutHist.Add("foo0");
         _OutHist.Add("foo1");
         _OutHist.Add("foo2");

@@ -205,17 +205,17 @@ public static class ActorExtensions
             }
         }
 
-        /// <inheritdoc cref="ActorData.AnimFrom" />
+        /// <inheritdoc cref="ActorData.AnimFromPos" />
         public Vector2 AnimFrom
         {
             get
             {
-                return @this.Data.AnimFrom;
+                return @this.Data.AnimFromPos;
             }
 
             set
             {
-                @this.Data.AnimFrom = value;
+                @this.Data.AnimFromPos = value;
             }
         }
 

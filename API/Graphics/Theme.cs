@@ -54,6 +54,7 @@ public sealed class Theme : IDescribable, IRegistrable
 
     #region Default Themes
 
+    // todo not props
     public static Theme Apollo { get; set; } = null!;
     public static Theme Void { get; set; } = null!;
     public static Theme VSCode { get; set; } = null!;

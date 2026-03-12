@@ -99,7 +99,7 @@ public static class Stage
 
     /// <summary>
     /// Add <c>IActor</c>(s). Do NOT add an actor that is already on the Stage.
-    /// After you're done adding, call <c>Cleanup()</c> to order by <c>RenderPriority</c>
+    /// After you're done adding, call <c>Cleanup</c> to order by <c>RenderPriority</c>
     /// </summary>
     public static void Add(IActor actor)
     {

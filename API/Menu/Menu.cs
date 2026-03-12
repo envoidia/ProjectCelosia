@@ -74,8 +74,9 @@ public sealed class Menu
     /// </summary>
     public void Create()
     {
-        Stage.AddRange(this.Actors);
+        // The order of these is critical to ListWidgets having correct OptCount in their Create
         this.OnCreate?.Invoke();
+        Stage.AddRange(this.Actors);
 
         Stage.Sort();
     }

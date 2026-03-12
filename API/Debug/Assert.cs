@@ -16,7 +16,7 @@ public static class Assert
     [Conditional("DEBUG")]
     public static void Unreachable(object v)
     {
-        System.Diagnostics.Debug.Assert(false, "Unreachable code was executed");
+        System.Diagnostics.Debug.Assert(false, "Code thought to be unreachable was executed");
     }
 
     /// <summary>
@@ -26,6 +26,23 @@ public static class Assert
     public static void Unreachable(object v, string msg)
     {
         System.Diagnostics.Debug.Assert(false, msg);
+    }
+
+    /// <summary>
+    /// Asserts that values are equal
+    /// </summary>
+    [Conditional("DEBUG")]
+    public static void Eq(object v1, object v2)
+    {
+        System.Diagnostics.Debug.Assert(v1.Equals(v2), $"{v1} and {v2} must be equal");
+    }
+
+    /// <inheritdoc cref="Eq(object, object)" />
+    [Conditional("DEBUG")]
+    public static void Eq(object v1, object v2, object v3)
+    {
+        System.Diagnostics.Debug.Assert(v1.Equals(v2) && v2.Equals(v3),
+            $"{v1}, {v2}, and {v3} must be equal");
     }
 
     /// <summary>
@@ -77,28 +94,28 @@ public static class Assert
     /// Asserts that an int is less than another
     /// </summary>
     [Conditional("DEBUG")]
-    public static void LessThan(int i1, int i2)
+    public static void LessThan(int v1, int v2)
     {
-        System.Diagnostics.Debug.Assert(i1 < i2, $"{i1} must be less than {i2}");
+        System.Diagnostics.Debug.Assert(v1 < v2, $"{v1} must be less than {v2}");
     }
 
     /// <summary>
     /// Asserts that an int is within 2 others
     /// </summary>
     [Conditional("DEBUG")]
-    public static void InRange(int i, int min, int max)
+    public static void InRange(int v, int min, int max)
     {
-        System.Diagnostics.Debug.Assert(i <= max && i >= min, $"{i} must between {min} and {max} (inclusive)");
+        System.Diagnostics.Debug.Assert(v <= max && v >= min, $"{v} must between {min} and {max} (inclusive)");
     }
 
     /// <summary>
     /// Asserts that an int is within 2 others or is a special exception
     /// </summary>
     [Conditional("DEBUG")]
-    public static void InRangeOr(int i, int min, int max, int exception)
+    public static void InRangeOr(int v, int min, int max, int exception)
     {
-        System.Diagnostics.Debug.Assert((i <= max && i >= min) || i == exception,
-            $"{i} must between {min} and {max} (inclusive), or must be {exception}");
+        System.Diagnostics.Debug.Assert((v <= max && v >= min) || v == exception,
+            $"{v} must between {min} and {max} (inclusive), or must be {exception}");
     }
 
     /// <summary>

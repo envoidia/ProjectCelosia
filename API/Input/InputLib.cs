@@ -224,6 +224,7 @@ public static class InputLib
             trigR += state.Triggers.Right;
 
             // tfw struct is just an existing type privately wrapped for no reason
+            // u know the api is good when ur bit casting it away
             // safety: single-field struct that hasnt been updated since probably like 2006
             buttons |= Unsafe.BitCast<GamePadButtons, Buttons>(state.Buttons);
 

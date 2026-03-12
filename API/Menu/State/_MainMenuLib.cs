@@ -1,3 +1,4 @@
+using API.Menu.Widget;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
@@ -27,9 +28,44 @@ internal static class _MainMenuLib
     //     CurDir = SelectionType.Horiz
     // };
 
+
+    private static readonly ListWidget _TestLR = new(new(900, 500), true, "yes R", "foo", "bar",
+    "baz", "lorem", "ipsum", "dolor", "si", "amet")
+    {
+        FixedWidth = 400
+    };
+
+    private static readonly ListWidget _TestLS = new(new(1500, 500), false, "yes S no R", "foo", "bar",
+    "baz", "lorem", "ipsum", "dolor", "si", "amet")
+    {
+        Slant = -15
+    };
+
+    private static readonly ListWidget _TestLRS = new(new(2100, 500), true, "yes R yes S", "foo", "bar",
+   "baz", "lorem", "ipsum", "dolor", "si", "amet")
+    {
+        FixedWidth = 400,
+        Slant = -10
+    };
+
+    private static readonly Menu _MainMenu = new("Main", _TestLS, _TestLRS, _TestLR);
+
+    internal static void _Init()
+    {
+        _TestLR.SetTextR("A", "B", "C", "D", "E", "F", "G", "H", "I");
+
+        _TestLR.CalcLayout();
+        _TestLS.CalcLayout();
+        _TestLRS.CalcLayout();
+
+        // todo how am i supposed to change state when theres a menu up
+        //StateMachine.State.AddMenu(_MainMenu);
+    }
+
     internal static void _Update(GameTime gt)
     {
         StateMachine.Add(States.Battle);
+
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
         //             Point.Zero, Colors.Bg,

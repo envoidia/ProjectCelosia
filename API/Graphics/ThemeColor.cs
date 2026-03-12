@@ -4,7 +4,7 @@ namespace API.Graphics;
 
 /// <summary>
 /// For when you need to store a color that could change with the <c>Theme</c>.
-/// Use <c>Theme.Get()</c> to convert to a <c>ColorCode</c> and <c>ThemeColor.Str</c> to convert to a string
+/// Use <c>Theme.Get</c> to convert to a <c>ColorCode</c> and <c>ThemeColor.Str</c> to convert to a string
 /// </summary>
 public enum ThemeColor
 {

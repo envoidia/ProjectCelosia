@@ -11,6 +11,7 @@ using API.Name;
 using API.Util;
 using API.Menu.Widget;
 using System;
+using Microsoft.Xna.Framework.Input;
 
 namespace API.Battle.State;
 
@@ -78,9 +79,8 @@ internal sealed class _InspectLib
     };
 
     // Items on current page
-    private static readonly ListRightWidget _PageItems = new(new(60, 740), 16)
+    private static readonly ListWidget _PageItems = new(new(60, 740), true, 16)
     {
-        ItemPadding = new(40, 20, 10, 10),
         FixedWidth = 800,
         OnChangeIndex = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
     };
@@ -347,6 +347,7 @@ internal sealed class _InspectLib
 
     internal static void _Update(GameTime gt)
     {
+        // todo better solution (snap to 0/1 when opening/closing) (or at least buffer inputs)
         if (Parellelograms.CoverLeft.Prog == 1 && InputLib.Check(Keybinds.Back))
         {
             //StateMachine.Remove();
@@ -354,7 +355,7 @@ internal sealed class _InspectLib
             return;
         }
 
-        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.Q))
+        if (InputLib.IsKeyJustPressed(Keys.Q))
         {
             foreach (Unit u in BattleLib.Battle.GetAllUnits())
             {
@@ -365,7 +366,7 @@ internal sealed class _InspectLib
             _UpdateInspectUnitPage(_Queue.Index);
         }
 
-        if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.W))
+        if (InputLib.IsKeyJustPressed(Keys.W))
         {
             foreach (Unit u in BattleLib.Battle.GetAllUnits())
             {
@@ -426,30 +427,48 @@ internal sealed class _InspectLib
         switch ((_InspectPage) index)
         {
             case _InspectPage.Skills:
-                _PageItems.SetText([.. u.SkillInstances.Select(s => s.Skill.GetName(ThemeColor.White))]);
-                _PageItems.SetRightText([.. u.SkillInstances.Select(s => s.GetCostCdFormatted())]);
+                _PageItems.SetTextL([.. u.SkillInstances.Select(s
+                    => s.Skill.GetName(ThemeColor.White))]);
+
+                _PageItems.SetTextR([.. u.SkillInstances.Select(s
+                    => s.GetCostCdFormatted())]);
+
+                _PageItems.CalcLayout();
 
                 _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
             case _InspectPage.Passives:
-                _PageItems.SetRightText(); // todo
-                _PageItems.SetText([.. u.Passives.Select(s => s.GetName(ThemeColor.White))]);
+                _PageItems.SetTextR(); // todo
+
+                _PageItems.SetTextL([.. u.Passives.Select(s
+                    => s.GetName(ThemeColor.White))]);
+
+                _PageItems.CalcLayout();
 
                 _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
             case _InspectPage.Buffs:
-                _PageItems.SetText([.. u.BuffInstances.Select(b => b.Buff.GetName(ThemeColor.White))]);
-                _PageItems.SetRightText([.. u.BuffInstances.Select(b => b.GetTurnsStacksFormatted())]);
+                _PageItems.SetTextL([.. u.BuffInstances.Select(b
+                    => b.Buff.GetName(ThemeColor.White))]);
+
+                _PageItems.SetTextR([.. u.BuffInstances.Select(b
+                    => b.GetTurnsStacksFormatted())]);
+
+                _PageItems.CalcLayout();
 
                 _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
             case _InspectPage.Stats:
-                _PageItems.SetText();
-                _PageItems.SetRightText();
+                _PageItems.SetTextL();
+                _PageItems.SetTextR();
+
+                _PageItems.CalcLayout();
+
                 _Desc.Text = "";
+
                 return;
         }
     }

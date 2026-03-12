@@ -50,7 +50,7 @@ public static class StringExtensions
         /// If provided <c>this</c> has a mod ID portion (<c>:</c>), uses that instead of <c>modId</c> param.
         /// If the key can't be found, defaults to displaying the given key
         /// </returns>
-        /// <para>Asserts > 0 args passed</para>
+        /// <summary><para>Asserts > 0 args passed</para></summary>
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatLang(string modId, ReadOnlySpan<object> args)
         {

@@ -14,7 +14,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     public bool IsVisible = true;
 
     /// <summary>
-    /// Priority to draw with. Changes only applied on <c>Stage.Cleanup()</c>
+    /// Priority to draw with. Changes only applied on <c>Stage.Cleanup</c>
     /// </summary>
     public RenderPriority Priority
     {
@@ -37,7 +37,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         set
         {
             this._position = value;
-            this.AnimFrom = this.CalcAnimFrom();
+            this.AnimFromPos = this.CalcAnimFromPos();
         }
     }
     public float X
@@ -50,7 +50,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         set
         {
             this._position.X = value;
-            this.AnimFrom = this.CalcAnimFrom();
+            this.AnimFromPos = this.CalcAnimFromPos();
         }
     }
     public float Y
@@ -63,7 +63,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         set
         {
             this._position.Y = value;
-            this.AnimFrom = this.CalcAnimFrom();
+            this.AnimFromPos = this.CalcAnimFromPos();
         }
     }
 
@@ -121,7 +121,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     } = Alignment.TopLeft;
 
     /// <summary>
-    /// Distance from Position to draw at
+    /// Distance from <c>Position</c> to draw at
     /// </summary>
     public Point Origin = Point.Zero;
 
@@ -133,7 +133,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// <summary>
     /// Position to interpolate to/from during create/destroy animation if <c>AnimType</c> is <c>Move</c>
     /// </summary>
-    public Vector2 AnimFrom;
+    public Vector2 AnimFromPos;
 
     /// <summary>
     /// Direction to interpolate to/from during create/destroy animation if <c>AnimType</c> is <c>Move</c>
@@ -144,7 +144,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         set
         {
             field = value;
-            this.AnimFrom = this.CalcAnimFrom();
+            this.AnimFromPos = this.CalcAnimFromPos();
         }
     } = Dir.Left;
 
@@ -316,7 +316,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// <summary>
     /// Automatically calculates the pos to anim in/out from
     /// </summary>
-    public Vector2 CalcAnimFrom()
+    public Vector2 CalcAnimFromPos()
     {
         return this.AnimFromDir switch
         {
