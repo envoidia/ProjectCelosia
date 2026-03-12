@@ -59,12 +59,12 @@ internal static class _MainMenuLib
         _TestLRS.CalcLayout();
 
         // todo how am i supposed to change state when theres a menu up
-        //StateMachine.State.AddMenu(_MainMenu);
+        StateMachine.State.AddMenu(_MainMenu);
     }
 
     internal static void _Update(GameTime gt)
     {
-        StateMachine.Add(States.Battle);
+        //StateMachine.Add(States.Battle);
 
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),

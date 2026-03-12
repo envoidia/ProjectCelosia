@@ -171,7 +171,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     internal readonly List<Routine> _routines = [];
 
     /// <summary>
-    /// Called when this is added to the stage. Does not add it to the stage
+    /// Called when this is added to the stage. Does not add it to the <c>Stage</c>
     /// </summary>
     public void Create()
     {
@@ -188,7 +188,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     }
 
     /// <summary>
-    /// Called when this should be removed from the stage
+    /// Called to start this' animation leading to its removal from the <c>Stage</c>
     /// </summary>
     public void Destroy()
     {

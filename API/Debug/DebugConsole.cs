@@ -221,9 +221,9 @@ public static class DebugConsole
 
         _OutHist.Add($"{color1}[{source}]{color2} {msgLines[0]}");
 
-        foreach (string line in msgLines)
+        for (int i = 1; i < msgLines.Length; i++)
         {
-            _OutHist.Add(line);
+            _OutHist.Add(msgLines[i]);
         }
 
         _UpdateOutHistText();
