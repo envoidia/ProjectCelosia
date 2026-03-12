@@ -148,7 +148,7 @@ public sealed class Core : Game
             //PreferMultiSampling = true
         };
 
-        this.IsFixedTimeStep = true;
+        this.IsFixedTimeStep = false;
         //Graphics.PreferMultiSampling = true;
         Graphics.ApplyChanges();
 

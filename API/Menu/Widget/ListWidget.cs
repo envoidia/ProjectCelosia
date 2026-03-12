@@ -39,13 +39,17 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     public int FixedWidth = 0;
 
     /// <summary>
-    /// Amount to add to X per option. You probably want <c>NormalSlant</c>
+    /// Amount to add to X per option.
+    /// You probably want <c>NormalSlant</c> or 0. Other numbers may not function properly.
     /// Call <c>CalcLayout</c> after changing
     /// </summary>
     public int Slant = 0;
 
     public const int NormalSlant = -14;
 
+    /// <summary>
+    /// Background might look weird if slant isn't <c>NormalSlant</c>
+    /// </summary>
     public bool HasBackground = false;
 
     private const int _BgOutlineThickness = 10;
@@ -425,14 +429,18 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         float x = MathHelper.SmoothStep(this.AnimFrom.X,
             this.Position.X - this.Padding.L, (float) this.Prog);
 
+        bool drawScrollbar = this.HeightLimit != NoLimit && this.OptCount > this.HeightLimit;
+
+        int extraWidth = drawScrollbar ? 23 : 0;
+
         if (this.HasBackground)
         {
-            int maxScroll = HeightLimit == NoLimit ? 0 : this.OptCount - this.HeightLimit;
+            int maxScroll = this.HeightLimit == NoLimit ? 0 : this.OptCount - this.HeightLimit;
 
             RenderLib.DrawParallelogram(
                 new(x + (this.Slant * (this.OptCount - maxScroll - 1)),
                 this.Position.Y - this.Padding.T),
-                new(this.Width + this.Padding.LR, this.Height),
+                new(this.Width + this.Padding.LR + extraWidth, this.Height),
                 this.Origin, Settings.Theme.Bg, Settings.Theme.Fg,
                 _BgOutlineThickness, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
                 Progress.One);
@@ -452,12 +460,12 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
             Label l = this.LabelsL[i];
 
+            // Cursor
             if (this.Progs[i] != 0)
             {
-                // Cursor
                 RenderLib.DrawParallelogram(
                     new(x + (this.Slant * (i - this.Scroll)), this.Position.Y + h - this.Padding.T),
-                    new(this.Width + this.Padding.LR, l.Height + l.Padding.TB + this.Padding.TB),
+                    new(this.Width + this.Padding.LR + extraWidth, l.Height + l.Padding.TB + this.Padding.TB),
                     this.Origin, Settings.Theme.Accent, Color.Red,
                     0, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
                     Progress.Min(this.Prog, this.Progs[i]));
@@ -482,6 +490,32 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
                     lr.Data.DrawDebug(false);
                 }
             }
+        }
+
+        // Scrollbar
+        if (drawScrollbar)
+        {
+            // Portion currently displayed
+            float ratio = Math.Min((float) this.HeightLimit / this.OptCount, 1);
+
+            // Maximum range for the bar to move
+            float range = this.Height - 10;
+
+            float barLength = range * ratio;
+
+            range -= barLength;
+
+            // 1 = bottom; 0 = top
+            float scrollAmt = (float) this.Scroll / Math.Max(this.OptCount - this.HeightLimit, 0);
+
+            float x1 = this.X + this.Width + this.Padding.LR
+                - (this.Slant == 0 ? -25 : ((range * scrollAmt) / 6))
+                + (this.HasRight ? -18 : 15);
+
+            float y1 = this.Y + 5 + (range * scrollAmt);
+
+            Core.ShapeBatch.DrawRectangle(new(x1, y1), new(10, barLength),
+                Settings.Theme.Fg, Color.Red, 0f, rotation: this.Slant / -84.85f);
         }
 
         // Disabled input overlay

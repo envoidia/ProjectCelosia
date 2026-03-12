@@ -30,35 +30,34 @@ internal static class _MainMenuLib
     // };
 
 
-    private static readonly ListWidget _TestLR = new(new(900, 500), true, "yes R", "foo", "bar",
+    private static readonly ListWidget _TestLR = new(new(900, 500), true, "aaaa", "foo", "bar",
     "baz")
     {
         FixedWidth = 400,
         HeightLimit = 3
     };
 
-    private static readonly ListWidget _TestLS = new(new(1500, 500), false, "yes S no R", "foo", "bar",
-    "baz", "lorem", "ipsum", "dolor", "si", "amet")
+    private static readonly ListWidget _TestLS = new(new(1500, 500), false, "bbbb", "foo", "bar",
+    "baz", "lorem", "ipsum", "dolor", "si", "amet", "dsfsdf", "wqeqwe", "ertygf", "glorp", "dgytr", "foo", "bar",
+    "baz", "lorem", "ipsum", "dolor", "si", "amet", "ewrqas", "wqeqfsdg", "jrtuyu", "glorp", "rgdfg", "foo", "bar",
+    "baz", "lorem", "ipsum", "dolor", "si", "amet", "tyryty", "rhyrtu", "fbhfcfs", "glorp", "bcvfd")
     {
         Slant = ListWidget.NormalSlant,
+        FixedWidth = 200,
         HeightLimit = 6,
         HasBackground = true
     };
 
-    private static readonly ListWidget _TestLRS = new(new(2100, 500), true, "yes R yes S", "foo", "bar",
+    private static readonly ListWidget _TestLRS = new(new(2100, 500), true, "cccc", "foo", "bar",
    "baz", "lorem", "ipsum", "dolor", "si", "amet")
     {
         FixedWidth = 400,
         Slant = ListWidget.NormalSlant,
+        HeightLimit = 7,
         HasBackground = true
     };
 
-    private static readonly Label _Dbg = new()
-    {
-        Position = new(1500, 300)
-    };
-
-    private static readonly Menu _MainMenu = new("Main", _TestLR, _TestLRS);
+    private static readonly Menu _MainMenu = new("Main", _TestLR, _TestLS, _TestLRS);
 
     internal static void _Init()
     {
@@ -70,13 +69,12 @@ internal static class _MainMenuLib
         _TestLRS.CalcLayout();
 
         // todo how am i supposed to change state when theres a menu up
-        //StateMachine.State.AddMenu(_MainMenu);
+        StateMachine.State.AddMenu(_MainMenu);
     }
 
     internal static void _Update(GameTime gt)
     {
-        _Dbg.Text = $"Scroll: {_TestLS.Scroll}\nIndex: {_TestLS.Index}";
-        StateMachine.Add(States.Battle);
+        //StateMachine.Add(States.Battle);
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
         //             Point.Zero, Colors.Bg,
