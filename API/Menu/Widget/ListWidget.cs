@@ -45,7 +45,14 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// </summary>
     public int Slant = 0;
 
-    public const int NormalSlant = -15;
+    public const int NormalSlant = -14;
+
+    /// <summary>
+    /// Only fits well with <c>Slant</c> set to <c>NormalSlant</c>
+    /// </summary>
+    public bool HasBackground = false;
+
+    private const int _BgOutlineThickness = 10;
 
     public Padding ItemPadding
     {
@@ -83,7 +90,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             field = value;
             this.Index = Math.Clamp(this.Index, 0, Math.Max(value - 1, 0));
         }
-    }
+    } = 0;
 
     public Action<int>? OnChangeIndex { get; set; }
 
@@ -123,6 +130,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     public ListWidget(Vector2 pos, bool useRight, params ReadOnlySpan<string> textL)
     {
         this._Setup(pos, textL.Length, useRight);
+
+        this.OptCount = textL.Length;
 
         for (int i = 0; i < this.OptCount; i++)
         {
@@ -165,7 +174,6 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
 
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
-        this.OptCount = 0;
     }
 
     /// <summary>
@@ -319,34 +327,42 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     {
         // todo cleanup + move input out of draw
         // + dont have the cursor immediately vanish when optcount goes from n>0 to =0
-        if (this.OptCount != 0)
+
+        float x = MathHelper.SmoothStep(this.AnimFrom.X,
+            this.Position.X - this.Padding.L, (float) this.Prog);
+
+        if (HasBackground)
         {
-            int h = 0;
-            for (int i = 0; i < this.OptCount; i++)
-            {
-                this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gt,
-                    i == this.Index ? AnimDirs.In : AnimDirs.Out);
-
-                if (this.Progs[i] != 0)
-                {
-                    // Cursor
-                    RenderLib.DrawParallelogram(new(MathHelper.SmoothStep(this.AnimFrom.X,
-                        this.Position.X - this.Padding.L, (float) this.Prog) + (this.Slant * i),
-                        this.Position.Y + h - this.Padding.T),
-                        new(this.Width + this.Padding.LR, this.LabelsL[i].Height +
-                        this.LabelsL[i].Padding.TB + this.Padding.TB),
-                        this.Origin, Settings.Theme.Accent, Color.Red,
-                        0f, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
-                        Progress.Min(this.Prog, this.Progs[i]));
-                }
-
-                h += this.LabelsL[i].Height + this.LabelsL[i].Padding.TB;
-            }
+            RenderLib.DrawParallelogram(
+                new(x + (this.Slant * (this.OptCount - 1)), this.Position.Y - this.Padding.T),
+                new(this.Width + this.Padding.LR, this.Height),
+                this.Origin, Settings.Theme.Bg, Settings.Theme.Fg,
+                _BgOutlineThickness, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
+                Progress.One);
         }
+
+        int h = 0;
 
         for (int i = 0; i < this.OptCount; i++)
         {
             Label l = this.LabelsL[i];
+
+            this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gt,
+                i == this.Index ? AnimDirs.In : AnimDirs.Out);
+
+            if (this.Progs[i] != 0)
+            {
+                // Cursor
+                RenderLib.DrawParallelogram(
+                    new(x + (this.Slant * i), this.Position.Y + h - this.Padding.T),
+                    new(this.Width + this.Padding.LR, l.Height + l.Padding.TB + this.Padding.TB),
+                    this.Origin, Settings.Theme.Accent, Color.Red,
+                    0, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
+                    Progress.Min(this.Prog, this.Progs[i]));
+            }
+
+            h += l.Height + l.Padding.TB;
+
             l.Data.Act(gt);
 
             if (DebugUtil.DrawActorOutlines)

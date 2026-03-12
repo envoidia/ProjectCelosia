@@ -38,14 +38,16 @@ internal static class _MainMenuLib
     private static readonly ListWidget _TestLS = new(new(1500, 500), false, "yes S no R", "foo", "bar",
     "baz", "lorem", "ipsum", "dolor", "si", "amet")
     {
-        Slant = -15
+        Slant = ListWidget.NormalSlant,
+        HasBackground = true
     };
 
     private static readonly ListWidget _TestLRS = new(new(2100, 500), true, "yes R yes S", "foo", "bar",
    "baz", "lorem", "ipsum", "dolor", "si", "amet")
     {
         FixedWidth = 400,
-        Slant = -10
+        Slant = ListWidget.NormalSlant,
+        HasBackground = true
     };
 
     private static readonly Menu _MainMenu = new("Main", _TestLS, _TestLRS, _TestLR);
@@ -53,6 +55,7 @@ internal static class _MainMenuLib
     internal static void _Init()
     {
         _TestLR.SetTextR("A", "B", "C", "D", "E", "F", "G", "H", "I");
+        _TestLRS.SetTextR("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
         _TestLR.CalcLayout();
         _TestLS.CalcLayout();
@@ -65,7 +68,6 @@ internal static class _MainMenuLib
     internal static void _Update(GameTime gt)
     {
         //StateMachine.Add(States.Battle);
-
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
         //             Point.Zero, Colors.Bg,

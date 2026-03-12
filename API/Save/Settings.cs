@@ -104,6 +104,7 @@ public static class Settings
         }
         else
         {
+            AllSettings = new();
             Reset();
             Write();
         }

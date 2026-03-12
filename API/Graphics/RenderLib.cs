@@ -35,16 +35,17 @@ public static class RenderLib
     public static void DrawParallelogram(Vector2 pos, Point size, Point origin, Color color, Color outlineColor,
         float outlineThickness, int slantL, int slantR, Progress prog)
     {
-
         pos -= origin.ToVector2();
 
         float angLOff = slantL > 0 ? size.Y / slantL : 0;
         float angROff = slantR > 0 ? size.Y / slantR : 0;
 
         Vector2 tl = new(pos.X + angLOff, pos.Y);
-        Vector2 tr = new(MathHelper.SmoothStep(tl.X, (pos.X + size.X) + angROff, (float) prog), pos.Y);
+        Vector2 tr = new(MathHelper.SmoothStep(tl.X, (pos.X + size.X) + angROff,
+            (float) prog), pos.Y);
         Vector2 bl = new(pos.X, pos.Y + size.Y);
-        Vector2 br = new(MathHelper.SmoothStep(bl.X, pos.X + size.X, (float) prog), pos.Y + size.Y);
+        Vector2 br = new(MathHelper.SmoothStep(bl.X, pos.X + size.X,
+            (float) prog), pos.Y + size.Y);
 
         Core.ShapeBatch.DrawTriangleStrip(tl, tr, bl, br, color, outlineColor, outlineThickness);
     }

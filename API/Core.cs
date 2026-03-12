@@ -200,11 +200,12 @@ public sealed class Core : Game
 
         // Must be after inits
         StateMachine.Add(States.MainMenu);
-        _MainMenuLib._Init();
 
 #if !NATIVE_AOT
         ModLoader._LoadAllMods();
 #endif
+
+        _MainMenuLib._Init();
 
         // Must be after settings, should be after all registry modifications (for autocomplete)
         Commands._Init();
