@@ -269,69 +269,43 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// <summary>
     /// Call <c>CalcLayout</c> after changing
     /// </summary>
-    public void SetTextL(params ReadOnlySpan<string> textL)
+    public void SetTextL(params ReadOnlySpan<string> text)
     {
-        this.OptCount = textL.Length;
+        this._SetText(this.LabelsL, text, Alignment.TopLeft);
+    }
+
+    /// <inheritdoc cref="SetTextL" />
+    public void SetTextR(params ReadOnlySpan<string> text)
+    {
+        Assert.NotNull(this.LabelsR);
+        this._SetText(this.LabelsR, text, Alignment.TopRight);
+    }
+
+    private void _SetText(List<Label> labels, ReadOnlySpan<string> text, Alignment align)
+    {
+        this.OptCount = text.Length;
 
         int i = 0;
-
-        // Set existing labels until reaching the end of the new text
-        for (; i < textL.Length && i < this.LabelsL.Count; i++)
+        for (; i < text.Length && i < this.LabelsL.Count; i++)
         {
-            this.LabelsL[i].IsVisible = true;
-            this.LabelsL[i].Padding = this.ItemPadding;
-            this.LabelsL[i].Text = textL[i];
+            labels[i].IsVisible = true;
+            labels[i].Padding = this.ItemPadding;
+            labels[i].Text = text[i];
         }
 
-        // New list shorter, blank out remaining Labels and progs
         for (; i < this.LabelsL.Count; i++)
         {
-            this.LabelsL[i].IsVisible = false;
-            this.LabelsL[i].Padding = Padding.Zero;
+            labels[i].IsVisible = false;
+            labels[i].Padding = Padding.Zero;
             this.Progs[i] = Progress.Zero;
         }
 
-        // New list longer, add more Labels and progs
-        for (; i < textL.Length; i++)
-        {
-            this.LabelsL.Add(new Label()
-            {
-                Text = textL[i],
-                Padding = this.ItemPadding
-            });
-
-            this.Progs.Add(Progress.Zero);
-        }
-    }
-
-    // todo deduplicate
-    /// <inheritdoc cref="SetTextL" />
-    public void SetTextR(params ReadOnlySpan<string> textR)
-    {
-        Assert.NotNull(this.LabelsR);
-
-        this.OptCount = textR.Length;
-
-        int i = 0;
-        for (; i < textR.Length && i < this.LabelsL.Count; i++)
-        {
-            this.LabelsR[i].IsVisible = true;
-            this.LabelsR[i].Padding = this.ItemPadding;
-            this.LabelsR[i].Text = textR[i];
-        }
-
-        for (; i < this.LabelsL.Count; i++)
-        {
-            this.LabelsR[i].IsVisible = false;
-            this.LabelsR[i].Padding = Padding.Zero;
-        }
-
-        for (; i < textR.Length; i++)
+        for (; i < text.Length; i++)
         {
             this.LabelsR.Add(new Label()
             {
-                Text = textR[i],
-                Alignment = Alignment.TopRight,
+                Text = text[i],
+                Alignment = align,
                 Padding = this.ItemPadding
             });
         }
