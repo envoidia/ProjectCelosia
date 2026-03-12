@@ -11,7 +11,6 @@ namespace API.Menu.Widget;
 
 /* todo:
     - internal label alignment setting
-    - max height (creates scrollbar)
     - maybe make every option an IComponent and make them hold Labels?
 */
 public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
@@ -23,7 +22,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// <summary>
     /// Whether this has a right-side component
     /// </summary>
-    public bool UseRight
+    public bool HasRight
     {
         get
         {
@@ -47,12 +46,22 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
     public const int NormalSlant = -14;
 
-    /// <summary>
-    /// Only fits well with <c>Slant</c> set to <c>NormalSlant</c>
-    /// </summary>
     public bool HasBackground = false;
 
     private const int _BgOutlineThickness = 10;
+
+    /// <summary>
+    /// Options displayed before truncating with scrollbar. If <c>NoLimit</c>, displays all
+    /// Call <c>CalcLayout</c> after changing
+    /// </summary>
+    public int HeightLimit = NoLimit;
+
+    public const int NoLimit = 0;
+
+    /// <summary>
+    /// Indices scrolled down from the top
+    /// </summary>
+    public int Scroll = 0;
 
     public Padding ItemPadding
     {
@@ -142,6 +151,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         this.Data.OnCreate = this.OnCreate;
         this.Data.OnDestroy = this.OnDestroy;
+
+        this.OnChangeIndex = this._OnChangeIndex;
     }
 
     private void _Setup(Vector2 pos, int capacity, bool useRight)
@@ -174,6 +185,81 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
 
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
+    }
+
+    private void _OnChangeIndex(int newIndex)
+    {
+        if (this.HeightLimit == NoLimit)
+        {
+            return;
+        }
+
+        // Check margin
+        if (newIndex == 0)
+        {
+            this.Scroll = 0;
+        }
+        else if (newIndex == this.OptCount - 1)
+        {
+            this.Scroll = this.OptCount - this.HeightLimit;
+        }
+        else if (newIndex <= this.Scroll)
+        {
+            this.Scroll--;
+        }
+        else if (newIndex >= this.Scroll + this.HeightLimit - 1)
+        {
+            this.Scroll++;
+        }
+
+        // Make other labels invis, reposition ones in range
+        int h = 0;
+        int prevW = this.FixedWidth != 0 ? this.FixedWidth : this.Width;
+        int shownCount = 0;
+
+        for (int i = 0; i < this.OptCount; i++)
+        {
+            Label l = this.LabelsL[i];
+
+            if (!this._IndexIsShown(i))
+            {
+                l.IsVisible = false;
+
+                if (this.HasRight)
+                {
+                    this.LabelsR[i].IsVisible = false;
+                }
+
+                continue;
+            }
+
+            shownCount++;
+
+            l.IsVisible = true;
+            l.Prog = Progress.One;
+
+            h += l.Padding.T;
+            l.Position = this.Position + new Vector2(l.Padding.L + (this.Slant * shownCount), h);
+
+            if (this.HasRight)
+            {
+                Label lr = this.LabelsR[i];
+
+                lr.IsVisible = true;
+                lr.Prog = Progress.One;
+
+                lr.Position = new(this.X + prevW - lr.Padding.R + (this.Slant * shownCount), l.Y);
+            }
+
+            h += l.Height + l.Padding.B;
+        }
+
+        this.Height = h;
+    }
+
+    private bool _IndexIsShown(int index)
+    {
+        return this.HeightLimit == NoLimit || (index >= this.Scroll && index <= this.Scroll + this.HeightLimit - 1);
     }
 
     /// <summary>
@@ -253,22 +339,30 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         // todo i dont think non-fixed width works correctly (this must be set after all L calcs)
         int prevW = this.FixedWidth != 0 ? this.FixedWidth : this.Width;
+        int shownCount = 0;
 
         for (int i = 0; i < this.OptCount; i++)
         {
+            if (!this._IndexIsShown(i))
+            {
+                continue;
+            }
+
+            shownCount++;
+
             Label l = this.LabelsL[i];
 
             this.Height += l.Padding.T;
-            l.Position = this.Position + new Vector2(l.Padding.L + (this.Slant * i), this.Height);
+            l.Position = this.Position + new Vector2(l.Padding.L + (this.Slant * shownCount), this.Height);
             this.Height += l.Height + l.Padding.B;
 
             int w = l.Width + l.Padding.LR;
 
-            if (this.UseRight)
+            if (this.HasRight)
             {
                 Label lr = this.LabelsR[i];
 
-                lr.Position = new(this.X + prevW - lr.Padding.R + (this.Slant * i), l.Y);
+                lr.Position = new(this.X + prevW - lr.Padding.R + (this.Slant * shownCount), l.Y);
 
                 w += lr.Width + lr.Padding.LR + _GapBeforeRight;
             }
@@ -286,7 +380,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         this.Origin = this.Data.CalcOrigin();
 
-        if (UseRight)
+        if (this.HasRight)
         {
             Assert.Eq(this.LabelsL.Count, this.LabelsR.Count);
         }
@@ -303,7 +397,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         {
             this.LabelsL[i].Create();
 
-            if (this.UseRight)
+            if (this.HasRight)
             {
                 this.LabelsR[i].Create();
             }
@@ -316,7 +410,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         {
             this.LabelsL[i].Destroy();
 
-            if (this.UseRight)
+            if (this.HasRight)
             {
                 this.LabelsR[i].Destroy();
             }
@@ -331,10 +425,13 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         float x = MathHelper.SmoothStep(this.AnimFrom.X,
             this.Position.X - this.Padding.L, (float) this.Prog);
 
-        if (HasBackground)
+        if (this.HasBackground)
         {
+            int maxScroll = HeightLimit == NoLimit ? 0 : this.OptCount - this.HeightLimit;
+
             RenderLib.DrawParallelogram(
-                new(x + (this.Slant * (this.OptCount - 1)), this.Position.Y - this.Padding.T),
+                new(x + (this.Slant * (this.OptCount - maxScroll - 1)),
+                this.Position.Y - this.Padding.T),
                 new(this.Width + this.Padding.LR, this.Height),
                 this.Origin, Settings.Theme.Bg, Settings.Theme.Fg,
                 _BgOutlineThickness, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
@@ -345,16 +442,21 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         for (int i = 0; i < this.OptCount; i++)
         {
-            Label l = this.LabelsL[i];
-
             this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gt,
                 i == this.Index ? AnimDirs.In : AnimDirs.Out);
+
+            if (!this._IndexIsShown(i))
+            {
+                continue;
+            }
+
+            Label l = this.LabelsL[i];
 
             if (this.Progs[i] != 0)
             {
                 // Cursor
                 RenderLib.DrawParallelogram(
-                    new(x + (this.Slant * i), this.Position.Y + h - this.Padding.T),
+                    new(x + (this.Slant * (i - this.Scroll)), this.Position.Y + h - this.Padding.T),
                     new(this.Width + this.Padding.LR, l.Height + l.Padding.TB + this.Padding.TB),
                     this.Origin, Settings.Theme.Accent, Color.Red,
                     0, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
@@ -370,7 +472,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
                 l.Data.DrawDebug(false);
             }
 
-            if (this.UseRight)
+            if (this.HasRight)
             {
                 Label lr = this.LabelsR[i];
                 lr.Data.Act(gt);

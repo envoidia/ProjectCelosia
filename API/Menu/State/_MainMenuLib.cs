@@ -1,3 +1,4 @@
+using API.Graphics;
 using API.Menu.Widget;
 using Microsoft.Xna.Framework;
 
@@ -30,15 +31,17 @@ internal static class _MainMenuLib
 
 
     private static readonly ListWidget _TestLR = new(new(900, 500), true, "yes R", "foo", "bar",
-    "baz", "lorem", "ipsum", "dolor", "si", "amet")
+    "baz")
     {
-        FixedWidth = 400
+        FixedWidth = 400,
+        HeightLimit = 3
     };
 
     private static readonly ListWidget _TestLS = new(new(1500, 500), false, "yes S no R", "foo", "bar",
     "baz", "lorem", "ipsum", "dolor", "si", "amet")
     {
         Slant = ListWidget.NormalSlant,
+        HeightLimit = 6,
         HasBackground = true
     };
 
@@ -50,11 +53,16 @@ internal static class _MainMenuLib
         HasBackground = true
     };
 
-    private static readonly Menu _MainMenu = new("Main", _TestLS, _TestLRS, _TestLR);
+    private static readonly Label _Dbg = new()
+    {
+        Position = new(1500, 300)
+    };
+
+    private static readonly Menu _MainMenu = new("Main", _TestLR, _TestLRS);
 
     internal static void _Init()
     {
-        _TestLR.SetTextR("A", "B", "C", "D", "E", "F", "G", "H", "I");
+        _TestLR.SetTextR("A", "B", "C", "D");
         _TestLRS.SetTextR("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
         _TestLR.CalcLayout();
@@ -62,12 +70,13 @@ internal static class _MainMenuLib
         _TestLRS.CalcLayout();
 
         // todo how am i supposed to change state when theres a menu up
-        StateMachine.State.AddMenu(_MainMenu);
+        //StateMachine.State.AddMenu(_MainMenu);
     }
 
     internal static void _Update(GameTime gt)
     {
-        //StateMachine.Add(States.Battle);
+        _Dbg.Text = $"Scroll: {_TestLS.Scroll}\nIndex: {_TestLS.Index}";
+        StateMachine.Add(States.Battle);
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
         //             Point.Zero, Colors.Bg,

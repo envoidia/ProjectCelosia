@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -148,7 +149,8 @@ public sealed class Core : Game
         };
 
         // todo settings
-        this.IsFixedTimeStep = false;
+        this.IsFixedTimeStep = true;
+        this.TargetElapsedTime = TimeSpan.FromMilliseconds(16.6f);
         // todo TargetElapsedTime
 
         // Apply the graphic presentation changes.
