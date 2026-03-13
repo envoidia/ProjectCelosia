@@ -296,7 +296,6 @@ public sealed class Unit
         return Math.Max(value, 0);
     }
 
-
     /// <param name="current">Whether to compare to base</param>
     /// <returns>Affinities of this formatted readably</returns>
     public string GetAffinitiesString(bool current)
@@ -627,8 +626,8 @@ public sealed class Unit
     // todo weapon
     public string GetEquipString()
     {
-        return $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.White.Str} {(this.Equipped as INameable)?.GetName() ??
-            "None".GetLang()}";
+        return $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.White.Str} {(this.Equipped as INameable)?
+            .GetName() ?? "None".GetLang()}";
     }
 
     public void DecrementTurns()
@@ -707,7 +706,8 @@ public sealed class Unit
                 if (this.Defend > dmg)
                 {
                     this.Defend -= dmg;
-                    return new SkillResult(SkillResultType.HitEffectBlock, "LogChangeShield".FormatLang([nameS,
+                    return new SkillResult(SkillResultType.HitEffectBlock,
+                        "LogChangeShield".FormatLang([nameS,
                         (defendOld + this.Shield).Format(ThemeColor.Shield),
                         (this.Defend + this.Shield).Format(ThemeColor.Shield),
                         this.GetStat(Stats.Hp).Format(ThemeColor.Hp), dmgFull.Format()]));
@@ -731,15 +731,16 @@ public sealed class Unit
                 {
                     int shieldOld = this.Shield;
                     this.Shield -= dmg;
-                    return new SkillResult(SkillResultType.HitEffectBlock, "LogChangeShield".FormatLang([
-                        nameS, (defendOld + shieldOld).Format(ThemeColor.Shield), this.Shield.Format(ThemeColor.Shield),
+                    return new SkillResult(SkillResultType.HitEffectBlock, "LogChangeShield"
+                        .FormatLang([nameS, (defendOld + shieldOld)
+                        .Format(ThemeColor.Shield), this.Shield.Format(ThemeColor.Shield),
                         this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp), (-dmgFull).Format()]));
                 }
 
                 // Destroy Shield and proceed to HP
-                msg.Add("LogChangeShield".FormatLang([nameS, (defendOld + this.Shield).Format(ThemeColor.Shield),
-                    ThemeColor.Shield + 0, this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp),
-                    (-(defendOld + this.Shield)).Format()]));
+                msg.Add("LogChangeShield".FormatLang([nameS, (defendOld + this.Shield)
+                    .Format(ThemeColor.Shield), ThemeColor.Shield + 0, this.GetBaseStat(Stats.Hp)
+                    .Format(ThemeColor.Hp), (-(defendOld + this.Shield)).Format()]));
 
                 dmg -= this.Shield;
                 this.Shield = 0;
@@ -756,8 +757,8 @@ public sealed class Unit
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
 
-        msg.Add("LogChangeHp".FormatLang([nameS, hpOld.Format(ThemeColor.Hp, false),
-            hpNew.Format(ThemeColor.Hp, false),
+        msg.Add("LogChangeHp".FormatLang([nameS,
+            hpOld.Format(ThemeColor.Hp, false), hpNew.Format(ThemeColor.Hp, false),
             this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()]));
 
         // todo should this be a separate result from hitting shield

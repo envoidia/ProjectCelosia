@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using API.Debug;
 using API.Graphics;
 using API.Save;
@@ -66,6 +67,16 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// Indices scrolled down from the top
     /// </summary>
     public int Scroll = 0;
+
+    /// <summary>
+    /// Used to interpolate the scrollbar
+    /// </summary>
+    public Vector2 LastScrollbarPos = new(UninitializedScrollbarPos);
+
+    /// <summary>
+    /// Scrollbar starting position
+    /// </summary>
+    public const int UninitializedScrollbarPos = -1;
 
     public Padding ItemPadding
     {
@@ -467,12 +478,13 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
 
         // Scrollbar
+        // The magic numbers throughout this code are just whatever values made the spacing look right to me
         if (drawScrollbar)
         {
             // Portion currently displayed
             float ratio = Math.Min((float) this.HeightLimit / this.OptCount, 1);
 
-            // Maximum range for the bar to move
+            // Maximum range for the bar to move. Slightly less than height so it leaves a margin on the edges
             float range = this.Height - 10;
 
             float barLength = range * ratio;
@@ -483,12 +495,21 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             float scrollAmt = (float) this.Scroll / Math.Max(this.OptCount - this.HeightLimit, 0);
 
             float x1 = this.X + this.Width + this.Padding.LR
-                - (this.Slant == 0 ? -25 : ((range * scrollAmt) / 6))
+                - (this.Slant == 0 ? -25 : ((range * scrollAmt) / RenderLib.DefaultSlant))
                 + (this.HasRight ? -18 : 15);
 
             float y1 = this.Y + 5 + (range * scrollAmt);
 
-            Core.ShapeBatch.DrawRectangle(new(x1, y1), new(10, barLength),
+            Vector2 pos = new(x1, y1);
+
+            if (this.LastScrollbarPos.X != UninitializedScrollbarPos)
+            {
+                pos = Vector2.SmoothStep(this.LastScrollbarPos, pos, 0.15f);
+            }
+
+            this.LastScrollbarPos = pos;
+
+            Core.ShapeBatch.DrawRectangle(pos, new(10, barLength),
                 Settings.Theme.Fg, Color.Red, 0f, rotation: this.Slant / -84.85f);
         }
 

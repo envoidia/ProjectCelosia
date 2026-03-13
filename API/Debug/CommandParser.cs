@@ -5,7 +5,7 @@ using System.Text;
 
 namespace API.Debug;
 
-public static partial class CommandParser
+public static class CommandParser
 {
     /// <summary>
     /// Executes the specified command string from left to right

@@ -86,8 +86,7 @@ public static class Stage
             Core.ShapeBatch.Begin(Resolution.TransformationMatrix());
 
             Core.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
-                SamplerState.PointClamp, null, null, null,
-                Resolution.TransformationMatrix());
+                SamplerState.PointClamp, transformMatrix: Resolution.TransformationMatrix());
         }
 
         static void end()

@@ -113,8 +113,8 @@ public static class Commands
                 / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
         }, [], "Forces GC collection and reports memory", Core.Id);
 
-        Command.Register("c", _Cmd_c, TextParamArr, "Writes to clipboard", Core.Id);
-        Command.Register("p", _Cmd_p, [], "Reads from clipboard", Core.Id);
+        Command.Register("cbc", _Cmd_cbc, TextParamArr, "Writes to clipboard", Core.Id);
+        Command.Register("cbp", _Cmd_cbp, [], "Reads from clipboard", Core.Id);
 
         #endregion
 
@@ -324,7 +324,7 @@ public static class Commands
         return new(ExitCode.Err, "NYI");
     }
 
-    private static CommandResult _Cmd_c(ReadOnlySpan<string> args)
+    private static CommandResult _Cmd_cbc(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
         {
@@ -337,7 +337,7 @@ public static class Commands
         return new(null);
     }
 
-    private static CommandResult _Cmd_p(ReadOnlySpan<string> args)
+    private static CommandResult _Cmd_cbp(ReadOnlySpan<string> args)
     {
         return new(Clipboard.Text);
     }
