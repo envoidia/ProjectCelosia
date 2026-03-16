@@ -7,6 +7,8 @@ namespace API.Graphics;
 public static class RenderLib
 {
     public const int DefaultSlant = 6;
+    public const int UnitSpriteSize = 384;
+    public const int BgOutlineThickness = 10;
 
     public static Progress UpdateProg(Progress prog, float speed, GameTime gt, AnimDirs dir)
     {

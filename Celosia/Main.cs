@@ -22,7 +22,7 @@ public static class Main
     {
         // Really gross temporary initialize for testing battles
         Core.Battle = new API.Battle.Battle(new Team(
-            new Unit(CBattle.UnitTypes.Johny, 19, null, CBattle.Skills.Fireball, CBattle.Skills.ChainLightning, Skills.Defend),
+            new Unit(CBattle.UnitTypes.Johny, 19, null, CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.ChainLightning, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, 19, null, Skills.Nothing, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, 19, null, CBattle.Skills.Fireball, Skills.Defend)),

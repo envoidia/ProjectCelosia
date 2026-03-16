@@ -29,14 +29,23 @@ public sealed class Label : IActor
     }
 
     // Background
-    public bool HasBackground = false;
+    public BackgroundType BackgroundType = BackgroundType.None;
 
     public Vector2 MinBackgroundSize = Vector2.Zero;
 
-    private Color _bgC;
-    public ThemeColor BackgroundColor = ThemeColor.TransBlack;
-
     public RichTextLayout RichTextLayout;
+
+    public int? MaxWidth
+    {
+        get
+        {
+            return this.RichTextLayout.Width;
+        }
+        set
+        {
+            this.RichTextLayout.Width = value;
+        }
+    }
 
     /// <summary>
     /// Rotation of the text. The debug outline for rotated text does not currently take rotation into account
@@ -54,12 +63,8 @@ public sealed class Label : IActor
             Font = font ?? Core.Koruri60
         };
 
-        this._bgC = Settings.Theme.Get(this.BackgroundColor);
-
         Theme.OnChange += () =>
         {
-            this._bgC = Settings.Theme.Get(this.BackgroundColor);
-
             // Force text to re-render
             string t = this.Text;
             this.Text = "";
@@ -74,17 +79,33 @@ public sealed class Label : IActor
 
     public void Draw(GameTime gt)
     {
-        if (this.HasBackground)
-        {
-            this.Data.DrawBackground(this._bgC, this.MinBackgroundSize);
-        }
-
         if (string.IsNullOrWhiteSpace(this.Text))
         {
             return;
         }
 
-        this.RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom, this.Position,
-            (float) this.Prog), Settings.Theme.Fg, this.Rotation, this.Origin.ToVector2());
+        int xOff = 0;
+
+        switch (this.BackgroundType)
+        {
+            case BackgroundType.Rectangle:
+                this.Data.DrawBackground(Settings.Theme.TransBlack, this.MinBackgroundSize);
+                break;
+
+            case BackgroundType.Parellelogram:
+                xOff = this.Height / RenderLib.DefaultSlant;
+
+                RenderLib.DrawParallelogram(new(this.X - this.Padding.L, this.Y - this.Padding.T),
+                    new(this.Width + this.Padding.LR + xOff, this.Height + this.Padding.TB),
+                    this.Origin, Settings.Theme.Bg, Settings.Theme.Fg,
+                    RenderLib.BgOutlineThickness, RenderLib.DefaultSlant,
+                    RenderLib.DefaultSlant, Progress.One);
+
+                break;
+        }
+
+        this.RichTextLayout.Draw(Core.SpriteBatch, MathUtil.SmoothStep(this.AnimFrom,
+            new(this.X + xOff, this.Y), (float) this.Prog), Settings.Theme.Fg,
+            this.Rotation, this.Origin.ToVector2());
     }
 }

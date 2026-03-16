@@ -296,6 +296,17 @@ public sealed class Unit
         return Math.Max(value, 0);
     }
 
+    /// <returns>
+    /// Adjusted SP/Bloom cost of the given <c>Skill</c>
+    /// </returns>
+    public int GetCost(Skill s)
+    {
+        int cost = this.IsBoolStat(BoolStats.InfiniteSp) && !s.IsBloom ? 0 : s.Cost;
+
+        // Make sure cost doesn't go below 1 unless the skill has a base 0 SP cost
+        return cost > 0 ? (int) Math.Max(cost * (this.GetElementSpCost(s.GetElement()) / 1000d), 1) : 0;
+    }
+
     /// <param name="current">Whether to compare to base</param>
     /// <returns>Affinities of this formatted readably</returns>
     public string GetAffinitiesString(bool current)

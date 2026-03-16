@@ -678,12 +678,12 @@ public static class Commands
 
     #region Battle
 
-    private const string _UnitIndexError = "unitindex (args[1]) must be an int 0-{0}";
-    private const string _TurnsError = "turns (args[4]) must be an int > 0";
-    private const string _StacksError = "stacks (args[5]) must be an int > 0";
-
     private static CommandResult _Cmd_buff(ReadOnlySpan<string> args)
     {
+        const string _UnitIndexError = "unitindex (args[1]) must be an int 0-{0}";
+        const string _TurnsError = "turns (args[4]) must be an int > 0";
+        const string _StacksError = "stacks (args[5]) must be an int > 0";
+
         if (args.Length < 4)
         {
             return new(ExitCode.Err, getHelpText());

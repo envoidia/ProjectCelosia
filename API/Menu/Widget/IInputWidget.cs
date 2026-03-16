@@ -55,6 +55,7 @@ public static class InputWidgetExtensions
             if (@this.CheckInput)
             {
                 int newIndex = MenuLib.CheckMovement1D(@this.Index, @this.OptCount, @this.CurDir);
+
                 if (@this.Index != newIndex)
                 {
                     @this.OnChangeIndex?.Invoke(newIndex);

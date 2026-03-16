@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using API.Debug;
 using API.Graphics;
 using API.Save;
@@ -52,8 +51,6 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// Background might look weird if slant isn't <c>NormalSlant</c>
     /// </summary>
     public bool HasBackground = false;
-
-    private const int _BgOutlineThickness = 10;
 
     /// <summary>
     /// Options displayed before truncating with scrollbar. If <c>NoLimit</c>, displays all
@@ -143,15 +140,17 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
     }
 
-    public ListWidget(Vector2 pos, bool useRight, int capacity)
+    public ListWidget(Vector2 pos, bool useRight, int capacity, RenderPriority priority = RenderPriority.B1Med)
     {
         this._Setup(pos, capacity, useRight);
 
+        this.Data.Priority = priority;
         this.Data.OnCreate = this.OnCreate;
         this.Data.OnDestroy = this.OnDestroy;
     }
 
-    public ListWidget(Vector2 pos, bool useRight, params ReadOnlySpan<string> textL)
+    public ListWidget(Vector2 pos, bool useRight, RenderPriority priority = RenderPriority.B1Med,
+        params ReadOnlySpan<string> textL)
     {
         this._Setup(pos, textL.Length, useRight);
 
@@ -164,6 +163,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         this.CalcLayout();
 
+        this.Data.Priority = priority;
         this.Data.OnCreate = this.OnCreate;
         this.Data.OnDestroy = this.OnDestroy;
 
@@ -302,6 +302,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             labels[i].IsVisible = true;
             labels[i].Padding = this.ItemPadding;
             labels[i].Text = text[i];
+            labels[i].Prog = this.Prog;
         }
 
         for (; i < this.LabelsL.Count; i++)
@@ -317,7 +318,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             {
                 Text = text[i],
                 Alignment = align,
-                Padding = this.ItemPadding
+                Padding = this.ItemPadding,
+                Prog = this.Prog
             });
         }
     }
@@ -427,7 +429,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
                 this.Position.Y - this.Padding.T),
                 new(this.Width + this.Padding.LR + extraWidth, this.Height),
                 this.Origin, Settings.Theme.Bg, Settings.Theme.Fg,
-                _BgOutlineThickness, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
+                RenderLib.BgOutlineThickness, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
                 Progress.One);
         }
 

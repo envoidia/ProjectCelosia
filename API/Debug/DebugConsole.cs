@@ -7,7 +7,6 @@ using API.Input;
 using API.Menu.State;
 using API.Menu.Widget;
 using API.Util;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace API.Debug;
@@ -149,7 +148,7 @@ public static class DebugConsole
     {
         Position = new(10, World.H - 35),
         Padding = new(10, 10, 10, 30),
-        HasBackground = true, // todo also use current command width for this
+        BackgroundType = BackgroundType.Rectangle, // todo also use current command width for this
         MinBackgroundSize = new(_MinBgWidth, 0),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
@@ -179,7 +178,8 @@ public static class DebugConsole
 
     private static readonly Menu.Menu _Menu = new("DbgConsole")
     {
-        InputWidgets = [_Input]
+        InputWidgets = [_Input],
+        GetInputPrompt = static () => null
     };
 
     internal static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)

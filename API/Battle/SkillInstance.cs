@@ -7,7 +7,7 @@ public sealed class SkillInstance(Skill skill)
     public readonly Skill Skill = skill;
     public int Cooldown = 0;
 
-    public string GetCostCdFormatted()
+    public string GetCostCdFormatted(Unit u)
     {
         if (this.Skill.Cooldown == 0)
         {

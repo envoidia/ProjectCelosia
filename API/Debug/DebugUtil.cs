@@ -46,7 +46,7 @@ public static class DebugUtil
         Text = "_GetInfoLText()", // todo
         Position = new(10, 10),
         Padding = new(10),
-        HasBackground = true,
+        BackgroundType = BackgroundType.Rectangle,
         AnimType = AnimType.None,
         IsVisible = false
     };
@@ -55,7 +55,7 @@ public static class DebugUtil
     {
         Position = new(World.W - 10, 10),
         Padding = new(10),
-        HasBackground = true,
+        BackgroundType = BackgroundType.Rectangle,
         Alignment = Alignment.TopRight,
         AnimType = AnimType.None,
         IsVisible = false
@@ -81,7 +81,7 @@ public static class DebugUtil
         Text = "_GetKeyNameText()",
         Position = World.Vec - new Vector2(422, _KeyYOff),
         Padding = new(10),
-        HasBackground = true,
+        BackgroundType = BackgroundType.Rectangle,
         AnimType = AnimType.None,
         IsVisible = false
     };
@@ -90,7 +90,7 @@ public static class DebugUtil
     {
         Position = World.Vec - new Vector2(112, _KeyYOff),
         Padding = new(10, 120, 10, 10),
-        HasBackground = true,
+        BackgroundType = BackgroundType.Rectangle,
         AnimType = AnimType.None,
         IsVisible = false
     };

@@ -8,11 +8,11 @@ using API.Debug;
 using API.Extensions;
 using API.Graphics;
 using API.Input;
-using API.Menu;
 using API.Menu.State;
 using API.Menu.Widget;
 using API.Modding;
 using API.Save;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Battle.State;
@@ -38,7 +38,7 @@ public static class BattleLib
 
     #region Display Fields
 
-    private const int _ActorCount = 29;
+    private const int _ActorCount = 38;
     private static readonly List<IActor> _Actors = new(_ActorCount);
 
     private const int _AnimPrimActorCount = 0; // todo
@@ -48,19 +48,41 @@ public static class BattleLib
     internal static readonly TabBarWidget _Queue = new(new(World.W2, 90), UnitCount)
     {
         CheckInput = false,
-        Priority = RenderPriority.B2Med,
+        Priority = RenderPriority.B3Med,
         OnChangeIndex = _InspectLib._UpdateInspectUnitPage,
         AnimFromDir = Dir.Up
     };
 
     private static readonly Label[] _BloomLabels = new Label[TeamCount];
 
-    // Per-unit Labels
+
+    // Per-unit graphics
+    private static readonly ARectangle[] _Sprites = new ARectangle[UnitCount];
     internal static readonly Label[] _Stats = new Label[UnitCount];
     private static readonly Label[] _Buffs = new Label[UnitCount];
     internal static readonly Label[] _Moves = new Label[UnitCount];
 
-    private static readonly Label _SkillsL = new();
+    internal static readonly Label _SkillDesc = new(RenderPriority.B2Low)
+    {
+        MaxWidth = 1150,
+        BackgroundType = BackgroundType.Parellelogram
+    };
+
+    internal static readonly ListWidget _SkillList = new(new(), true,
+        7, RenderPriority.B2Low)
+    {
+        FixedWidth = 800,
+        HasBackground = true,
+        Slant = ListWidget.NormalSlant,
+        Priority = RenderPriority.B1High,
+        OnChangeIndex = static index =>
+        {
+            Unit u = Battle.GetUnitAtPos(_selectingMove);
+            List<SkillInstance> skills = u.SkillInstances;
+            _SkillDesc.Text = skills[index].Skill.GetFullDesc();
+            _SkillDesc.X = _GetSkillDescX();
+        }
+    };
 
     #endregion
 
@@ -83,7 +105,6 @@ public static class BattleLib
     internal static SkillInstance _selectedSkillInstance = null!; // todo
 
     // Menu navigation
-    internal static int _indexSkill = 0;
     internal static int _indexTarget = 0;
 
     // todo replays
@@ -121,7 +142,7 @@ public static class BattleLib
     internal static void _Init()
     {
         // Add preinitialized actors
-        _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillsL);
+        _Actors.AddRange(_Queue, LogLib._BattleLog, _SkillDesc, _SkillList);
 
         // Setup Labels
         for (int i = 0; i < TeamCount; i++)
@@ -134,37 +155,46 @@ public static class BattleLib
             });
         }
 
-        // Per-unit Labels
+        // Per-unit graphics
         for (int i = 0; i < UnitCount; i++)
         {
             int x1 = 75;
-            int x2 = 600;
-            int y = 450 + (450 * i);
+            int x2 = 500;
+            int y = 300 + (450 * i);
             Dir dir = i > PosLib.HighestAlly ? Dir.Right : Dir.Left;
 
             if (i >= PosLib.LowestOpp)
             {
                 x1 = World.W - 500;
-                x2 = World.W - 825;
-                y = 450 + (450 * (i - PosLib.LowestOpp));
+                x2 = World.W - 965;
+                y = 300 + (450 * (i - PosLib.LowestOpp));
             }
 
-            _Actors.Add(_Stats[i] = new Label()
+            _Actors.Add(_Sprites[i] = new()
+            {
+                Position = new(x2, y),
+                Size = new(RenderLib.UnitSpriteSize),
+                AnimFromDir = dir
+            });
+            _Actors.Add(_Stats[i] = new()
             {
                 Position = new(x1, y),
                 AnimFromDir = dir
             });
-            _Actors.Add(_Buffs[i] = new Label()
+            _Actors.Add(_Buffs[i] = new()
             {
                 Position = new(x1, y + 150),
                 AnimFromDir = dir
             });
-            _Actors.Add(_Moves[i] = new Label()
+            _Actors.Add(_Moves[i] = new()
             {
-                Position = new(x2, y + 50),
-                AnimFromDir = dir
+                Position = new(x2 + RenderLib.UnitSpriteSize + 20, y),
+                AnimFromDir = dir,
+                BackgroundType = BackgroundType.Parellelogram
             });
         }
+
+        _SkillList.CurDir = SelectionType.HorizVert;
 
         Assert.LenIs(_Actors, _ActorCount);
     }
@@ -194,6 +224,15 @@ public static class BattleLib
         // setup stage
         Stage.AddRange(_Actors);
         Stage.Sort();
+
+        _SetupSkillList(_selectingMove);
+
+        // todo better fix
+        for (int i = 0; i < _SkillList.LabelsL.Count; i++)
+        {
+            _SkillList.LabelsL[i].Prog = Progress.One;
+            _SkillList.LabelsR[i].Prog = Progress.One;
+        }
     }
 
     // todo remove?
@@ -234,10 +273,10 @@ public static class BattleLib
         switch (_selectingMove)
         {
             case < PosLib.LowestOpp:
-                _SelectPlayerMove();
+                _SelectPlayerMove(gt);
                 return;
             case <= PosLib.Highest:
-                _SelectOpponentMove();
+                _SelectOpponentMove(gt);
                 return;
             case _ExecutionPhase:
                 _ExecuteMove();
@@ -364,8 +403,6 @@ public static class BattleLib
                 Assert.CapIs(sb, Cap); // todo remove before final release
                 _Buffs[i].Text = sb.ToString();
             }
-
-
         }
 
         // Update queue
@@ -402,31 +439,21 @@ public static class BattleLib
 
     #region Move Execution Methods
 
-    private static void _SelectPlayerMove()
+    private static void _SelectPlayerMove(GameTime gt)
     {
         if (_selectingMove >= Battle.PlayerTeam.Units.Length)
         {
             return;
         }
 
-        _SkillsL.Position = new(600, 500 + (450 * _selectingMove));
-        // todo support ExA
-        // todo do not assign every frame
-        _SkillsL.Text =
-            // todo list all skills
-            $"{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Skill
-                // temp
-                // todo real skill description display
-                .GetName()}";//({ThemeColor.Cooldown}{Battle.PlayerTeam.Units[_selectingMove].SkillInstances[0].Cooldown}{ThemeColor.White.Str})";
-
-        _SelectMove();
+        _SelectMove(gt);
     }
 
-    private static void _SelectOpponentMove()
+    private static void _SelectOpponentMove(GameTime gt)
     {
         if (Settings.SelectOpponentMoves)
         {
-            _SelectMove();
+            _SelectMove(gt);
             return;
         }
 
@@ -447,18 +474,15 @@ public static class BattleLib
         }
     }
 
-    private static void _SelectMove()
+    private static void _SelectMove(GameTime gt)
     {
         // Cancel
         if (_selectingMove != 0 && InputLib.Check(Keybinds.Back))
         {
-            // todo
-            _SkillsL.Text = "";
-
             _selectingMove--;
             _Queue.Index = _GetQueueIndex(_selectingMove);
 
-            _indexSkill = 0;
+            _SkillList.Index = 0;
             _Moves[_selectingMove].Text = "";
 
             for (int i = 0; i <= Battle.PlayerTeam.Units[_selectingMove].ExtraActions; i++)
@@ -466,12 +490,12 @@ public static class BattleLib
                 _CurMoves.RemoveLast();
             }
 
+            _SetupSkillList(_selectingMove);
+
             return;
         }
 
-        _indexSkill = MenuLib.CheckMovement1D(_indexSkill, 6); // todo
-
-        //MenuLib.handleOptColor(skills, indexSkill); todo
+        _SkillList.Input(gt);
 
         if (!InputLib.Check(Keybinds.Confirm))
         {
@@ -479,18 +503,48 @@ public static class BattleLib
         }
 
         // todo fix: crashes if selectopponentmoves is enabled
-        _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_indexSkill];
+        _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_SkillList.Index];
+        _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex();
+
+        _SkillList.IsVisible = false;
+        _SkillDesc.IsVisible = false;
         _Moves[_selectingMove].Text = _selectedSkillInstance.Skill.GetName();
 
-        // todo
-        _SkillsL.Text = "";
-
-        _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex();
         States.Battle.AddMenu(_TargetingLib._Menu);
-        //StateMachine.Add(States.Targeting);
     }
 
-    // todo split out into multiple fns
+    internal static void _SetupSkillList(int index)
+    {
+        if (index > PosLib.HighestAlly && !Settings.SelectOpponentMoves)
+        {
+            _SkillList.IsVisible = false;
+            _SkillDesc.IsVisible = false;
+            return;
+        }
+
+        _SkillList.IsVisible = true;
+        _SkillDesc.IsVisible = true;
+
+        Unit u = Battle.GetUnitAtPos(index);
+        List<SkillInstance> skills = u.SkillInstances;
+
+        int y = 300 + (450 * index);
+
+        _SkillList.Position = new(600 + RenderLib.UnitSpriteSize, y);
+        _SkillList.SetTextL([.. skills.Select(s => s.Skill.GetName())]);
+        _SkillList.SetTextR([.. skills.Select(s => s.GetCostCdFormatted(u))]);
+
+        _SkillDesc.Position = new(_GetSkillDescX(), y);
+        _SkillDesc.Text = skills[0].Skill.GetFullDesc();
+
+        _SkillList.CalcLayout();
+    }
+
+    private static int _GetSkillDescX()
+    {
+        return 600 + RenderLib.UnitSpriteSize + 800 + 50 - (_SkillDesc.Height / RenderLib.DefaultSlant);
+    }
+
     private static void _ExecuteMove()
     {
         if (_CurMoves.Count == 0)
@@ -563,12 +617,9 @@ public static class BattleLib
             Element element = skill.GetElement();
 
             Team team = self.Pos < PosLib.LowestOpp ? Battle.PlayerTeam : Battle.OpponentTeam;
-            int cost = self.IsBoolStat(BoolStats.InfiniteSp) && !skill.IsBloom ? 0 : skill.Cost;
+            int cost = self.GetCost(skill);
 
-            // Make sure cost doesn't go below 1 unless the skill has a base 0 SP cost
-            int costMod = cost > 0 ? (int) Math.Max(cost * (self.GetElementSpCost(element) / 1000d), 1) : 0;
-
-            int change = (int) (skill.IsBloom ? costMod : costMod * self.GetMult(Mults.SpUse));
+            int change = (int) (skill.IsBloom ? cost : cost * self.GetMult(Mults.SpUse));
             spNew = skill.IsBloom ? team.Bloom - change : self.Sp - change;
 
             if (spNew < 0)
@@ -689,6 +740,7 @@ public static class BattleLib
     private static void _EndTurn()
     {
         _selectingMove = 0;
+        _SetupSkillList(_selectingMove);
         _usingMove = _SelectionPhase;
         Battle.Turn++;
 

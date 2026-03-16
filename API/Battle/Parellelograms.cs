@@ -12,6 +12,6 @@ public static class Parellelograms
     {
         Speed = IActor.DefaultSpeed,
         SlantL = 0,
-        Priority = RenderPriority.B2Low
+        Priority = RenderPriority.B3Low
     };
 }

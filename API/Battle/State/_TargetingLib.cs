@@ -33,7 +33,9 @@ internal static class _TargetingLib
             //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";
 
-            //StateMachine.Remove();
+            _SkillList.IsVisible = true;
+            _SkillDesc.IsVisible = true;
+
             States.Battle.RemoveMenu();
             return;
         }
@@ -70,13 +72,12 @@ internal static class _TargetingLib
         {
             _extraActions = 0;
             _selectingMove++;
+            _SetupSkillList(_selectingMove);
         }
 
-        _indexSkill = 0;
-
+        _SkillList.Index = 0;
         _UpdateStatDisplay(_selectingMove);
 
-        //StateMachine.Remove();
         States.Battle.RemoveMenu();
     }
 }

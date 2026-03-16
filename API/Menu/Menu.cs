@@ -20,9 +20,11 @@ public sealed class Menu
     public string DbgName { get; }
 
     /// <summary>
-    /// Called when this is first reached to update the input prompt <c>Label</c> in the bottom-right corner
+    /// Called when this is first reached to update the input prompt <c>Label</c> in the bottom-right corner.
+    /// If null, uses the current <c>State</c>'s instead.
+    /// If returns null, there will be no prompt
     /// </summary>
-    public Func<string>? GetInputPrompt { get; init; }
+    public Func<string?>? GetInputPrompt { get; init; }
 
     /// <summary>
     /// <c>IActors</c> that this will add to the stage. Also handles controls for any that are <c>IInputWidgets</c>

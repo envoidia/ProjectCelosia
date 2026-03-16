@@ -14,6 +14,7 @@ public static class InputPrompts
     public static readonly InputPrompt Move = new("InputMove", Keybinds.LeftRightUpDown);
     public static readonly InputPrompt MoveLeftRight = new("InputMove", Keybinds.LeftRight);
     public static readonly InputPrompt ScrollUpDown = new("InputScroll", Keybinds.UpDown);
+    public static readonly InputPrompt ChangePage = new("InputChangePage", Keybinds.LeftRight);
     public static readonly InputPrompt Faster = new("InputFaster", Keybinds.Hotkey1);
     public static readonly InputPrompt ToStart = new("InputToStart", Keybinds.Hotkey2);
 
@@ -24,7 +25,9 @@ public static class InputPrompts
         MultiInputType = MultiInputType.And
     };
 
-    // Inspect menu
+    // todo Inspect menu
+    public static readonly InputPrompt ChangeUnit = new("InputChangeUnit",
+        Keybinds.PageL, Keybinds.PageR);
     public static readonly InputPrompt InspectStat = new("InputInspectStat", Keybinds.Menu1);
     public static readonly InputPrompt InspectAffinity = new("InputInspectAffinity", Keybinds.Menu2);
     public static readonly InputPrompt InspectEquip = new("InputInspectEquip", Keybinds.Confirm);

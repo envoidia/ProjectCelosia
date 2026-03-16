@@ -88,7 +88,7 @@ public static class CommandParser
     {
         if (!Command.Cmds.TryGetValue(cmdKey, out Command cmd))
         {
-            DebugConsole.Log($"{cmdKey} is not a recognized command. Use `help` for help and `ls cmd` to list all commands",
+            DebugConsole.Log($"{cmdKey} is not a recognized command. Use `help` for help and `man cmd` to list all commands",
             nameof(DebugConsole), LogLevel.Error);
 
             // todo suggest close matches
@@ -118,6 +118,7 @@ public static class CommandParser
         return cmdArgs;
     }
 
+    // todo fix " not being removed from output
     public static string[] _SplitUnquotedWhitespace(string input)
     {
         List<string> result = new(8);
@@ -252,7 +253,7 @@ public static class CommandParser
         {
             return null;
         }
-        
+
         int skip = args.Length - 1;
 
         if (skipFirst)

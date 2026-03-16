@@ -49,6 +49,9 @@ internal sealed class _InspectLib
 
         OnUpdate = _Update,
 
+        GetInputPrompt = static () => Menu.State.State.GetInputPromptString(ScrollUpDown,
+            ChangePage, ChangeUnit, Back),
+
         InputWidgets = [_Queue]
     };
 
@@ -74,56 +77,30 @@ internal sealed class _InspectLib
     // Page list
     private static readonly TabBarWidget _PageTabs = new(new(1135, 600), 8)
     {
-        Priority = RenderPriority.B2Med,
+        Priority = RenderPriority.B3Med,
         OnChangeIndex = _UpdateInspectPage
     };
 
     // Items on current page
-    private static readonly ListWidget _PageItems = new(new(60, 740), true, 16)
+    private static readonly ListWidget _PageItems = new(new(60, 740), true,
+        16, RenderPriority.B3Med)
     {
         FixedWidth = 800,
         OnChangeIndex = static i => _UpdatePageItemDesc(i, _PageTabs.Index)
     };
 
-    private static readonly ASlantedLine _PageDivL = new(new(35, 590), new(635, 20));
-    private static readonly ASlantedLine _PageDivR = new(new(1600, 590), new(635, 20));
+    private static readonly ASlantedLine _PageDivL = new(new(35, 590),
+        new(635, 20), RenderPriority.B3Med);
+    private static readonly ASlantedLine _PageDivR = new(new(1600, 590),
+        new(635, 20), RenderPriority.B3Med);
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
-
-    // Unit tabs
-    private static readonly string[] _UnitList = new string[UnitCount];
-
-    //private static TabBarWidget _unitTabs = null!;
-    //private static readonly GuiBoxChain _UnitListBox = new(518, 40, 106) { Priority = RenderPriority.B2Med };
-
-    // Input prompts
-    // todo remove
-    private static readonly Label[] _Prompts = new Label[10];
-    private static readonly InputPrompt[] _PromptTypes = [
-            InspectStat, InspectAffinity,
-            InspectEquip, InspectMult, InspectMod, InspectOther,
-            InspectUnitL, InspectUnitR,
-            InspectPageL, InspectPageR];
-
-    // todo Dividing paths
-    private const int _Y = 800;
-    // private static readonly Path _PageDivL = new(new(30, _Y), new(370, _Y),
-    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-    // private static readonly Path _PageDivR = new(new(900, _Y), new(1450, _Y),
-    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-
-    // private static readonly Path _MultP = new(new(60, _Y), new(660, _Y),
-    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-    // private static readonly Path _ModP = new(new(60 + 675, _Y), new(660 + 675, _Y),
-    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
-    // private static readonly Path _OtherP = new(new(60 + 1350, _Y), new(660 + 1350, _Y),
-    //     RenderPriority.B2Med) { Speed = IAnimated.DefaultSpeed };
 
     // Current unit items
     private static readonly ARectangle _UnitBounds = new()
     {
         Position = new(40, 95),
-        Size = new(384),
-        Priority = RenderPriority.B2Med
+        Size = new(RenderLib.UnitSpriteSize),
+        Priority = RenderPriority.B3Med
     };
 
     private const int _StatStartX = 450;
@@ -132,13 +109,13 @@ internal sealed class _InspectLib
     private const int _StatStartY = 175;
     private const int _StatGapY = 65;
 
-    private static readonly Label _Lvl = new(RenderPriority.B2Med)
+    private static readonly Label _Lvl = new(RenderPriority.B3Med)
     {
         Position = new(_StatStartX, _StatStartY)
     };
 
     private static readonly HpBarWidget _Hp = new(new(_StatStartX, _StatStartY + _StatGapY),
-        _StatBarWidth, RenderPriority.B2Med);
+        _StatBarWidth, RenderPriority.B3Med);
     // private static readonly Label _Hp = new(RenderPriority.B2Med) {
     //     Text = "HP",
     //     Position = new(_StatStartX, _StatStartY + _StatGapY)
@@ -149,8 +126,8 @@ internal sealed class _InspectLib
     // };
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
-    private static readonly StatBarWidget _Sp = new(new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B2Med, ThemeColor.Stat.Str + "StatSp".GetLang())
+    private static readonly StatBarWidget _Sp = new(pos: new(_StatStartX, _StatStartY + (_StatGapY * 2)),
+            _StatBarWidth, RenderPriority.B3Med, ThemeColor.Stat.Str + "StatSp".GetLang())
     {
         ColorLayer0 = ThemeColor.SpBack,
         ColorLayer1 = ThemeColor.Sp,
@@ -165,12 +142,12 @@ internal sealed class _InspectLib
     //     Alignment = Alignment.TopRight
     // };
 
-    private static readonly Label _Equip = new(RenderPriority.B2Med)
+    private static readonly Label _Equip = new(RenderPriority.B3Med)
     {
         Position = new(_StatStartX, _StatStartY + (_StatGapY * 3))
     };
 
-    private static readonly Label _Affinities = new(RenderPriority.B2Med)
+    private static readonly Label _Affinities = new(RenderPriority.B3Med)
     {
         Position = new(_StatStartX, _StatStartY + (_StatGapY * 4))
     };
@@ -189,13 +166,11 @@ internal sealed class _InspectLib
     //private static GuiBoxBar spBar = coolRectBars[CoolRectBars.SP_INSPECT.ordinal()];
 
     // Current page items
-    // todo remove
-    private static readonly Label _PageItemList = new(RenderPriority.B2Med);
-    private static readonly Label _PageItemRightList = new(RenderPriority.B2Med);
-    private static readonly Label _DescHeader = new(RenderPriority.B2Med);
-    private static readonly Label _Desc = new(RenderPriority.B2Med)
+    // private static readonly Label _DescHeader = new(RenderPriority.B2Med);
+    private static readonly Label _Desc = new(RenderPriority.B3Med)
     {
-        Position = new(950, 740)
+        Position = new(950, 740),
+        MaxWidth = 1150
     };
 
     #endregion
@@ -227,7 +202,7 @@ internal sealed class _InspectLib
     {
         // Add preinitialized actors
         _Actors.AddRange(_UnitBounds, _Equip, _Affinities, _Lvl, _Hp, _Sp,
-            _PageItemList, _PageItemRightList, _DescHeader, _Desc, _PageDivL, _PageDivR);
+            /*_DescHeader,*/ _Desc, _PageDivL, _PageDivR);
 
         // todo hp/sp bars
         _AnimPrimActors.AddRange(Parellelograms.CoverLeft/*, _PageListBox, _UnitListBox,*/
@@ -263,7 +238,8 @@ internal sealed class _InspectLib
             int x = _StatStartX + _StatGapX * (i > 2 ? 2 : 1);
             int y = _StatStartY + (_StatGapY * (i % 3));
 
-            _Actors.Add(_StatsBasic[i] = new StatBarWidget(new(x, y), _StatBarWidth, RenderPriority.B2Med));
+            _Actors.Add(_StatsBasic[i] = new StatBarWidget(new(x, y), _StatBarWidth,
+                RenderPriority.B3Med));
             // _Actors.Add(_StatsBasic[i] = new Label(RenderPriority.B2Med) {
             //     Position = new(x, y),
             //     Alignment = Alignment.TopLeft
@@ -323,12 +299,12 @@ internal sealed class _InspectLib
     {
         // todo account for non-8 units?
         // todo unify for nameplates
-        Unit[] u = BattleLib.Battle.GetAllUnits();
+        // Unit[] u = BattleLib.Battle.GetAllUnits();
 
-        for (int i = 0; i < UnitCount; i++)
-        {
-            _UnitList[i] = u[i].FormatName(false);
-        }
+        // for (int i = 0; i < UnitCount; i++)
+        // {
+        //     _UnitList[i] = u[i].FormatName(false);
+        // }
 
         // todo set their X here
 
@@ -431,13 +407,14 @@ internal sealed class _InspectLib
                     => s.Skill.GetName(ThemeColor.White))]);
 
                 _PageItems.SetTextR([.. u.SkillInstances.Select(s
-                    => s.GetCostCdFormatted())]);
+                    => s.GetCostCdFormatted(u))]);
 
                 _PageItems.CalcLayout();
 
                 _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
+
             case _InspectPage.Passives:
                 _PageItems.SetTextR(); // todo
 
@@ -449,6 +426,7 @@ internal sealed class _InspectLib
                 _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
+
             case _InspectPage.Buffs:
                 _PageItems.SetTextL([.. u.BuffInstances.Select(b
                     => b.Buff.GetName(ThemeColor.White))]);
@@ -461,6 +439,7 @@ internal sealed class _InspectLib
                 _UpdatePageItemDesc(_PageItems.Index, index);
 
                 return;
+
             case _InspectPage.Stats:
                 _PageItems.SetTextL();
                 _PageItems.SetTextR();

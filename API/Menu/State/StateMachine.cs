@@ -16,10 +16,10 @@ public static class StateMachine
 
     internal static readonly Label _InputPrompt = new(RenderPriority.Highest)
     {
-        Position = World.Vec - new Vector2(10),
+        Position = new(World.W - 50, World.H - 30),
         Padding = new(10),
         Alignment = Alignment.BottomRight,
-        HasBackground = true,
+        BackgroundType = BackgroundType.Parellelogram,
         AnimFromDir = Dir.Down
     };
 

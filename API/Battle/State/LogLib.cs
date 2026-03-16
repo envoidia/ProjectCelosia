@@ -8,7 +8,9 @@ public static class LogLib
 {
     internal static readonly Label _BattleLog = new()
     {
-        Position = new(World.W2 - 300 + 700, 405)
+        Position = new(World.W2 - 300 + 700, 405),
+        Padding = new(10),
+        BackgroundType = BackgroundType.Parellelogram
     };
 
     internal static readonly List<string> _LogText = new(1024); // todo decide capacity
