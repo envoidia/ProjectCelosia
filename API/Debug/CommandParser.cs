@@ -200,7 +200,7 @@ public static class CommandParser
                 return null;
             }
 
-            if (paramNum >= cmd.Params.Length)
+            if (paramNum > cmd.Params.Length)
             {
                 // Just assume it's valid since there are no rules for it
                 return "";

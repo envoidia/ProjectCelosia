@@ -316,7 +316,9 @@ public static class Commands
 
         Assert.NotNull(cmd);
 
-        return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}");
+        Console.WriteLine(Command.Cmds);
+
+        return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}\n");
     }
 
     private static CommandResult _Cmd_whoami(ReadOnlySpan<string> args)
