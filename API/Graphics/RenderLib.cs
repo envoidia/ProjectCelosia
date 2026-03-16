@@ -31,7 +31,7 @@ public static class RenderLib
         Vector2 bl = new(l, b);
         Vector2 br = new(MathHelper.SmoothStep(bl.X, r, (float) prog), b);
 
-        Core.ShapeBatch.DrawTriangleStrip(tl, tr, bl, br, color, outlineColor, outlineThickness);
+        Core.ShapeBatch.DrawQuad(tl, tr, bl, br, color, outlineColor, outlineThickness);
     }
 
     public static void DrawParallelogram(Vector2 pos, Point size, Point origin, Color color, Color outlineColor,
@@ -49,6 +49,6 @@ public static class RenderLib
         Vector2 br = new(MathHelper.SmoothStep(bl.X, pos.X + size.X,
             (float) prog), pos.Y + size.Y);
 
-        Core.ShapeBatch.DrawTriangleStrip(tl, tr, bl, br, color, outlineColor, outlineThickness);
+        Core.ShapeBatch.DrawQuad(tl, tr, bl, br, color, outlineColor, outlineThickness);
     }
 }

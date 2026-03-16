@@ -6,7 +6,7 @@ namespace API.Util;
 /// <summary>
 /// A float clamped from 0-1 representing progress of some action
 /// </summary>
-public readonly struct Progress(float p = 0)
+public readonly struct Progress(float p = 0) : IEquatable<Progress>
 {
     public static readonly Progress One = new(1);
     public static readonly Progress Zero = new(0);
@@ -75,7 +75,7 @@ public readonly struct Progress(float p = 0)
 
     public static bool operator ==(Progress l, Progress r)
     {
-        return l._p == r._p;
+        return l.Equals(r);
     }
 
     public static bool operator ==(Progress l, float r)
@@ -90,7 +90,7 @@ public readonly struct Progress(float p = 0)
 
     public static bool operator !=(Progress l, Progress r)
     {
-        return l._p != r._p;
+        return !l.Equals(r);
     }
 
     public static bool operator !=(Progress l, float r)
@@ -168,11 +168,16 @@ public readonly struct Progress(float p = 0)
         return p._p;
     }
 
+    public bool Equals(Progress other)
+    {
+        return this._p == other._p;
+    }
+
     public override bool Equals(object? obj)
     {
         return obj switch
         {
-            Progress p => this._p == p._p,
+            Progress p => this.Equals(p),
             float f => this._p == f,
             int i => this._p == i,
             long l => this._p == l,
@@ -203,7 +208,7 @@ public readonly struct Progress(float p = 0)
 
     public static Progress ParseOrDefault(string? str, Progress defaultValue = default)
     {
-        if(str is null)
+        if (str is null)
         {
             return defaultValue;
         }

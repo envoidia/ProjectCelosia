@@ -65,6 +65,7 @@ public static class BattleLib
     internal static readonly Label _SkillDesc = new(RenderPriority.B2Low)
     {
         MaxWidth = 1150,
+        Padding = new(10),
         BackgroundType = BackgroundType.Parellelogram
     };
 
@@ -513,6 +514,7 @@ public static class BattleLib
         States.Battle.AddMenu(_TargetingLib._Menu);
     }
 
+    // todo move x over based on height
     internal static void _SetupSkillList(int index)
     {
         if (index > PosLib.HighestAlly && !Settings.SelectOpponentMoves)
@@ -530,19 +532,24 @@ public static class BattleLib
 
         int y = 300 + (450 * index);
 
-        _SkillList.Position = new(600 + RenderLib.UnitSpriteSize, y);
-        _SkillList.SetTextL([.. skills.Select(s => s.Skill.GetName())]);
+        _SkillList.SetTextL([.. skills.Select(s => s.Skill.GetName(ThemeColor.White))]);
         _SkillList.SetTextR([.. skills.Select(s => s.GetCostCdFormatted(u))]);
+        _SkillList.Position = new(650 + RenderLib.UnitSpriteSize, y);
 
-        _SkillDesc.Position = new(_GetSkillDescX(), y);
-        _SkillDesc.Text = skills[0].Skill.GetFullDesc();
+        // _SkillList.Y = y;
+        // _SkillList.CalcLayout();
+        // _SkillList.X = 650 + RenderLib.UnitSpriteSize;// - (_SkillList.Height / RenderLib.DefaultSlant);
 
         _SkillList.CalcLayout();
+
+        _SkillDesc.Text = skills[0].Skill.GetFullDesc();
+        _SkillDesc.Position = new(_GetSkillDescX(), y + 10);
     }
 
+    // todo fix slightly inconsistent x w diff heights
     private static int _GetSkillDescX()
     {
-        return 600 + RenderLib.UnitSpriteSize + 800 + 50 - (_SkillDesc.Height / RenderLib.DefaultSlant);
+        return (int) (600 + RenderLib.UnitSpriteSize + 800 + 115 - (_SkillDesc.Height / (float) RenderLib.DefaultSlant));
     }
 
     private static void _ExecuteMove()
