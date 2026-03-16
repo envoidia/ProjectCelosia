@@ -21,10 +21,9 @@ public sealed class Command
     /// </summary>
     public readonly CommandParam[] Params;
 
-    /// <summary>
-    /// Description of this
-    /// </summary>
+    public readonly string Name;
     public readonly string Desc;
+    public readonly string? ExtendedDesc = null;
 
     /// <summary>
     /// ID of the mod this is from
@@ -36,14 +35,16 @@ public sealed class Command
     /// </summary>
     public readonly bool IsVisible;
 
-    private Command(Func<ReadOnlySpan<string>, CommandResult> fn,
-        CommandParam[] @params, string desc, string modId, bool isVisible)
+    private Command(Func<ReadOnlySpan<string>, CommandResult> fn, CommandParam[] @params,
+        string name, string desc, string modId, bool isVisible, string? extendedDesc)
     {
         this.Fn = fn;
         this.Params = @params;
+        this.Name = name;
         this.Desc = desc;
         this.ModId = modId;
         this.IsVisible = isVisible;
+        this.ExtendedDesc = extendedDesc;
     }
 
     /// <summary>
@@ -52,7 +53,8 @@ public sealed class Command
     /// </summary>
     /// <returns>The error, if any</returns>
     public static CommandRegistrationError? Register(string name, Func<ReadOnlySpan<string>,
-        CommandResult> fn, CommandParam[] @params, string desc, string modId, bool isVisible = true)
+        CommandResult> fn, CommandParam[] @params, string desc, string modId,
+        bool isVisible = true, string? extendedDesc = null)
     {
         if (name.Any(c => char.IsWhiteSpace(c) || c == '|'))
         {
@@ -64,8 +66,19 @@ public sealed class Command
             return CommandRegistrationError.AlreadyUsed;
         }
 
-        Cmds.Add(name, new(fn, @params, desc, modId, isVisible));
+        Cmds.Add(name, new(fn, @params, name, desc, modId, isVisible, extendedDesc));
 
         return null;
+    }
+
+    public string GetHintText(int skip)
+    {
+        return string.Join(' ', this.Params.Skip(skip)
+            .Select(s => $"[{s.Hint}]"));
+    }
+
+    public string GetUsageText()
+    {
+        return $"Usage: {this.Name} {this.GetHintText(0)}";
     }
 }

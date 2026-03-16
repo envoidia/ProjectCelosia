@@ -35,7 +35,7 @@ public static class Commands
 
     private const string _BasicInfo = "Basic info";
 
-    private const string _Help = "Enter a command followed by its arguments with a space between each.\nWrap an argument in \" to include spaces. Inside of quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\n`man cmd` to list all commands, `man kb` to list all keybinds";
+    private const string _Help = "Enter a command followed by its arguments with a space between each.\nWrap an argument in \" to include spaces. Inside of quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
 
     private static readonly string[] _Overlays = ["info", "console", "outline", "theme", "input", "perf"];
     private static readonly string[] _Writable = ["modlist", "registry", "lang", "stage", "battlelog", "theme"];
@@ -52,10 +52,6 @@ public static class Commands
         {
             return new(_Help);
         }, [], _BasicInfo, Core.Id);
-
-        string[] manArgs = ["cmd", "kb"];
-        Command.Register("man", _Cmd_man, [new(manArgs)],
-            _BasicInfo, Core.Id);
 
         Command.Register("clear", static _ =>
         {
@@ -86,9 +82,6 @@ public static class Commands
 
         Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
             "Counts lines, words, and chars", Core.Id);
-
-        Command.Register("which", _Cmd_which, [new("command",
-            [.. Command.Cmds.Keys])], "Returns the ID and description of a command", Core.Id);
 
         Command.Register("whoami", _Cmd_whoami, [],
             "Returns the name of the loaded save", Core.Id);
@@ -126,7 +119,8 @@ public static class Commands
 
         Command.Register("write", _Cmd_write, [new(_Writable),
             new("preserve formatting?", CommandParam.InputBools)],
-            "Write various things", Core.Id);
+            "Write various things", Core.Id,
+            extendedDesc: "args[1] determines whether to preserve text formatting codes. Leave blank to preserve colors but not images");
 
         Command.Register("cleanup", _Cmd_cleanup, [new(_Cleanable)],
             "Sort and cleanup various things", Core.Id);
@@ -140,7 +134,8 @@ public static class Commands
         Command.Register("setting", _Cmd_setting,
             [new("setting key/reload/reset",
             [.. Settings.AllSettings.Keys, "reload", "reset"]),
-            new("value")], "Alter settings", Core.Id);
+            new("value")], "Alter settings", Core.Id,
+            extendedDesc: "Omit value to print the current value\n`reload` to reload from file, `reset` to reset to default\nIf a value is invalid, the default will be used instead");
 
         #endregion
 
@@ -151,7 +146,8 @@ public static class Commands
             new("buff ID", [], () => Registry.IdsOf<Buff>()),
             new("turns", CommandParam.InputNumbers1To9),
             new("stacks", CommandParam.InputNumbers1To9)],
-            "Give/remove buffs in battle", Core.Id);
+            "Give/remove buffs in battle", Core.Id,
+            extendedDesc: "Can omit turns and stacks if removing");
 
         // todo passive
 
@@ -160,6 +156,12 @@ public static class Commands
         // todo stat statmult/affinity/stage/stageturns/mult/boomantat/statmod
 
         #endregion
+
+        // Must be last
+        string[] manArgs = ["cmd", "kb"];
+        const string Man = "man";
+        Command.Register(Man, _Cmd_man, [new("cmd/kb/command name",
+            ["cmd", "kb", Man, .. Command.Cmds.Keys])], _BasicInfo, Core.Id);
     }
 
     #region Basic
@@ -168,7 +170,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, _Help);
+            return new(ExitCode.Err, Command.Cmds["man"].GetUsageText());
         }
 
         switch (args[1])
@@ -209,17 +211,25 @@ public static class Commands
 
                     Non-control keys are used to type
                     """);
-
-            default:
-                return new(ExitCode.Err, _Help);
         }
+
+        if (!Command.Cmds.TryGetValue(args[1], out Command cmd))
+        {
+            return new(ExitCode.Err, $"Command {args[1]} couldn't be found");
+        }
+
+        Assert.NotNull(cmd);
+
+        string? extDesc = $"\n{cmd.ExtendedDesc}" ?? null;
+
+        return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}\n{cmd.GetUsageText()}\n{extDesc}");
     }
 
     private static CommandResult _Cmd_grep(ReadOnlySpan<string> args)
     {
         if (args.Length < 3)
         {
-            return new(ExitCode.Err, "Usage: `grep [text] [search]`");
+            return new(ExitCode.Err, Command.Cmds["grep"].GetUsageText());
         }
 
         string[] lines = args[1].Split('\n');
@@ -247,7 +257,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, "Usage: `wc [text] [l/w/c]`");
+            return new(ExitCode.Err, Command.Cmds["wc"].GetUsageText());
         }
 
         bool usingFormat = args[^1] is "l" or "w" or "c";
@@ -300,25 +310,6 @@ public static class Commands
         }
 
         return new(string.Format(_WcRes, lines, words, chars));
-    }
-
-    private static CommandResult _Cmd_which(ReadOnlySpan<string> args)
-    {
-        if (args.Length == 1)
-        {
-            return new(ExitCode.Err, "Must pass the target command");
-        }
-
-        if (!Command.Cmds.TryGetValue(args[1], out Command cmd))
-        {
-            return new(ExitCode.Err, $"Command {args[1]} couldn't be found");
-        }
-
-        Assert.NotNull(cmd);
-
-        Console.WriteLine(Command.Cmds);
-
-        return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}\n");
     }
 
     private static CommandResult _Cmd_whoami(ReadOnlySpan<string> args)
@@ -502,7 +493,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, $"Must pass the item to write ({_Writable}\nargs[1] determines whether to preserve text formatting codes. Leave blank to preserve colors but not images");
+            return new(ExitCode.Err, $"Must pass the item to write ({_Writable}\n{Command.Cmds["write"].ExtendedDesc}");
         }
 
         _Preserve fmt = _Preserve.NonImages;
@@ -634,7 +625,8 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, "Usage: `setting [setting] [value]`. Omit value to print the current value\n`setting reload` to reload from file, `setting reset` to reset to default\nIf a value is invalid, the default will be used instead");
+            Command cmd = Command.Cmds["setting"];
+            return new(ExitCode.Err, $"{cmd.GetUsageText()}\n{cmd.ExtendedDesc}");
         }
 
         if (args[1] == "reload")
@@ -670,71 +662,15 @@ public static class Commands
             return new($"{args[1]}={val}");
         }
 
-        switch (args[1])
+        if (!Settings.AllSettings.ContainsKey(args[1]))
         {
-            // Gameplay
-            case nameof(Settings.BattleSpeed):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.ShowInvalidMoveWarning):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            // Display
-            case nameof(Settings.Language):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.Resolution):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.Fullscreen):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.EnableVsync):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.Theme):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            // Audio
-            case nameof(Settings.MusicVolume):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.SfxVolume):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            // Controls
-            case nameof(Settings.ShowInputGuide):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.DetectNintendoController):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            // Debug
-            case nameof(Settings.EnableDebugFeatures):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            case nameof(Settings.SelectOpponentMoves):
-                Settings.AllSettings[args[1]] = args[2];
-                break;
-
-            default:
-                return new(ExitCode.Err, $"Setting `{args[1]}` couldn't be found");
+            return new(ExitCode.Err, $"Setting `{args[1]}` couldn't be found");
         }
 
+        Settings.AllSettings[args[1]] = args[2];
         Settings.Write();
         Settings.Reload();
+
         return new($"Changed setting `{args[1]}` to `{args[2]}`");
     }
 
@@ -748,12 +684,9 @@ public static class Commands
 
     private static CommandResult _Cmd_buff(ReadOnlySpan<string> args)
     {
-        const string Usage = "Usage: `buff [unit index 0-7] [give/remove] [buff ID] [turns] [stacks]`. "
-            + "Can omit turns and stacks if removing";
-
         if (args.Length < 4)
         {
-            return new(ExitCode.Err, Usage);
+            return new(ExitCode.Err, getHelpText());
         }
 
         // todo fail if not in battle
@@ -791,7 +724,7 @@ public static class Commands
             case Give:
                 if (args.Length < 6)
                 {
-                    return new(ExitCode.Err, Usage);
+                    return new(ExitCode.Err, getHelpText());
                 }
 
                 if (!int.TryParse(args[4], out int turns))
@@ -830,6 +763,12 @@ public static class Commands
 
             default:
                 return new(ExitCode.Err, "args[2] must be `give` or `remove`");
+        }
+
+        static string getHelpText()
+        {
+            Command cmd = Command.Cmds["buff"];
+            return $"{cmd.GetUsageText()}\n{cmd.ExtendedDesc}";
         }
     }
 

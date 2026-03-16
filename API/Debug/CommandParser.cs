@@ -248,20 +248,21 @@ public static class CommandParser
     /// </returns>
     public static string? GetHintText(ReadOnlySpan<string> args, bool skipFirst)
     {
-        if (args.Length != 0 && Command.Cmds.TryGetValue(args[0], out Command? cmd))
+        if (args.Length == 0 || !Command.Cmds.TryGetValue(args[0], out Command? cmd))
         {
-            int skip = args.Length - 1;
+            return null;
+        }
+        
+        int skip = args.Length - 1;
 
-            if (skipFirst)
-            {
-                skip++;
-            }
+        if (skipFirst)
+        {
+            skip++;
+        }
 
-            if (skip < cmd.Params.Length)
-            {
-                return string.Join(' ', cmd.Params.Skip(skip)
-                    .Select(s => $"[{s.Hint}]"));
-            }
+        if (skip < cmd.Params.Length)
+        {
+            return cmd.GetHintText(skip);
         }
 
         return null;
