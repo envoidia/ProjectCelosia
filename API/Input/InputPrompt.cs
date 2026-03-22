@@ -22,6 +22,6 @@ public sealed class InputPrompt(string keyName, params Keybind[] keybinds)
             }
         }
 
-        return builder.Append("  ").Append(keyName.GetLang()).ToString();
+        return builder.Append(' ').Append(keyName.GetLang()).ToString();
     }
 }

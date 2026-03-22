@@ -69,6 +69,6 @@ public static class StateMachine
     /// </summary>
     public static void UpdateInputPrompt()
     {
-        _InputPrompt.Text = State.GetInputPrompt();
+        _InputPrompt.Text = State.GetInputPrompt() ?? "";
     }
 }

@@ -66,12 +66,12 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
     /// <returns>
     /// Called when this is first reached and on menu change to update the input prompt <c>Label</c> in the bottom-right corner
     /// </returns>
-    public string GetInputPrompt()
+    public string? GetInputPrompt()
     {
         // Use Menu prompt
         if (this.Menus.Count > 0)
         {
-            Func<string>? menuPrompt = this.Menus[^1].GetInputPrompt;
+            Func<string?>? menuPrompt = this.Menus[^1].GetInputPrompt;
             if (menuPrompt is not null)
             {
                 return menuPrompt();
@@ -79,7 +79,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
         }
 
         // Use State prompt
-        return this.OnGetInputPrompt?.Invoke() ?? "";
+        return this.OnGetInputPrompt?.Invoke();
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
 
             if (i != (inputPrompts.Length - 1))
             {
-                inputs.Append("  ");
+                inputs.Append("   ");
             }
         }
 
