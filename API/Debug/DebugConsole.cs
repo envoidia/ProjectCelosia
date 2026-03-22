@@ -16,6 +16,11 @@ public static class DebugConsole
 {
     #region Props/Fields
 
+    /// <summary>
+    /// Whether to mirror console messages to stdout
+    /// </summary>
+    public static bool Mirror = false;
+
     internal static bool _Show
     {
         get;
@@ -182,6 +187,7 @@ public static class DebugConsole
             string? match = CommandParser.GetCurrentAutocompleteMatch(args);
 
             // Trailing space fixes cursor pos bug
+            // todo check all params for errors and not just the last one
             _Command.Text = $"{_color.Str}>{(match == "" ? null : _colorErr.Str)}{text} ";
 
             _CommandHint.X = _Command.X + _Command.Width - 18;
@@ -244,14 +250,19 @@ public static class DebugConsole
 
         _UpdateOutHistText();
 
-        // If mirroring to external log/console, must sanitize '［', '['
-        // Console.WriteLine($"{logLevel switch
-        // {
-        //     LogLevel.Info => "",
-        //     LogLevel.Warning => "\e[0;33m",
-        //     LogLevel.Error => "\e[0;31m",
-        //     _ => throw new ClosedEnumsWhenException()
-        // }}[{source}] {msg}");
+        if (!Mirror)
+        {
+            return;
+        }
+
+        // todo sanitize '［', '['
+        Console.WriteLine($"{logLevel switch
+        {
+            LogLevel.Info => "",
+            LogLevel.Warning => "\e[0;33m",
+            LogLevel.Error => "\e[0;31m",
+            _ => throw new ClosedEnumsWhenException()
+        }}[{source}] {msg}");
     }
 
     /// <summary>
@@ -362,6 +373,7 @@ public static class DebugConsole
         _Line.Width = Math.Max(_MinBgWidth, _OutHistLabel.Width + 20);
     }
 
+    // todo why does it visually appear 1+ too high up sometimes when outhist updates ???
     private static void _UpdateScrollbar()
     {
         // Portion currently displayed

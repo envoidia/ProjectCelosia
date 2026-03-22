@@ -8,7 +8,7 @@ public static partial class FormattingRegexes
     {
         /// <summary>
         /// Removes text formatting codes <c>/i[image]</c>/<c>/c[color]</c> and undoubles slashes.
-        /// For dumping text to the OS console in a readable format
+        /// For dumping text to the stdout in a readable format
         /// </summary>
         public string RemoveFormattingCodes()
         {

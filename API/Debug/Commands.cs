@@ -37,6 +37,8 @@ public static class Commands
 
     private const string _Help = "Enter a command followed by its arguments with a space between each.\nWrap an argument in \" to include spaces. Inside of quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
 
+    private const string _Arg1MustBeBool = "args[1] ({1}) must be a bool (true or false)";
+
     private static readonly string[] _Overlays = ["info", "console", "outline", "theme", "input", "perf"];
     private static readonly string[] _Writable = ["modlist", "registry", "lang", "stage", "battlelog", "theme"];
     private static readonly string[] _Cleanable = ["stage", "layout"];
@@ -97,6 +99,10 @@ public static class Commands
             return new(null);
         }, TextParamArr, "Writes text to stdout", Core.Id);
 
+        Command.Register("mirror", _Cmd_mirror,
+            [new("true/false/blank to toggle", CommandParam.InputBools)],
+            "Control whether to mirror console messages to stdout", Core.Id);
+
         Command.Register("gc", static args =>
         {
             return new($"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
@@ -112,7 +118,7 @@ public static class Commands
 
         Command.Register("overlay", _Cmd_overlay, [new(_Overlays),
             new("show/hide/blank to toggle", ["show", "hide"])],
-            "Enable/disable/toggle overlays", Core.Id);
+            "Control various overlays", Core.Id);
 
         Command.Register("write", _Cmd_write, [new(_Writable),
             new("preserve formatting?", CommandParam.InputBools)],
@@ -314,6 +320,31 @@ public static class Commands
         return new(ExitCode.Err, "NYI");
     }
 
+    private static CommandResult _Cmd_mirror(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            DebugConsole.Mirror ^= true;
+            return new(getString());
+        }
+
+        if (!bool.TryParse(args[1], out bool b))
+        {
+            return new(ExitCode.Err, string.Format(_Arg1MustBeBool, args[1]));
+        }
+
+        DebugConsole.Mirror = b;
+        return new(getString());
+
+        static string getString()
+        {
+            const string NowMirroring = "Now mirroring console messages to stdout";
+            const string NoLongerMirroring = "No longer mirroring console messages to stdout";
+
+            return DebugConsole.Mirror ? NowMirroring : NoLongerMirroring;
+        }
+    }
+
     private static CommandResult _Cmd_cbc(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
@@ -499,7 +530,7 @@ public static class Commands
         {
             if (!bool.TryParse(args[2], out bool b))
             {
-                return new(ExitCode.Err, $"args[1] ({args[1]}) must be a bool (true or false)");
+                return new(ExitCode.Err, string.Format(_Arg1MustBeBool, args[1]));
             }
 
             fmt = b ? _Preserve.True : _Preserve.False;
