@@ -55,10 +55,7 @@ public static class Commands
 
         Command.Register("clear", static _ =>
         {
-            DebugConsole._OutHist.Clear();
-            DebugConsole._OutHistLabel.Text = "\n";
-            DebugConsole._Line.Width = DebugConsole._MinBgWidth;
-
+            DebugConsole.ClearOutHist();
             return new(null);
         }, [], "Clears the console", Core.Id);
 

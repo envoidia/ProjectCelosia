@@ -96,11 +96,12 @@ internal sealed class _InspectLib
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Current unit items
-    private static readonly ARectangle _UnitBounds = new()
+    private static readonly ARectangle _UnitBounds = new(ThemeColor.TransBlack)
     {
         Position = new(40, 95),
         Size = new(RenderLib.UnitSpriteSize),
-        Priority = RenderPriority.B3Med
+        Priority = RenderPriority.B3Med,
+        OutlineColor = ThemeColor.White
     };
 
     private const int _StatStartX = 450;

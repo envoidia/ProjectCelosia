@@ -461,24 +461,24 @@ public sealed class TextInputWidget : IInputWidget
             return;
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.Home) || (this.UseUpDown && InputLib.Check(Keybinds.Up)))
-        {
-            this.Index = 0;
-            return;
-        }
-
-        if (InputLib.IsKeyJustPressed(Keys.End) || (this.UseUpDown && InputLib.Check(Keybinds.Down)))
-        {
-            this.Index = this.OptCount;
-            return;
-        }
-
         if (!ctrlPressed)
         {
+            if (InputLib.IsKeyJustPressed(Keys.Home) || (this.UseUpDown && InputLib.Check(Keybinds.Up)))
+            {
+                this.Index = 0;
+                return;
+            }
+
+            if (InputLib.IsKeyJustPressed(Keys.End) || (this.UseUpDown && InputLib.Check(Keybinds.Down)))
+            {
+                this.Index = this.OptCount;
+                return;
+            }
+
             return;
         }
 
-        if (InputLib.IsKeyJustPressed(Keys.K) && InputLib.IsCtrlPressed() && InputLib.IsShiftPressed())
+        if (InputLib.IsShiftPressed() && InputLib.IsKeyJustPressed(Keys.K))
         {
             this.Clear();
             return;

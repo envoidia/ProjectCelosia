@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using API.Extensions;
 using API.Graphics;
@@ -32,6 +33,7 @@ public static class DebugConsole
             _CommandHint.IsVisible = value;
             _Cursor.IsVisible = value;
             _OutHistLabel.IsVisible = value;
+            _Scrollbar.IsVisible = _OutHist.Count > _DisplayedOutHistLines && value;
             _Line.IsVisible = value;
 
             _Focused = value;
@@ -66,10 +68,13 @@ public static class DebugConsole
     private static ThemeColor _color;
     private static ThemeColor _colorErr;
 
+    private const int _TextX = 10;
+    private const int _TextOff = 17;
+
     private static readonly Label _Command = new(RenderPriority.B3High, Core.Mono40)
     {
         Text = ">",
-        Position = new(10, World.H - 10),
+        Position = new(_TextX, World.H - 10),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
@@ -81,7 +86,7 @@ public static class DebugConsole
     /// </summary>
     private static readonly Label _CommandHint = new(RenderPriority.B3Med, Core.Mono40)
     {
-        Position = new(10, World.H - 10),
+        Position = new(_TextX, World.H - 10),
         Padding = new(10),
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
@@ -90,16 +95,22 @@ public static class DebugConsole
 
     private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.B3High)
     {
-        Position = new(27, World.H - 50),
+        Position = new(_TextX + _TextOff, World.H - 50),
         IsVisible = false
+    };
+
+    private static readonly ARectangle _Scrollbar = new(ThemeColor.Gray, RenderPriority.B3High)
+    {
+        X = 10,
+        Alignment = Alignment.BottomLeft,
+        OutlineColor = ThemeColor.Gray
     };
 
     private const int _InHistLimit = 128;
     internal static readonly List<string> _InHist = new(_InHistLimit);
 
-    // todo scroll output
     private const int _DisplayedOutHistLines = 24;
-    internal static readonly List<string> _OutHist = new(_DisplayedOutHistLines);
+    internal static readonly List<string> _OutHist = new(128);
 
     /// <summary>
     /// Non-auto prop to avoid unneccessary update in <c>_ExecuteCommand</c>
@@ -114,6 +125,11 @@ public static class DebugConsole
         get => _outHistIndex;
         set
         {
+            if (_OutHist.Count <= _DisplayedOutHistLines)
+            {
+                return;
+            }
+
             _outHistIndex = Math.Clamp(value, 0, _OutHist.Count - _DisplayedOutHistLines);
             _UpdateOutHistText();
         }
@@ -146,8 +162,8 @@ public static class DebugConsole
 
     internal static readonly Label _OutHistLabel = new(RenderPriority.B3High, Core.Mono40)
     {
-        Position = new(10, World.H - 35),
-        Padding = new(10, 10, 10, 30),
+        Position = new(_TextX + _TextOff, World.H - 35),
+        Padding = new(_TextX + _TextOff, 10, 10, 30),
         BackgroundType = BackgroundType.Rectangle, // todo also use current command width for this
         MinBackgroundSize = new(_MinBgWidth, 0),
         Alignment = Alignment.BottomLeft,
@@ -186,12 +202,13 @@ public static class DebugConsole
     {
         Position = new(0, World.H - 60),
         Size = new(_MinBgWidth, 1),
-        IsVisible = false
+        IsVisible = false,
+        OutlineColor = ThemeColor.Gray
     };
 
     #endregion
 
-    #region Logging
+    #region Functions
 
     /// <summary>
     /// Write a message to the ingame console
@@ -238,6 +255,15 @@ public static class DebugConsole
         // }}[{source}] {msg}");
     }
 
+    /// <summary>
+    /// Clears output history
+    /// </summary>
+    public static void ClearOutHist()
+    {
+        _OutHist.Clear();
+        _UpdateOutHistText();
+    }
+
     #endregion
 
     #region Internals
@@ -250,38 +276,10 @@ public static class DebugConsole
         Stage.Add(_CommandHint);
         Stage.Add(_Cursor);
         Stage.Add(_OutHistLabel);
+        Stage.Add(_Scrollbar);
         Stage.Add(_Line);
 
-        // todo
-        _OutHist.Add("foo0");
-        _OutHist.Add("foo1");
-        _OutHist.Add("foo2");
-        _OutHist.Add("foo3");
-        _OutHist.Add("foo4");
-        _OutHist.Add("foo5");
-        _OutHist.Add("foo6");
-        _OutHist.Add("foo7");
-        _OutHist.Add("foo8");
-        _OutHist.Add("foo9");
-        _OutHist.Add("foo10");
-        _OutHist.Add("foo11");
-        _OutHist.Add("foo12");
-        _OutHist.Add("foo13");
-        _OutHist.Add("foo14");
-        _OutHist.Add("foo15");
-        _OutHist.Add("foo16");
-        _OutHist.Add("foo17");
-        _OutHist.Add("foo18");
-        _OutHist.Add("foo19");
-        _OutHist.Add("foo20");
-        _OutHist.Add("foo21");
-        _OutHist.Add("foo22");
-        _OutHist.Add("foo23");
-        _OutHist.Add("foo24");
-        _OutHist.Add("foo25");
-        _OutHist.Add("foo26");
-        _OutHist.Add("foo27");
-        _OutHist.Add("foo28");
+        _UpdateScrollbar();
     }
 
     internal static void _Update()
@@ -357,15 +355,36 @@ public static class DebugConsole
         int start = Math.Max(0, _OutHist.Count - _DisplayedOutHistLines - _OutHistIndex);
         int take = Math.Min(_DisplayedOutHistLines, _OutHist.Count - start);
 
-        _OutHistLabel.Text = string.Join("\n", _OutHist.Skip(start).Take(take)) + "\n";
+        _OutHistLabel.Text = $"{string.Join("\n", _OutHist.Skip(start).Take(take))}\n";
+
+        _UpdateScrollbar();
+        _Scrollbar.IsVisible = _OutHist.Count > _DisplayedOutHistLines;
 
         _Line.Width = Math.Max(_MinBgWidth, _OutHistLabel.Width + 20);
     }
 
+    private static void _UpdateScrollbar()
+    {
+        // Portion currently displayed
+        float ratio = Math.Min((float) _DisplayedOutHistLines / _OutHist.Count, 1);
+
+        // Maximum range for the bar to move. Slightly less than height so it leaves a margin on the edges
+        float range = (_OutHistLabel.Height - 50) + _OutHistLabel.Padding.TB - 20;
+
+        float barLength = range * ratio;
+        range -= barLength;
+
+        _Scrollbar.Size = new(10, (int) barLength);
+
+        // 0 = bottom; 1 = top
+        float scrollAmt = (float) _OutHistIndex / Math.Max(_OutHist.Count - _DisplayedOutHistLines, 0);
+
+        _Scrollbar.Y = _OutHistLabel.Y - _Scrollbar.Height - 35 - (range * scrollAmt);
+    }
+
     private static bool _ExecuteCommand()
     {
-        string text = _Input.Text;
-        if (text.Length == 0)
+        if (_Input.Text.Length == 0)
         {
             return false;
         }
@@ -373,17 +392,17 @@ public static class DebugConsole
         _inHistIndex = -1;
         _outHistIndex = 0;
 
-        if (_InHist.Count == 0 || _InHist[^1] != text)
+        if (_InHist.Count == 0 || _InHist[^1] != _Input.Text)
         {
             if (_InHist.Count > _InHistLimit)
             {
                 _InHist.RemoveFirst();
             }
 
-            _InHist.Add(text);
+            _InHist.Add(_Input.Text);
         }
 
-        CommandParser.ExecuteCommand(text);
+        CommandParser.ExecuteCommand(_Input.Text);
 
         return true;
     }

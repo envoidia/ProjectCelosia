@@ -490,7 +490,6 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             float range = this.Height - 10;
 
             float barLength = range * ratio;
-
             range -= barLength;
 
             // 1 = bottom; 0 = top

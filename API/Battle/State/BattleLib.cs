@@ -171,11 +171,12 @@ public static class BattleLib
                 y = 300 + (450 * (i - PosLib.LowestOpp));
             }
 
-            _Actors.Add(_Sprites[i] = new()
+            _Actors.Add(_Sprites[i] = new(ThemeColor.TransBlack)
             {
                 Position = new(x2, y),
                 Size = new(RenderLib.UnitSpriteSize),
-                AnimFromDir = dir
+                AnimFromDir = dir,
+                OutlineColor = ThemeColor.White
             });
             _Actors.Add(_Stats[i] = new()
             {
