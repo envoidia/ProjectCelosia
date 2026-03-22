@@ -256,11 +256,16 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
 
     public void DrawDebug(bool drawOrigin = true)
     {
-        Color outlineColor = this.Prog == 0
-            ? Color.ActorOutlineProg0
-            : this.Prog == 1
-                ? Color.ActorOutlineProg1
-                : Color.ActorOutline;
+        Color outlineColor = Color.ActorOutline;
+
+        if (this.Prog == 0)
+        {
+            outlineColor = Color.ActorOutlineProg0;
+        }
+        else if (this.Prog == 1)
+        {
+            outlineColor = Color.ActorOutlineProg1;
+        }
 
         (Color, Color) colors = this.IsVisible
             ? (outlineColor, Color.ActorPadding)
@@ -277,8 +282,8 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
         // Padding
         if (this.Padding != Padding.Zero)
         {
-            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2() -
-            new Vector2(this.Padding.L, this.Padding.T),
+            Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2()
+            - new Vector2(this.Padding.L, this.Padding.T),
             new(this.Width + this.Padding.LR, this.Height + this.Padding.TB), Color.Trans,
             colors.Item2);
         }

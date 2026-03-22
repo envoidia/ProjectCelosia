@@ -10,7 +10,6 @@ namespace API.Graphics;
 /// Renderable text <c>IActor</c>.
 /// Expected to have static lifetime -- otherwise, make sure to manually unsubscribe from <c>Theme.Change</c>
 /// </summary>
-// todo color
 public sealed class Label : IActor
 {
     public string Text

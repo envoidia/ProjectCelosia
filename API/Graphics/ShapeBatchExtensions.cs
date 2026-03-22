@@ -32,10 +32,11 @@ public static class ShapeBatchExtensions
             @this.DrawTriangle(tl, tr, bl, fill, Color.Red, 0);
             @this.DrawTriangle(tr, bl, br, fill, Color.Red, 0);
 
-            Vector2 getOffset(Vector2 curr, Vector2 prev, Vector2 next)
+            // Calculate normals for correct outline thickness
+            Vector2 getOffset(Vector2 cur, Vector2 prev, Vector2 next)
             {
-                Vector2 edgeIn = curr - prev;
-                Vector2 edgeOut = next - curr;
+                Vector2 edgeIn = cur - prev;
+                Vector2 edgeOut = next - cur;
 
                 // Outward normals
                 Vector2 nIn = new(edgeIn.Y, -edgeIn.X);

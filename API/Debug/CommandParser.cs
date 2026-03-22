@@ -141,8 +141,7 @@ public static class CommandParser
             {
                 inQuotes = !inQuotes;
             }
-
-            if (char.IsWhiteSpace(c) && !inQuotes)
+            else if (char.IsWhiteSpace(c) && !inQuotes)
             {
                 if (current.Length > 0)
                 {

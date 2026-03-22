@@ -220,9 +220,9 @@ public static class Commands
 
         Assert.NotNull(cmd);
 
-        string? extDesc = $"\n{cmd.ExtendedDesc}" ?? null;
+        string? extDesc = cmd.ExtendedDesc is null ? null : $"\n{cmd.ExtendedDesc}";
 
-        return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}\n{cmd.GetUsageText()}\n{extDesc}");
+        return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}\n{cmd.GetUsageText()}{extDesc}");
     }
 
     private static CommandResult _Cmd_grep(ReadOnlySpan<string> args)

@@ -76,7 +76,6 @@ public sealed class Core : Game
     /// <param name="title">The title to display in the title bar of the game window.</param>
     public Core(string title)
     {
-        // Ensure that multiple cores are not created
         System.Diagnostics.Debug.Assert(Instance is null, "Only a single instance of Core should be created");
 
         // Store reference to engine for global member access

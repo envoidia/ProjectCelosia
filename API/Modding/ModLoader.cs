@@ -106,25 +106,7 @@ public static class ModLoader
                     return false;
                 }
 
-                string id = ((GameMod) val).Id;
-
-                // Make sure it doesn't use _ ID prefix (unless it's the base mod)
-                if (id != Core.BaseModId && id.StartsWith('_'))
-                {
-                    throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be"
-                        + $" {id} because the _ prefix is reserved for the base mod");
-                }
-
-                // Make sure its ID doesn't match base mod ID other than _
-                foreach(string str in Core.ReservedIds)
-                {
-                    if (string.Equals(id, str.Replace("_", ""),
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        throw new _ModLoadException(dllPath, $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be"
-                            + $" {id} because {id} is a reserved name");
-                    }
-                }
+                validateId(((GameMod) val).Id, prop);
 
                 return true;
             })
@@ -149,6 +131,36 @@ public static class ModLoader
         {
             mod.OnInit?.Invoke();
             _LoadedMods.Add(mod);
+        }
+
+        void validateId(string id, PropertyInfo prop)
+        {
+            // No spaces
+            if (id.Any(char.IsWhiteSpace))
+            {
+                throw new _ModLoadException(dllPath, $"mod IDs cannot contain whitespace");
+            }
+
+            // Make sure it doesn't use _ ID prefix (unless it's the base mod)
+            if (id != Core.BaseModId && id.StartsWith('_'))
+            {
+                throw new _ModLoadException(dllPath, $"{getIdErrText()} the _ prefix is reserved for the base mod");
+            }
+
+            // Make sure its ID doesn't match base mod ID other than _
+            foreach (string str in Core.ReservedIds)
+            {
+                if (string.Equals(id, str.Replace("_", ""),
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new _ModLoadException(dllPath, $"{getIdErrText()} {id} is a reserved name");
+                }
+            }
+
+            string getIdErrText()
+            {
+                return $"Mod ID of {entryPoint.FullName}.{prop.Name} cannot be {id} because ";
+            }
         }
     }
 

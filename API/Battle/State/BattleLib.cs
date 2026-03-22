@@ -547,9 +547,9 @@ public static class BattleLib
     }
 
     // todo fix slightly inconsistent x w diff heights
-    private static int _GetSkillDescX()
+    private static float _GetSkillDescX()
     {
-        return (int) (600 + RenderLib.UnitSpriteSize + 800 + 115 - (_SkillDesc.Height / (float) RenderLib.DefaultSlant));
+        return 600 + RenderLib.UnitSpriteSize + 800 + 115 - (_SkillDesc.Height / (float) RenderLib.DefaultSlant);
     }
 
     private static void _ExecuteMove()

@@ -1,4 +1,3 @@
-using API.Menu.Widget;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.State;
@@ -19,54 +18,8 @@ internal static class _MainMenuLib
 
     private const int _OptCount = (int) _Options.Quit;
 
-    // internal static readonly Menu _MainMenu = new("Main", new TabBarWidget(new(1000, 500),
-    //     "lorem", "ipsum", "dolor", "si", "amet",
-    //     "foo", "bar", "among", "us", "impostor", "is", "sus"),
-    //     new TabBarWidget(new(1000, 700), "lorem", "ipsum", "dolor", "si", "amet"));
-
-    // internal static readonly TabBarWidget TestT1 = new(new(1000, 1100), "aaa", "bbbbb", "cccccc", "wjkdhas") {
-    //     CurDir = SelectionType.Horiz
-    // };
-
-
-    private static readonly ListWidget _TestLR = new(new(900, 500), true, textL: ["aaaa", "foo", "bar",
-    "baz"])
-    {
-        FixedWidth = 400,
-        HeightLimit = 3
-    };
-
-    private static readonly ListWidget _TestLS = new(new(1500, 500), false, textL: ["bbbb", "foo", "bar",
-    "baz", "lorem", "ipsum", "dolor", "si", "amet", "dsfsdf", "wqeqwe", "ertygf", "glorp", "dgytr", "foo", "bar",
-    "baz", "lorem", "ipsum", "dolor", "si", "amet", "ewrqas", "wqeqfsdg", "jrtuyu", "glorp", "rgdfg", "foo", "bar",
-    "baz", "lorem", "ipsum", "dolor", "si", "amet", "tyryty", "rhyrtu", "fbhfcfs", "glorp", "bcvfd"])
-    {
-        Slant = ListWidget.NormalSlant,
-        FixedWidth = 200,
-        HeightLimit = 6,
-        HasBackground = true
-    };
-
-    private static readonly ListWidget _TestLRS = new(new(2100, 500), true,
-        textL: ["cccc", "foo", "bar", "baz", "lorem", "ipsum", "dolor", "si", "amet"])
-    {
-        FixedWidth = 400,
-        Slant = ListWidget.NormalSlant,
-        HeightLimit = 7,
-        HasBackground = true
-    };
-
-    private static readonly Menu _MainMenu = new("Main", _TestLR, _TestLS, _TestLRS);
-
     internal static void _Init()
     {
-        _TestLR.SetTextR("A", "B", "C", "D");
-        _TestLRS.SetTextR("1", "2", "3", "4", "5", "6", "7", "8", "9");
-
-        _TestLR.CalcLayout();
-        _TestLS.CalcLayout();
-        _TestLRS.CalcLayout();
-
         // todo how am i supposed to change state when theres a menu up
         // StateMachine.State.AddMenu(_MainMenu);
     }
