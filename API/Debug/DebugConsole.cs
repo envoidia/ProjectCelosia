@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using API.Extensions;
 using API.Graphics;
@@ -374,12 +373,11 @@ public static class DebugConsole
         float barLength = range * ratio;
         range -= barLength;
 
-        _Scrollbar.Size = new(10, (int) barLength);
-
         // 0 = bottom; 1 = top
         float scrollAmt = (float) _OutHistIndex / Math.Max(_OutHist.Count - _DisplayedOutHistLines, 0);
 
         _Scrollbar.Y = _OutHistLabel.Y - _Scrollbar.Height - 35 - (range * scrollAmt);
+        _Scrollbar.Size = new(10, (int) barLength);
     }
 
     private static bool _ExecuteCommand()

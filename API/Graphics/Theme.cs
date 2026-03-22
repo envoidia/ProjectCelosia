@@ -810,11 +810,16 @@ public sealed class Theme : IDescribable, IRegistrable
         const int Cap = 1500;
         StringBuilder sb = new(this.ToString(), Cap);
 
-        foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
+        ThemeColor[] tcs = Enum.GetValues<ThemeColor>();
+        for (int i = 0; i < tcs.Length; i++)
         {
+            sb.Append($"{tcs[i]} = {(renderColor ? tcs[i].Str : null)}{this.Get(tcs[i])
+                .ToRgbaStr()}{(renderColor ? ThemeColor.White.Str : null)}");
 
-            sb.Append($"{tc} = {(renderColor ? tc.Str : null)}{this.Get(tc).ToRgbaStr()}{(renderColor
-                ? ThemeColor.White.Str : null)}\n");
+            if (i != tcs.Length - 1)
+            {
+                sb.Append('\n');
+            }
         }
 
         Assert.CapIs(sb, Cap); // todo remove before final release
