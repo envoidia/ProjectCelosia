@@ -15,8 +15,6 @@ public static class InputPrompts
     public static readonly InputPrompt MoveLeftRight = new("InputMove", Keybinds.LeftRight);
     public static readonly InputPrompt ScrollUpDown = new("InputScroll", Keybinds.UpDown);
     public static readonly InputPrompt ChangePage = new("InputChangePage", Keybinds.LeftRight);
-    public static readonly InputPrompt Faster = new("InputFaster", Keybinds.Hotkey1);
-    public static readonly InputPrompt ToStart = new("InputToStart", Keybinds.Hotkey2);
 
     public static readonly InputPrompt Log = new("InputLog", Keybinds.Menu1);
     public static readonly InputPrompt Inspect = new("InputInspect", Keybinds.Menu2);

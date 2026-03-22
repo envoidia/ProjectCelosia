@@ -359,8 +359,8 @@ internal sealed class _InspectLib
     internal static string _GetInputPrompt()
     {
         return _curPage == _InspectPage.Stats
-        ? Menu.State.State.GetInputPromptString(Faster, ToStart, Back)
-        : Menu.State.State.GetInputPromptString(ScrollUpDown, Faster, ToStart, Back);
+        ? Menu.State.State.GetInputPromptString(Back)
+        : Menu.State.State.GetInputPromptString(ScrollUpDown, Back);
     }
 
     // todo fix some shit that fails to change

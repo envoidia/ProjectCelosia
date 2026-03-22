@@ -16,7 +16,7 @@ internal static class _TargetingLib
     {
         OnUpdate = _Update,
         GetInputPrompt = static () =>
-            Menu.State.State.GetInputPromptString(Move, Faster, ToStart, Confirm, Back, Log, Inspect)
+            Menu.State.State.GetInputPromptString(Move, Confirm, Back, Log, Inspect)
     };
 
     /// <summary>

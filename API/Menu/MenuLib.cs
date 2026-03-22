@@ -11,18 +11,24 @@ public static class MenuLib
 
     public static int CheckMovement1D(int index, int optCount, SelectionType dir = SelectionType.HorizVert)
     {
-        if (InputLib.CheckRaw(Keybinds.Hotkey2))
-        {
-            return 0;
-        }
 
         if (InputLib.Check(dir.GetDec(), true))
         {
+            if (InputLib.CheckRaw(Keybinds.Hotkey2))
+            {
+                return 0;
+            }
+
             return index == 0 ? optCount - 1 : index - 1;
         }
 
         if (InputLib.Check(dir.GetInc(), true))
         {
+            if (InputLib.CheckRaw(Keybinds.Hotkey2))
+            {
+                return optCount - 1;
+            }
+
             return index == (optCount - 1) ? 0 : index + 1;
         }
 
@@ -43,25 +49,45 @@ public static class MenuLib
         // Move selection
         if (InputLib.Check(Keybinds.Up, true))
         {
+            // On player side
             if (index < PosLib.LowestOpp)
             {
-                // On player side
+                if (InputLib.CheckRaw(Keybinds.Hotkey2))
+                {
+                    return 0;
+                }
+
                 newIndex = (indexI - 1) < 0 ? PosLib.HighestAlly : index - 1;
             }
             else
             {
+                if (InputLib.CheckRaw(Keybinds.Hotkey2))
+                {
+                    return PosLib.LowestOpp;
+                }
+
                 newIndex = (indexI - 1) < PosLib.LowestOpp ? PosLib.HighestOpp : index - 1;
             }
         }
         else if (InputLib.Check(Keybinds.Down, true))
         {
+            // On player side
             if (index < PosLib.LowestOpp)
             {
-                // On player side
+                if (InputLib.CheckRaw(Keybinds.Hotkey2))
+                {
+                    return PosLib.HighestAlly;
+                }
+
                 newIndex = (indexI + 1) >= PosLib.LowestOpp ? 0 : index + 1;
             }
             else
             {
+                if (InputLib.CheckRaw(Keybinds.Hotkey2))
+                {
+                    return PosLib.HighestOpp;
+                }
+
                 newIndex = (indexI + 1) > PosLib.HighestOpp ? PosLib.LowestOpp : index + 1;
             }
         }

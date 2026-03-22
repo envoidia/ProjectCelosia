@@ -30,8 +30,8 @@ public static class Keybinds
     /// </summary>
     public static readonly Keybind Menu2 = new("KeyMenu2", KeybindId.Menu2, Keys.V, Buttons.X);
 
-    public static readonly Keybind PageL = new("KeyPageL", KeybindId.PageL, Keys.S, Buttons.LeftShoulder);
-    public static readonly Keybind PageR = new("KeyPageR", KeybindId.PageR, Keys.D, Buttons.RightShoulder);
+    public static readonly Keybind PageL = new("KeyPageL", KeybindId.PageL, Keys.A, Buttons.LeftShoulder);
+    public static readonly Keybind PageR = new("KeyPageR", KeybindId.PageR, Keys.S, Buttons.RightShoulder);
 
     public static readonly Keybind Left = new("KeyLeft", KeybindId.Left, Keys.Left, Buttons.DPadLeft);
     public static readonly Keybind Right = new("KeyRight", KeybindId.Right, Keys.Right, Buttons.DPadRight);
@@ -45,7 +45,7 @@ public static class Keybinds
     public static readonly Keybind Hotkey1 = new("KeyHotkey1", KeybindId.Hotkey1, Keys.LeftShift, Buttons.LeftTrigger);
 
     /// <summary>
-    /// Used for various hotkeys, including jump to start of menu
+    /// Used for various hotkeys, including jump to start/end of menu
     /// </summary>
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
 
