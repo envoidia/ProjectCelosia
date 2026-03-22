@@ -255,14 +255,13 @@ public static class DebugConsole
             return;
         }
 
-        // todo sanitize '［', '['
         Console.WriteLine($"{logLevel switch
         {
             LogLevel.Info => "",
             LogLevel.Warning => "\e[0;33m",
             LogLevel.Error => "\e[0;31m",
             _ => throw new ClosedEnumsWhenException()
-        }}[{source}] {msg}");
+        }}[{source}] {msg.Replace('［', '[')}");
     }
 
     /// <summary>

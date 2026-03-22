@@ -379,14 +379,13 @@ public static class Commands
 
         if (args.Length > 2)
         {
-            if (args[2] == Show)
+#pragma warning disable CS8509
+            ch = args[2] switch
+#pragma warning restore CS8509
             {
-                ch = _OverlayChange.Show;
-            }
-            else if (args[2] == Hide)
-            {
-                ch = _OverlayChange.Hide;
-            }
+                Show => _OverlayChange.Show,
+                Hide => _OverlayChange.Hide,
+            };
         }
 
         switch (args[1])
