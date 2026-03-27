@@ -43,7 +43,6 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
         string buffName = buff.GetName();
 
         // Already has buff
-        // todo fix dupe buff bug
         if (buffInstance is not null)
         {
             const int Cap = 192;

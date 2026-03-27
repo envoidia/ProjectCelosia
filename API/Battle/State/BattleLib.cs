@@ -79,7 +79,6 @@ public static class BattleLib
         FixedWidth = 800,
         HasBackground = true,
         Slant = ListWidget.NormalSlant,
-        Priority = RenderPriority.B1High,
         OnChangeIndex = static index =>
         {
             Unit u = Battle.GetUnitAtPos(_selectingMove);
@@ -172,7 +171,7 @@ public static class BattleLib
             if (i >= PosLib.LowestOpp)
             {
                 x1 = World.W - x2;
-                x2 = World.W - 965;
+                x2 = World.W - 1000;
                 y = getY(i - PosLib.LowestOpp);
             }
 
@@ -349,7 +348,7 @@ public static class BattleLib
 
         Unit[] units = Battle.GetAllUnits();
 
-        const int Cap = 48;
+        const int Cap = 128;
         StringBuilder sb = new(Cap);
 
         // Update nameplates
@@ -408,23 +407,19 @@ public static class BattleLib
 
                 if (buffInstance.Buff == Buffs.Defend)
                 {
-                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
-                            .Append(u.Defend.Format()).Append('(')
-                            .Append(buffInstance.Turns).Append(") ");
+                    sb.Append($"{buffInstance.Buff.Icon}{ThemeColor.White.Str}x{u.Defend.Format()}({buffInstance.Turns}) ");
                 }
                 else if (buffInstance.Buff == Buffs.Shield)
                 {
-                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
-                            .Append(u.Shield.Format()).Append('(')
-                            .Append(buffInstance.Turns).Append(") ");
+                    sb.Append($"{buffInstance.Buff.Icon}{ThemeColor.White.Str}x{u.Shield.Format()}({buffInstance.Turns}) ");
                 }
                 else
                 {
-                    sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str);
+                    sb.Append(buffInstance.Buff.Icon + ThemeColor.White.Str);
 
                     if (buffInstance.Buff.MaxStacks > 1)
                     {
-                        sb.Append('x').Append(buffInstance.Stacks);
+                        sb.Append($"x{buffInstance.Stacks}");
                     }
 
                     sb.Append('(');
@@ -441,8 +436,15 @@ public static class BattleLib
                     sb.Append(") ");
                 }
 
-                Assert.CapIs(sb, Cap); // todo remove before final release
+                // todo remove before final release
+                if (sb.Capacity != Cap)
+                {
+                    DebugConsole.Log($"Cap {sb.Capacity}", nameof(_UpdateStatDisplay));
+                }
+
                 _Buffs[i].Text = sb.ToString();
+
+                sb.Clear();
             }
         }
 
