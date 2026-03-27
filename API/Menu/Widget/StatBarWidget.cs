@@ -73,10 +73,20 @@ public sealed class StatBarWidget : StatBarWidgetBase
         Theme.OnChange += ThemeChangeStatic;
     }
 
-    public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string text = "")
-        : base(pos, width, renderPriority, text)
+    public StatBarWidget(Vector2 pos, int width, RenderPriority renderPriority, string title = "")
+        : base(pos, width, renderPriority, title)
     {
         this.ThemeChange();
+    }
+
+    public static StatBarWidget CreateSpBarWidget(Vector2 pos, int width, RenderPriority renderPriority)
+    {
+        return new StatBarWidget(pos, width, renderPriority, ThemeColor.Stat.Str + "StatSp".GetLang())
+        {
+            ColorLayer0 = ThemeColor.SpBack,
+            ColorLayer1 = ThemeColor.Sp,
+            MaxVal = 1000
+        };
     }
 
     public override void Draw(GameTime gt)

@@ -1,4 +1,5 @@
 using System;
+using API.Battle.State;
 using API.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -10,6 +11,8 @@ namespace API.Menu.Widget;
 /// </summary>
 public abstract class StatBarWidgetBase : ILayoutWidget, IActor
 {
+    public const int DefaultWidth = _InspectLib._StatGapX - 100;
+
     protected const int _BarStartOffset = 100;
     protected const int _HeightOffset = 5;
 
@@ -41,12 +44,12 @@ public abstract class StatBarWidgetBase : ILayoutWidget, IActor
         }
     }
 
-    public StatBarWidgetBase(Vector2 pos, int width, RenderPriority renderPriority, string text)
+    public StatBarWidgetBase(Vector2 pos, int width, RenderPriority renderPriority, string title)
     {
         this.Data = new(this, renderPriority);
         this.Position = pos;
         this.Width = width;
-        this.Title.Text = text;
+        this.Title.Text = title;
 
         Theme.OnChange += this.ThemeChange;
 

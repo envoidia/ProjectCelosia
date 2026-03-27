@@ -42,7 +42,7 @@ public static class StringExtensions
             // Default to ID
             DebugConsole.Log($"Lang entry {key} not found", nameof(StringExtensions),
                 LogLevel.Warning);
-            return $"{ThemeColor.Neg.Str}MISSING LANG ENTRY: {key}";
+            return $"{ThemeColor.Neg.Str}MISSING LANG ENTRY: {key}{ThemeColor.White.Str}";
         }
 
         /// <returns>

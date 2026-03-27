@@ -27,7 +27,7 @@ public static class BattleLib
     /// <summary>
     /// Multiplier for all stats
     /// </summary>
-    public const int StatMult = 10;
+    public const int StatMult = 1;
 
     public const int TeamCount = 2;
     public const int TeamSize = 4;
@@ -38,7 +38,7 @@ public static class BattleLib
 
     #region Display Fields
 
-    private const int _ActorCount = 38;
+    private const int _ActorCount = 54;
     private static readonly List<IActor> _Actors = new(_ActorCount);
 
     private const int _AnimPrimActorCount = 0; // todo
@@ -58,7 +58,11 @@ public static class BattleLib
 
     // Per-unit graphics
     private static readonly ARectangle[] _Sprites = new ARectangle[UnitCount];
-    internal static readonly Label[] _Stats = new Label[UnitCount];
+    private static readonly Label[] _Names = new Label[UnitCount]; // todo remove
+
+    private static readonly HpBarWidget[] _HpBars = new HpBarWidget[UnitCount];
+    private static readonly StatBarWidget[] _SpBars = new StatBarWidget[UnitCount];
+
     private static readonly Label[] _Buffs = new Label[UnitCount];
     internal static readonly Label[] _Moves = new Label[UnitCount];
 
@@ -159,16 +163,22 @@ public static class BattleLib
         // Per-unit graphics
         for (int i = 0; i < UnitCount; i++)
         {
-            int x1 = 75;
-            int x2 = 500;
-            int y = 300 + (450 * i);
+            int x1 = 40;
+            int x2 = 600;
+
+            int y = getY(i);
             Dir dir = i > PosLib.HighestAlly ? Dir.Right : Dir.Left;
 
             if (i >= PosLib.LowestOpp)
             {
-                x1 = World.W - 500;
+                x1 = World.W - x2;
                 x2 = World.W - 965;
-                y = 300 + (450 * (i - PosLib.LowestOpp));
+                y = getY(i - PosLib.LowestOpp);
+            }
+
+            static int getY(int ind)
+            {
+                return 240 + (450 * ind);
             }
 
             _Actors.Add(_Sprites[i] = new(ThemeColor.TransBlack)
@@ -178,11 +188,25 @@ public static class BattleLib
                 AnimFromDir = dir,
                 OutlineColor = ThemeColor.White
             });
-            _Actors.Add(_Stats[i] = new()
+
+            _Actors.Add(_Names[i] = new()
             {
                 Position = new(x1, y),
                 AnimFromDir = dir
             });
+
+            const int YOff = 60;
+
+            _Actors.Add(_HpBars[i] = new(new(x1, y + YOff), StatBarWidgetBase.DefaultWidth,
+                RenderPriority.B1Med)
+            {
+                AnimFromDir = dir
+            });
+
+            _Actors.Add(_SpBars[i] = StatBarWidget.CreateSpBarWidget(new(x1, y + (YOff * 2)),
+                StatBarWidgetBase.DefaultWidth, RenderPriority.B1Med));
+            _SpBars[i].AnimFromDir = dir;
+
             _Actors.Add(_Buffs[i] = new()
             {
                 Position = new(x1, y + 150),
@@ -318,9 +342,9 @@ public static class BattleLib
         // Update bloom labels
         for (int i = 0; i < TeamCount; i++)
         {
-            // todo fix it getting confused by the /
             _BloomLabels[i].Text =
-                $"{ThemeColor.Stat.Str}{"Bloom".GetLang()}{ThemeColor.White.Str}: {ThemeColor.Bloom.Str}{Battle.GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str}//{ThemeColor.Bloom.Str}1,000";
+                $"{ThemeColor.Stat.Str}{"Bloom".GetLang()}{ThemeColor.White.Str}: {ThemeColor.Bloom.Str}{Battle
+                    .GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str}//{ThemeColor.Bloom.Str}1,000";
         }
 
         Unit[] units = Battle.GetAllUnits();
@@ -331,8 +355,23 @@ public static class BattleLib
         // Update nameplates
         for (int i = 0; i < units.Length; i++)
         {
+            Unit u = units[i];
+
             // Stat display
-            _Stats[i].Text = $"{units[i].FormatName(false)}\n{"StatHp".GetLang()}: {units[i].Hp}{(units[i].Shield > 0 ? $"{units[i].Shield.Format(ThemeColor.Shield, false)}{ThemeColor.White.Str}" : "")}//{units[i].GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(units[i].IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{units[i].Sp.Format(false)}//{1000.Format(false)}")}";
+            // todo remove
+            // _Stats[i].Text = $"{u.FormatName(false)}\n{"StatHp".GetLang()}: {u.Hp}{(u.Shield > 0 ? $"{u.Shield.Format(
+            //     ThemeColor.Shield, false)}{ThemeColor.White.Str}" : "")}//{u.GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(u.IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{u.Sp
+            //     .Format(false)}//{1000.Format(false)}")}";
+
+            // Stat display
+            _Names[i].Text = u.FormatName(false);
+
+            _HpBars[i].Hp = u.Hp;
+            _HpBars[i].MaxHp = u.GetBaseStat(Stats.Hp);
+            _HpBars[i].Shield = u.Shield;
+
+            // todo account for infinite sp
+            _SpBars[i].Val = u.Sp;
 
             // Buff display
             int buffCount = 0;
@@ -340,7 +379,7 @@ public static class BattleLib
             // List stage changes
             foreach (StageType stageType in Registry.Of<StageType>())
             {
-                int stage = units[i].GetStage(stageType);
+                int stage = u.GetStage(stageType);
                 if (stage != 0)
                 {
                     if (buffCount > 0 && buffCount % 4 == 0)
@@ -351,12 +390,12 @@ public static class BattleLib
                     buffCount++;
 
                     sb.Append(stageType.Icon).Append(ThemeColor.White.Str).Append((stage >= 1) ? '+' : "")
-                    .Append(stage).Append('(').Append(units[i].GetStageTurns(stageType)).Append(") ");
+                    .Append(stage).Append('(').Append(u.GetStageTurns(stageType)).Append(") ");
                 }
             }
 
             // List buffs
-            List<BuffInstance> buffInstances = units[i].BuffInstances;
+            List<BuffInstance> buffInstances = u.BuffInstances;
 
             foreach (BuffInstance buffInstance in buffInstances)
             {
@@ -370,13 +409,13 @@ public static class BattleLib
                 if (buffInstance.Buff == Buffs.Defend)
                 {
                     sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
-                            .Append(units[i].Defend.Format()).Append('(')
+                            .Append(u.Defend.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 }
                 else if (buffInstance.Buff == Buffs.Shield)
                 {
                     sb.Append(buffInstance.Buff.Icon).Append(ThemeColor.White.Str).Append('x')
-                            .Append(units[i].Shield.Format()).Append('(')
+                            .Append(u.Shield.Format()).Append('(')
                             .Append(buffInstance.Turns).Append(") ");
                 }
                 else

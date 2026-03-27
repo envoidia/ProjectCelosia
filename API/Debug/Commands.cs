@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using API.Battle;
+using API.Battle.BuffEffects;
 using API.Battle.State;
 using API.Graphics;
 using API.Lang;
@@ -144,8 +145,15 @@ public static class Commands
 
         #region Battle
 
-        Command.Register("buff", _Cmd_buff, [new("unit index 0-7",
-            CommandParam.InputNumbers0To7), new(["give", "remove"]),
+        const string UnitIndex = "unit index 0-7";
+        CommandParam UnitIndexParam = new(UnitIndex, CommandParam.InputNumbers0To7);
+
+        Command.Register("resetunit", _Cmd_resetunit, [UnitIndexParam],
+            "Reset buffs and stat changes", Core.Id,
+            extendedDesc: "Omit unit to reset all");
+
+        Command.Register("buff", _Cmd_buff, [UnitIndexParam,
+            new(["give", "remove"]),
             new("buff ID", [], () => Registry.IdsOf<Buff>()),
             new("turns", CommandParam.InputNumbers1To9),
             new("stacks", CommandParam.InputNumbers1To9)],
@@ -705,9 +713,56 @@ public static class Commands
 
     #region Battle
 
+    private const string _UnitIndexError = "unitindex (args[1]) must be an int 0-7";
+
+    // private static CommandResult _Cmd_sethp(ReadOnlySpan<string> args)
+    // {
+        
+    // }
+
+    // todo set HP, SP, statmult
+
+    private static CommandResult _Cmd_resetunit(ReadOnlySpan<string> args)
+    {
+        if(args.Length < 2)
+        {
+            foreach(Unit u in BattleLib.Battle.GetAllUnits())
+            {
+                reset(u);
+            }
+
+            return new(null);
+        }
+
+        if(!int.TryParse(args[1], out int unitIndex))
+        {
+            return new(ExitCode.Err, _UnitIndexError);
+        }
+
+        reset(BattleLib.Battle.GetUnitAtPos(unitIndex));
+
+        return new(null);
+
+        static void reset(Unit u)
+        {
+            u.Hp = u.GetBaseStat(Stats.Hp);
+            u.Shield = 0;
+            u.Sp = Unit.StartingSp;
+
+            foreach(BuffInstance buffInstance in u.BuffInstances)
+            {
+                foreach(IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+                {
+                    buffEffect.OnRemove(u, buffInstance.Stacks);
+                }
+            }
+
+            u.BuffInstances.Clear();
+        }
+    }
+
     private static CommandResult _Cmd_buff(ReadOnlySpan<string> args)
     {
-        const string _UnitIndexError = "unitindex (args[1]) must be an int 0-{0}";
         const string _TurnsError = "turns (args[4]) must be an int > 0";
         const string _StacksError = "stacks (args[5]) must be an int > 0";
 
@@ -720,18 +775,18 @@ public static class Commands
 
         // Find Unit
         int unitIndex;
-        try
+        try // todo use TryParse
         {
             unitIndex = int.Parse(args[1]);
         }
         catch
         {
-            return new(ExitCode.Err, string.Format(_UnitIndexError, PosLib.Highest));
+            return new(ExitCode.Err, _UnitIndexError);
         }
 
         if (unitIndex is < 0 or > PosLib.Highest)
         {
-            return new(ExitCode.Err, string.Format(_UnitIndexError, PosLib.Highest));
+            return new(ExitCode.Err, _UnitIndexError);
         }
 
         Unit unit = BattleLib.Battle.GetUnitAtPos(unitIndex);

@@ -105,8 +105,7 @@ internal sealed class _InspectLib
     };
 
     private const int _StatStartX = 450;
-    private const int _StatGapX = 595;
-    private const int _StatBarWidth = _StatGapX - 50;
+    internal const int _StatGapX = 595;
     private const int _StatStartY = 175;
     private const int _StatGapY = 65;
 
@@ -116,7 +115,7 @@ internal sealed class _InspectLib
     };
 
     private static readonly HpBarWidget _Hp = new(new(_StatStartX, _StatStartY + _StatGapY),
-        _StatBarWidth, RenderPriority.B3Med);
+        StatBarWidgetBase.DefaultWidth, RenderPriority.B3Med);
     // private static readonly Label _Hp = new(RenderPriority.B2Med) {
     //     Text = "HP",
     //     Position = new(_StatStartX, _StatStartY + _StatGapY)
@@ -127,13 +126,9 @@ internal sealed class _InspectLib
     // };
     //private static GuiBoxBar hpBar = coolRectBars[CoolRectBars.HP_INSPECT.ordinal()]; todo
 
-    private static readonly StatBarWidget _Sp = new(pos: new(_StatStartX, _StatStartY + (_StatGapY * 2)),
-            _StatBarWidth, RenderPriority.B3Med, ThemeColor.Stat.Str + "StatSp".GetLang())
-    {
-        ColorLayer0 = ThemeColor.SpBack,
-        ColorLayer1 = ThemeColor.Sp,
-        MaxVal = 1000
-    };
+    private static readonly StatBarWidget _Sp = StatBarWidget.CreateSpBarWidget(new(_StatStartX,
+        _StatStartY + (_StatGapY * 2)), StatBarWidgetBase.DefaultWidth, RenderPriority.B3Med);
+
     // private static readonly Label _Sp = new(RenderPriority.B2Med) {
     //     Text = "SP",
     //     Position = new(_StatStartX, _StatStartY + (_StatGapY * 2))
@@ -239,7 +234,7 @@ internal sealed class _InspectLib
             int x = _StatStartX + _StatGapX * (i > 2 ? 2 : 1);
             int y = _StatStartY + (_StatGapY * (i % 3));
 
-            _Actors.Add(_StatsBasic[i] = new StatBarWidget(new(x, y), _StatBarWidth,
+            _Actors.Add(_StatsBasic[i] = new StatBarWidget(new(x, y), StatBarWidgetBase.DefaultWidth,
                 RenderPriority.B3Med));
             // _Actors.Add(_StatsBasic[i] = new Label(RenderPriority.B2Med) {
             //     Position = new(x, y),
@@ -327,17 +322,16 @@ internal sealed class _InspectLib
         // todo better solution (snap to 0/1 when opening/closing) (or at least buffer inputs)
         if (Parellelograms.CoverLeft.Prog == 1 && InputLib.Check(Keybinds.Back))
         {
-            //StateMachine.Remove();
             States.Battle.RemoveMenu();
             return;
         }
 
+        // todo temp
         if (InputLib.IsKeyJustPressed(Keys.Q))
         {
             foreach (Unit u in BattleLib.Battle.GetAllUnits())
             {
                 u.SetStatMult(Stats.Agi, u.GetStatMult(Stats.Agi) + 240);
-                u.Shield += 500;
             }
 
             _UpdateInspectUnitPage(_Queue.Index);
@@ -347,7 +341,17 @@ internal sealed class _InspectLib
         {
             foreach (Unit u in BattleLib.Battle.GetAllUnits())
             {
-                u.Hp += 500;
+                u.Hp += 100;
+            }
+
+            _UpdateInspectUnitPage(_Queue.Index);
+        }
+
+        if (InputLib.IsKeyJustPressed(Keys.E))
+        {
+            foreach (Unit u in BattleLib.Battle.GetAllUnits())
+            {
+                u.Shield += 100;
             }
 
             _UpdateInspectUnitPage(_Queue.Index);

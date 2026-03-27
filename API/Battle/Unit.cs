@@ -21,7 +21,9 @@ public sealed class Unit
     public UnitType UnitType { get; }
     public int Lvl { get; }
     public int Hp;
-    public int Sp = 200;
+
+    public const int StartingSp = 200;
+    public int Sp = StartingSp;
 
     /// <summary>
     /// Position on the battlefield.

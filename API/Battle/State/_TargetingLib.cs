@@ -58,10 +58,10 @@ internal static class _TargetingLib
         // todo support ExA
         _Moves[_selectingMove].Text = $"{_Moves[_selectingMove].Text} /c[white]→ {target.FormatName(false)}";
 
-        foreach (Label stat in _Stats)
-        {
-            //stat.Color = Colors.White;
-        }
+        // foreach (Label stat in _Stats)
+        // {
+        //     //stat.Color = Colors.White;
+        // }
 
         // Move on to next Unit unless this one has extra actions
         if (_extraActions < self.ExtraActions)

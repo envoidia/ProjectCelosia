@@ -71,7 +71,7 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
 
     protected string _GetFormattedDescInclusions()
     {
-        const int Cap = 256;
+        const int Cap = 512;
         StringBuilder formattedInclusions = new(this.GetDesc(), Cap);
         HashSet<IDescribable> di = this._GetDescInclusions();
 
