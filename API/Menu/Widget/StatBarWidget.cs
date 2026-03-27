@@ -1,4 +1,5 @@
 using System;
+using API.Battle;
 using API.Debug;
 using API.Extensions;
 using API.Graphics;
@@ -85,7 +86,7 @@ public sealed class StatBarWidget : StatBarWidgetBase
         {
             ColorLayer0 = ThemeColor.SpBack,
             ColorLayer1 = ThemeColor.Sp,
-            MaxVal = 1000
+            MaxVal = Unit.MaxSp
         };
     }
 

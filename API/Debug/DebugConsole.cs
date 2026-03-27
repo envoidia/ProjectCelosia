@@ -75,7 +75,7 @@ public static class DebugConsole
     private const int _TextX = 10;
     private const int _TextOff = 17;
 
-    private static readonly Label _Command = new(RenderPriority.B3High, Core.Mono40)
+    private static readonly Label _Command = new(RenderPriority.Highest, Core.Mono40)
     {
         Text = ">",
         Position = new(_TextX, World.H - 10),
@@ -88,7 +88,7 @@ public static class DebugConsole
     /// <summary>
     /// Autocomplete/hint portion of the command
     /// </summary>
-    private static readonly Label _CommandHint = new(RenderPriority.B3Med, Core.Mono40)
+    private static readonly Label _CommandHint = new(RenderPriority.Highest, Core.Mono40)
     {
         Position = new(_TextX, World.H - 10),
         Padding = new(10),
@@ -97,13 +97,13 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.B3High)
+    private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.Highest)
     {
         Position = new(_TextX + _TextOff, World.H - 50),
         IsVisible = false
     };
 
-    private static readonly ARectangle _Scrollbar = new(ThemeColor.Gray, RenderPriority.B3High)
+    private static readonly ARectangle _Scrollbar = new(ThemeColor.Gray, RenderPriority.Highest)
     {
         X = 10,
         Alignment = Alignment.BottomLeft,
@@ -164,7 +164,7 @@ public static class DebugConsole
 
     internal const int _MinBgWidth = 1500;
 
-    internal static readonly Label _OutHistLabel = new(RenderPriority.B3High, Core.Mono40)
+    internal static readonly Label _OutHistLabel = new(RenderPriority.Highest, Core.Mono40)
     {
         Position = new(_TextX + _TextOff, World.H - 35),
         Padding = new(_TextX + _TextOff, 10, 10, 30),

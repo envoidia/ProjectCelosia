@@ -14,6 +14,7 @@ public class CommandParam
     /// </summary>
     public readonly string[] ValidInputs;
 
+    public static readonly string[] InputNumbers1To3 = ["1", "2", "3"];
     public static readonly string[] InputNumbers0To7 = ["0", "1", "2", "3", "4", "5", "6", "7"];
     public static readonly string[] InputNumbers1To9 = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     public static readonly string[] InputBools = ["true", "false"];

@@ -799,7 +799,7 @@ public static class BattleLib
 
         foreach (Unit unit in Battle.GetAllUnits())
         {
-            unit.Sp = (int) Math.Min(unit.Sp + (100 * unit.GetMult(Mults.SpGain)), 1000);
+            unit.Sp = (int) Math.Min(unit.Sp + (100 * unit.GetMult(Mults.SpGain)), Unit.MaxSp);
 
             const int Cap = 192;
 
@@ -859,8 +859,8 @@ public static class BattleLib
         LogLib.Add("LogGainSpBloom".GetLang());
 
         // Increase bloom
-        Battle.PlayerTeam.Bloom = Math.Min(Battle.PlayerTeam.Bloom + 100, 1000);
-        Battle.OpponentTeam.Bloom = Math.Min(Battle.OpponentTeam.Bloom + 100, 1000);
+        Battle.PlayerTeam.Bloom = Math.Min(Battle.PlayerTeam.Bloom + 100, Team.MaxBloom);
+        Battle.OpponentTeam.Bloom = Math.Min(Battle.OpponentTeam.Bloom + 100, Team.MaxBloom);
 
         _UpdateStatDisplay(0);
     }

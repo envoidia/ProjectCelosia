@@ -9,7 +9,7 @@ public static class CalcLib
     public static string ChangeSp(Unit unit, int change)
     {
         int spOld = unit.Sp;
-        int spNew = (int) Math.Clamp(spOld + (change * unit.GetMult(Mults.SpGain)), 0, 1000);
+        int spNew = (int) Math.Clamp(spOld + (change * unit.GetMult(Mults.SpGain)), 0, Unit.MaxSp);
 
         if (spNew != spOld)
         {
@@ -24,7 +24,7 @@ public static class CalcLib
     public static string ChangeBloom(Team team, Side side, int change)
     {
         int bloomOld = team.Bloom;
-        int bloomNew = Math.Clamp(bloomOld + change, 0, 1000);
+        int bloomNew = Math.Clamp(bloomOld + change, 0, Team.MaxBloom);
 
         if (bloomNew != bloomOld)
         {

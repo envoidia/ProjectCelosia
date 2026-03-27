@@ -117,6 +117,10 @@ public static class Commands
 
         #region Domain-specific
 
+        CommandParam batchParam = new("batch 0-3", CommandParam.InputNumbers1To3);
+        Command.Register("setdraw", _Cmd_setdraw, [batchParam, batchParam, batchParam],
+        "Set which draw batches are performed", Core.Id);
+
         Command.Register("overlay", _Cmd_overlay, [new(_Overlays),
             new("show/hide/blank to toggle", ["show", "hide"])],
             "Control various overlays", Core.Id);
@@ -146,15 +150,28 @@ public static class Commands
         #region Battle
 
         const string UnitIndex = "unit index 0-7";
-        CommandParam UnitIndexParam = new(UnitIndex, CommandParam.InputNumbers0To7);
+        CommandParam unitIndexParam = new(UnitIndex, CommandParam.InputNumbers0To7);
 
-        Command.Register("resetunit", _Cmd_resetunit, [UnitIndexParam],
+        Command.Register("unitinfo", _Cmd_unitinfo, [unitIndexParam],
+            "Get detailed unit info", Core.Id);
+
+        Command.Register("sethp", _Cmd_sethp, [unitIndexParam, new("hp")],
+        "Set unit HP", Core.Id);
+
+        Command.Register("setsp", _Cmd_setsp, [unitIndexParam, new("sp")],
+        "Set unit SP", Core.Id);
+
+        Command.Register("setstatmult", _Cmd_setstatmult, [unitIndexParam,
+            new("stat id", [], Registry.IdsOf<Stat>),
+            new("mult")], "Set unit stat multipliers", Core.Id);
+
+        Command.Register("resetunit", _Cmd_resetunit, [unitIndexParam],
             "Reset buffs and stat changes", Core.Id,
             extendedDesc: "Omit unit to reset all");
 
-        Command.Register("buff", _Cmd_buff, [UnitIndexParam,
+        Command.Register("buff", _Cmd_buff, [unitIndexParam,
             new(["give", "remove"]),
-            new("buff ID", [], () => Registry.IdsOf<Buff>()),
+            new("buff id", [], Registry.IdsOf<Buff>),
             new("turns", CommandParam.InputNumbers1To9),
             new("stacks", CommandParam.InputNumbers1To9)],
             "Give/remove buffs in battle", Core.Id,
@@ -374,6 +391,36 @@ public static class Commands
     #endregion
 
     #region Domain-specific
+
+    private static CommandResult _Cmd_setdraw(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            DebugUtil.DrawB1 = true;
+            DebugUtil.DrawB2 = true;
+            DebugUtil.DrawB3 = true;
+
+            return new("Drawing all batches");
+        }
+
+        Span<bool> batches = [false, false, false];
+
+        for (int i = 1; i < args.Length; i++)
+        {
+            if (!int.TryParse(args[i], out int batch) || batch is < 1 or > 3)
+            {
+                return new(ExitCode.Err, "Each batch must be an int 1-3");
+            }
+
+            batches[batch - 1] = true;
+        }
+
+        DebugUtil.DrawB1 = batches[0];
+        DebugUtil.DrawB2 = batches[1];
+        DebugUtil.DrawB3 = batches[2];
+
+        return new($"Drawing batches {string.Join(", ", args[1..])}");
+    }
 
     private static CommandResult _Cmd_overlay(ReadOnlySpan<string> args)
     {
@@ -715,33 +762,129 @@ public static class Commands
 
     private const string _UnitIndexError = "unitindex (args[1]) must be an int 0-7";
 
-    // private static CommandResult _Cmd_sethp(ReadOnlySpan<string> args)
-    // {
-        
-    // }
-
-    // todo set HP, SP, statmult
-
-    private static CommandResult _Cmd_resetunit(ReadOnlySpan<string> args)
+    private static bool _ParseUnitIndex(string arg, out int index)
     {
-        if(args.Length < 2)
+        if (!int.TryParse(arg, out int unitIndex) || unitIndex is < 0 or > PosLib.Highest)
         {
-            foreach(Unit u in BattleLib.Battle.GetAllUnits())
-            {
-                reset(u);
-            }
-
-            return new(null);
+            index = -1;
+            return false;
         }
 
-        if(!int.TryParse(args[1], out int unitIndex))
+        index = unitIndex;
+        return true;
+    }
+
+    private static CommandResult _Cmd_unitinfo(ReadOnlySpan<string> args)
+    {
+        if (args.Length < 2)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        if (!_ParseUnitIndex(args[1], out int unitIndex))
         {
             return new(ExitCode.Err, _UnitIndexError);
         }
 
-        reset(BattleLib.Battle.GetUnitAtPos(unitIndex));
+        return new(BattleLib.Battle.GetUnitAtPos(unitIndex).GetDbgInfo());
+    }
 
-        return new(null);
+    private static CommandResult _Cmd_sethp(ReadOnlySpan<string> args)
+    {
+        if (args.Length < 3)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        if (!_ParseUnitIndex(args[1], out int unitIndex))
+        {
+            return new(ExitCode.Err, _UnitIndexError);
+        }
+
+        if (!int.TryParse(args[2], out int hp) || hp < 0)
+        {
+            return new(ExitCode.Err, "hp (args[2]) must be an int > 0");
+        }
+
+        Unit u = BattleLib.Battle.GetUnitAtPos(unitIndex);
+        u.Hp = hp;
+
+        return new($"Set {u.FormatName()} HP to {hp}");
+    }
+
+    private static CommandResult _Cmd_setsp(ReadOnlySpan<string> args)
+    {
+        if (args.Length < 3)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        if (!_ParseUnitIndex(args[1], out int unitIndex))
+        {
+            return new(ExitCode.Err, _UnitIndexError);
+        }
+
+        if (!int.TryParse(args[2], out int sp) || sp < 0)
+        {
+            return new(ExitCode.Err, "sp (args[2]) must be an int > 0");
+        }
+
+        Unit u = BattleLib.Battle.GetUnitAtPos(unitIndex);
+        u.Sp = sp;
+
+        return new($"Set {u.FormatName()} SP to {sp}");
+    }
+
+    private static CommandResult _Cmd_setstatmult(ReadOnlySpan<string> args)
+    {
+        if (args.Length < 4)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        if (!_ParseUnitIndex(args[1], out int unitIndex))
+        {
+            return new(ExitCode.Err, _UnitIndexError);
+        }
+
+        IRegistrable? reg = Registry.Get(args[2]);
+        if (reg is null || reg is not Stat stat)
+        {
+            return new(ExitCode.Err, "stat (args[2]) must be a valid Stat");
+        }
+
+        if (!int.TryParse(args[3], out int mult) || mult < 0)
+        {
+            return new(ExitCode.Err, "mult (args[3]) must be an int > 0");
+        }
+
+        Unit u = BattleLib.Battle.GetUnitAtPos(unitIndex);
+        u.SetStatMult(stat, mult);
+
+        return new($"Set {u.FormatName()} {stat.GetName()} mult to {mult}");
+    }
+
+    private static CommandResult _Cmd_resetunit(ReadOnlySpan<string> args)
+    {
+        if (args.Length < 2)
+        {
+            foreach (Unit u in BattleLib.Battle.GetAllUnits())
+            {
+                reset(u);
+            }
+
+            return new("Reset all units");
+        }
+
+        if (!_ParseUnitIndex(args[1], out int unitIndex))
+        {
+            return new(ExitCode.Err, _UnitIndexError);
+        }
+
+        Unit u2 = BattleLib.Battle.GetUnitAtPos(unitIndex);
+        reset(u2);
+
+        return new($"Reset {u2.FormatName(false)}");
 
         static void reset(Unit u)
         {
@@ -749,15 +892,20 @@ public static class Commands
             u.Shield = 0;
             u.Sp = Unit.StartingSp;
 
-            foreach(BuffInstance buffInstance in u.BuffInstances)
+            foreach (BuffInstance buffInstance in u.BuffInstances)
             {
-                foreach(IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
                 {
                     buffEffect.OnRemove(u, buffInstance.Stacks);
                 }
             }
 
             u.BuffInstances.Clear();
+
+            foreach (Stat s in Registry.Of<Stat>())
+            {
+                u.SetStatMult(s, Unit.StartingStatMult);
+            }
         }
     }
 
@@ -774,17 +922,7 @@ public static class Commands
         // todo fail if not in battle
 
         // Find Unit
-        int unitIndex;
-        try // todo use TryParse
-        {
-            unitIndex = int.Parse(args[1]);
-        }
-        catch
-        {
-            return new(ExitCode.Err, _UnitIndexError);
-        }
-
-        if (unitIndex is < 0 or > PosLib.Highest)
+        if (!_ParseUnitIndex(args[1], out int unitIndex))
         {
             return new(ExitCode.Err, _UnitIndexError);
         }
@@ -809,23 +947,13 @@ public static class Commands
                     return new(ExitCode.Err, getHelpText());
                 }
 
-                if (!int.TryParse(args[4], out int turns))
-                {
-                    return new(ExitCode.Err, _TurnsError);
-                }
-
-                if (turns is < 1)
+                if (!int.TryParse(args[4], out int turns) || turns < 1)
                 {
                     return new(ExitCode.Err, _TurnsError);
                 }
 
                 // Find stacks
-                if (!int.TryParse(args[5], out int stacks))
-                {
-                    return new(ExitCode.Err, _StacksError);
-                }
-
-                if (stacks is < 1)
+                if (!int.TryParse(args[5], out int stacks) || stacks < 1)
                 {
                     return new(ExitCode.Err, _StacksError);
                 }

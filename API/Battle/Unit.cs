@@ -23,6 +23,7 @@ public sealed class Unit
     public int Hp;
 
     public const int StartingSp = 200;
+    public const int MaxSp = 1000;
     public int Sp = StartingSp;
 
     /// <summary>
@@ -57,8 +58,11 @@ public sealed class Unit
     // Stats
     private readonly Dictionary<Stat, int> _Stats;
 
+    public const int StartingStatMult = 1000;
+    public const int MinStatMult = 100;
+
     /// <summary>
-    /// Treated as multipliers applied to _stats, in 10ths of a % (1,000 = 100%), min 10%
+    /// Treated as multipliers applied to _stats, in 10ths of a % (<c>StartingStatMult</c> = 100%), min 10%
     /// </summary>
     private readonly Dictionary<Stat, int> _StatsMult = [];
 
@@ -217,6 +221,25 @@ public sealed class Unit
         this._StatsMult[stat] = set;
     }
 
+    public string GetDbgStatsString()
+    {
+        const int Len = 128;
+        StringBuilder str = new(Len);
+
+        foreach (Stat s in Registry.Of<Stat>())
+        {
+            str.Append($"{s.GetName()}: {this.GetStat(s)}/{this.GetBaseStat(s)} (mult {this.GetStatMult(s)})\n");
+        }
+
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetDbgStatsString));
+        }
+
+        return str.ToString();
+    }
+
     #endregion
 
     #region Affinities
@@ -370,8 +393,8 @@ public sealed class Unit
 
     public string GetStageStatString(StageType stageType, int stageNew)
     {
-        StringBuilder builder = new();
-        builder.Append(ThemeColor.White.Str).Append(" (");
+        StringBuilder str = new();
+        str.Append(ThemeColor.White.Str).Append(" (");
         int statCount = stageType.Stats.Length;
 
         for (int i = 0; i < statCount; i++)
@@ -382,15 +405,34 @@ public sealed class Unit
             int statNew = this.GetStatWithStage(stat, stageNew);
             int change = statNew - statOld;
 
-            builder.Append("LogStageStat".FormatLang([this.FormatName(), stat.GetName(),
+            str.Append("LogStageStat".FormatLang([this.FormatName(), stat.GetName(),
                 TextLib.FormatStat(statOld, statDefault), TextLib.FormatStat(statNew, statDefault),
                 statDefault.Format(ThemeColor.Imp), change.Format()]));
 
-            builder.Append(i == (statCount - 1) ? ")" : ", ");
+            str.Append(i == (statCount - 1) ? ")" : ", ");
         }
 
         Assert.Unreachable("init the sb size");
-        return builder.ToString();
+        return str.ToString();
+    }
+
+    public string GetDbgStagesString()
+    {
+        const int Len = 128;
+        StringBuilder str = new(Len);
+
+        foreach (StageType st in Registry.Of<StageType>())
+        {
+            str.Append($"{st.GetName()}: {this.GetStage(st)}, {this.GetStageTurns(st)} turns");
+        }
+
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetDbgStagesString));
+        }
+
+        return str.ToString();
     }
 
     #endregion
@@ -412,16 +454,22 @@ public sealed class Unit
         this._Mults[mult] = set; // todo ensure these dont crash
     }
 
-    public string GetMultsString()
+    public string GetDbgMultsString()
     {
-        StringBuilder str = new();
+        const int Len = 512;
+        StringBuilder str = new(Len);
         foreach (Mult mult in Registry.Of<Mult>())
         {
-            int curMult = this._Mults[mult];
-            str.Append(mult.Format(curMult)).Append('\n');
+            int curMult = this.GetRawMult(mult);
+            str.Append($"{mult.GetName()}: {mult.Format(curMult)}\n");
         }
 
-        Assert.Unreachable("init the sb size");
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetDbgMultsString));
+        }
+
         return str.ToString();
     }
 
@@ -466,17 +514,25 @@ public sealed class Unit
 
     public string GetOtherStatsString()
     {
-        StringBuilder str = new();
+        const int Len = 128;
+        StringBuilder str = new(Len);
         foreach (BoolStat stat in Registry.Of<BoolStat>())
         {
             if (stat.IsVisible)
             {
-                str.Append(this.GetBoolStatString(stat)).Append('\n');
+                str.Append($"{this.GetBoolStatString(stat)}\n");
             }
         }
 
-        Assert.Unreachable("init the sb size");
-        return str.Append(this.ExtraActions.Format()).ToString();
+        str.Append(this.ExtraActions.Format());
+
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetOtherStatsString));
+        }
+
+        return str.ToString();
     }
 
     public string GetBoolStatString(BoolStat stat)
@@ -488,6 +544,24 @@ public sealed class Unit
 
         return (stat.IsPositive ? ThemeColor.Pos : ThemeColor.Neg) +
             (this.IsBoolStat(stat) ? "Yes".GetLang() : "No".GetLang());
+    }
+
+    public string GetDbgBoolStatsString()
+    {
+        const int Len = 128;
+        StringBuilder str = new(Len);
+        foreach (BoolStat stat in Registry.Of<BoolStat>())
+        {
+            str.Append($"{stat.GetName()}: {this.GetBoolStat(stat)}\n");
+        }
+
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetDbgBoolStatsString));
+        }
+
+        return str.ToString();
     }
 
     #endregion
@@ -532,13 +606,37 @@ public sealed class Unit
 
     public string GetStatModsString()
     {
-        StringBuilder str = new();
+        const int Len = 128;
+        StringBuilder str = new(Len);
         foreach (StatMod mod in Registry.Of<StatMod>())
         {
-            str.Append(mod.Format(this.GetStatMod(mod))).Append('\n');
+            str.Append($"{mod.Format(this.GetStatMod(mod))}\n");
         }
 
-        Assert.Unreachable("init the sb size");
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetStatModsString));
+        }
+
+        return str.ToString();
+    }
+
+    public string GetDbgStatModsString()
+    {
+        const int Len = 128;
+        StringBuilder str = new(Len);
+        foreach (StatMod mod in Registry.Of<StatMod>())
+        {
+            str.Append($"{mod.GetName()}: {this.GetStatMod(mod)}\n");
+        }
+
+        // todo remove
+        if (str.Length > Len)
+        {
+            DebugConsole.Log(str.Length.ToString(), nameof(GetDbgStatModsString));
+        }
+
         return str.ToString();
     }
 
@@ -802,6 +900,11 @@ public sealed class Unit
         }
 
         return name + suffix + ThemeColor.White.Str;
+    }
+
+    public string GetDbgInfo()
+    {
+    return $"{nameof(Unit)}: {this.FormatName(false)}\nHP: {this.Hp}/{this.GetBaseStat(Stats.Hp)}\nShield: {this.Shield}\nDefend: {this.Defend}\nSP: {this.Sp}\nStats: {this.GetDbgStatsString()}\nPos: {this.Pos}\nDupeIndex: {this.DupeIndex}\nSkillInstances: {string.Join('\n', this.SkillInstances.Select(si => si.ToString()))}\nBuffInstances: {string.Join('\n', this.BuffInstances.Select(bi => bi.ToString()))}\nAffinities: {this.GetAffinitiesString(true)}\nStages: {this.GetDbgStagesString()}\nMults: {this.GetDbgMultsString()}\nBoolStats: {this.GetDbgBoolStatsString()}\nStatMods: {this.GetDbgStatModsString()}\nEquipped: {this.GetEquipString()}\nExtraActions: {this.ExtraActions}";
     }
 
     #endregion

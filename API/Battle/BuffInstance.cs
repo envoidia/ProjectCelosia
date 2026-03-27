@@ -15,4 +15,9 @@ public sealed class BuffInstance(Buff buff, int turns, int stacks)
     {
         return $"x{this.Stacks}({this.Turns})";
     }
+
+    public override string ToString()
+    {
+        return $"{this.Buff.GetName()} {this.GetTurnsStacksFormatted()}";
+    }
 }

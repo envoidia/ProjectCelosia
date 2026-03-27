@@ -39,6 +39,21 @@ public static class DebugUtil
     public static TimeSpan LastUpdateTime = TimeSpan.Zero;
     public static TimeSpan LastDrawTime = TimeSpan.Zero;
 
+    /// <summary>
+    /// Whether to draw batch 1 of the <c>Stage</c>
+    /// </summary>
+    public static bool DrawB1 = true;
+
+    /// <summary>
+    /// Whether to draw batch 2 of the <c>Stage</c>
+    /// </summary>
+    public static bool DrawB2 = true;
+
+    /// <summary>
+    /// Whether to draw batch 3 of the <c>Stage</c>
+    /// </summary>
+    public static bool DrawB3 = true;
+
     #region Labels
 
     private static readonly Label _DebugInfoL = new(RenderPriority.Highest, Core.Mono40)

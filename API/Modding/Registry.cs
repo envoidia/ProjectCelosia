@@ -67,6 +67,9 @@ public static class Registry
         return items;
     }
 
+    /// <returns>
+    /// The IDs of all registered items of the given type
+    /// </returns>
     public static string[] IdsOf<T>() where T : IRegistrable
     {
         if (_TypeIdCache.TryGetValue(typeof(T), out string[] cachedIds))

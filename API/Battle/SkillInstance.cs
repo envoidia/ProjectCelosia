@@ -21,4 +21,9 @@ public sealed class SkillInstance(Skill skill)
 
         return $"{this.Cooldown}/{this.Skill.Cooldown} {"CD".GetLang()}, {this.Skill.GetCostFormatted()}";
     }
+
+    public override string ToString()
+    {
+        return $"{this.Skill.GetName()} ({this.Cooldown})";
+    }
 }

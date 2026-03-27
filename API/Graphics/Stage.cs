@@ -26,12 +26,14 @@ public static class Stage
     {
         int i = _Actors.Count - 1;
 
-        // The only reason this gross stuff has to happen is bc SpriteBatch and ShapeBatch are separate
         begin();
 
         for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.B2Low; i--)
         {
-            _Actors[i].Data.Act(gt);
+            if (DebugUtil.DrawB1)
+            {
+                _Actors[i].Data.Act(gt);
+            }
         }
 
         end();
@@ -40,7 +42,10 @@ public static class Stage
 
         for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.B3Low; i--)
         {
-            _Actors[i].Data.Act(gt);
+            if (DebugUtil.DrawB2)
+            {
+                _Actors[i].Data.Act(gt);
+            }
         }
 
         end();
@@ -49,7 +54,10 @@ public static class Stage
 
         for (; i >= 0 && _Actors[i].Data.Priority < RenderPriority.Highest; i--)
         {
-            _Actors[i].Data.Act(gt);
+            if (DebugUtil.DrawB3)
+            {
+                _Actors[i].Data.Act(gt);
+            }
         }
 
         end();
