@@ -272,7 +272,7 @@ public static class CommandParser
     /// </returns>
     public static bool IsNameValid(string name)
     {
-        return !name.Any(static c => c == '"' | c == '|' || c == '$' || char.IsWhiteSpace(c));
+        return !name.Any(static c => c is '"' or '|' or '$' or '(' or ')' || char.IsWhiteSpace(c));
     }
 
     /// <returns>
@@ -290,8 +290,17 @@ public static class CommandParser
         }
         else if (str.StartsWith('$'))
         {
-            matchAgainst = [.. Command.Env.Keys];
-            offset = 1;
+            // todo improve command expansion autocomplete
+            if (str.Length > 1 && str[1] == '(')
+            {
+                matchAgainst = [.. Command.Cmds.Keys];
+                offset = 2;
+            }
+            else
+            {
+                matchAgainst = [.. Command.Env.Keys];
+                offset = 1;
+            }
         }
         else
         {
@@ -331,6 +340,11 @@ public static class CommandParser
 
             return len;
         }
+
+        // string[] getMatchAgainst()
+        // {
+
+        // }
     }
 
     public static string? GetCurrentHintText(Span<string[]> args)

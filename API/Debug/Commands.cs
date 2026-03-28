@@ -313,7 +313,7 @@ public static class Commands
 
         if (!CommandParser.IsNameValid(args[2]))
         {
-            return new(ExitCode.Err, "Name must not contain |, $, \", or whitespace");
+            return new(ExitCode.Err, "Name must not contain \", |, $, (, ), or whitespace");
         }
 
         Command.Env[args[2]] = args[1];
