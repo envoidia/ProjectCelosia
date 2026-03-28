@@ -17,6 +17,8 @@ public static class InputPrompts
     public static readonly InputPrompt ChangePage = new("InputChangePage", Keybinds.LeftRight);
 
     public static readonly InputPrompt Log = new("InputLog", Keybinds.Menu1);
+    public static readonly InputPrompt LogToTopBottom = new("InputLogToTopBottom", Keybinds.Confirm);
+    
     public static readonly InputPrompt Inspect = new("InputInspect", Keybinds.Menu2);
     public static readonly InputPrompt InspectHere = new("InputInspectHere", Keybinds.Menu2, Keybinds.Hotkey1)
     {

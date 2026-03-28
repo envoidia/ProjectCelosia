@@ -34,7 +34,6 @@ public static class LogLib
 
     private static readonly ARectangle _Scrollbar = new(ThemeColor.White, RenderPriority.B3Med)
     {
-        //Alignment = Alignment.BottomLeft,
         OutlineColor = ThemeColor.White,
         Rotation = ListWidget.NormalSlant / -84.85f
     };
@@ -47,7 +46,7 @@ public static class LogLib
     private static readonly Menu.Menu _Menu = new("Log", Parellelograms.CoverLeft, _Scrollbar)
     {
         GetInputPrompt = static () => Menu.State.State.GetInputPromptString(
-            InputPrompts.ScrollUpDown, InputPrompts.Back),
+            InputPrompts.ScrollUpDown, InputPrompts.LogToTopBottom, InputPrompts.Back),
 
         OnCreate = static () =>
         {
@@ -55,6 +54,7 @@ public static class LogLib
             _BattleLog.Priority = RenderPriority.B3Med;
             _BattleLog.BackgroundType = BackgroundType.None;
             _BattleLog.Text = _FormatLog(true);
+            BattleLib._Queue.Priority = RenderPriority.B2Med;
         },
 
         OnDestroy = static () =>
@@ -63,6 +63,7 @@ public static class LogLib
             _BattleLog.Priority = RenderPriority.B1Med;
             _BattleLog.BackgroundType = BackgroundType.Parellelogram;
             _BattleLog.Text = _FormatLog(false);
+            BattleLib._Queue.Priority = RenderPriority.B3Med;
         },
 
         OnUpdate = static gt =>
@@ -84,20 +85,10 @@ public static class LogLib
             }
 
             _UpdateScrollbar();
-
-            if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.F5))
-            {
-                Add("a", "b", "c", "d", "e", "f", "g", "h");
-            }
-            if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.F6))
-            {
-                _LogText.Clear();
-                _UpdateLog();
-            }
         }
     };
 
-    // todo limit size, try to consolidate to 1 fn? take any ienumerabel?
+    // todo limit size, try to consolidate to 1 fn? take any ienumerabel? just spread the lists?
     /// <summary>
     /// Add to the battle log
     /// </summary>

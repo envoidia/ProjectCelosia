@@ -124,10 +124,9 @@ public static class MenuLib
         }
 
         // To top/bottom
-        // todo test
-        if (InputLib.Check(Keybinds.Hotkey2, true))
+        if (InputLib.Check(Keybinds.Confirm, true))
         {
-            return logScroll == lines - off ? Math.Max(lines - off, 0) : 0;
+            return logScroll == 0 ? Math.Max(lines - off, 0) : 0;
         }
 
         return logScroll;
