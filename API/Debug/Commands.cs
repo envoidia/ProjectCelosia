@@ -67,9 +67,46 @@ public static class Commands
             return new(string.Join('\n', DebugConsole._InHist));
         }, [], "Returns command history", Core.Id);
 
+        Command.Register("whoami", _Cmd_whoami, [],
+        "Returns the name of the loaded save", Core.Id);
+
+        Command.Register("kill", _ =>
+        {
+            Core.Instance.Exit();
+            return new(null);
+        }, [], "Closes the game", Core.Id);
+
+        // todo rename?
+        Command.Register("export", args =>
+        {
+            Console.WriteLine($"[{args[0]}] {string.Join(' ', args.ToArray(),
+                1, args.Length - 1).Replace('［', '[')}");
+
+            return new(null);
+        }, TextParamArr, "Writes text to stdout", Core.Id);
+
+        Command.Register("mirror", _Cmd_mirror,
+            [new("true/false/blank to toggle", CommandParam.InputBools)],
+            "Control whether to mirror console messages to stdout", Core.Id);
+
+        Command.Register("gc", static args =>
+        {
+            return new($"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
+                / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
+        }, [], "Forces GC collection and reports memory", Core.Id);
+
+        Command.Register("set", _Cmd_set, [new("value"),
+            new("var name")], "Set variables", Core.Id);
+
+        Command.Register("env", _Cmd_env, [], "Outputs all variables", Core.Id);
+
+        #endregion
+
+        #region Text Processing
+
         Command.Register("echo", args =>
-            new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
-            TextParamArr, "Returns its input", Core.Id);
+           new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
+           TextParamArr, "Returns its input", Core.Id);
 
         const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
         const string Search = "search";
@@ -93,33 +130,6 @@ public static class Commands
         Command.Register("tail", _Cmd_tail, [TextParam, new(Count)],
             "Clip text to last x lines", Core.Id,
             extendedDesc: CountDefault);
-
-        Command.Register("whoami", _Cmd_whoami, [],
-            "Returns the name of the loaded save", Core.Id);
-
-        Command.Register("kill", _ =>
-        {
-            Core.Instance.Exit();
-            return new(null);
-        }, [], "Closes the game", Core.Id);
-
-        Command.Register("export", args =>
-        {
-            Console.WriteLine($"[{args[0]}] {string.Join(' ', args.ToArray(),
-                1, args.Length - 1).Replace('［', '[')}");
-
-            return new(null);
-        }, TextParamArr, "Writes text to stdout", Core.Id);
-
-        Command.Register("mirror", _Cmd_mirror,
-            [new("true/false/blank to toggle", CommandParam.InputBools)],
-            "Control whether to mirror console messages to stdout", Core.Id);
-
-        Command.Register("gc", static args =>
-        {
-            return new($"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
-                / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
-        }, [], "Forces GC collection and reports memory", Core.Id);
 
         Command.Register("cbc", _Cmd_cbc, TextParamArr, "Writes to clipboard", Core.Id);
         Command.Register("cbp", _Cmd_cbp, [], "Reads from clipboard", Core.Id);
@@ -264,6 +274,79 @@ public static class Commands
         return new($"{cmd.ModId}:{args[1]}: {cmd.Desc}\n{cmd.GetUsageText()}{extDesc}");
     }
 
+    private static CommandResult _Cmd_whoami(ReadOnlySpan<string> args)
+    {
+        return new(ExitCode.Err, "NYI");
+    }
+
+    private static CommandResult _Cmd_mirror(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            DebugConsole.Mirror ^= true;
+            return new(getString());
+        }
+
+        if (!bool.TryParse(args[1], out bool b))
+        {
+            return new(ExitCode.Err, string.Format(_Arg1MustBeBool, args[1]));
+        }
+
+        DebugConsole.Mirror = b;
+        return new(getString());
+
+        static string getString()
+        {
+            const string NowMirroring = "Now mirroring console messages to stdout";
+            const string NoLongerMirroring = "No longer mirroring console messages to stdout";
+
+            return DebugConsole.Mirror ? NowMirroring : NoLongerMirroring;
+        }
+    }
+
+    private static CommandResult _Cmd_set(ReadOnlySpan<string> args)
+    {
+        if (args.Length < 3)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        if (!CommandParser.IsNameValid(args[2]))
+        {
+            return new(ExitCode.Err, "Name must not contain |, $, \", or whitespace");
+        }
+
+        Command.Env[args[2]] = args[1];
+
+        // todo output head of what it was set to
+        return new($"Set ${args[2]}");
+    }
+
+    private static CommandResult _Cmd_env(ReadOnlySpan<string> args)
+    {
+        StringBuilder str = new(128);
+
+        bool isFirst = true;
+
+        foreach (KeyValuePair<string, string> kvp in Command.Env)
+        {
+            if (!isFirst)
+            {
+                str.AppendLine();
+            }
+
+            str.Append($"{kvp.Key}={kvp.Value}");
+
+            isFirst = false;
+        }
+
+        return new(str.ToString());
+    }
+
+    #endregion
+
+    #region Text Processing
+
     private static CommandResult _Cmd_grep(ReadOnlySpan<string> args)
     {
         if (args.Length < 3)
@@ -378,7 +461,7 @@ public static class Commands
         {
             count = lines.Length;
         }
-        
+
         return new(string.Join(Environment.NewLine, lines.AsSpan(0, count)));
     }
 
@@ -403,42 +486,12 @@ public static class Commands
 
         string[] lines = args[1].Split(Environment.NewLine);
 
-        if(count > lines.Length)
+        if (count > lines.Length)
         {
-            count = lines.Length;    
+            count = lines.Length;
         }
 
         return new(string.Join(Environment.NewLine, lines.AsSpan(lines.Length - count)));
-    }
-
-    private static CommandResult _Cmd_whoami(ReadOnlySpan<string> args)
-    {
-        return new(ExitCode.Err, "NYI");
-    }
-
-    private static CommandResult _Cmd_mirror(ReadOnlySpan<string> args)
-    {
-        if (args.Length == 1)
-        {
-            DebugConsole.Mirror ^= true;
-            return new(getString());
-        }
-
-        if (!bool.TryParse(args[1], out bool b))
-        {
-            return new(ExitCode.Err, string.Format(_Arg1MustBeBool, args[1]));
-        }
-
-        DebugConsole.Mirror = b;
-        return new(getString());
-
-        static string getString()
-        {
-            const string NowMirroring = "Now mirroring console messages to stdout";
-            const string NoLongerMirroring = "No longer mirroring console messages to stdout";
-
-            return DebugConsole.Mirror ? NowMirroring : NoLongerMirroring;
-        }
     }
 
     private static CommandResult _Cmd_cbc(ReadOnlySpan<string> args)

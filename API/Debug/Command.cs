@@ -9,7 +9,15 @@ namespace API.Debug;
 /// </summary>
 public sealed class Command
 {
+    /// <summary>
+    /// All registered commands
+    /// </summary>
     public static readonly Dictionary<string, Command> Cmds = [];
+
+    /// <summary>
+    /// All saved variables
+    /// </summary>
+    public static readonly Dictionary<string, string> Env = [];
 
     /// <summary>
     /// Function this should execute
@@ -56,7 +64,7 @@ public sealed class Command
         CommandResult> fn, CommandParam[] @params, string desc, string modId,
         bool isVisible = true, string? extendedDesc = null)
     {
-        if (name.Any(c => char.IsWhiteSpace(c) || c == '|'))
+        if (!CommandParser.IsNameValid(name))
         {
             return CommandRegistrationError.InvalidName;
         }

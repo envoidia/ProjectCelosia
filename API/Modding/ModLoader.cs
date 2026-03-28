@@ -16,7 +16,7 @@ namespace API.Modding;
 #pragma warning disable IL2075
 
 
-// todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file
+// todo add mod dependency loading, mod unloading, mod disabling, mod config, and saving logs to a temporary file, multiple init stages
 public static class ModLoader
 {
     #region API

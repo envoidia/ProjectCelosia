@@ -25,6 +25,7 @@ public static class CommandParser
 
         Assert.NotNull(cmdObj);
 
+        ExpandVars(cmds[0]);
         CommandResult res = cmdObj.Fn(cmds[0]);
 
         string source = cmds[0][0];
@@ -60,6 +61,7 @@ public static class CommandParser
                 return;
             }
 
+            ExpandVars(cmds[i]);
             res = cmdObj.Fn([cmds[i][0], res.Msg ?? "", .. cmds[i][1..]]);
 
             source = cmds[i][0];
@@ -78,6 +80,20 @@ public static class CommandParser
         if (res.Msg is not null)
         {
             DebugConsole.Log(res.Msg, source);
+        }
+    }
+
+    /// <summary>
+    /// Performs variable expansion on an argument list
+    /// </summary>
+    public static void ExpandVars(string[] args)
+    {
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i].StartsWith('$'))
+            {
+                args[i] = Command.Env.GetValueOrDefault(args[i][1..], "");
+            }
         }
     }
 
@@ -112,14 +128,14 @@ public static class CommandParser
         Span<string[]> cmdArgs = new string[cmds.Length][];
         for (int i = 0; i < cmds.Length; i++)
         {
-            cmdArgs[i] = _SplitUnquotedWhitespace(cmds[i]);
+            cmdArgs[i] = SplitUnquotedWhitespace(cmds[i]);
         }
 
         return cmdArgs;
     }
 
     // todo fix " not being removed from output
-    public static string[] _SplitUnquotedWhitespace(string input)
+    public static string[] SplitUnquotedWhitespace(string input)
     {
         List<string> result = new(8);
         StringBuilder current = new(64);
@@ -182,16 +198,30 @@ public static class CommandParser
     }
 
     /// <returns>
+    /// Whether the command/variable name is valid
+    /// </returns>
+    public static bool IsNameValid(string name)
+    {
+        return !name.Any(static c => c == '"' | c == '|' || c == '$' || char.IsWhiteSpace(c));
+    }
+
+    /// <returns>
     /// The closest autocomplete match for the specified param of the currently typed command, or null.
     /// Returning an empty string makes syntax highlighting consider the input valid
     /// </returns>
     public static string? GetAutocompleteMatch(int paramNum, string param0, string str)
     {
         string[] matchAgainst;
+        int offset = 0;
 
         if (paramNum == 0)
         {
             matchAgainst = [.. Command.Cmds.Keys];
+        }
+        else if (str.StartsWith('$'))
+        {
+            matchAgainst = [.. Command.Env.Keys];
+            offset = 1;
         }
         else
         {
@@ -207,19 +237,19 @@ public static class CommandParser
             }
 
             matchAgainst = cmd.Params[paramNum - 1].GetValidInputs();
+        }
 
-            if (matchAgainst.Length == 0)
-            {
-                return "";
-            }
+        if (matchAgainst.Length == 0)
+        {
+            return "";
         }
 
         string? match = matchAgainst
-            .Where(k => k.StartsWith(str, StringComparison.Ordinal))
-            .OrderByDescending(k => getCommonPrefixLength(k, str))
+            .Where(k => k.StartsWith(str[offset..], StringComparison.Ordinal))
+            .OrderByDescending(k => getCommonPrefixLength(k, str[offset..]))
             .FirstOrDefault();
 
-        return match?[getCommonPrefixLength(match, str)..];
+        return match?[getCommonPrefixLength(match, str[offset..])..];
 
         static int getCommonPrefixLength(string a, string b)
         {
