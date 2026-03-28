@@ -11,7 +11,7 @@ public static class CommandParser
     /// Executes the specified command string from left to right
     /// </summary>
     // todo cleanup
-    public static void ExecuteCommand(string str)
+    public static LogMessage? ExecuteCommand(string str)
     {
         Span<string[]> cmds = TokenizeCommand(str);
 
@@ -20,12 +20,17 @@ public static class CommandParser
 
         if (cmdObj is null)
         {
-            return;
+            return null;
         }
 
         Assert.NotNull(cmdObj);
 
-        ExpandVars(cmds[0]);
+        LogMessage? exp = PerformExpansion(cmds[0]);
+        if (exp is not null)
+        {
+            return exp;
+        }
+
         CommandResult res = cmdObj.Fn(cmds[0]);
 
         string source = cmds[0][0];
@@ -34,10 +39,10 @@ public static class CommandParser
         {
             if (res.Msg is not null)
             {
-                DebugConsole.Log(res.Msg, source, LogLevel.Error);
+                return new(res.Msg, source, LogLevel.Err);
             }
 
-            return;
+            return null;
         }
 
         // Only 1 command
@@ -45,10 +50,10 @@ public static class CommandParser
         {
             if (res.Msg is not null)
             {
-                DebugConsole.Log(res.Msg, source);
+                return new(res.Msg, source);
             }
 
-            return;
+            return null;
         }
 
         // Execute remaining commands
@@ -58,10 +63,15 @@ public static class CommandParser
 
             if (cmdObj is null)
             {
-                return;
+                return null;
             }
 
-            ExpandVars(cmds[i]);
+            LogMessage? exp1 = PerformExpansion(cmds[i]);
+            if (exp1 is not null)
+            {
+                return exp1;
+            }
+
             res = cmdObj.Fn([cmds[i][0], res.Msg ?? "", .. cmds[i][1..]]);
 
             source = cmds[i][0];
@@ -70,31 +80,71 @@ public static class CommandParser
             {
                 if (res.Msg is not null)
                 {
-                    DebugConsole.Log(res.Msg, source, LogLevel.Error);
+                    return new(res.Msg, source, LogLevel.Err);
                 }
 
-                return;
+                return null;
             }
         }
 
         if (res.Msg is not null)
         {
-            DebugConsole.Log(res.Msg, source);
+            return new(res.Msg, source);
         }
+
+        return null;
     }
 
     /// <summary>
-    /// Performs variable expansion on an argument list
+    /// Performs variable and command expansion on an argument list
     /// </summary>
-    public static void ExpandVars(string[] args)
+    /// <returns>
+    /// Error <c>LogMessage</c> if there was an error
+    /// </returns>
+    public static LogMessage? PerformExpansion(string[] args)
     {
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i].StartsWith('$'))
             {
+                if (args[i][1] == '(')
+                {
+                    int bracketDepth = 1;
+
+                    for (int j = 2; j < args[i].Length; j++)
+                    {
+                        if (args[i][j] == '(')
+                        {
+                            bracketDepth++;
+                        }
+                        else if (args[i][j] == ')')
+                        {
+                            bracketDepth--;
+
+                            if (bracketDepth == 0)
+                            {
+                                LogMessage? msg = ExecuteCommand(args[i][2..^1]);
+
+                                if (msg is null || msg.Value.LogLevel == LogLevel.Err)
+                                {
+                                    return msg;
+                                }
+
+                                args[i] = msg.Value.Msg;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
+                }
+
                 args[i] = Command.Env.GetValueOrDefault(args[i][1..], "");
             }
         }
+
+        return null;
     }
 
     /// <returns>
@@ -105,7 +155,7 @@ public static class CommandParser
         if (!Command.Cmds.TryGetValue(cmdKey, out Command cmd))
         {
             DebugConsole.Log($"{cmdKey} is not a recognized command. Use `help` for help and `man cmd` to list all commands",
-            nameof(DebugConsole), LogLevel.Error);
+            nameof(DebugConsole), LogLevel.Err);
 
             // todo suggest close matches
 
@@ -134,7 +184,6 @@ public static class CommandParser
         return cmdArgs;
     }
 
-    // todo fix " not being removed from output
     public static string[] SplitUnquotedWhitespace(string input)
     {
         List<string> result = new(8);

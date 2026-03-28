@@ -233,7 +233,7 @@ public static class DebugConsole
         {
             LogLevel.Info => ThemeColor.Accent.Str,
             LogLevel.Warning => ThemeColor.Imp.Str,
-            LogLevel.Error => ThemeColor.Neg.Str,
+            LogLevel.Err => ThemeColor.Neg.Str,
             _ => throw new ClosedEnumsWhenException()
         };
 
@@ -259,9 +259,14 @@ public static class DebugConsole
         {
             LogLevel.Info => "",
             LogLevel.Warning => "\e[0;33m",
-            LogLevel.Error => "\e[0;31m",
+            LogLevel.Err => "\e[0;31m",
             _ => throw new ClosedEnumsWhenException()
         }}[{source}] {msg.Replace('［', '[')}");
+    }
+
+    public static void Log(LogMessage msg)
+    {
+        Log(msg.Msg, msg.Source, msg.LogLevel);
     }
 
     /// <summary>
@@ -411,7 +416,12 @@ public static class DebugConsole
             _InHist.Add(_Input.Text);
         }
 
-        CommandParser.ExecuteCommand(_Input.Text);
+        LogMessage? msg = CommandParser.ExecuteCommand(_Input.Text);
+
+        if (msg is not null)
+        {
+            Log(msg.Value);
+        }
 
         return true;
     }

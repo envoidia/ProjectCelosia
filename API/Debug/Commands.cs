@@ -36,7 +36,7 @@ public static class Commands
 
     private const string _BasicInfo = "Basic info";
 
-    private const string _Help = "Enter a command followed by its arguments with a space between each.\nWrap an argument in \" to include spaces. Inside of quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
+    private const string _Help = "Enter a command followed by its arguments with a space between each.\nTo include spaces, escape them with \\ or wrap an argument in \"\nInside quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\nAccess variables with $ prefix\nEmbed commands as parameters by wrapping them in $()\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
 
     private const string _Arg1MustBeBool = "args[1] ({1}) must be a bool (true or false)";
 
@@ -225,7 +225,7 @@ public static class Commands
         switch (args[1])
         {
             case "cmd":
-                const int Cap = 1500;
+                const int Cap = 3000;
                 StringBuilder sb = new("Command list:", Cap);
                 foreach (KeyValuePair<string, Command> kvp in
                     Command.Cmds.Where(kvp => kvp.Value.IsVisible))
