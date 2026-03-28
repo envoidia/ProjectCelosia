@@ -19,7 +19,7 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
 
     public string KeyName { get; set; } = keyName;
 
-    public string Icon { get; set; } = icon;
+    public string Icon = icon;
     public string KeyDesc { get; set; } = keyDesc;
 
     /// <summary>

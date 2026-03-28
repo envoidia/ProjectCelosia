@@ -2,9 +2,6 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using Microsoft.Xna.Framework;
-
-using static API.Input.InputPrompts;
-using static API.Battle.State.BattleLib;
 using System.Linq;
 using API.Extensions;
 using API.Name;
@@ -12,6 +9,10 @@ using API.Util;
 using API.Menu.Widget;
 using System;
 using Microsoft.Xna.Framework.Input;
+
+using static API.Input.InputPrompts;
+using static API.Battle.State.BattleLib;
+
 
 namespace API.Battle.State;
 
@@ -28,6 +29,11 @@ internal sealed class _InspectLib
 
     internal static readonly Menu.Menu _Menu = new("Inspect")
     {
+        GetInputPrompt = static () => Menu.State.State.GetInputPromptString(ScrollUpDown,
+           ChangePage, ChangeUnit, Back),
+
+        InputWidgets = [_Queue],
+
         OnCreate = static () =>
         {
             _Queue.CheckInput = true;
@@ -47,12 +53,7 @@ internal sealed class _InspectLib
             _Queue.Index = _GetQueueIndex(_GetQueuePos());
         },
 
-        OnUpdate = _Update,
-
-        GetInputPrompt = static () => Menu.State.State.GetInputPromptString(ScrollUpDown,
-            ChangePage, ChangeUnit, Back),
-
-        InputWidgets = [_Queue]
+        OnUpdate = _Update
     };
 
     // Stat types
@@ -107,7 +108,7 @@ internal sealed class _InspectLib
     private const int _StatStartX = 450;
     internal const int _StatGapX = 595;
     private const int _StatStartY = 175;
-    private const int _StatGapY = 65;
+    internal const int _StatGapY = 65;
 
     private static readonly Label _Lvl = new(RenderPriority.B3Med)
     {
@@ -307,7 +308,6 @@ internal sealed class _InspectLib
         _Menu.Setup([.. _AnimPrimActors, .. _Actors, _PageTabs, _PageItems]);
     }
 
-    // todo remove
     internal static void _Create()
     {
         States.Battle.AddMenu(_Menu);

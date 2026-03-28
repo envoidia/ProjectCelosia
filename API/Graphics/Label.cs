@@ -46,6 +46,18 @@ public sealed class Label : IActor
         }
     }
 
+    public int VerticalSpacing
+    {
+        get
+        {
+            return this.RichTextLayout.VerticalSpacing;
+        }
+        set
+        {
+            this.RichTextLayout.VerticalSpacing = value;
+        }
+    }
+
     /// <summary>
     /// Rotation of the text. The debug outline for rotated text does not currently take rotation into account
     /// </summary>

@@ -122,7 +122,12 @@ public sealed record State(string Name, Action<GameTime>? OnUpdate, Func<string>
             }
         }
 
-        Assert.CapIs(inputs, Cap); // todo remove before final release
+        // todo remove
+        if (inputs.Length > Cap)
+        {
+            DebugConsole.Log(inputs.Length.ToString(), nameof(GetInputPromptString));
+        }
+
         return inputs.ToString();
     }
 }

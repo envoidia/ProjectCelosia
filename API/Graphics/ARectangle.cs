@@ -37,6 +37,7 @@ public sealed class ARectangle : IActor
         }
     }
 
+    public float Rotation = 0f;
 
     private void _ThemeChange()
     {
@@ -48,6 +49,6 @@ public sealed class ARectangle : IActor
     {
         Core.ShapeBatch.DrawRectangle(
             MathUtil.SmoothStep(this.AnimFrom, this.Position, (float) this.Prog) - this.Origin.ToVector2(),
-            new(this.Width, this.Height), this._fillColor, this._outlineColor);
+            new(this.Width, this.Height), this._fillColor, this._outlineColor, rotation: Rotation);
     }
 }

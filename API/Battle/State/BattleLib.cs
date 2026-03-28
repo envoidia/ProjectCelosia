@@ -194,21 +194,21 @@ public static class BattleLib
                 AnimFromDir = dir
             });
 
-            const int YOff = 60;
-
-            _Actors.Add(_HpBars[i] = new(new(x1, y + YOff), StatBarWidgetBase.DefaultWidth,
-                RenderPriority.B1Med)
+            _Actors.Add(_HpBars[i] = new(new(x1, y + _InspectLib._StatGapY),
+                StatBarWidgetBase.DefaultWidth, RenderPriority.B1Med)
             {
                 AnimFromDir = dir
             });
 
-            _Actors.Add(_SpBars[i] = StatBarWidget.CreateSpBarWidget(new(x1, y + (YOff * 2)),
-                StatBarWidgetBase.DefaultWidth, RenderPriority.B1Med));
+            _Actors.Add(_SpBars[i] = StatBarWidget.CreateSpBarWidget(new(x1,
+                y + (_InspectLib._StatGapY * 2)), StatBarWidgetBase.DefaultWidth,
+                RenderPriority.B1Med));
+
             _SpBars[i].AnimFromDir = dir;
 
             _Actors.Add(_Buffs[i] = new()
             {
-                Position = new(x1, y + 150),
+                Position = new(x1, y + 180),
                 AnimFromDir = dir
             });
             _Actors.Add(_Moves[i] = new()
@@ -243,6 +243,11 @@ public static class BattleLib
         _InspectLib._LateInit();
 
         LogLib.Add(_GetTurnString(1));
+
+        for(int i = 2; i <= 100; i++)
+        {
+            LogLib.Add(i.ToString());
+        }
 
         _UpdateStatDisplay(0);
 
@@ -314,7 +319,7 @@ public static class BattleLib
         // todo fix it might still be possible to double the coverleft???
         if (InputLib.Check(Keybinds.Menu1))
         {
-            StateMachine.Add(States.Log);
+            LogLib._Create();
             return;
         }
 
@@ -325,7 +330,6 @@ public static class BattleLib
                 _indexTarget = _GetQueuePos();
             }
 
-            //StateMachine.Add(States.Inspect);
             _InspectLib._Create();
             return;
         }

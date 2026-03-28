@@ -59,7 +59,9 @@ public sealed class Battle
         return side == Side.Ally ? this.PlayerTeam : this.OpponentTeam;
     }
 
-    /// <returns>A new array of all units</returns>
+    /// <returns>
+    /// A new array of all <c>Units</c>
+    /// </returns>
     public Unit[] GetAllUnits()
     {
         return [.. this.PlayerTeam.Units, .. this.OpponentTeam.Units];

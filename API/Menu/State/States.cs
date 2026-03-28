@@ -16,17 +16,4 @@ public static class States
     {
         OnCreate = BattleLib._Create, OnDestroy = BattleLib._Destroy
     };
-
-    // todo remove
-    public static readonly State Log = new("Log",
-        static _ =>
-        {
-            if (InputLib.Check(Keybinds.Back, Keybinds.Menu1))
-            {
-                StateMachine.Remove();
-            }
-        },
-
-        // todo ToStart should be start/end
-        static () => State.GetInputPromptString(ScrollUpDown, BackLog));
 }
