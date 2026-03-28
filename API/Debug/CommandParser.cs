@@ -188,7 +188,9 @@ public static class CommandParser
     {
         List<string> result = new(8);
         StringBuilder current = new(64);
+
         bool inQuotes = false;
+        bool lastCharDs = false;
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -204,7 +206,7 @@ public static class CommandParser
 
             if (c == '"')
             {
-                inQuotes = !inQuotes;
+                inQuotes ^= true;
             }
             else if (char.IsWhiteSpace(c) && !inQuotes)
             {
@@ -216,6 +218,25 @@ public static class CommandParser
             }
             else
             {
+                if (c == '$')
+                {
+                    lastCharDs = true;
+                }
+                else if (lastCharDs && c == '(')
+                {
+                    lastCharDs = false;
+                    inQuotes = true;
+                }
+                else if (c == ')')
+                {
+                    lastCharDs = false;
+                    inQuotes = false;
+                }
+                else
+                {
+                    lastCharDs = false;
+                }
+
                 current.Append(c);
             }
         }
