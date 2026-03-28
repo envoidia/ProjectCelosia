@@ -21,12 +21,12 @@ internal static class _MainMenuLib
     internal static void _Init()
     {
         // todo how am i supposed to change state when theres a menu up
-        StateMachine.State.AddMenu(Debug.UiTestLib.Menu);
+        // StateMachine.State.AddMenu(Debug.UiTestLib.Menu);
     }
 
     internal static void _Update(GameTime gt)
     {
-        //StateMachine.Add(States.Battle);
+        StateMachine.Add(States.Battle);
         // RenderLib.DrawParallelogram(new(1500, 800),
         //             new(1200, 800),
         //             Point.Zero, Colors.Bg,

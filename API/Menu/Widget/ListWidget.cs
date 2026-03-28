@@ -494,14 +494,15 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             float barLength = range * ratio;
             range -= barLength;
 
-            // 1 = bottom; 0 = top
-            float scrollAmt = (float) this.Scroll / Math.Max(this.OptCount - this.HeightLimit, 0);
+            // 0 = bottom; 1 = top
+            float scrollAmt = Math.Abs((float) this.Scroll / Math.Max(this.OptCount - this.HeightLimit, 0) - 1);
 
+            float y1 = this.Y - 5 + this.Height - barLength - (range * scrollAmt);
+
+            float centerY = y1 + (barLength / 2f);
             float x1 = this.X + this.Width + this.Padding.LR
-                - (this.Slant == 0 ? -25 : ((range * scrollAmt) / RenderLib.DefaultSlant))
-                + (this.HasRight ? -18 : 15);
-
-            float y1 = this.Y + 5 + (range * scrollAmt);
+               + (this.Slant == 0 ? -25 : (((this.Y - 5) - centerY) / RenderLib.DefaultSlant))
+               + (this.HasRight ? -18 : 15);
 
             Vector2 pos = new(x1, y1);
 

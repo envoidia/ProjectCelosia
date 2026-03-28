@@ -34,6 +34,7 @@ public static class LogLib
 
     private static readonly ARectangle _Scrollbar = new(ThemeColor.White, RenderPriority.B3Med)
     {
+        //Alignment = Alignment.BottomLeft,
         OutlineColor = ThemeColor.White,
         Rotation = ListWidget.NormalSlant / -84.85f
     };
@@ -82,6 +83,8 @@ public static class LogLib
                 _UpdateLog();
             }
 
+            _UpdateScrollbar();
+
             if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.F5))
             {
                 Add("a", "b", "c", "d", "e", "f", "g", "h");
@@ -120,7 +123,6 @@ public static class LogLib
 
     private static void _UpdateLog()
     {
-        _UpdateScrollbar();
         _BattleLog.Text = _FormatLog(_IsLogMenu());
     }
 
@@ -128,6 +130,14 @@ public static class LogLib
     {
         // Portion currently displayed
         float ratio = Math.Min((float) _FullLines / _LogText.Count, 1);
+
+        if (ratio == 1)
+        {
+            _Scrollbar.IsVisible = false;
+            return;
+        }
+
+        _Scrollbar.IsVisible = true;
 
         // Maximum range for the bar to move. Slightly less than height so it leaves a margin on the edges
         float range = World.H - 10;
@@ -138,17 +148,19 @@ public static class LogLib
         // 0 = bottom; 1 = top
         float scrollAmt = (float) _logScroll / Math.Max(_LogText.Count - _FullLines, 0);
 
-        float x = 2035 + ((range * scrollAmt) / RenderLib.DefaultSlant);
         float y = (World.H - 5) - _Scrollbar.Height - (range * scrollAmt);
+
+        float centerY = y + (barLength / 2f);
+        float x = 1975 + (((World.H - 5) - centerY) / RenderLib.DefaultSlant);
 
         Vector2 pos = new(x, y);
 
-        // if (_lastScrollbarPos.X != ListWidget.UninitializedScrollbarPos)
-        // {
-        //     pos = Vector2.SmoothStep(_lastScrollbarPos, pos, 0.15f);
-        // }
+        if (_lastScrollbarPos.X != ListWidget.UninitializedScrollbarPos)
+        {
+            pos = Vector2.SmoothStep(_lastScrollbarPos, pos, 0.15f);
+        }
 
-        //_lastScrollbarPos = pos;
+        _lastScrollbarPos = pos;
         _Scrollbar.Position = pos;
 
         _Scrollbar.Size = new(10, (int) barLength);
