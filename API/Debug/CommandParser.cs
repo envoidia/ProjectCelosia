@@ -15,6 +15,11 @@ public static class CommandParser
     {
         Span<string[]> cmds = TokenizeCommand(str);
 
+        if(cmds.Length == 0 || cmds[0].Length == 0)
+        {
+            return new("Command doesn't exist", nameof(CommandParser), LogLevel.Err);
+        }
+
         // Execute first command
         Command? cmdObj = GetCommand(cmds[0][0]);
 
