@@ -73,9 +73,9 @@ public static class BattleLib
         BackgroundType = BackgroundType.Parellelogram
     };
 
-    // todo why doesnt this scrolling work ???
+    // todo support >6 skills, why doesnt this scrolling work ???
     internal static readonly ListWidget _SkillList = new(new(), true,
-        7, RenderPriority.B2Low)
+        6, RenderPriority.B2Low)
     {
         FixedWidth = 800,
         HasBackground = true,

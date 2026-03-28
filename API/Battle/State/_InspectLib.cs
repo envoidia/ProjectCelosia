@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework.Input;
 using static API.Input.InputPrompts;
 using static API.Battle.State.BattleLib;
 
-
 namespace API.Battle.State;
 
 // todo cleanup

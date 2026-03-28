@@ -11,7 +11,7 @@ public static class UiTestLib
     private static readonly List<string> _Text = ["Foo", "Bar", "Baz", "Lorem", "Ipsum", "Dolor",
         "Si", "Amet"];
 
-    private static readonly ListWidget _List = new(new(500, 500),
+    private static readonly ListWidget _List = new(new(3000, 1000),
         false, Graphics.RenderPriority.Highest, [.. _Text])
     {
         HeightLimit = 6,
@@ -19,7 +19,10 @@ public static class UiTestLib
         HasBackground = true
     };
 
-    public static readonly Menu.Menu Menu = new("Test", _List)
+    private static readonly TabBarWidget _Tab = new(new(3000, 500),
+        "lorem", "ipsum", "dolor", "si", "amet");
+
+    public static readonly Menu.Menu Menu = new("Test", _List, _Tab)
     {
         OnCreate = static () =>
         {

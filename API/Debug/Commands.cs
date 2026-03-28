@@ -72,7 +72,7 @@ public static class Commands
             TextParamArr, "Returns its input", Core.Id);
 
         const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
-        const string Search = "Search";
+        const string Search = "search";
 
         Command.Register("grep", _Cmd_grep, [TextParam,
             new(Search)], GrepDesc, Core.Id);
@@ -82,6 +82,17 @@ public static class Commands
 
         Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
             "Counts lines, words, and chars", Core.Id);
+
+        const string Count = "count";
+        const string CountDefault = "count defaults to 10";
+
+        Command.Register("head", _Cmd_head, [TextParam, new(Count)],
+            "Clip text to first x lines", Core.Id,
+            extendedDesc: CountDefault);
+
+        Command.Register("tail", _Cmd_tail, [TextParam, new(Count)],
+            "Clip text to last x lines", Core.Id,
+            extendedDesc: CountDefault);
 
         Command.Register("whoami", _Cmd_whoami, [],
             "Returns the name of the loaded save", Core.Id);
@@ -338,6 +349,66 @@ public static class Commands
         }
 
         return new(string.Format(_WcRes, lines, words, chars));
+    }
+
+    private const string _LinesErr = "lines (args[2]) must be an int > 0";
+
+    private static CommandResult _Cmd_head(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        int count = 10;
+
+        if (args.Length > 2)
+        {
+            if (!int.TryParse(args[2], out int c) || c <= 0)
+            {
+                return new(ExitCode.Err, _LinesErr);
+            }
+
+            count = c;
+        }
+
+        string[] lines = args[1].Split(Environment.NewLine, count + 1);
+
+        if (count > lines.Length)
+        {
+            count = lines.Length;
+        }
+        
+        return new(string.Join(Environment.NewLine, lines.AsSpan(0, count)));
+    }
+
+    private static CommandResult _Cmd_tail(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        int count = 10;
+
+        if (args.Length > 2)
+        {
+            if (!int.TryParse(args[2], out int c) || c <= 0)
+            {
+                return new(ExitCode.Err, _LinesErr);
+            }
+
+            count = c;
+        }
+
+        string[] lines = args[1].Split(Environment.NewLine);
+
+        if(count > lines.Length)
+        {
+            count = lines.Length;    
+        }
+
+        return new(string.Join(Environment.NewLine, lines.AsSpan(lines.Length - count)));
     }
 
     private static CommandResult _Cmd_whoami(ReadOnlySpan<string> args)
