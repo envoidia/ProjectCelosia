@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using API.Battle;
 using API.Battle.BuffEffects;
@@ -95,8 +96,13 @@ public static class Commands
                 / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
         }, [], "Forces GC collection and reports memory", Core.Id);
 
+        const string VarName = "var name";
+        CommandParam varNameParam = new(VarName);
+
         Command.Register("set", _Cmd_set, [new("value"),
-            new("var name")], "Set variables", Core.Id);
+            varNameParam], "Set variables", Core.Id);
+
+        Command.Register("unset", _Cmd_unset, [varNameParam], "Unset variables", Core.Id);
 
         Command.Register("env", _Cmd_env, [], "Outputs all variables", Core.Id);
 
@@ -320,6 +326,21 @@ public static class Commands
 
         // todo output head of what it was set to
         return new($"Set ${args[2]}");
+    }
+
+    private static CommandResult _Cmd_unset(ReadOnlySpan<string> args)
+    {
+        if(args.Length == 1)
+        {
+            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+        }
+
+        if(Command.Env.Remove(args[1]))
+        {
+            return new($"Unset ${args[1]}");
+        }
+
+        return new($"Variable ${args[1]} does not exist");
     }
 
     private static CommandResult _Cmd_env(ReadOnlySpan<string> args)
