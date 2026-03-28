@@ -167,7 +167,7 @@ public static class DebugConsole
     internal static readonly Label _OutHistLabel = new(RenderPriority.Highest, Core.Mono40)
     {
         Position = new(_TextX + _TextOff, World.H - 35),
-        Padding = new(_TextX + _TextOff, 10, 10, 30),
+        Padding = new(_TextX + _TextOff, 10, 10, 40),
         BackgroundType = BackgroundType.Rectangle, // todo also use current command width for this
         MinBackgroundSize = new(_MinBgWidth, 0),
         Alignment = Alignment.BottomLeft,
