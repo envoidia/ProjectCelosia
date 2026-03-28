@@ -42,12 +42,14 @@ public static class Keybinds
     /// Used for various hotkeys, including doubling held input repeat speed
     /// </summary>
     // todo better names for these
-    public static readonly Keybind Hotkey1 = new("KeyHotkey1", KeybindId.Hotkey1, Keys.LeftShift, Buttons.LeftTrigger);
+    public static readonly Keybind Hotkey1 = new("KeyHotkey1", KeybindId.Hotkey1,
+        Keys.LeftShift, Buttons.LeftTrigger);
 
     /// <summary>
-    /// Used for various hotkeys, including jump to start/end of menu
+    /// Used for various hotkeys
     /// </summary>
-    public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2, Keys.LeftControl, Buttons.RightTrigger);
+    public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2,
+        Keys.LeftControl, Buttons.RightTrigger);
 
     /// <summary>
     /// Keybinds that don't call other keybinds
