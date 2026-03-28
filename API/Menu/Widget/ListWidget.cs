@@ -314,13 +314,15 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         for (; i < text.Length; i++)
         {
-            this.LabelsR.Add(new Label()
+            labels.Add(new Label()
             {
                 Text = text[i],
                 Alignment = align,
                 Padding = this.ItemPadding,
                 Prog = this.Prog
             });
+
+            this.Progs.Add(Progress.Zero);
         }
     }
 

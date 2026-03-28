@@ -73,12 +73,14 @@ public static class BattleLib
         BackgroundType = BackgroundType.Parellelogram
     };
 
+    // todo why doesnt this scrolling work ???
     internal static readonly ListWidget _SkillList = new(new(), true,
         7, RenderPriority.B2Low)
     {
         FixedWidth = 800,
         HasBackground = true,
         Slant = ListWidget.NormalSlant,
+        HeightLimit = 6,
         OnChangeIndex = static index =>
         {
             Unit u = Battle.GetUnitAtPos(_selectingMove);
@@ -243,11 +245,6 @@ public static class BattleLib
         _InspectLib._LateInit();
 
         LogLib.Add(_GetTurnString(1));
-
-        for(int i = 2; i <= 100; i++)
-        {
-            LogLib.Add(i.ToString());
-        }
 
         _UpdateStatDisplay(0);
 

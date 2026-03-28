@@ -81,6 +81,16 @@ public static class LogLib
                 _logScroll = newScroll;
                 _UpdateLog();
             }
+
+            if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.F5))
+            {
+                Add("a", "b", "c", "d", "e", "f", "g", "h");
+            }
+            if (InputLib.IsKeyJustPressed(Microsoft.Xna.Framework.Input.Keys.F6))
+            {
+                _LogText.Clear();
+                _UpdateLog();
+            }
         }
     };
 
@@ -128,17 +138,19 @@ public static class LogLib
         // 0 = bottom; 1 = top
         float scrollAmt = (float) _logScroll / Math.Max(_LogText.Count - _FullLines, 0);
 
-        float x = 2035 + (range * scrollAmt) / RenderLib.DefaultSlant;
+        float x = 2035 + ((range * scrollAmt) / RenderLib.DefaultSlant);
         float y = (World.H - 5) - _Scrollbar.Height - (range * scrollAmt);
 
         Vector2 pos = new(x, y);
 
-        if (_lastScrollbarPos.X != ListWidget.UninitializedScrollbarPos)
-        {
-            pos = Vector2.SmoothStep(_lastScrollbarPos, pos, 0.15f);
-        }
+        // if (_lastScrollbarPos.X != ListWidget.UninitializedScrollbarPos)
+        // {
+        //     pos = Vector2.SmoothStep(_lastScrollbarPos, pos, 0.15f);
+        // }
 
+        //_lastScrollbarPos = pos;
         _Scrollbar.Position = pos;
+
         _Scrollbar.Size = new(10, (int) barLength);
     }
 
