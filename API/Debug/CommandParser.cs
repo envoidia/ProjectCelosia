@@ -301,6 +301,8 @@ public static class CommandParser
     /// </returns>
     public static string? GetAutocompleteMatch(int paramNum, string param0, string str)
     {
+        string trimmed = str.TrimStart();
+
         string[] matchAgainst;
         int offset = 0;
 
@@ -308,10 +310,10 @@ public static class CommandParser
         {
             matchAgainst = [.. Command.Cmds.Keys];
         }
-        else if (str.StartsWith('$'))
+        else if (trimmed.StartsWith('$'))
         {
             // todo improve command expansion autocomplete
-            if (str.Length > 1 && str[1] == '(')
+            if (trimmed.Length > 1 && trimmed[1] == '(')
             {
                 matchAgainst = [.. Command.Cmds.Keys];
                 offset = 2;
@@ -344,11 +346,11 @@ public static class CommandParser
         }
 
         string? match = matchAgainst
-            .Where(k => k.StartsWith(str[offset..], StringComparison.Ordinal))
-            .OrderByDescending(k => getCommonPrefixLength(k, str[offset..]))
+            .Where(k => k.StartsWith(trimmed[offset..], StringComparison.Ordinal))
+            .OrderByDescending(k => getCommonPrefixLength(k, trimmed[offset..]))
             .FirstOrDefault();
 
-        return match?[getCommonPrefixLength(match, str[offset..])..];
+        return match?[getCommonPrefixLength(match, trimmed[offset..])..];
 
         static int getCommonPrefixLength(string a, string b)
         {
@@ -360,11 +362,6 @@ public static class CommandParser
 
             return len;
         }
-
-        // string[] getMatchAgainst()
-        // {
-
-        // }
     }
 
     public static string? GetCurrentHintText(Span<string[]> args)
