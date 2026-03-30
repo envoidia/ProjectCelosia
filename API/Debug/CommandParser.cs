@@ -110,7 +110,8 @@ public static class CommandParser
     {
         for (int i = 0; i < args.Length; i++)
         {
-            if (args[i].StartsWith('$'))
+            string arg = args[i].Trim();
+            if (arg.StartsWith('$'))
             {
                 if (args[i][1] == '(')
                 {
@@ -145,16 +146,16 @@ public static class CommandParser
                     break;
                 }
 
-                args[i] = Command.Env.GetValueOrDefault(args[i][1..], "");
+                args[i] = Command.Env.GetValueOrDefault(arg[1..], "");
                 continue;
             }
 
             // Remove \ from escaped $
-            if (args[i].StartsWith("\\$"))
+            if (arg.StartsWith("\\$"))
             {
-                args[i] = args[i][1..];
+                args[i] = arg[1..];
             }
-    }
+        }
 
         return null;
     }
