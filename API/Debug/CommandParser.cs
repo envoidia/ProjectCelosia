@@ -15,7 +15,7 @@ public static class CommandParser
     {
         Span<string[]> cmds = TokenizeCommand(str);
 
-        if(cmds.Length == 0 || cmds[0].Length == 0)
+        if (cmds.Length == 0 || cmds[0].Length == 0)
         {
             return new("Command doesn't exist", nameof(CommandParser), LogLevel.Err);
         }
@@ -146,8 +146,15 @@ public static class CommandParser
                 }
 
                 args[i] = Command.Env.GetValueOrDefault(args[i][1..], "");
+                continue;
             }
-        }
+
+            // Remove \ from escaped $
+            if (args[i].StartsWith("\\$"))
+            {
+                args[i] = args[i][1..];
+            }
+    }
 
         return null;
     }
@@ -204,7 +211,11 @@ public static class CommandParser
             if (c == '\\' && i + 1 < input.Length)
             {
                 // Preserve the escaped character
-                current.Append(input[i + 1]);
+                char ch = input[i + 1];
+
+                // Escape $
+                current.Append(ch == '$' ? "\\$" : ch);
+
                 i++;
                 continue;
             }
@@ -212,38 +223,41 @@ public static class CommandParser
             if (c == '"')
             {
                 inQuotes ^= true;
+                continue;
             }
-            else if (char.IsWhiteSpace(c) && !inQuotes)
+
+            if (char.IsWhiteSpace(c) && !inQuotes)
             {
                 if (current.Length > 0)
                 {
                     result.Add(current.ToString());
                     current.Clear();
                 }
+
+                continue;
+            }
+
+            if (c == '$')
+            {
+                lastCharDs = true;
+            }
+            else if (lastCharDs && c == '(')
+            {
+                lastCharDs = false;
+                inQuotes = true;
+            }
+            else if (c == ')')
+            {
+                lastCharDs = false;
+                inQuotes = false;
             }
             else
             {
-                if (c == '$')
-                {
-                    lastCharDs = true;
-                }
-                else if (lastCharDs && c == '(')
-                {
-                    lastCharDs = false;
-                    inQuotes = true;
-                }
-                else if (c == ')')
-                {
-                    lastCharDs = false;
-                    inQuotes = false;
-                }
-                else
-                {
-                    lastCharDs = false;
-                }
-
-                current.Append(c);
+                lastCharDs = false;
             }
+
+            current.Append(c);
+
         }
 
         if (current.Length > 0)

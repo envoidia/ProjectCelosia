@@ -168,8 +168,8 @@ public static class DebugConsole
     {
         Position = new(_TextX + _TextOff, World.H - 35),
         Padding = new(_TextX + _TextOff, 10, 10, 40),
-        BackgroundType = BackgroundType.Rectangle, // todo also use current command width for this
-        MinBackgroundSize = new(_MinBgWidth, 0),
+        BackgroundType = BackgroundType.Rectangle,
+        MinBackgroundSize = new(_MinBgWidth, 0), // todo also use current command width for this
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
         IsVisible = false
