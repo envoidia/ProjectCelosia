@@ -113,23 +113,23 @@ public static class CommandParser
             string arg = args[i].Trim();
             if (arg.StartsWith('$'))
             {
-                if (args[i][1] == '(')
+                if (arg.Length > 1 && arg[1] == '(')
                 {
                     int bracketDepth = 1;
 
-                    for (int j = 2; j < args[i].Length; j++)
+                    for (int j = 2; j < arg.Length; j++)
                     {
-                        if (args[i][j] == '(')
+                        if (arg[j] == '(')
                         {
                             bracketDepth++;
                         }
-                        else if (args[i][j] == ')')
+                        else if (arg[j] == ')')
                         {
                             bracketDepth--;
 
                             if (bracketDepth == 0)
                             {
-                                LogMessage? msg = ExecuteCommand(args[i][2..^1]);
+                                LogMessage? msg = ExecuteCommand(arg[2..^1]);
 
                                 if (msg is null || msg.Value.LogLevel == LogLevel.Err)
                                 {
@@ -292,7 +292,8 @@ public static class CommandParser
     /// </returns>
     public static bool IsNameValid(string name)
     {
-        return !name.Any(static c => c is '"' or '|' or '$' or '(' or ')' || char.IsWhiteSpace(c));
+        return name.Length > 0
+            && !name.Any(static c => c is '"' or '|' or '$' or '(' or ')' || char.IsWhiteSpace(c));
     }
 
     /// <returns>
