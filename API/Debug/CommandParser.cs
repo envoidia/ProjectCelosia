@@ -143,7 +143,7 @@ public static class CommandParser
                         }
                     }
 
-                    break;
+                    continue;
                 }
 
                 args[i] = Command.Env.GetValueOrDefault(arg[1..], "");
