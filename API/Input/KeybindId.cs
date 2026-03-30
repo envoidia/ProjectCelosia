@@ -19,6 +19,10 @@ public enum KeybindId
     Hotkey1,
     Hotkey2,
 
+    DebugInfo,
+    DebugConsole,
+    DebugOverlay,
+
     /// <summary>
     /// Marker. Always add non-merged keybinds above this
     /// </summary>

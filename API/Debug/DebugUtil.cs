@@ -79,7 +79,7 @@ public static class DebugUtil
     private const int _InfoRUpdateRateS = 1;
     private static TimeSpan _timeSinceUpdateInfoR = TimeSpan.FromSeconds(_InfoRUpdateRateS);
 
-    private const int _KeyYOff = 576;
+    private const int _KeyYOff = 700;
 
     internal static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
@@ -94,7 +94,7 @@ public static class DebugUtil
     private static readonly Label _DebugInfoKeyNames = new(RenderPriority.Highest, Core.Mono40)
     {
         Text = "_GetKeyNameText()",
-        Position = World.Vec - new Vector2(422, _KeyYOff),
+        Position = World.Vec - new Vector2(472, _KeyYOff),
         Padding = new(10),
         BackgroundType = BackgroundType.Rectangle,
         AnimType = AnimType.None,
@@ -184,13 +184,13 @@ public static class DebugUtil
 
     private static void _CheckInputs()
     {
-        if (InputLib.IsKeyJustPressed(Keys.F1))
+        if (InputLib.Check(Keybinds.DebugInfo))
         {
             _ToggleShowDebugInfo();
         }
 
-        DebugConsole._Show ^= InputLib.IsKeyJustPressed(Keys.F2);
-        DrawActorOutlines ^= InputLib.IsKeyJustPressed(Keys.F3);
+        DebugConsole._Show ^= InputLib.Check(Keybinds.DebugConsole);
+        DrawActorOutlines ^= InputLib.Check(Keybinds.DebugOverlay);
     }
 
     internal static void _SetShowDebugInfo(bool show)
@@ -222,12 +222,12 @@ public static class DebugUtil
     // todo cleanup
     private static string _GetInfoLText()
     {
-        return $"[F1] Close, [F2] Console, [F3] Outlines\nVersion: {BuildInfo.BuildDate}";
+        return $"[{Keybinds.DebugInfo.Key}] Close, [{Keybinds.DebugConsole.Key}] Console, [{Keybinds.DebugOverlay.Key}] Actor Overlay\nVersion: {BuildInfo.BuildDate}";
     }
 
     private static string _GetKeyNameText()
     {
-        const int Cap = 450;
+        const int Cap = 579;
         StringBuilder sb = new(Cap);
         for (int i = 0; i < Keybinds.NonMergedKeybinds.Count; i++)
         {
@@ -240,7 +240,7 @@ public static class DebugUtil
             }
         }
 
-        Assert.CapIs(sb, Cap);
+        Assert.CapIs(sb, Cap); // todo remove before release (it may be wrong depending on lang and binds)
         return sb.ToString();
     }
 

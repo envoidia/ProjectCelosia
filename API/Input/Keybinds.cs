@@ -51,11 +51,20 @@ public static class Keybinds
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2,
         Keys.LeftControl, Buttons.RightTrigger);
 
+    public static readonly Keybind DebugInfo = new("KeyDebugInfo", KeybindId.DebugInfo,
+        Keys.F1, Buttons.None);
+
+    public static readonly Keybind DebugConsole = new("KeyDebugConsole", KeybindId.DebugConsole,
+        Keys.F2, Buttons.None);
+
+    public static readonly Keybind DebugOverlay = new("KeyDebugOverlay", KeybindId.DebugOverlay,
+        Keys.F3, Buttons.None);
+
     /// <summary>
     /// Keybinds that don't call other keybinds
     /// </summary>
-    public static readonly List<Keybind> NonMergedKeybinds =
-        [Confirm, Back, Menu1, Menu2, PageL, PageR, Left, Right, Up, Down, Hotkey1, Hotkey2];
+    public static readonly List<Keybind> NonMergedKeybinds = [Confirm, Back, Menu1, Menu2, PageL, PageR,
+        Left, Right, Up, Down, Hotkey1, Hotkey2, DebugInfo, DebugConsole, DebugOverlay];
 
     // Merged
 
