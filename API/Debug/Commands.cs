@@ -97,12 +97,12 @@ public static class Commands
         }, [], "Forces GC collection and reports memory", Core.Id);
 
         const string VarName = "var name";
-        CommandParam varNameParam = new(VarName);
-
+        
         Command.Register("set", _Cmd_set, [new("value"),
-            varNameParam], "Set variables", Core.Id);
+            new(VarName)], "Set variables", Core.Id);
 
-        Command.Register("unset", _Cmd_unset, [varNameParam], "Unset variables", Core.Id);
+        Command.Register("unset", _Cmd_unset, [new(VarName,
+            [], () => [.. Command.Env.Keys])], "Unset variables", Core.Id);
 
         Command.Register("env", _Cmd_env, [], "Outputs all variables", Core.Id);
 
