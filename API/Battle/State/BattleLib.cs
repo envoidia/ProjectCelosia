@@ -495,11 +495,11 @@ public static class BattleLib
 
     private static void _SelectOpponentMove(GameTime gt)
     {
-        if (Settings.SelectOpponentMoves)
-        {
-            _SelectMove(gt);
-            return;
-        }
+        // if (Settings.SelectOpponentMoves)
+        // {
+        //     _SelectMove(gt);
+        //     return;
+        // }
 
         // temp
         Skill selectedSkill = Skills.Nothing;
@@ -560,7 +560,7 @@ public static class BattleLib
     // todo move x over based on height
     internal static void _SetupSkillList(int index)
     {
-        if (index > PosLib.HighestAlly && !Settings.SelectOpponentMoves)
+        if (index > PosLib.HighestAlly/* && !Settings.SelectOpponentMoves*/)
         {
             _SkillList.IsVisible = false;
             _SkillDesc.IsVisible = false;

@@ -43,8 +43,13 @@ public sealed class Command
     /// </summary>
     public readonly bool IsVisible;
 
+    /// <summary>
+    /// Whether this should be blocked if cheats are disabled
+    /// </summary>
+    public readonly bool IsCheat;
+
     private Command(Func<ReadOnlySpan<string>, CommandResult> fn, CommandParam[] @params,
-        string name, string desc, string modId, bool isVisible, string? extendedDesc)
+        string name, string desc, string modId, bool isVisible, bool isCheat, string? extendedDesc)
     {
         this.Fn = fn;
         this.Params = @params;
@@ -52,6 +57,7 @@ public sealed class Command
         this.Desc = desc;
         this.ModId = modId;
         this.IsVisible = isVisible;
+        this.IsCheat = isCheat;
         this.ExtendedDesc = extendedDesc;
     }
 
@@ -62,7 +68,7 @@ public sealed class Command
     /// <returns>The error, if any</returns>
     public static CommandRegistrationError? Register(string name, Func<ReadOnlySpan<string>,
         CommandResult> fn, CommandParam[] @params, string desc, string modId,
-        bool isVisible = true, string? extendedDesc = null)
+        bool isVisible = true, bool isCheat = false, string? extendedDesc = null)
     {
         if (!CommandParser.IsNameValid(name))
         {
@@ -74,7 +80,7 @@ public sealed class Command
             return CommandRegistrationError.AlreadyUsed;
         }
 
-        Cmds.Add(name, new(fn, @params, name, desc, modId, isVisible, extendedDesc));
+        Cmds.Add(name, new(fn, @params, name, desc, modId, isVisible, isCheat, extendedDesc));
 
         return null;
     }

@@ -97,7 +97,7 @@ public static class Commands
         }, [], "Forces GC collection and reports memory", Core.Id);
 
         const string VarName = "var name";
-        
+
         Command.Register("set", _Cmd_set, [new("value"),
             new(VarName)], "Set variables", Core.Id);
 
@@ -183,17 +183,17 @@ public static class Commands
             "Get detailed unit info", Core.Id);
 
         Command.Register("sethp", _Cmd_sethp, [unitIndexParam, new("hp")],
-        "Set unit HP", Core.Id);
+        "Set unit HP", Core.Id, isCheat: true);
 
         Command.Register("setsp", _Cmd_setsp, [unitIndexParam, new("sp")],
-        "Set unit SP", Core.Id);
+        "Set unit SP", Core.Id, isCheat: true);
 
         Command.Register("setstatmult", _Cmd_setstatmult, [unitIndexParam,
             new("stat id", [], Registry.IdsOf<Stat>),
-            new("mult")], "Set unit stat multipliers", Core.Id);
+            new("mult")], "Set unit stat multipliers", Core.Id, isCheat: true);
 
         Command.Register("resetunit", _Cmd_resetunit, [unitIndexParam],
-            "Reset buffs and stat changes", Core.Id,
+            "Reset buffs and stat changes", Core.Id, isCheat: true,
             extendedDesc: "Omit unit to reset all");
 
         Command.Register("buff", _Cmd_buff, [unitIndexParam,
@@ -201,14 +201,14 @@ public static class Commands
             new("buff id", [], Registry.IdsOf<Buff>),
             new("turns", CommandParam.InputNumbers1To9),
             new("stacks", CommandParam.InputNumbers1To9)],
-            "Give/remove buffs in battle", Core.Id,
+            "Give/remove buffs in battle", Core.Id, isCheat: true,
             extendedDesc: "Can omit turns and stacks if removing");
 
         // todo passive
 
         // todo equip
 
-        // todo stat statmult/affinity/stage/stageturns/mult/boomantat/statmod
+        // todo stat affinity/stage/stageturns/mult/boolstat/statmod
 
         #endregion
 
@@ -330,12 +330,12 @@ public static class Commands
 
     private static CommandResult _Cmd_unset(ReadOnlySpan<string> args)
     {
-        if(args.Length == 1)
+        if (args.Length == 1)
         {
             return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
         }
 
-        if(Command.Env.Remove(args[1]))
+        if (Command.Env.Remove(args[1]))
         {
             return new($"Unset ${args[1]}");
         }

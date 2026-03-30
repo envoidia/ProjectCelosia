@@ -141,11 +141,6 @@ public static class DebugUtil
 
     internal static void _Update(GameTime gt)
     {
-        if (!Settings.EnableDebugFeatures)
-        {
-            return;
-        }
-
         DebugConsole._Update();
 
         _CheckInputs();

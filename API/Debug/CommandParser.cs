@@ -21,24 +21,26 @@ public static class CommandParser
         }
 
         // Execute first command
-        Command? cmdObj = GetCommand(cmds[0][0]);
+        string source = cmds[0][0];
+        Command? cmdObj = GetCommand(source);
 
         if (cmdObj is null)
         {
             return null;
         }
 
-        Assert.NotNull(cmdObj);
+        if (!Save.Settings.EnableCheats && cmdObj.IsCheat)
+        {
+            return new("Cheats must be enabled to use this", source, LogLevel.Err);
+        }
 
-        LogMessage? exp = PerformExpansion(cmds[0]);
+        LogMessage? exp = ExpandVarsAndCmds(cmds[0]);
         if (exp is not null)
         {
             return exp;
         }
 
         CommandResult res = cmdObj.Fn(cmds[0]);
-
-        string source = cmds[0][0];
 
         if (res.ExitCode == ExitCode.Err)
         {
@@ -71,7 +73,7 @@ public static class CommandParser
                 return null;
             }
 
-            LogMessage? exp1 = PerformExpansion(cmds[i]);
+            LogMessage? exp1 = ExpandVarsAndCmds(cmds[i]);
             if (exp1 is not null)
             {
                 return exp1;
@@ -106,7 +108,7 @@ public static class CommandParser
     /// <returns>
     /// Error <c>LogMessage</c> if there was an error
     /// </returns>
-    public static LogMessage? PerformExpansion(string[] args)
+    public static LogMessage? ExpandVarsAndCmds(string[] args)
     {
         for (int i = 0; i < args.Length; i++)
         {

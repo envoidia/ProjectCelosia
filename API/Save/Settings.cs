@@ -89,8 +89,7 @@ public static class Settings
 
     #region Debug
 
-    public static bool EnableDebugFeatures;
-    public static bool SelectOpponentMoves;
+    public static bool EnableCheats;
 
     #endregion
 
@@ -139,8 +138,11 @@ public static class Settings
         DetectNintendoController = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(DetectNintendoController)), true);
 
         // Debug
-        EnableDebugFeatures = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableDebugFeatures)), true);
-        SelectOpponentMoves = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(SelectOpponentMoves)), false);
+#if DEBUG
+        EnableCheats = true;
+#else
+        EnableCheats = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableCheats)), false);
+#endif
 
         Core.Graphics.ApplyChanges();
     }
@@ -174,7 +176,6 @@ public static class Settings
         AllSettings[nameof(DetectNintendoController)] = "true";
 
         // Debug
-        AllSettings[nameof(EnableDebugFeatures)] = "true";
-        AllSettings[nameof(SelectOpponentMoves)] = "false";
+        AllSettings[nameof(EnableCheats)] = "false";
     }
 }

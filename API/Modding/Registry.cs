@@ -82,6 +82,28 @@ public static class Registry
         return ids;
     }
 
+    /// <summary>
+    /// Removes the specified type from the type cache
+    /// </summary>
+    /// <returns>
+    /// true if the cache was invalidated; false if it didn't exist
+    /// </returns>
+    public static bool InvalidateTypeCache<T>() where T : IRegistrable
+    {
+        return _TypeCache.Remove(typeof(T));
+    }
+
+    /// <summary>
+    /// Removes the specified type from the type ID cache
+    /// </summary>
+    /// <returns>
+    /// true if the cache was invalidated; false if it didn't exist
+    /// </returns>
+    public static bool InvalidateTypeIdCache<T>() where T : IRegistrable
+    {
+        return _TypeIdCache.Remove(typeof(T));
+    }
+
     public new static string ToString()
     {
         return $"Registry: {string.Join('\n', _Reg.OrderBy(kvp => kvp.Key)
