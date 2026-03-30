@@ -257,6 +257,7 @@ public sealed class TextInputWidget : IInputWidget
                     // Do not return
                 }
 
+                // Check needed for alt path
                 if (this.Index > 0)
                 {
                     this._Sb.Remove(this.Index - 1, 1);

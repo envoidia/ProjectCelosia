@@ -204,6 +204,7 @@ public static class CommandParser
 
         bool inQuotes = false;
         bool lastCharDs = false;
+        int bracketDepth = 0;
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -245,12 +246,16 @@ public static class CommandParser
             else if (lastCharDs && c == '(')
             {
                 lastCharDs = false;
+                bracketDepth++;
                 inQuotes = true;
             }
             else if (c == ')')
             {
                 lastCharDs = false;
-                inQuotes = false;
+                if (bracketDepth > 0 && --bracketDepth == 0)
+                {
+                    inQuotes = false;
+                }
             }
             else
             {
