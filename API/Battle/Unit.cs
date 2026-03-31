@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using API.Battle.BuffEffects;
 using API.Battle.State;
@@ -111,7 +112,7 @@ public sealed class Unit
     #region Add/Remove
 
     // todo add non params versions
-    public void AddSkills(params Skill[] skills)
+    public void AddSkills(params ReadOnlySpan<Skill> skills)
     {
         foreach (Skill skill in skills)
         {
@@ -119,16 +120,26 @@ public sealed class Unit
         }
     }
 
+    /// <returns>
+    /// Whether any of the supplied <c>Skills</c> were removed successfully
+    /// </returns>
     // todo fix cooldown error
-    public void RemoveSkills(params Skill[] skills)
+    public bool RemoveSkills(params ReadOnlySpan<Skill> skills)
     {
+        bool removedAny = false;
+
         foreach (Skill skill in skills)
         {
-            this.SkillInstances.Remove(new SkillInstance(skill));
+            if (this.SkillInstances.Remove(new SkillInstance(skill)))
+            {
+                removedAny = true;
+            }
         }
+
+        return removedAny;
     }
 
-    public void AddPassives(params Passive[] passives)
+    public void AddPassives(params ReadOnlySpan<Passive> passives)
     {
         foreach (Passive passive in passives)
         {
@@ -141,20 +152,32 @@ public sealed class Unit
         }
     }
 
-    public void RemovePassives(params Passive[] passives)
+    /// <returns>
+    /// Whether any of the supplied <c>Passives</c> were removed successfully
+    /// </returns>
+    public bool RemovePassives(params ReadOnlySpan<Passive> passives)
     {
+        bool removedAny = false;
+
         foreach (Passive passive in passives)
         {
-            this.Passives.Remove(passive);
+            if (!this.Passives.Remove(passive))
+            {
+                continue;
+            }
 
             foreach (IBuffEffect buffEffect in passive.BuffEffects)
             {
                 buffEffect.OnRemove(this, 1);
             }
+
+            removedAny = true;
         }
+
+        return removedAny;
     }
 
-    public void GiveBuffInstances(params BuffInstance[] buffInstances)
+    public void GiveBuffInstances(params ReadOnlySpan<BuffInstance> buffInstances)
     {
         foreach (BuffInstance buffInstance in buffInstances)
         {
@@ -167,22 +190,32 @@ public sealed class Unit
         }
     }
 
-    public void RemoveBuffs(params Buff[] buffs)
+    /// <returns>
+    /// Whether any of the supplied <c>Buffs</c> were removed successfully
+    /// </returns>
+    public bool RemoveBuffs(params ReadOnlySpan<Buff> buffs)
     {
+        bool removedAny = false;
+
         foreach (Buff buff in buffs)
         {
             BuffInstance? buffInstance = this.BuffInstances.FirstOrDefault(bi => bi.Buff == buff);
-            if (buffInstance is not null)
+            if (buffInstance is null)
             {
-                foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
-                {
-                    buffEffect.OnRemove(this, 1);
-                }
-
-                this.BuffInstances.Remove(buffInstance);
-
+                continue;
             }
+
+            foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
+            {
+                buffEffect.OnRemove(this, 1);
+            }
+
+            this.BuffInstances.Remove(buffInstance);
+
+            removedAny = true;
         }
+
+        return removedAny;
     }
 
     #endregion
@@ -904,7 +937,7 @@ public sealed class Unit
 
     public string GetDbgInfo()
     {
-    return $"{nameof(Unit)}: {this.FormatName(false)}\nHP: {this.Hp}/{this.GetBaseStat(Stats.Hp)}\nShield: {this.Shield}\nDefend: {this.Defend}\nSP: {this.Sp}\nStats: {this.GetDbgStatsString()}\nPos: {this.Pos}\nDupeIndex: {this.DupeIndex}\nSkillInstances: {string.Join('\n', this.SkillInstances.Select(si => si.ToString()))}\nBuffInstances: {string.Join('\n', this.BuffInstances.Select(bi => bi.ToString()))}\nAffinities: {this.GetAffinitiesString(true)}\nStages: {this.GetDbgStagesString()}\nMults: {this.GetDbgMultsString()}\nBoolStats: {this.GetDbgBoolStatsString()}\nStatMods: {this.GetDbgStatModsString()}\nEquipped: {this.GetEquipString()}\nExtraActions: {this.ExtraActions}";
+        return $"{nameof(Unit)}: {this.FormatName(false)}\nHP: {this.Hp}/{this.GetBaseStat(Stats.Hp)}\nShield: {this.Shield}\nDefend: {this.Defend}\nSP: {this.Sp}\nStats: {this.GetDbgStatsString()}\nPos: {this.Pos}\nDupeIndex: {this.DupeIndex}\nSkillInstances: {string.Join('\n', this.SkillInstances.Select(si => si.ToString()))}\nBuffInstances: {string.Join('\n', this.BuffInstances.Select(bi => bi.ToString()))}\nAffinities: {this.GetAffinitiesString(true)}\nStages: {this.GetDbgStagesString()}\nMults: {this.GetDbgMultsString()}\nBoolStats: {this.GetDbgBoolStatsString()}\nStatMods: {this.GetDbgStatModsString()}\nEquipped: {this.GetEquipString()}\nExtraActions: {this.ExtraActions}";
     }
 
     #endregion

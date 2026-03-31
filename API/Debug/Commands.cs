@@ -1110,11 +1110,13 @@ public static class Commands
                         .FormatName(false)} for {ThemeColor.Imp.Str}{turns}{ThemeColor.White.Str} turns");
 
             case Remove:
-                unit.RemoveBuffs(buff);
+                if (unit.RemoveBuffs(buff))
+                {
+                    return new($"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White
+                        .Str} from {unit.FormatName(false)}");
+                }
 
-                // todo differentiate between removal and lack thereof? allow removal of x turns/stacks?
-                return new(
-                    $"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} from {unit.FormatName(false)}");
+                return new($"{unit.FormatName(false)} doesn't have {buff.GetNameWithoutIcon()}");
 
             default:
                 return new(ExitCode.Err, "args[2] must be `give` or `remove`");
