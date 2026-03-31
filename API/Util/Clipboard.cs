@@ -18,7 +18,6 @@ public static partial class Clipboard
             SDL_free(ptr);
             return result;
         }
-
         set
         {
             Assert.NotNull(value);

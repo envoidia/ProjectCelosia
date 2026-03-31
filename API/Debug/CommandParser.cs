@@ -15,62 +15,22 @@ public static class CommandParser
     {
         Span<string[]> cmds = TokenizeCommand(str);
 
-        if (cmds.Length == 0 || cmds[0].Length == 0)
+        CommandResult? res = null;
+        string source = "";
+
+        for (int i = 0; i < cmds.Length; i++)
         {
-            return new("Command doesn't exist", nameof(CommandParser), LogLevel.Err);
-        }
+            source = cmds[i][0];
 
-        // Execute first command
-        string source = cmds[0][0];
-        Command? cmdObj = GetCommand(source);
-
-        if (cmdObj is null)
-        {
-            return null;
-        }
-
-        if (!Save.Settings.EnableCheats && cmdObj.IsCheat)
-        {
-            return new("Cheats must be enabled to use this", source, LogLevel.Err);
-        }
-
-        LogMessage? exp = ExpandVarsAndCmds(cmds[0]);
-        if (exp is not null)
-        {
-            return exp;
-        }
-
-        CommandResult res = cmdObj.Fn(cmds[0]);
-
-        if (res.ExitCode == ExitCode.Err)
-        {
-            if (res.Msg is not null)
-            {
-                return new(res.Msg, source, LogLevel.Err);
-            }
-
-            return null;
-        }
-
-        // Only 1 command
-        if (cmds.Length == 1)
-        {
-            if (res.Msg is not null)
-            {
-                return new(res.Msg, source);
-            }
-
-            return null;
-        }
-
-        // Execute remaining commands
-        for (int i = 1; i < cmds.Length; i++)
-        {
-            cmdObj = GetCommand(cmds[i][0]);
-
+            Command? cmdObj = GetCommand(source);
             if (cmdObj is null)
             {
                 return null;
+            }
+
+            if (!Save.Settings.EnableCheats && cmdObj.IsCheat)
+            {
+                return new("Cheats must be enabled to use this", source, LogLevel.Err);
             }
 
             LogMessage? exp1 = ExpandVarsAndCmds(cmds[i]);
@@ -79,24 +39,24 @@ public static class CommandParser
                 return exp1;
             }
 
-            res = cmdObj.Fn([cmds[i][0], res.Msg ?? "", .. cmds[i][1..]]);
+            res = i == 0
+                ? cmdObj.Fn(cmds[0])
+                : cmdObj.Fn([cmds[i][0], res?.Msg ?? "", .. cmds[i][1..]]);
 
-            source = cmds[i][0];
-
-            if (res.ExitCode == ExitCode.Err)
+            if (res?.ExitCode == ExitCode.Err)
             {
-                if (res.Msg is not null)
+                if (res?.Msg is not null)
                 {
-                    return new(res.Msg, source, LogLevel.Err);
+                    return new(res.Value.Msg, source, LogLevel.Err);
                 }
 
                 return null;
             }
         }
 
-        if (res.Msg is not null)
+        if (res?.Msg is not null)
         {
-            return new(res.Msg, source);
+            return new(res.Value.Msg, source);
         }
 
         return null;

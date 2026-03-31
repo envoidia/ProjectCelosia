@@ -37,7 +37,7 @@ public static class Commands
 
     private const string _BasicInfo = "Basic info";
 
-    private const string _Help = "Enter a command followed by its arguments with a space between each.\nTo include spaces, escape them with \\ or wrap an argument in \"\nInside quote pairs, \\\" will be parsed as a literal \"\n| pipes the output of a command into the next\nAccess variables with $ prefix\nEmbed commands as parameters by wrapping them in $()\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
+    private const string _Help = "Enter a command followed by its arguments with a space between each.\nPrefix special characters with \\ to escape them\nTo include spaces, escape them or wrap an argument in \"\n| pipes the output of a command into the next\nAccess variables with $ prefix\nEmbed commands as parameters by wrapping them in $()\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
 
     private const string _Arg1MustBeBool = "args[1] ({1}) must be a bool (true or false)";
 
