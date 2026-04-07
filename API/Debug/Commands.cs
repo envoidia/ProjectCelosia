@@ -246,8 +246,8 @@ public static class Commands
                 return new($"""
                     {ThemeColor.Imp.Str}[Left/Right]{ThemeColor.White.Str} Move cursor
                     {ThemeColor.Imp.Str}[BkSp/Del]{ThemeColor.White.Str} Delete to left/right
-                    {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space-separated)
-                    {ThemeColor.Imp.Str}[Alt]{ThemeColor.White.Str} Move and delete by word part (case- or space-separated)
+                    {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space/punctuation-separated)
+                    {ThemeColor.Imp.Str}[Alt]{ThemeColor.White.Str} Move and delete by word part (case/space/punctuation-separated)
                     {ThemeColor.Imp.Str}[Home/End]{ThemeColor.White.Str} Cursor to start/end
 
                     {ThemeColor.Imp.Str}[Ctrl+Shift+BkSp/Del]{ThemeColor.White.Str} Delete all to left/right
@@ -417,11 +417,11 @@ public static class Commands
 
         string str = string.Join(' ', args.ToArray(), 1, args.Length - (usingFormat ? 2 : 1));
 
-        int chars = str.Length;
+        int charCount = str.Length;
 
         if (args.Length >= 3 && args[^1] == "c")
         {
-            return new(chars.ToString());
+            return new(charCount.ToString());
         }
 
         int lines = 1;
@@ -452,7 +452,7 @@ public static class Commands
             return new(words.ToString());
         }
 
-        return new(string.Format(_WcRes, lines, words, chars));
+        return new(string.Format(_WcRes, lines, words, charCount));
     }
 
     private const string _LinesErr = "lines (args[2]) must be an int > 0";
@@ -1116,7 +1116,8 @@ public static class Commands
                         .Str} from {unit.FormatName(false)}");
                 }
 
-                return new($"{unit.FormatName(false)} doesn't have {buff.GetNameWithoutIcon()}");
+                return new(ExitCode.Err,
+                    $"{unit.FormatName(false)} doesn't have {buff.GetNameWithoutIcon()}");
 
             default:
                 return new(ExitCode.Err, "args[2] must be `give` or `remove`");

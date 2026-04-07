@@ -1,5 +1,6 @@
 using API;
 using API.Battle;
+using API.Battle.BuffEffects;
 using API.Battle.SkillEffects;
 using API.Graphics;
 
@@ -12,6 +13,16 @@ public static class Skills
     {
         SkillEffects = [new Damage(50, SkillTypes.Mag, Elements.Ignis),
             new GiveBuff(Buffs.Burn, 3)
+        ],
+
+        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "2"]
+    };
+
+    public static readonly Skill HeatWave = new(Core.BaseModId, "SkillHeatWave",
+        "__API:SkillDescBuff", Ranges.ColumnOf31RNoSelf, 100)
+    {
+        SkillEffects = [new Damage(35, SkillTypes.Mag, Elements.Ignis),
+            new GiveBuff(Buffs.Burn, 1)
         ],
 
         DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "2"]

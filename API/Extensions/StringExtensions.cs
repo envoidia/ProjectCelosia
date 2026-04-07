@@ -54,7 +54,7 @@ public static class StringExtensions
         /// <param name="args">The formatting arguments to apply</param>
         public string FormatLang(string modId, ReadOnlySpan<object> args)
         {
-            // todo Assert.LenNotZero(args);
+            // Assert.LenNotZero(args); todo
             return string.Format(@this.GetLang(modId), args);
         }
 

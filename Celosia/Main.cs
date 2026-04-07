@@ -24,14 +24,15 @@ public static class Main
         const int Lvl = 14;
         Core.Battle = new API.Battle.Battle(new Team(
             new Unit(CBattle.UnitTypes.Johny, Lvl, null, CBattle.Skills.Fireball,
-            CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.ChainLightning, Skills.Defend),
+            CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.HeatWave, CBattle.Skills.ChainLightning, Skills.Defend),
             new Unit(UnitTypes.TestUnitType, Lvl, null, CBattle.Skills.Fireball, Skills.Defend),
-            new Unit(UnitTypes.TestUnitType, Lvl, null, Skills.Nothing, Skills.Defend),
-            new Unit(UnitTypes.TestUnitType, Lvl, null, CBattle.Skills.Fireball, Skills.Defend)),
+            new Unit(CBattle.UnitTypes.Jane, Lvl, null, Skills.Nothing, Skills.Defend, CBattle.Skills.ChainLightning),
+            new Unit(UnitTypes.TestUnitType, Lvl, null, CBattle.Skills.Fireball,
+            CBattle.Skills.Fireball, CBattle.Skills.Fireball, CBattle.Skills.HeatWave, CBattle.Skills.ChainLightning, Skills.Defend)),
             new Team(new Unit(UnitTypes.TestUnitType, Lvl, null, Skills.Nothing, Skills.Defend),
                 new Unit(UnitTypes.TestUnitType, Lvl, null, CBattle.Skills.Fireball, Skills.Defend),
                 new Unit(CBattle.UnitTypes.Johny, Lvl, null, Skills.Nothing, Skills.Defend),
-                new Unit(UnitTypes.TestUnitType, Lvl, null, CBattle.Skills.Fireball, Skills.Defend)));
+                new Unit(CBattle.UnitTypes.Jane, Lvl, null, CBattle.Skills.Fireball, Skills.Defend)));
 
         _ReloadLang();
         API.Lang.Language.OnReload += _ReloadLang;

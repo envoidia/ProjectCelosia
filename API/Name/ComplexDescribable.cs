@@ -12,6 +12,7 @@ namespace API.Name;
 /// An item that can be named and described, with a description that can include formatting args
 /// and the descriptions of any <c>IDescribable</c>
 /// </summary>
+// todo: if descargs arent set in the ctor, init tostring behavior is weird
 public abstract class ComplexDescribable(string keyName, string icon, string keyDesc) : IDescribable
 {
     public DescArg[] DescArgs { private get; init; } = [];

@@ -2,7 +2,7 @@ namespace API.Battle;
 
 public static class Ranges
 {
-    public static readonly Range Self = new(Core.Id, "RangeSelf", 3,
+    public static readonly Range Self = new(Core.Id, "RangeSelf", 0,
         Side.Ally, [Target.Self])
     {
         CanTargetSelf = true
@@ -129,6 +129,9 @@ public static class Ranges
 
     public static readonly Range AcrossUpDown = new(Core.Id, "RangeAcrossUpDown", 0,
         Side.Opponent, [Target.SelfAcross, Target.SelfAcrossUp, Target.SelfAcrossDown]);
+
+    public static readonly Range ColumnOf31RNoSelf = new(Core.Id, "RangeColumnOf31RNoSelf", 1,
+        Side.Both, [Target.Target, Target.TargetUp, Target.TargetDown]);
 
     public static readonly Range ColumnOf31R = new(Core.Id, "RangeColumnOf31R", 1,
         Side.Both, [Target.Target, Target.TargetUp, Target.TargetDown])

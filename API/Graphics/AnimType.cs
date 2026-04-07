@@ -7,5 +7,6 @@ namespace API.Graphics;
 public enum AnimType
 {
     Move,
+    Custom,
     None
 }

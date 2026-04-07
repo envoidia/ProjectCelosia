@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using API.Battle.State;
 using API.Extensions;
 using API.Graphics;
 using API.Modding;
@@ -40,6 +42,9 @@ public sealed class Range : IDescribable, IRegistrable
         Registry.Register(this);
     }
 
+    /// <returns>
+    /// All positions that this will impact for the given self and target positions
+    /// </returns>
     public List<int> GetTargetPositions(int posSelf, int posTarget)
     {
         List<int> pos = [];
@@ -82,6 +87,43 @@ public sealed class Range : IDescribable, IRegistrable
                     pos.AddRange(PosLib.GetTeamWithout(posTarget));
                     break;
             }
+        }
+
+        return pos;
+    }
+
+    /// <returns>
+    /// Whether this can reach the given target position from the given self position with the given range mod
+    /// </returns>
+    public bool CanReach(int posSelf, int posTarget, int modRange)
+    {
+        // Check for disallowed self-targeting
+        if (!this.CanTargetSelf && posTarget == posSelf)
+        {
+            return false;
+        }
+
+        // Check if target is within vertical range
+        if (Math.Abs(PosLib.GetHeight(posSelf)
+            - PosLib.GetHeight(posTarget)) > this.RangeVertical + modRange)
+        {
+            return false;
+        }
+
+        // Check if the targeted side is allowed
+        return this.Side == Side.Both || this.Side == PosLib.GetRelativeSide(posSelf, posTarget);
+    }
+
+    /// <returns>
+    /// For each position, whether this can target it for the given self position and range mod
+    /// </returns>
+    public bool[] GetMainTargetPositions(int posSelf, int modRange)
+    {
+        bool[] pos = new bool[BattleLib.UnitCount];
+
+        for (int i = 0; i < BattleLib.UnitCount; i++)
+        {
+            pos[i] = this.CanReach(posSelf, i, modRange);
         }
 
         return pos;

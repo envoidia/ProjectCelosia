@@ -58,8 +58,11 @@ public static class DebugConsole
                 _color = ThemeColor.Imp;
                 _colorErr = ThemeColor.Neg;
                 _Input.OnChangeText!.Invoke();
+
+                return;
             }
-            else if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
+
+            if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
             {
                 StateMachine.State.RemoveMenu();
                 _color = ThemeColor.Gray;
@@ -129,11 +132,6 @@ public static class DebugConsole
         get => _outHistIndex;
         set
         {
-            if (_OutHist.Count <= _DisplayedOutHistLines)
-            {
-                return;
-            }
-
             _outHistIndex = Math.Clamp(value, 0, _OutHist.Count - _DisplayedOutHistLines);
             _UpdateOutHistText();
         }

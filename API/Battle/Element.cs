@@ -30,7 +30,8 @@ public sealed class Element : INameable, IRegistrable
     public Mult? MultDmgTaken { get; }
 
     /// <summary>
-    /// Whether this should be listed in affinities. Intended for elements that aren't meant to have affinities
+    /// Whether this should be listed in affinities.
+    /// Intended for elements that aren't meant to have affinities, but they can still have them
     /// </summary>
     public bool IsVisible { get; init; } = true;
 

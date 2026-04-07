@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
 using API.Graphics;
 using API.Input;
 using API.Menu;
 using API.Menu.State;
+using API.Save;
+using API.Util;
 using Microsoft.Xna.Framework;
 
 namespace API.Battle.State;
@@ -12,8 +16,21 @@ using static API.Input.InputPrompts;
 
 internal static class _TargetingLib
 {
-    internal static readonly Menu.Menu _Menu = new("Targeting")
+    private static readonly ABlank _Reticle = new(_DrawReticle, RenderPriority.B1High)
     {
+        Position = new(_UninitializedReticlePos),
+        AnimType = AnimType.Custom
+    };
+
+    internal static readonly Menu.Menu _Menu = new("Targeting", _Reticle)
+    {
+        OnCreate = static () =>
+        {
+            _Reticle.Prog = Progress.Zero;
+            Stage.Remove(_Reticle);
+            _UpdateReticle();
+        },
+        OnDestroy = static () => _Reticle.Prog = Progress.One,
         OnUpdate = _Update,
         GetInputPrompt = static () =>
             Menu.State.State.GetInputPromptString(Move, Confirm, Back, Log, Inspect)
@@ -41,9 +58,14 @@ internal static class _TargetingLib
         }
 
         // todo move to InputWidget + rendering
-        _indexTarget = MenuLib.CheckMovementTargeting(_indexTarget, _selectingMove, _selectedSkillInstance.Skill.Range);
+        int newIndex = MenuLib.CheckMovementTargeting(_indexTarget, _selectingMove,
+            _selectedSkillInstance.Skill.Range);
 
-        //MenuLib.handleOptColor(stats, indexTarget);
+        if (newIndex != _indexTarget)
+        {
+            _indexTarget = newIndex;
+            _UpdateReticle();
+        }
 
         if (!InputLib.Check(Keybinds.Confirm))
         {
@@ -51,17 +73,15 @@ internal static class _TargetingLib
         }
 
         Unit self = Battle.PlayerTeam.Units[_selectingMove];
+
+        // todo Battle.GetUnitAtPos
         Unit target = _indexTarget < PosLib.LowestOpp
             ? Battle.PlayerTeam.Units[_indexTarget]
             : Battle.OpponentTeam.Units[_indexTarget - PosLib.LowestOpp];
+
         _CurMoves.Add(new Move(_selectedSkillInstance, self, target.Pos));
         // todo support ExA
         _Moves[_selectingMove].Text = $"{_Moves[_selectingMove].Text} /c[white]→ {target.FormatName(false)}";
-
-        // foreach (Label stat in _Stats)
-        // {
-        //     //stat.Color = Colors.White;
-        // }
 
         // Move on to next Unit unless this one has extra actions
         if (_extraActions < self.ExtraActions)
@@ -80,4 +100,72 @@ internal static class _TargetingLib
 
         States.Battle.RemoveMenu();
     }
+
+    #region Targeting Reticle
+
+    private static Color _reticleColor = Settings.Theme.Imp;
+
+    private static readonly Vector2 _ReticleSize = new(200);
+    private const int _ReticleThickness = 20;
+
+    private static List<int> _reticlePos = new(UnitCount);
+    private static readonly Vector2[] _PrevPos = new Vector2[8];
+
+    private const int _UninitializedReticlePos = -1;
+
+    private static TimeSpan _animTimer = new();
+    private const int _AnimDistMult = 4;
+    private const int _ThicknessDist = 10;
+
+    private static void _UpdateReticle()
+    {
+        _reticleColor = _validMainTargets[_indexTarget] ? Settings.Theme.Imp : Settings.Theme.Neg;
+        _reticlePos = _selectedSkillInstance.Skill.Range.GetTargetPositions(_selectingMove, _indexTarget);
+    }
+
+    private static void _DrawReticle(GameTime gt)
+    {
+        _animTimer += gt.ElapsedGameTime / _AnimDistMult;
+        float timer = (float) Math.Sin(_animTimer.TotalSeconds);
+
+        Vector2 size = _ReticleSize * (float) _Reticle.Prog;
+
+        for (int i = 0; i < _reticlePos.Count; i++)
+        {
+            int sPos = _reticlePos[i];
+
+            if (sPos == PosLib.Invalid)
+            {
+                continue;
+            }
+
+            int divisor = 1; //sPos == _indexTarget ? 1 : 2;
+
+            bool isImmune = Battle.GetUnitAtPos(sPos).GetAffinity(_selectedSkillInstance.Skill.GetElement()) >= 5;
+            Color color = isImmune ? Settings.Theme.Neg : _reticleColor;
+
+            Vector2 pos = new Vector2(sPos >= PosLib.LowestOpp ? OppSpriteX : AllySpriteX,
+            GetUnitGraphicY(sPos)) + new Vector2(RenderLib.UnitSpriteSize / (2 * divisor));
+
+            if (_PrevPos[i].X != _UninitializedReticlePos)
+            {
+                pos = Vector2.Lerp(_PrevPos[i], pos, RenderLib.GetInterpolationAmount(gt));
+            }
+
+            _PrevPos[i] = pos;
+
+            if (sPos == _indexTarget)
+            {
+                // Outer reticle
+                Core.ShapeBatch.BorderRectangle(pos - (size / (2 * divisor)), size / divisor, color,
+                    _ReticleThickness + (timer * _ThicknessDist), rotation: timer * _AnimDistMult);
+            }
+
+            // Inner reticle
+            Core.ShapeBatch.BorderRectangle(pos - (size / (4 * divisor)), size / (2 * divisor), color,
+                _ReticleThickness + (-timer * _ThicknessDist), rotation: -timer * _AnimDistMult);
+        }
+    }
+
+    #endregion
 }

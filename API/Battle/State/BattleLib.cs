@@ -34,11 +34,14 @@ public static class BattleLib
     public const int StatCount = 6;
     public const int UnitCount = TeamSize * TeamCount;
 
+    public const int AllySpriteX = 600;
+    public const int OppSpriteX = World.W - 1000;
+
     #endregion
 
     #region Display Fields
 
-    private const int _ActorCount = 54;
+    private const int _ActorCount = 62;
     private static readonly List<IActor> _Actors = new(_ActorCount);
 
     private const int _AnimPrimActorCount = 0; // todo
@@ -65,6 +68,7 @@ public static class BattleLib
 
     private static readonly Label[] _Buffs = new Label[UnitCount];
     internal static readonly Label[] _Moves = new Label[UnitCount];
+    private static readonly Label[] _Affinities = new Label[UnitCount];
 
     internal static readonly Label _SkillDesc = new(RenderPriority.B2Low)
     {
@@ -73,7 +77,7 @@ public static class BattleLib
         BackgroundType = BackgroundType.Parellelogram
     };
 
-    // todo support >6 skills, why doesnt this scrolling work ???
+    // todo support >6 skills, why doesnt this scrolling work ???, fix wrong item pos with < 6
     internal static readonly ListWidget _SkillList = new(new(), true,
         6, RenderPriority.B2Low)
     {
@@ -85,8 +89,11 @@ public static class BattleLib
         {
             Unit u = Battle.GetUnitAtPos(_selectingMove);
             List<SkillInstance> skills = u.SkillInstances;
+
             _SkillDesc.Text = skills[index].Skill.GetFullDesc();
             _SkillDesc.X = _GetSkillDescX();
+
+            _UpdateTargetingMarkers(skills[index].Skill, u.GetStatMod(StatMods.Range));
         }
     };
 
@@ -107,6 +114,11 @@ public static class BattleLib
     /// </summary>
     internal static int _usingMove = _SelectionPhase;
     internal const int _SelectionPhase = 200;
+
+    /// <summary>
+    /// Whether each pos is a valid main target for the currently selected skill
+    /// </summary>
+    internal static bool[] _validMainTargets = null!;
 
     internal static SkillInstance _selectedSkillInstance = null!; // todo
 
@@ -164,22 +176,25 @@ public static class BattleLib
         // Per-unit graphics
         for (int i = 0; i < UnitCount; i++)
         {
-            int x1 = 40;
-            int x2 = 600;
+            int y = GetUnitGraphicY(i);
 
-            int y = getY(i);
-            Dir dir = i > PosLib.HighestAlly ? Dir.Right : Dir.Left;
+            int x1 = 40;
+            int x2 = AllySpriteX;
+            int x3 = 630;
+
+            Dir dir = Dir.Left;
+            Alignment align = Alignment.TopLeft;
+            int mult = 1;
 
             if (i >= PosLib.LowestOpp)
             {
                 x1 = World.W - x2;
-                x2 = World.W - 1000;
-                y = getY(i - PosLib.LowestOpp);
-            }
+                x2 = OppSpriteX;
+                x3 = x2 + RenderLib.UnitSpriteSize - 50;
 
-            static int getY(int ind)
-            {
-                return 240 + (450 * ind);
+                dir = Dir.Right;
+                align = Alignment.TopRight;
+                mult = -1;
             }
 
             _Actors.Add(_Sprites[i] = new(ThemeColor.TransBlack)
@@ -213,9 +228,19 @@ public static class BattleLib
                 Position = new(x1, y + 180),
                 AnimFromDir = dir
             });
+
             _Actors.Add(_Moves[i] = new()
             {
-                Position = new(x2 + RenderLib.UnitSpriteSize + 20, y),
+                Position = new(x3 + (RenderLib.UnitSpriteSize * mult), y),
+                Alignment = align,
+                AnimFromDir = dir,
+                BackgroundType = BackgroundType.Parellelogram
+            });
+
+            _Actors.Add(_Affinities[i] = new(RenderPriority.B1High)
+            {
+                Position = new(x3, y - 20),
+                Alignment = align,
                 AnimFromDir = dir,
                 BackgroundType = BackgroundType.Parellelogram
             });
@@ -244,7 +269,7 @@ public static class BattleLib
 
         _InspectLib._LateInit();
 
-        LogLib.Add(_GetTurnString(1));
+        LogLib.Add(GetTurnString(1));
 
         _UpdateStatDisplay(0);
 
@@ -515,6 +540,7 @@ public static class BattleLib
         if (_selectingMove > PosLib.Highest)
         {
             _selectingMove = _ExecutionPhase;
+            _BlankTargetingMarkers();
         }
     }
 
@@ -548,7 +574,7 @@ public static class BattleLib
 
         // todo fix: crashes if selectopponentmoves is enabled
         _selectedSkillInstance = Battle.PlayerTeam.Units[_selectingMove].SkillInstances[_SkillList.Index];
-        _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex();
+        _indexTarget = _selectedSkillInstance.Skill.GetStartingIndex(_selectingMove);
 
         _SkillList.IsVisible = false;
         _SkillDesc.IsVisible = false;
@@ -587,12 +613,65 @@ public static class BattleLib
 
         _SkillDesc.Text = skills[0].Skill.GetFullDesc();
         _SkillDesc.Position = new(_GetSkillDescX(), y + 10);
+
+        _UpdateTargetingMarkers(skills[0].Skill, u.GetStatMod(StatMods.Range));
     }
 
     // todo fix slightly inconsistent x w diff heights
     private static float _GetSkillDescX()
     {
         return 600 + RenderLib.UnitSpriteSize + 800 + 115 - (_SkillDesc.Height / (float) RenderLib.DefaultSlant);
+    }
+
+    private static void _BlankTargetingMarkers()
+    {
+        for (int i = 0; i < UnitCount; i++)
+        {
+            _Sprites[i].FillColor = ThemeColor.TransBlack;
+            _Affinities[i].Text = "";
+        }
+    }
+
+    private static void _BlankAffinityMarkers()
+    {
+        for (int i = 0; i < UnitCount; i++)
+        {
+            _Affinities[i].Text = "";
+        }
+    }
+
+    private static void _UpdateTargetingMarkers(Skill s, int modRange)
+    {
+        _UpdateRangeMarkers(s.Range, modRange);
+
+        Element e = s.GetElement();
+        if (!s.IsDamaging() || !e.IsVisible)
+        {
+            _BlankAffinityMarkers();
+            return;
+        }
+
+        _UpdateAffinityMarkers(e);
+    }
+
+    private static void _UpdateRangeMarkers(Range r, int modRange)
+    {
+        _validMainTargets = r.GetMainTargetPositions(_selectingMove, modRange);
+
+        for (int i = 0; i < UnitCount; i++)
+        {
+            _Sprites[i].FillColor = _validMainTargets[i] ? ThemeColor.Accent : ThemeColor.TransBlack;
+        }
+    }
+
+    private static void _UpdateAffinityMarkers(Element e)
+    {
+        Unit[] units = Battle.GetAllUnits();
+
+        for (int i = 0; i < UnitCount; i++)
+        {
+            _Affinities[i].Text = units[i].GetAffinity(e).Format(true);
+        }
     }
 
     private static void _ExecuteMove()
@@ -858,7 +937,7 @@ public static class BattleLib
         }
 
         // todo is trailing white needed
-        LogLib.Add(_GetTurnString(Battle.Turn));
+        LogLib.Add(GetTurnString(Battle.Turn));
         LogLib.Add("LogGainSpBloom".GetLang());
 
         // Increase bloom
@@ -882,9 +961,19 @@ public static class BattleLib
         units.Sort(static (a, b) => a.GetStat(Stats.Agi).CompareTo(b.GetStat(Stats.Agi)));
     }
 
-    private static string _GetTurnString(int turn)
+    public static string GetTurnString(int turn)
     {
         return $"{ThemeColor.Turn.Str}{"Turn".GetLang()} {turn}{ThemeColor.White.Str}";
+    }
+
+    public static int GetUnitGraphicY(int pos)
+    {
+        if (pos >= PosLib.LowestOpp)
+        {
+            pos -= PosLib.LowestOpp;
+        }
+
+        return 240 + (450 * pos);
     }
 
     #endregion

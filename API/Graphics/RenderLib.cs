@@ -9,13 +9,18 @@ public static class RenderLib
     public const int DefaultSlant = 6;
     public const int UnitSpriteSize = 384;
     public const int BgOutlineThickness = 10;
+    public const int LerpRate = 10;
+
+    public static float GetInterpolationAmount(GameTime gt, float time = LerpRate)
+    {
+        return (float) (time / (1 / gt.ElapsedGameTime.TotalSeconds));
+    }
 
     public static Progress UpdateProg(Progress prog, float speed, GameTime gt, AnimDirs dir)
     {
-        return prog + (float) (gt.ElapsedGameTime.TotalSeconds * (int) dir * speed *
-            (1 + Convert.ToInt32((int) dir == -1)));
+        return prog + (float) (speed * gt.ElapsedGameTime.TotalSeconds * (int) dir
+            * (1 + Convert.ToInt32((int) dir == -1)));
     }
-
 
     // todo deprecate
     public static void DrawParallelogram(int l, int r, int t, int b, Color color, Color outlineColor,

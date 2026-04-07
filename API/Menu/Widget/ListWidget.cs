@@ -508,7 +508,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
             if (this.LastScrollbarPos.X != UninitializedScrollbarPos)
             {
-                pos = Vector2.SmoothStep(this.LastScrollbarPos, pos, 0.15f);
+                pos = Vector2.SmoothStep(this.LastScrollbarPos, pos, RenderLib.GetInterpolationAmount(gt));
             }
 
             this.LastScrollbarPos = pos;

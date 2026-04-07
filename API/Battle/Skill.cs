@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using API.Battle.SkillEffects;
 using API.Extensions;
 using API.Graphics;
@@ -21,6 +22,7 @@ public sealed class Skill : ComplexDescribable, IRegistrable
     public RenderPriority Prio { get; init; } = RenderPriority.B1Med;
     public bool IsBloom { get; init; } = false;
 
+    // todo automatically assign
     public SkillRole[] SkillRoles { get; init; } = [];
     public SkillEffect[] SkillEffects { get; init; } = [];
 
@@ -45,26 +47,30 @@ public sealed class Skill : ComplexDescribable, IRegistrable
 
     public bool IsRangeSelf()
     {
-        return (this.Range == Ranges.Self) || (this.Range == Ranges.SelfUpDown);
+        return this.Range == Ranges.Self || this.Range == Ranges.SelfUpDown;
     }
 
-    // todo i guess this would be better written with a contains form that searches for all 3 of them at once but this isnt perf critical anyway
     public bool ShouldTargetOpponent()
     {
-        return (this.Range.Side == Side.Opponent) ||
-                                          this.SkillRoles.Contains(SkillRole.Attack) ||
-                                          this.SkillRoles.Contains(SkillRole.DebuffDefensive) ||
-                                          this.SkillRoles.Contains(SkillRole.DebuffOffensive);
+        return this.Range.Side == Side.Opponent || this.SkillRoles.Any(static sr =>
+            sr is SkillRole.Attack or SkillRole.DebuffDefensive or SkillRole.DebuffOffensive);
+    }
+
+    public bool IsDamaging()
+    {
+        // todo SkillRoles
+        return this.SkillEffects.Any(se => se is Damage);
+        // return this.SkillRoles.Contains(SkillRole.Attack);
     }
 
     // todo multiple elements
     public Element GetElement()
     {
-        foreach (SkillEffect skillEffect in this.SkillEffects)
+        foreach (SkillEffect se in this.SkillEffects)
         {
-            if (skillEffect.Element != Element.Vis)
+            if (se.Element != Element.Vis)
             {
-                return skillEffect.Element;
+                return se.Element;
             }
         }
 
@@ -75,8 +81,13 @@ public sealed class Skill : ComplexDescribable, IRegistrable
     /// The index a skill should start at based off of its role
     /// </returns>
     // todo more complex logic
-    public int GetStartingIndex()
+    public int GetStartingIndex(int selfIndex)
     {
+        if (this.IsRangeSelf())
+        {
+            return selfIndex;
+        }
+
         return this.ShouldTargetOpponent() ? PosLib.LowestOpp : 0;
     }
 

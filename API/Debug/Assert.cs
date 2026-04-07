@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -161,6 +162,13 @@ public static class Assert
     public static void LenNotZero(object?[] c)
     {
         System.Diagnostics.Debug.Assert(c.Length != 0, $"Size of {c} must not be 0");
+    }
+
+    /// <inheritdoc cref="LenNotZero(object?[])" />
+    [Conditional("DEBUG")]
+    public static void LenNotZero(ReadOnlySpan<object> c)
+    {
+        System.Diagnostics.Debug.Assert(c.Length != 0, $"Size of {c.ToString()} must not be 0");
     }
 
     /// <summary>

@@ -76,10 +76,10 @@ public sealed class Menu
     /// </summary>
     public void Create()
     {
-        // The order of these is critical to ListWidgets having correct OptCount in their Create
+        // Order is critical
         this.OnCreate?.Invoke();
-        Stage.AddRange(this.Actors);
 
+        Stage.AddRange(this.Actors);
         Stage.Sort();
     }
 
@@ -88,12 +88,14 @@ public sealed class Menu
     /// </summary>
     public void Destroy()
     {
+        // Order is critical
+        this.OnDestroy?.Invoke();
+
         foreach (IActor a in this.Actors)
         {
             a.Destroy();
         }
 
-        this.OnDestroy?.Invoke();
 
         Stage.Sort();
     }

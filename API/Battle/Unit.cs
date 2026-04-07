@@ -371,23 +371,22 @@ public sealed class Unit
     {
         Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
 
-        const int Cap = 532;
-        StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ", Cap);
+        const int Len = 532;
+        StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ", Len);
         foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible))
         {
-            sb.Append(element.Icon).Append(' ')
-                .Append(affs.GetValueOrDefault(element, 0).Format());
+            sb.Append($"{element.Icon} {affs.GetValueOrDefault(element, 0).Format()}");
 
             if (current)
             {
-                sb.Append(ThemeColor.White.Str).Append("//")
-                    .Append(this.UnitType._Affinities.GetValueOrDefault(element, 0).Format());
+                sb.Append($"{ThemeColor.White.Str}//{this.UnitType._Affinities.GetValueOrDefault(element,
+                    0).Format()}");
             }
 
             sb.Append("   ");
         }
 
-        Assert.CapIs(sb, Cap); // todo remove before final release
+        Assert.CapIs(sb, Len); // todo remove before final release
         return sb.ToString();
     }
 

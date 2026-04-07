@@ -37,9 +37,9 @@ public static class NumberExtensions
         /// <returns>
         /// The given <c>int</c> formatted based on the current locale
         /// </returns>
+        /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive and use <c>isPositive</c> to pick the color</param>
         /// <param name="threshold">Above this number is considered positive</param>
         /// <param name="isPositive">Whether to use green for > threshold</param>
-        /// <param name="useSign">Whether to insert a <c>+</c> if the <c>int</c> is positive and use <c>isPositive</c> to pick the color</param>
         public string Format(bool useSign, int threshold = 0, bool isPositive = true)
         {
             if (!useSign)

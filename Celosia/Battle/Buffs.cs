@@ -20,4 +20,11 @@ public static class Buffs
     {
         DescArgs = [$"{ThemeColor.Neg.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Neg.Str}-5% {ThemeColor.Stat.Str}{Stats.Agi.GetName()}"]
     };
+
+    // public static readonly Buff GlaciesAffUp = new(Core.BaseModId, "BuffBurn", "/i[snowflake-2]",
+    //     "__API:BuffDesc2PerStackHp", BuffType.Buff, 3,
+    //     [new ChangeAffinity(Elements.Glacies, 1)])
+    // {
+    //     DescArgs = [$"{ThemeColor.Neg.Str}-545%{ThemeColor.Stat.Str}", $"{ThemeColor.Neg.Str}-545% {ThemeColor.Stat.Str}{Stats.Str.GetName()}"]
+    // };
 }

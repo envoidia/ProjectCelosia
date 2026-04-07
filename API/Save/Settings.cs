@@ -24,6 +24,7 @@ public static class Settings
     // Duration of in-battle pauses relative to 100% (1 = 100%, 0.1 = 10%)
     public static float BattleSpeed;
 
+    // todo shoudl this exist?
     public static bool ShowInvalidMoveWarning;
 
     #endregion

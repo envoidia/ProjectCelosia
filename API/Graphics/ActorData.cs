@@ -133,7 +133,19 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// <summary>
     /// Position to interpolate to/from during create/destroy animation if <c>AnimType</c> is <c>Move</c>
     /// </summary>
-    public Vector2 AnimFromPos;
+    public Vector2 AnimFromPos
+    {
+        get
+        {
+            if (this.AnimType == AnimType.Move)
+            {
+                return field;
+            }
+
+            return this.Position;
+        }
+        set;
+    }
 
     /// <summary>
     /// Direction to interpolate to/from during create/destroy animation if <c>AnimType</c> is <c>Move</c>
