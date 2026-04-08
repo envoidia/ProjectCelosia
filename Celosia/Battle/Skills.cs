@@ -15,7 +15,7 @@ public static class Skills
             new GiveBuff(Buffs.Burn, 3)
         ],
 
-        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "2"]
+        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "3"]
     };
 
     public static readonly Skill HeatWave = new(Core.BaseModId, "SkillHeatWave",
@@ -25,7 +25,7 @@ public static class Skills
             new GiveBuff(Buffs.Burn, 1)
         ],
 
-        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "2"]
+        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Burn, "1"]
     };
 
     public static readonly Skill ChainLightning = new(Core.BaseModId, "SkillChainLightning",
@@ -35,6 +35,6 @@ public static class Skills
             new GiveBuff(Buffs.Shock, 3)
         ],
 
-        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Shock, "2"]
+        DescArgs = [$"{ThemeColor.Neg.Str}+1", Buffs.Shock, "3"]
     };
 }

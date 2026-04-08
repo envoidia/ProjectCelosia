@@ -365,11 +365,11 @@ public sealed class Unit
         return cost > 0 ? (int) Math.Max(cost * (this.GetElementSpCost(s.GetElement()) / 1000d), 1) : 0;
     }
 
-    /// <param name="current">Whether to compare to base</param>
+    /// <param name="isCurrent">Whether to compare to base</param>
     /// <returns>Affinities of this formatted readably</returns>
-    public string GetAffinitiesString(bool current)
+    public string GetAffinitiesString(bool isCurrent)
     {
-        Dictionary<Element, int> affs = current ? this._Affinities : this.UnitType._Affinities;
+        Dictionary<Element, int> affs = isCurrent ? this._Affinities : this.UnitType._Affinities;
 
         const int Len = 532;
         StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ", Len);
@@ -377,7 +377,7 @@ public sealed class Unit
         {
             sb.Append($"{element.Icon} {affs.GetValueOrDefault(element, 0).Format()}");
 
-            if (current)
+            if (isCurrent)
             {
                 sb.Append($"{ThemeColor.White.Str}//{this.UnitType._Affinities.GetValueOrDefault(element,
                     0).Format()}");

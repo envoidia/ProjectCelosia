@@ -9,6 +9,11 @@ namespace API.Name;
 /// <summary>
 /// A formatting argument for the description. Can be an <c>IDescribable</c> or a <c>string</c>
 /// </summary>
+// todo make way more robust and stuff
+// goals:
+// -more types
+// -dont always supply as string
+// -auto-insert some args (like buff turn counts)
 public sealed class DescArg(OneOf<string, ComplexDescribable> value, DescArgType descriptionArgType = DescArgType.PlainText)
 {
     public string GetString()

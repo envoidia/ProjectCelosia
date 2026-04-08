@@ -139,13 +139,11 @@ internal static class _TargetingLib
                 continue;
             }
 
-            int divisor = 1; //sPos == _indexTarget ? 1 : 2;
-
             bool isImmune = Battle.GetUnitAtPos(sPos).GetAffinity(_selectedSkillInstance.Skill.GetElement()) >= 5;
             Color color = isImmune ? Settings.Theme.Neg : _reticleColor;
 
             Vector2 pos = new Vector2(sPos >= PosLib.LowestOpp ? OppSpriteX : AllySpriteX,
-            GetUnitGraphicY(sPos)) + new Vector2(RenderLib.UnitSpriteSize / (2 * divisor));
+            GetUnitGraphicY(sPos)) + new Vector2(RenderLib.UnitSpriteSize / 2);
 
             if (_PrevPos[i].X != _UninitializedReticlePos)
             {
@@ -157,12 +155,12 @@ internal static class _TargetingLib
             if (sPos == _indexTarget)
             {
                 // Outer reticle
-                Core.ShapeBatch.BorderRectangle(pos - (size / (2 * divisor)), size / divisor, color,
+                Core.ShapeBatch.BorderRectangle(pos - size / 2, size, color,
                     _ReticleThickness + (timer * _ThicknessDist), rotation: timer * _AnimDistMult);
             }
 
             // Inner reticle
-            Core.ShapeBatch.BorderRectangle(pos - (size / (4 * divisor)), size / (2 * divisor), color,
+            Core.ShapeBatch.BorderRectangle(pos - (size / 4), size / 2, color,
                 _ReticleThickness + (-timer * _ThicknessDist), rotation: -timer * _AnimDistMult);
         }
     }

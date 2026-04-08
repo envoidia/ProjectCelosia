@@ -11,6 +11,7 @@ namespace API.Modding;
 /// </summary>
 public static class Registry
 {
+    // todo can i preallocate some size
     internal static readonly Dictionary<string, IRegistrable> _Reg = new(StringComparer.Ordinal);
 
     private static readonly Dictionary<Type, object> _TypeCache = [];
