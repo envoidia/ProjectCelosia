@@ -34,10 +34,7 @@ public static class Commands
     public const string Give = "give";
     public const string Remove = "remove";
 
-    private const string _Nl = "nl";
     private const string _Man = "man";
-    private const string _Grep = "grep";
-    private const string _Wc = "wc";
     private const string _Write = "write";
     private const string _Setting = "setting";
     private const string _Buff = "buff";
@@ -124,13 +121,13 @@ public static class Commands
         const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
         const string Search = "search";
 
-        Command.Register(_Grep, _Cmd_grep, [TextParam,
+        Command.Register("grep", _Cmd_grep, [TextParam,
             new(Search)], GrepDesc, Core.Id);
 
         Command.Register("rg", _Cmd_grep, [TextParam,
             new(Search)], GrepDesc, Core.Id, false);
 
-        Command.Register(_Wc, _Cmd_wc, [TextParam, new("l/w/c")],
+        Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
             "Counts lines, words, and chars", Core.Id);
 
         const string Count = "count";
@@ -144,7 +141,7 @@ public static class Commands
             "Clip text to last x lines", Core.Id,
             extendedDesc: CountDefault);
 
-        Command.Register(_Nl, _Cmd_nl, TextParamArr, "Add line numbers to text", Core.Id);
+        Command.Register("nl", _Cmd_nl, TextParamArr, "Add line numbers to text", Core.Id);
 
         Command.Register("cbc", _Cmd_cbc, TextParamArr, "Writes to clipboard", Core.Id);
         Command.Register("cbp", _Cmd_cbp, [], "Reads from clipboard", Core.Id);
@@ -161,7 +158,7 @@ public static class Commands
             new("show/hide/blank to toggle", ["show", "hide"])],
             "Control various overlays", Core.Id);
 
-        Command.Register("write", _Cmd_write, [new(_Writable),
+        Command.Register(_Write, _Cmd_write, [new(_Writable),
             new("preserve formatting?", CommandParam.InputBools)],
             "Write various things", Core.Id,
             extendedDesc: "args[1] determines whether to preserve text formatting codes. Leave blank to preserve colors but not images");
@@ -175,11 +172,14 @@ public static class Commands
         Command.Register("cycletheme", _Cmd_cycletheme, [],
             "Cycles the current theme", Core.Id);
 
-        Command.Register("setting", _Cmd_setting,
+        Command.Register(_Setting, _Cmd_setting,
             [new("setting key/reload/reset",
             [.. Settings.AllSettings.Keys, "reload", "reset"]),
             new("value")], "Alter settings", Core.Id,
             extendedDesc: "Omit value to print the current value\n`reload` to reload from file, `reset` to reset to default\nIf a value is invalid, the default will be used instead");
+
+        Command.Register("actorinfo", _Cmd_actorinfo, [new("stage index")],
+        "Get detailed actor info", Core.Id);
 
         #endregion
 
@@ -361,7 +361,7 @@ public static class Commands
         {
             if (!isFirst)
             {
-                str.AppendLine();
+                str.Append('\n');
             }
 
             str.Append($"{kvp.Key}={kvp.Value}");
@@ -378,9 +378,14 @@ public static class Commands
 
     private static CommandResult _Cmd_grep(ReadOnlySpan<string> args)
     {
-        if (args.Length < 3)
+        if (args.Length == 1)
         {
-            return new(ExitCode.Err, Command.Cmds[_Grep].GetUsageText());
+            return new(ExitCode.Err, "Must provide text to search through and for");
+        }
+
+        if (args.Length == 2)
+        {
+            return new(ExitCode.Err, "Must provide text to search for");
         }
 
         string[] lines = args[1].Split('\n');
@@ -408,7 +413,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, Command.Cmds[_Wc].GetUsageText());
+            return new(ExitCode.Err, "Must provide text to count");
         }
 
         bool usingFormat = args[^1] is "l" or "w" or "c";
@@ -484,14 +489,14 @@ public static class Commands
             count = c;
         }
 
-        string[] lines = args[1].Split(Environment.NewLine, count + 1);
+        string[] lines = args[1].Split('\n', count + 1);
 
         if (count > lines.Length)
         {
             count = lines.Length;
         }
 
-        return new(string.Join(Environment.NewLine, lines.AsSpan(0, count)));
+        return new(string.Join('\n', lines.AsSpan(0, count)));
     }
 
     private static CommandResult _Cmd_tail(ReadOnlySpan<string> args)
@@ -513,24 +518,24 @@ public static class Commands
             count = c;
         }
 
-        string[] lines = args[1].Split(Environment.NewLine);
+        string[] lines = args[1].Split('\n');
 
         if (count > lines.Length)
         {
             count = lines.Length;
         }
 
-        return new(string.Join(Environment.NewLine, lines.AsSpan(lines.Length - count)));
+        return new(string.Join('\n', lines.AsSpan(lines.Length - count)));
     }
 
     private static CommandResult _Cmd_nl(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, Command.Cmds[_Nl].GetUsageText());
+            return new(ExitCode.Err, "Must provide text to add line numbers to");
         }
 
-        string[] lines = args[1].Split(Environment.NewLine);
+        string[] lines = args[1].Split('\n');
         StringBuilder sb = new((int) (args[1].Length * 1.2f));
 
         for (int i = 0; i < lines.Length; i++)
@@ -539,7 +544,7 @@ public static class Commands
 
             if (i != lines.Length - 1)
             {
-                sb.AppendLine();
+                sb.Append('\n');
             }
         }
 
@@ -950,11 +955,30 @@ public static class Commands
         return true;
     }
 
+    private static CommandResult _Cmd_actorinfo(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1 || !int.TryParse(args[1], out int index))
+        {
+            return new(ExitCode.Err, "stage index (args[1]) must be an int");
+        }
+
+        if (index < 0 || index >= Stage._Actors.Count)
+        {
+            return new(ExitCode.Err,
+                $"stage index (args[1]) must be >= 0 and < {Stage._Actors.Count}, was {index}");
+        }
+
+        IActor a = Stage._Actors[index];
+        ActorData d = a.Data;
+
+        return new(ExitCode.Ok, $"Stage[{index}]: {a}\n{nameof(d.IsVisible)}: {d.IsVisible}\n{nameof(d.Priority)}: {d.Priority}\n{nameof(d.Position)}: {d.Position}\n{nameof(d.Size)}: {d.Size}\n{nameof(d.Padding)}: {d.Padding}\n{nameof(d.Alignment)}: {d.Alignment}\n{nameof(d.Origin)}: {d.Origin}\n{nameof(d.Prog)}: {d.Prog}\n{nameof(d.AnimFromPos)}: {d.AnimFromPos}\n{nameof(d.AnimFromDir)}: {d.AnimFromDir}\n{nameof(d.AnimType)}: {d.AnimType}\n{nameof(d.Speed)}: {d.Speed}\n{nameof(d.OnCreate)}: {d.OnCreate}\n{nameof(d.OnDestroy)}: {d.OnDestroy}\n{nameof(d._routines)} count: {d._routines.Count}");
+    }
+
     private static CommandResult _Cmd_unitinfo(ReadOnlySpan<string> args)
     {
-        if (args.Length < 2)
+        if (args.Length == 1)
         {
-            return new(ExitCode.Err, Command.Cmds[args[0]].GetUsageText());
+            return new(ExitCode.Err, "Must provide unit index 0-7");
         }
 
         if (!_ParseUnitIndex(args[1], out int unitIndex))

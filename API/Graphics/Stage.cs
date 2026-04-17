@@ -14,8 +14,8 @@ namespace API.Graphics;
 /// </summary>
 public static class Stage
 {
-    // todo determine max size and use FixedList
-    private static readonly List<IActor> _Actors = new(250);
+    // todo determine max size
+    internal static readonly List<IActor> _Actors = new(250);
 
     internal static bool _needsSorting = false;
 
