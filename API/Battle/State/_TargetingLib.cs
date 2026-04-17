@@ -47,7 +47,6 @@ internal static class _TargetingLib
 
         if (InputLib.Check(Keybinds.Back))
         {
-            //foreach (Label stat in stats) stat.Color = Colors.White;
             _Moves[_selectingMove].Text = "";
 
             _SkillList.IsVisible = true;

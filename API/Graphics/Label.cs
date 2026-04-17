@@ -1,3 +1,4 @@
+using System;
 using API.Save;
 using API.Util;
 using FontStashSharp;
@@ -85,7 +86,7 @@ public sealed class Label : IActor
 
     public override string ToString()
     {
-        return $"{base.ToString()}: {this.RichTextLayout.Text}";
+        return $"{base.ToString()}: {this.RichTextLayout.Text.Replace(Environment.NewLine, "\\n")}";
     }
 
     public void Draw(GameTime gt)

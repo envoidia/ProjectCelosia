@@ -34,6 +34,14 @@ public static class Commands
     public const string Give = "give";
     public const string Remove = "remove";
 
+    private const string _Nl = "nl";
+    private const string _Man = "man";
+    private const string _Grep = "grep";
+    private const string _Wc = "wc";
+    private const string _Write = "write";
+    private const string _Setting = "setting";
+    private const string _Buff = "buff";
+
     private const string _BasicInfo = "Basic info";
 
     private const string _Help = "Enter a command followed by its arguments with a space between each.\nPrefix special characters with \\ to escape them\nTo include spaces, escape them or wrap an argument in \"\n| pipes the output of a command into the next\nAccess variables with $ prefix\nEmbed commands as parameters by wrapping them in $()\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
@@ -77,7 +85,7 @@ public static class Commands
         }, [], "Closes the game", Core.Id);
 
         // todo rename?
-        Command.Register("export", args =>
+        Command.Register("export", static args =>
         {
             Console.WriteLine($"[{args[0]}] {string.Join(' ', args.ToArray(),
                 1, args.Length - 1).Replace('［', '[')}");
@@ -101,7 +109,7 @@ public static class Commands
             new(VarName)], "Set variables", Core.Id);
 
         Command.Register("unset", _Cmd_unset, [new(VarName,
-            [], () => [.. Command.Env.Keys])], "Unset variables", Core.Id);
+            [], static () => [.. Command.Env.Keys])], "Unset variables", Core.Id);
 
         Command.Register("env", _Cmd_env, [], "Outputs all variables", Core.Id);
 
@@ -116,13 +124,13 @@ public static class Commands
         const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
         const string Search = "search";
 
-        Command.Register("grep", _Cmd_grep, [TextParam,
+        Command.Register(_Grep, _Cmd_grep, [TextParam,
             new(Search)], GrepDesc, Core.Id);
 
         Command.Register("rg", _Cmd_grep, [TextParam,
             new(Search)], GrepDesc, Core.Id, false);
 
-        Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
+        Command.Register(_Wc, _Cmd_wc, [TextParam, new("l/w/c")],
             "Counts lines, words, and chars", Core.Id);
 
         const string Count = "count";
@@ -135,6 +143,8 @@ public static class Commands
         Command.Register("tail", _Cmd_tail, [TextParam, new(Count)],
             "Clip text to last x lines", Core.Id,
             extendedDesc: CountDefault);
+
+        Command.Register(_Nl, _Cmd_nl, TextParamArr, "Add line numbers to text", Core.Id);
 
         Command.Register("cbc", _Cmd_cbc, TextParamArr, "Writes to clipboard", Core.Id);
         Command.Register("cbp", _Cmd_cbp, [], "Reads from clipboard", Core.Id);
@@ -213,9 +223,8 @@ public static class Commands
 
         // Must be last
         string[] manArgs = ["cmd", "kb"];
-        const string Man = "man";
-        Command.Register(Man, _Cmd_man, [new("cmd/kb/command name",
-            ["cmd", "kb", Man, .. Command.Cmds.Keys])], _BasicInfo, Core.Id);
+        Command.Register(_Man, _Cmd_man, [new("cmd/kb/command name",
+            ["cmd", "kb", _Man, .. Command.Cmds.Keys])], _BasicInfo, Core.Id);
     }
 
     #region Basic
@@ -224,7 +233,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, Command.Cmds["man"].GetUsageText());
+            return new(ExitCode.Err, Command.Cmds[_Man].GetUsageText());
         }
 
         switch (args[1])
@@ -371,7 +380,7 @@ public static class Commands
     {
         if (args.Length < 3)
         {
-            return new(ExitCode.Err, Command.Cmds["grep"].GetUsageText());
+            return new(ExitCode.Err, Command.Cmds[_Grep].GetUsageText());
         }
 
         string[] lines = args[1].Split('\n');
@@ -399,7 +408,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, Command.Cmds["wc"].GetUsageText());
+            return new(ExitCode.Err, Command.Cmds[_Wc].GetUsageText());
         }
 
         bool usingFormat = args[^1] is "l" or "w" or "c";
@@ -512,6 +521,29 @@ public static class Commands
         }
 
         return new(string.Join(Environment.NewLine, lines.AsSpan(lines.Length - count)));
+    }
+
+    private static CommandResult _Cmd_nl(ReadOnlySpan<string> args)
+    {
+        if (args.Length == 1)
+        {
+            return new(ExitCode.Err, Command.Cmds[_Nl].GetUsageText());
+        }
+
+        string[] lines = args[1].Split(Environment.NewLine);
+        StringBuilder sb = new((int) (args[1].Length * 1.2f));
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            sb.Append($"{i}: {lines[i]}");
+
+            if (i != lines.Length - 1)
+            {
+                sb.AppendLine();
+            }
+        }
+
+        return new(ExitCode.Ok, sb.ToString());
     }
 
     private static CommandResult _Cmd_cbc(ReadOnlySpan<string> args)
@@ -719,7 +751,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, $"Must pass the item to write ({_Writable}\n{Command.Cmds["write"].ExtendedDesc}");
+            return new(ExitCode.Err, $"Must pass the item to write ({_Writable}\n{Command.Cmds[_Write].ExtendedDesc}");
         }
 
         _Preserve fmt = _Preserve.NonImages;
@@ -851,7 +883,7 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            Command cmd = Command.Cmds["setting"];
+            Command cmd = Command.Cmds[_Setting];
             return new(ExitCode.Err, $"{cmd.GetUsageText()}\n{cmd.ExtendedDesc}");
         }
 
@@ -1124,7 +1156,7 @@ public static class Commands
 
         static string getHelpText()
         {
-            Command cmd = Command.Cmds["buff"];
+            Command cmd = Command.Cmds[_Buff];
             return $"{cmd.GetUsageText()}\n{cmd.ExtendedDesc}";
         }
     }
