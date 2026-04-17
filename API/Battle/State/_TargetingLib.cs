@@ -103,7 +103,8 @@ internal static class _TargetingLib
 
     #region Targeting Reticle
 
-    private static Color _reticleColor = Settings.Theme.Imp;
+    private static Color _targetColor = Settings.Theme.Imp;
+    private static readonly Color[] _CurColors = new Color[8];
 
     private static readonly Vector2 _ReticleSize = new(200);
     private const int _ReticleThickness = 20;
@@ -115,11 +116,12 @@ internal static class _TargetingLib
 
     private static TimeSpan _animTimer = new();
     private const int _AnimDistMult = 4;
-    private const int _ThicknessDist = 10;
+    private const int _SizeRange = 30;
+    private const int _ThicknessRange = 10;
 
     private static void _UpdateReticle()
     {
-        _reticleColor = _validMainTargets[_indexTarget] ? Settings.Theme.Imp : Settings.Theme.Neg;
+        _targetColor = _validMainTargets[_indexTarget] ? Settings.Theme.Imp : Settings.Theme.Neg;
         _reticlePos = _selectedSkillInstance.Skill.Range.GetTargetPositions(_selectingMove, _indexTarget);
     }
 
@@ -128,7 +130,7 @@ internal static class _TargetingLib
         _animTimer += gt.ElapsedGameTime / _AnimDistMult;
         float timer = (float) Math.Sin(_animTimer.TotalSeconds);
 
-        Vector2 size = _ReticleSize * (float) _Reticle.Prog;
+        Vector2 size = _ReticleSize * (float) _Reticle.Prog + new Vector2(timer * _SizeRange);
 
         for (int i = 0; i < _reticlePos.Count; i++)
         {
@@ -140,7 +142,10 @@ internal static class _TargetingLib
             }
 
             bool isImmune = Battle.GetUnitAtPos(sPos).GetAffinity(_selectedSkillInstance.Skill.GetElement()) >= 5;
-            Color color = isImmune ? Settings.Theme.Neg : _reticleColor;
+
+            _CurColors[i] = Color.Lerp(_CurColors[i], isImmune ? Settings.Theme.Neg : _targetColor, RenderLib.GetInterpolationAmount(gt));
+
+            Console.WriteLine("wtf"); // todo
 
             Vector2 pos = new Vector2(sPos >= PosLib.LowestOpp ? OppSpriteX : AllySpriteX,
             GetUnitGraphicY(sPos)) + new Vector2(RenderLib.UnitSpriteSize / 2);
@@ -155,13 +160,13 @@ internal static class _TargetingLib
             if (sPos == _indexTarget)
             {
                 // Outer reticle
-                Core.ShapeBatch.BorderRectangle(pos - size / 2, size, color,
-                    _ReticleThickness + (timer * _ThicknessDist), rotation: timer * _AnimDistMult);
+                Core.ShapeBatch.BorderRectangle(pos - size / 2, size, _CurColors[i],
+                    _ReticleThickness + (timer * _ThicknessRange), rotation: timer * _AnimDistMult);
             }
 
             // Inner reticle
-            Core.ShapeBatch.BorderRectangle(pos - (size / 4), size / 2, color,
-                _ReticleThickness + (-timer * _ThicknessDist), rotation: -timer * _AnimDistMult);
+            Core.ShapeBatch.BorderRectangle(pos - (size / 4), size / 2, _CurColors[i],
+                _ReticleThickness + (-timer * _ThicknessRange), rotation: -timer * _AnimDistMult);
         }
     }
 

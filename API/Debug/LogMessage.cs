@@ -1,5 +1,3 @@
-using System;
-
 namespace API.Debug;
 
 public readonly struct LogMessage(string msg, string source, LogLevel logLevel = LogLevel.Info)
