@@ -86,7 +86,7 @@ public sealed class Label : IActor
 
     public override string ToString()
     {
-        return $"{base.ToString()}: {this.RichTextLayout.Text.Replace("\n", "\\n")}";
+        return $"{base.ToString()}: {this.RichTextLayout.Text.Replace("\n", "\\n")}{ThemeColor.White.Str}";
     }
 
     public void Draw(GameTime gt)

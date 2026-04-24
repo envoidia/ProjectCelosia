@@ -56,7 +56,12 @@ public static class Commands
     {
         #region Basic
 
-        Command.Register("help", static args =>
+        Command.Register("void", static _ =>
+        {
+            return new(null);
+        }, [], "Prevents command results from being printed", Core.Id);
+        
+        Command.Register("help", static _ =>
         {
             return new(_Help);
         }, [], _BasicInfo, Core.Id);
@@ -94,7 +99,7 @@ public static class Commands
             [new("true/false/blank to toggle", CommandParam.InputBools)],
             "Control whether to mirror console messages to stdout", Core.Id);
 
-        Command.Register("gc", static args =>
+        Command.Register("gc", static _ =>
         {
             return new($"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
                 / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
