@@ -2,7 +2,6 @@
 .vs/
 .vscode/
 .idea/
-.zed/
 
 # Build files
 /API/bin/

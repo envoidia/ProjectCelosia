@@ -144,9 +144,6 @@ internal static class _TargetingLib
 
             _CurColors[i] = Color.Lerp(_CurColors[i], isImmune ? Settings.Theme.Neg : _targetColor, RenderLib.GetInterpolationAmount(gt));
 
-            Console.WriteLine("wtf"); // todo
-            System.Diagnostics.Debug.WriteLine("wtf2");
-
             Vector2 pos = new Vector2(sPos >= PosLib.LowestOpp ? OppSpriteX : AllySpriteX,
             GetUnitGraphicY(sPos)) + new Vector2(RenderLib.UnitSpriteSize / 2);
 

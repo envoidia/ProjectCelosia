@@ -67,7 +67,7 @@ public static class InputLib
                     ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
                     .Append(s.ToString("0.##")).Append('\n');
             }
-
+            l:
             l.Text = _InputSb.ToString();
             return false;
         });

@@ -77,12 +77,15 @@ public static class DebugConsole
 
     private const int _TextX = 10;
     private const int _TextOff = 17;
+    private const int _TextXWithOff = _TextX + _TextOff;
+    private const int _PaddingAmt = 10;
+    private static readonly Padding _Padding = new(_PaddingAmt);
 
     private static readonly Label _Command = new(RenderPriority.Highest, Core.Mono40)
     {
         Text = ">",
         Position = new(_TextX, World.H - 10),
-        Padding = new(10),
+        Padding = _Padding,
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
         IsVisible = false
@@ -94,7 +97,7 @@ public static class DebugConsole
     private static readonly Label _CommandHint = new(RenderPriority.Highest, Core.Mono40)
     {
         Position = new(_TextX, World.H - 10),
-        Padding = new(10),
+        Padding = _Padding,
         Alignment = Alignment.BottomLeft,
         AnimType = AnimType.None,
         IsVisible = false
@@ -102,7 +105,7 @@ public static class DebugConsole
 
     private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.Highest)
     {
-        Position = new(_TextX + _TextOff, World.H - 50),
+        Position = new(_TextXWithOff, World.H - 50),
         IsVisible = false
     };
 
@@ -164,8 +167,9 @@ public static class DebugConsole
 
     internal static readonly Label _OutHistLabel = new(RenderPriority.Highest, Core.Mono40)
     {
-        Position = new(_TextX + _TextOff, World.H - 35),
-        Padding = new(_TextX + _TextOff, 10, 10, 40),
+        Position = new(_TextXWithOff, World.H - 35),
+        MaxWidth = World.W - _TextXWithOff,
+        Padding = new(_TextXWithOff, 10, 10, 40),
         BackgroundType = BackgroundType.Rectangle,
         MinBackgroundSize = new(_MinBgWidth, 0), // todo also use current command width for this
         Alignment = Alignment.BottomLeft,
@@ -358,7 +362,6 @@ public static class DebugConsole
         if (InputLib.IsKeyJustPressed(Keys.End))
         {
             _OutHistIndex = 0;
-            return;
         }
     }
 

@@ -220,7 +220,7 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
     /// <summary>
     /// Add a <c>Routine</c> to execute when drawn
     /// </summary>
-    /// <param name="routine"><c>Routine</c> to execute when drawn. When it returns true, it's removed from the list</param>
+    /// <param name="routine"><c>Routine</c> to execute when drawn. Removed from the list upon returning true</param>
     public void AddRoutine(Routine routine)
     {
         routine.OnStart?.Invoke(actor);

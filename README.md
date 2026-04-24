@@ -3,7 +3,7 @@
 
 A turn-based RPG where you train monsters to fight for you, with perfect information availability, no grinding, and an emphasis on strategy
 
-Features a story about how trauma influences your perception, what it means to be special, whether it's sometimes for the best for people to die, and how to keep on living when nothing matters anymore 
+Features a story about how trauma influences your perception, what it means to be special, and how to keep on living when nothing matters anymore 
 
 Actively supports [modding](MODDING.md)
 

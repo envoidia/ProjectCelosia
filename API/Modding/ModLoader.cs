@@ -138,7 +138,7 @@ public static class ModLoader
             // No spaces
             if (id.Any(char.IsWhiteSpace))
             {
-                throw new _ModLoadException(dllPath, $"mod IDs cannot contain whitespace");
+                throw new _ModLoadException(dllPath, "mod IDs cannot contain whitespace");
             }
 
             // Make sure it doesn't use _ ID prefix (unless it's the base mod)
