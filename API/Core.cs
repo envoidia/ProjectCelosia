@@ -95,9 +95,7 @@ public sealed class Core : Game
         KoruriSystem.AddFont(File.ReadAllBytes("Font/koruri.ttf"));
         Koruri60 = KoruriSystem.GetFont(60);
 
-        MonoSystem = new FontSystem(new FontSystemSettings() {
-            TextShaper = new HarfBuzzTextShaper()
-        });
+        MonoSystem = new FontSystem();
         MonoSystem.AddFont(File.ReadAllBytes("Font/lilex.ttf"));
         Mono40 = MonoSystem.GetFont(40);
 
