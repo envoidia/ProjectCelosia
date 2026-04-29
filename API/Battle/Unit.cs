@@ -898,7 +898,7 @@ public sealed class Unit
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
-
+        
         msg.Add("LogChangeHp".FormatLang([nameS,
             hpOld.Format(ThemeColor.Hp, false), hpNew.Format(ThemeColor.Hp, false),
             this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()]));

@@ -37,12 +37,11 @@ public static class Properties
             if (parts.Length == 2)
             {
                 dict.Add(parts[0], parts[1].Replace("\\n", "\n"));
+                continue;
             }
-            else
-            {
-                throw new FormatException($"Malformed properties file {path}: line {i
-                    + 1}, \"{lines[i]}\" is not a comment and is missing separator =");
-            }
+
+            throw new FormatException($"Malformed properties file {path}: line {i
+                + 1}, \"{lines[i]}\" is not a comment and is missing separator =");
         }
 
         return dict;

@@ -31,9 +31,9 @@ public sealed class Theme : IDescribable, IRegistrable
 
     // todo determine a good level
     /// <summary>
-    /// Alpha to use for trans colors
+    /// Alpha to use for translucent colors
     /// </summary>
-    public const int TransOpacity = 120;
+    public const int TransAlpha = 120;
 
     public Theme(string modId, string keyName, string? itemId = null)
     {
@@ -76,7 +76,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 White = whites[3],
                 Gray = whites[0],
                 Black = grayBlues[0],
-                TransBlack = new(grayBlues[0], TransOpacity),
+                TransBlack = new(grayBlues[0], TransAlpha),
 
                 Fg = whites[3],
                 Bg = grayBlues[1],
@@ -152,7 +152,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 White = white,
                 Gray = gray,
                 Black = black,
-                TransBlack = new(black, TransOpacity),
+                TransBlack = new(black, TransAlpha),
 
                 Fg = white,
                 Bg = black,
@@ -228,7 +228,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 White = white,
                 Gray = gray,
                 Black = black,
-                TransBlack = new(black, TransOpacity),
+                TransBlack = new(black, TransAlpha),
 
                 Fg = white,
                 Bg = black,
@@ -287,7 +287,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 White = Color.White,
                 Gray = Color.Gray,
                 Black = Color.Black,
-                TransBlack = new(Color.Black, TransOpacity),
+                TransBlack = new(Color.Black, TransAlpha),
 
                 Fg = Color.White,
                 Bg = Color.Black,
@@ -358,7 +358,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 White = white,
                 Gray = gray,
                 Black = black,
-                TransBlack = new(black, TransOpacity),
+                TransBlack = new(black, TransAlpha),
 
                 Fg = paleBlue,
                 Bg = black,
@@ -420,7 +420,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 White = white,
                 Gray = r[9],
                 Black = r[0],
-                TransBlack = new(r[0], TransOpacity),
+                TransBlack = new(r[0], TransAlpha),
 
                 Fg = white,
                 Bg = r[0],

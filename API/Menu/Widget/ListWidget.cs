@@ -189,6 +189,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         if (useRight)
         {
+
             this.LabelsR = new List<Label>(capacity);
             for (int i = 0; i < capacity; i++)
             {

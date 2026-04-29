@@ -112,7 +112,7 @@ public readonly struct Progress(float p = 0) : IEquatable<Progress>
     {
         return l._p > r;
     }
-
+    
     public static bool operator >(float l, Progress r)
     {
         return l > r._p;

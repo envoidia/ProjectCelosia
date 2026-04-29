@@ -70,9 +70,9 @@ public sealed class Damage : SkillEffect
             float mdd = this.Element.MultDmgDealt is null ? 1f : self.GetMult(this.Element.MultDmgDealt);
             float mdt = this.Element.MultDmgTaken is null ? 1f : target.GetMult(this.Element.MultDmgTaken);
 
-            dmg = BattleLib.StatMult * (int) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken *
-                self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) * mdd * mdt * multWeakDmgDealt *
-                multWeakDmgTaken * multFollowUpDmgDealt * multFollowUpDmgTaken);
+            dmg = BattleLib.StatMult * (int) (((float) atk / def) * this.Pow * affMultDmgDealt * affMultDmgTaken
+                * self.GetMult(Mults.DmgDealt) * target.GetMult(Mults.DmgTaken) * mdd * mdt * multWeakDmgDealt
+                * multWeakDmgTaken * multFollowUpDmgDealt * multFollowUpDmgTaken);
 
             self.OnDealDamage(target, dmg, this.Element);
             target.OnTakeDamage(self, dmg, this.Element);

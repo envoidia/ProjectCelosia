@@ -60,7 +60,7 @@ public static class Commands
         {
             return new(null);
         }, [], "Prevents command results from being printed", Core.Id);
-        
+
         Command.Register("help", static _ =>
         {
             return new(_Help);
@@ -269,7 +269,7 @@ public static class Commands
                     {ThemeColor.Imp.Str}[Up/Down]{ThemeColor.White.Str} Move through command history
                     {ThemeColor.Imp.Str}[Ctrl+Up/Down]{ThemeColor.White.Str} Move through output history
                     {ThemeColor.Imp.Str}[Ctrl+Home/End]{ThemeColor.White.Str} To top/bottom of output history
-                    
+
                     {ThemeColor.Imp.Str}[Tab]{ThemeColor.White.Str} Accept autocomplete
                     {ThemeColor.Imp.Str}[Ctrl+C/V/X]{ThemeColor.White.Str} Copy/paste/cut
                     {ThemeColor.Imp.Str}[Enter]{ThemeColor.White.Str} Execute command
@@ -285,8 +285,6 @@ public static class Commands
         {
             return new(ExitCode.Err, $"Command {args[1]} couldn't be found");
         }
-
-        Assert.NotNull(cmd);
 
         string? extDesc = cmd.ExtendedDesc is null ? null : $"\n{cmd.ExtendedDesc}";
 

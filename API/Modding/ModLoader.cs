@@ -86,7 +86,7 @@ public static class ModLoader
             .FirstOrDefault(static t => _IsStatic(t)
                 && t.GetCustomAttribute<ModEntryPointAttribute>() is not null)
             ?? throw new _ModLoadException(dllPath,
-            $"Could not find a static class marked with ModEntryPointAttribute");
+            "Could not find a static class marked with ModEntryPointAttribute");
 
         // Find all mods in the entry point class
         ReadOnlySpan<GameMod> mods = [.. entryPoint
@@ -98,7 +98,7 @@ public static class ModLoader
                 {
                     return false;
                 }
-
+                
                 // Make sure it's not null
                 object? val = prop.GetValue(null);
                 if (val is null)

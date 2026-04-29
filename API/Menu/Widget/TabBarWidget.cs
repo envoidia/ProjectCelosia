@@ -258,7 +258,6 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
 
                 if (this.Progs[i] != 0)
                 {
-
                     // Cursor
                     RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.Theme.Accent,
                         Color.Red, 0f, 6, 6,
