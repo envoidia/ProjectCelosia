@@ -98,7 +98,7 @@ public static class ModLoader
                 {
                     return false;
                 }
-                
+
                 // Make sure it's not null
                 object? val = prop.GetValue(null);
                 if (val is null)

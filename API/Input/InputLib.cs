@@ -67,7 +67,7 @@ public static class InputLib
                     ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
                     .Append(s.ToString("0.##")).Append('\n');
             }
-            l:
+
             l.Text = _InputSb.ToString();
             return false;
         });
@@ -226,6 +226,7 @@ public static class InputLib
             // tfw struct is just an existing type privately wrapped for no reason
             // u know the api is good when ur bit casting it away
             // safety: single-field struct that hasnt been updated since probably like 2006
+            // todo: this will have a real public accessor when MG updates
             buttons |= Unsafe.BitCast<GamePadButtons, Buttons>(state.Buttons);
 
             // why are GamePadButtons and GamePadDPad separate

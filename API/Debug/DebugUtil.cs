@@ -170,7 +170,16 @@ public static class DebugUtil
             return;
         }
 
-        _DebugInfoR.Text = $"FPS: {(int) (1 / _avgFrameTime.TotalSeconds)}\nRAM: {GC.GetTotalMemory(false) / _Mb}MB\nResolution: NYI\nStates: {StateMachine.ToString()}\nMenus: {StateMachine.State.GetMenuString()}\nActors on Stage: {Stage.ActorCount()}\nOverworld Location: NYI\nLoaded Mods: {ModLoader._LoadedMods.Count}";
+        _DebugInfoR.Text = $"""
+        FPS: {(int) (1 / _avgFrameTime.TotalSeconds)}
+        RAM: {GC.GetTotalMemory(false) / _Mb}MB
+        Resolution: NYI
+        States: {StateMachine.ToString()}
+        Menus: {StateMachine.State.GetMenuString()}
+        Actors on Stage: {Stage.ActorCount()}
+        Overworld Location: NYI
+        Loaded Mods: {ModLoader._LoadedMods.Count}
+        """;
 
         _timeSinceUpdateInfoR = TimeSpan.Zero;
     }
@@ -215,7 +224,10 @@ public static class DebugUtil
     // todo cleanup
     private static string _GetInfoLText()
     {
-        return $"[{Keybinds.DebugInfo.Key}] Close, [{Keybinds.DebugConsole.Key}] Console, [{Keybinds.DebugOverlay.Key}] Actor Overlay\nVersion: {BuildInfo.BuildDate}";
+        return $"""
+        [{Keybinds.DebugInfo.Key}] Close, [{Keybinds.DebugConsole.Key}] Console, [{Keybinds.DebugOverlay.Key}] Actor Overlay
+        Version: {BuildInfo.BuildDate}
+        """;
     }
 
     private static string _GetKeyNameText()

@@ -25,7 +25,7 @@ public static partial class FormattingRegexes
         }
     }
 
-    [GeneratedRegex(@"\/c\[.*?]|\/i\[.*?]|\/\/")]
+    [GeneratedRegex(@"\/[ci]\[.*?]|\/\/")]
     private static partial Regex _RemoveFormattingCodes();
 
     [GeneratedRegex(@"\/i\[.*?]|\/\/")]

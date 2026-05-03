@@ -1,5 +1,6 @@
 # Lang Editing Guide
-[API/Lang.resx](API/Lang.resx) and [Celosia/Lang.resx](Celosia/Lang.resx) are the default (English) language files. To add a new language, copy- these into new files named `Lang.language_COUNTRY.resx` (eg `Lang.ja_JP.resx`) and change the content in the `<value>` tags (and nothing outside of them)
+# TODO UPDATE
+[API/Lang.resx](API/Lang.resx) and [Celosia/Lang.resx](Celosia/Lang.resx) are the default (English) language files. To add a new language, copy these into new files named `Lang.language_COUNTRY.resx` (eg `Lang.ja_JP.resx`) and change the content in the `<value>` tags (and nothing outside of them)
 
 You can edit the `.resx` file in any editor you want, but it's recommended to use one that has syntax highlighting to make it easier to read, such as [VSCode](https://code.visualstudio.com/)
 

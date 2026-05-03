@@ -164,7 +164,8 @@ public static class Stage
 
     public new static string ToString()
     {
-        return $"Actors ({_Actors.Count}): {string.Join("\n", [.. _Actors.Select(static a => a.ToString() + " " + a.Priority.ToString())])}";
+        return $"Actors ({_Actors.Count}): {string.Join("\n",
+            [.. _Actors.Select(static a => $"{a} {a.Priority}")])}";
     }
 
     internal static void _RecalcLayoutWidgets()

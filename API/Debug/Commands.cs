@@ -41,7 +41,15 @@ public static class Commands
 
     private const string _BasicInfo = "Basic info";
 
-    private const string _Help = "Enter a command followed by its arguments with a space between each.\nPrefix special characters with \\ to escape them\nTo include spaces, escape them or wrap an argument in \"\n| pipes the output of a command into the next\nAccess variables with $ prefix\nEmbed commands as parameters by wrapping them in $()\nUse `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it";
+    private const string _Help = """
+        Enter a command followed by its arguments with a space between each.
+        Prefix special characters with \\ to escape them
+        To include spaces, escape them or wrap an argument in "
+        | pipes the output of a command into the next
+        Access variables with $ prefix
+        Embed commands as parameters by wrapping them in $()
+        Use `man` with `cmd` to list commands, `kb` to list keybinds, and a command name for info about it
+        """;
 
     private const string _Arg1MustBeBool = "args[1] ({1}) must be a bool (true or false)";
 
@@ -181,7 +189,11 @@ public static class Commands
             [new("setting key/reload/reset",
             [.. Settings.AllSettings.Keys, "reload", "reset"]),
             new("value")], "Alter settings", Core.Id,
-            extendedDesc: "Omit value to print the current value\n`reload` to reload from file, `reset` to reset to default\nIf a value is invalid, the default will be used instead");
+            extendedDesc: """
+            Omit value to print the current value
+            `reload` to reload from file, `reset` to reset to default
+            If a value is invalid, the default will be used instead
+            """);
 
         Command.Register("actorinfo", _Cmd_actorinfo, [new("stage index")],
         "Get detailed actor info", Core.Id);
@@ -974,7 +986,24 @@ public static class Commands
         IActor a = Stage._Actors[index];
         ActorData d = a.Data;
 
-        return new(ExitCode.Ok, $"Stage[{index}]: {a}\n{nameof(d.IsVisible)}: {d.IsVisible}\n{nameof(d.Priority)}: {d.Priority}\n{nameof(d.Position)}: {d.Position}\n{nameof(d.Size)}: {d.Size}\n{nameof(d.Padding)}: {d.Padding}\n{nameof(d.Alignment)}: {d.Alignment}\n{nameof(d.Origin)}: {d.Origin}\n{nameof(d.Prog)}: {d.Prog}\n{nameof(d.AnimFromPos)}: {d.AnimFromPos}\n{nameof(d.AnimFromDir)}: {d.AnimFromDir}\n{nameof(d.AnimType)}: {d.AnimType}\n{nameof(d.Speed)}: {d.Speed}\n{nameof(d.OnCreate)}: {d.OnCreate}\n{nameof(d.OnDestroy)}: {d.OnDestroy}\n{nameof(d._routines)} count: {d._routines.Count}");
+        return new(ExitCode.Ok, $"""
+            Stage[{index}]: {a}
+            {nameof(d.IsVisible)}: {d.IsVisible}
+            {nameof(d.Priority)}: {d.Priority}
+            {nameof(d.Position)}: {d.Position}
+            {nameof(d.Size)}: {d.Size}
+            {nameof(d.Padding)}: {d.Padding}
+            {nameof(d.Alignment)}: {d.Alignment}
+            {nameof(d.Origin)}: {d.Origin}
+            {nameof(d.Prog)}: {d.Prog}
+            {nameof(d.AnimFromPos)}: {d.AnimFromPos}
+            {nameof(d.AnimFromDir)}: {d.AnimFromDir}
+            {nameof(d.AnimType)}: {d.AnimType}
+            {nameof(d.Speed)}: {d.Speed}
+            {nameof(d.OnCreate)}: {d.OnCreate}
+            {nameof(d.OnDestroy)}: {d.OnDestroy}
+            {nameof(d._routines)} count: {d._routines.Count}
+            """);
     }
 
     private static CommandResult _Cmd_unitinfo(ReadOnlySpan<string> args)
