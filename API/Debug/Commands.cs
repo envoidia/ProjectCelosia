@@ -98,7 +98,7 @@ public static class Commands
         Command.Register("export", static args =>
         {
             Console.WriteLine($"[{args[0]}] {string.Join(' ', args.ToArray(),
-                1, args.Length - 1).Replace('［', '[')}");
+                1, args.Length - 1)}");
 
             return new(null);
         }, TextParamArr, "Writes text to stdout", Core.Id);
@@ -573,8 +573,7 @@ public static class Commands
             return new(ExitCode.Err, "Must pass the text to copy");
         }
 
-        Clipboard.Text = string.Join(' ', args.ToArray(), 1, args.Length - 1)
-            .Replace('［', '[');
+        Clipboard.Text = string.Join(' ', args.ToArray(), 1, args.Length - 1);
 
         return new(null);
     }

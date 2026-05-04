@@ -95,6 +95,7 @@ public sealed class TextInputWidget : IInputWidget
     {
         this.Label = label;
         this.Label.RichTextLayout.CalculateGlyphs = true;
+        this.Label.RichTextLayout.SupportsCommands = false;
 
         this.Cursor = cursor;
         this.Cursor.Size = new(2, label.Height - 8); // todo height init + relative width(?) (is that supposed to say height?)
@@ -335,13 +336,6 @@ public sealed class TextInputWidget : IInputWidget
 
                 return;
 
-            // Replace open brackets with fullwidth counterparts. They look the same and FSS doesn't parse them
-            // If shift is held to type {, the key is instead None) (todo: test on other OSes)
-            // (todo use real brackets when logging)
-            case Keys.OemOpenBrackets:
-                this.Insert('［');
-                return;
-
             default:
                 this.Insert(args.Character);
                 return;
@@ -488,7 +482,7 @@ public sealed class TextInputWidget : IInputWidget
 #if !CONSOLE
         if (InputLib.IsKeyPressed(Keys.C))
         {
-            Clipboard.Text = this.Text.Replace('［', '[');
+            Clipboard.Text = this.Text;
             return;
         }
 
@@ -505,15 +499,9 @@ public sealed class TextInputWidget : IInputWidget
 
             for (int i = 0; i < cb.Length; i++)
             {
-                switch (cb[i])
-                {
-                    case '\n':
-                        cb[i] = ' ';
-                        continue;
-
-                    case '[':
-                        cb[i] = '［';
-                        continue;
+                if(cb[i] == '\n') {
+                    cb[i] = ' ';
+                    continue;
                 }
 
                 if (char.IsSurrogate(cb[i]))

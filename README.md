@@ -19,6 +19,7 @@ Actively supports [modding](MODDING.md)
   - todo more info
 - Assets:
   - [Koruri](https://github.com/Koruri/Koruri) 
+  - [Lilex](https://github.com/mishamyrt/Lilex)
   - [icons-texture.png](Game/Content/img/icons-texture.png)
     - Input prompts by [juliocacko](https://juliocacko.itch.io/free-input-prompts)
     - Other icons from [Game-icons.net](https://game-icons.net/about.html#authors)

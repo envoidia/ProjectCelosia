@@ -263,7 +263,7 @@ public static class DebugConsole
             LogLevel.Warning => "\e[0;33m",
             LogLevel.Err => "\e[0;31m",
             _ => throw new ClosedEnumsWhenException()
-        }}[{source}] {msg.Replace('［', '[')}");
+        }}[{source}] {msg}");
     }
 
     public static void Log(LogMessage msg)
@@ -287,6 +287,9 @@ public static class DebugConsole
     internal static void _Init()
     {
         _Input.SubscribeToInput();
+
+        // todo stop codes from working ?
+        _Command.RichTextLayout.SupportsCommands = true;
 
         Stage.Add(_Command);
         Stage.Add(_CommandHint);
@@ -368,9 +371,9 @@ public static class DebugConsole
     private static void _UpdateOutHistText()
     {
         int start = Math.Max(0, _OutHist.Count - _DisplayedOutHistLines - _OutHistIndex);
-        int take = Math.Min(_DisplayedOutHistLines, _OutHist.Count - start);
+        int count = Math.Min(_DisplayedOutHistLines, _OutHist.Count - start);
 
-        _OutHistLabel.Text = $"{string.Join("\n", _OutHist.Skip(start).Take(take))}\n";
+        _OutHistLabel.Text = $"{string.Join("\n", _OutHist.Skip(start).Take(count))}\n";
 
         _UpdateScrollbar();
         _Scrollbar.IsVisible = _OutHist.Count > _DisplayedOutHistLines;
