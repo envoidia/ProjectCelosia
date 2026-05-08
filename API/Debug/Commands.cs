@@ -43,7 +43,7 @@ public static class Commands
 
     private const string _Help = """
         Enter a command followed by its arguments with a space between each.
-        Prefix special characters with \\ to escape them
+        Prefix special characters with \ to escape them
         To include spaces, escape them or wrap an argument in "
         | pipes the output of a command into the next
         Access variables with $ prefix
@@ -53,8 +53,24 @@ public static class Commands
 
     private const string _Arg1MustBeBool = "args[1] ({1}) must be a bool (true or false)";
 
-    private static readonly string[] _Overlays = ["info", "console", "outline", "theme", "input", "perf"];
-    private static readonly string[] _Writable = ["modlist", "registry", "lang", "stage", "battlelog", "theme"];
+    private static readonly string[] _Overlays =
+    [
+        "info",
+        "console",
+        "outline",
+        "theme",
+        "input",
+        "perf",
+    ];
+    private static readonly string[] _Writable =
+    [
+        "modlist",
+        "registry",
+        "lang",
+        "stage",
+        "battlelog",
+        "theme",
+    ];
     private static readonly string[] _Cleanable = ["stage", "layout"];
     private static readonly string[] _Reloadable = ["lang", "settings", "themes"];
 
@@ -64,62 +80,100 @@ public static class Commands
     {
         #region Basic
 
-        Command.Register("void", static _ =>
-        {
-            return new(null);
-        }, [], "Prevents command results from being printed", Core.Id);
+        Command.Register(
+            "void",
+            static _ => new(null),
+            [],
+            "Prevents command results from being printed",
+            Core.Id
+        );
 
-        Command.Register("help", static _ =>
-        {
-            return new(_Help);
-        }, [], _BasicInfo, Core.Id);
+        Command.Register("help", static _ => new(_Help), [], _BasicInfo, Core.Id);
 
-        Command.Register("clear", static _ =>
-        {
-            DebugConsole.ClearOutHist();
-            return new(null);
-        }, [], "Clears the console", Core.Id);
+        Command.Register(
+            "clear",
+            static _ =>
+            {
+                DebugConsole.ClearOutHist();
+                return new(null);
+            },
+            [],
+            "Clears the console",
+            Core.Id
+        );
 
-        Command.Register("history", static _ =>
-        {
-            return new(string.Join('\n', DebugConsole._InHist));
-        }, [], "Returns command history", Core.Id);
+        Command.Register(
+            "history",
+            static _ => new(string.Join('\n', DebugConsole._InHist)),
+            [],
+            "Returns command history",
+            Core.Id
+        );
 
-        Command.Register("whoami", _Cmd_whoami, [],
-        "Returns the name of the loaded save", Core.Id);
+        Command.Register("whoami", _Cmd_whoami, [], "Returns the name of the loaded save", Core.Id);
 
-        Command.Register("kill", _ =>
-        {
-            Core.Instance.Exit();
-            return new(null);
-        }, [], "Closes the game", Core.Id);
+        Command.Register(
+            "kill",
+            _ =>
+            {
+                Core.Instance.Exit();
+                return new(null);
+            },
+            [],
+            "Closes the game",
+            Core.Id
+        );
 
         // todo rename?
-        Command.Register("export", static args =>
-        {
-            Console.WriteLine($"[{args[0]}] {string.Join(' ', args.ToArray(),
-                1, args.Length - 1)}");
+        Command.Register(
+            "export",
+            static args =>
+            {
+                Console.WriteLine(
+                    $"[{args[0]}] {string.Join(' ', args.ToArray(),
+                1, args.Length - 1)}"
+                );
 
-            return new(null);
-        }, TextParamArr, "Writes text to stdout", Core.Id);
+                return new(null);
+            },
+            TextParamArr,
+            "Writes text to stdout",
+            Core.Id
+        );
 
-        Command.Register("mirror", _Cmd_mirror,
+        Command.Register(
+            "mirror",
+            _Cmd_mirror,
             [new("true/false/blank to toggle", CommandParam.InputBools)],
-            "Control whether to mirror console messages to stdout", Core.Id);
+            "Control whether to mirror console messages to stdout",
+            Core.Id
+        );
 
-        Command.Register("gc", static _ =>
-        {
-            return new($"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
-                / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}");
-        }, [], "Forces GC collection and reports memory", Core.Id);
+        Command.Register(
+            "gc",
+            static _ =>
+            {
+                return new(
+                    $"Forced GC collect, memory usage went from {GC.GetTotalMemory(false)
+                / DebugUtil._Mb} to {GC.GetTotalMemory(true) / DebugUtil._Mb}"
+                );
+            },
+            [],
+            "Forces GC collection and reports memory",
+            Core.Id
+        );
 
         const string VarName = "var name";
 
-        Command.Register("set", _Cmd_set, [new("value"),
-            new(VarName)], "Set variables", Core.Id);
+        Command.Register("set", _Cmd_set, [new("value"), new(VarName)], "Set variables", Core.Id);
 
-        Command.Register("unset", _Cmd_unset, [new(VarName,
-            [], static () => [.. Command.Env.Keys])], "Unset variables", Core.Id);
+        Command.Register(
+            "unset",
+            _Cmd_unset,
+            [new(VarName, [], static () => [.. Command.Env.Keys])],
+            "Unset variables",
+            Core.Id
+        );
 
         Command.Register("env", _Cmd_env, [], "Outputs all variables", Core.Id);
 
@@ -127,32 +181,49 @@ public static class Commands
 
         #region Text Processing
 
-        Command.Register("echo", args =>
-           new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
-           TextParamArr, "Returns its input", Core.Id);
+        Command.Register(
+            "echo",
+            args => new(string.Join(' ', args.ToArray(), 1, args.Length - 1)),
+            TextParamArr,
+            "Returns its input",
+            Core.Id
+        );
 
         const string GrepDesc = "Searches through text. `grep` and `rg` are interchangable";
         const string Search = "search";
 
-        Command.Register("grep", _Cmd_grep, [TextParam,
-            new(Search)], GrepDesc, Core.Id);
+        Command.Register("grep", _Cmd_grep, [TextParam, new(Search)], GrepDesc, Core.Id);
 
-        Command.Register("rg", _Cmd_grep, [TextParam,
-            new(Search)], GrepDesc, Core.Id, false);
+        Command.Register("rg", _Cmd_grep, [TextParam, new(Search)], GrepDesc, Core.Id, false);
 
-        Command.Register("wc", _Cmd_wc, [TextParam, new("l/w/c")],
-            "Counts lines, words, and chars", Core.Id);
+        Command.Register(
+            "wc",
+            _Cmd_wc,
+            [TextParam, new("l/w/c")],
+            "Counts lines, words, and chars",
+            Core.Id
+        );
 
         const string Count = "count";
         const string CountDefault = "count defaults to 10";
 
-        Command.Register("head", _Cmd_head, [TextParam, new(Count)],
-            "Clip text to first x lines", Core.Id,
-            extendedDesc: CountDefault);
+        Command.Register(
+            "head",
+            _Cmd_head,
+            [TextParam, new(Count)],
+            "Clip text to first x lines",
+            Core.Id,
+            extendedDesc: CountDefault
+        );
 
-        Command.Register("tail", _Cmd_tail, [TextParam, new(Count)],
-            "Clip text to last x lines", Core.Id,
-            extendedDesc: CountDefault);
+        Command.Register(
+            "tail",
+            _Cmd_tail,
+            [TextParam, new(Count)],
+            "Clip text to last x lines",
+            Core.Id,
+            extendedDesc: CountDefault
+        );
 
         Command.Register("nl", _Cmd_nl, TextParamArr, "Add line numbers to text", Core.Id);
 
@@ -164,39 +235,72 @@ public static class Commands
         #region Domain-specific
 
         CommandParam batchParam = new("batch 0-3", CommandParam.InputNumbers1To3);
-        Command.Register("setdraw", _Cmd_setdraw, [batchParam, batchParam, batchParam],
-        "Set which draw batches are performed", Core.Id);
+        Command.Register(
+            "setdraw",
+            _Cmd_setdraw,
+            [batchParam, batchParam, batchParam],
+            "Set which draw batches are performed",
+            Core.Id
+        );
 
-        Command.Register("overlay", _Cmd_overlay, [new(_Overlays),
-            new("show/hide/blank to toggle", ["show", "hide"])],
-            "Control various overlays", Core.Id);
+        Command.Register(
+            "overlay",
+            _Cmd_overlay,
+            [new(_Overlays), new("show/hide/blank to toggle", ["show", "hide"])],
+            "Control various overlays",
+            Core.Id
+        );
 
-        Command.Register(_Write, _Cmd_write, [new(_Writable),
-            new("preserve formatting?", CommandParam.InputBools)],
-            "Write various things", Core.Id,
-            extendedDesc: "args[1] determines whether to preserve text formatting codes. Leave blank to preserve colors but not images");
+        Command.Register(
+            _Write,
+            _Cmd_write,
+            [new(_Writable), new("preserve formatting?", CommandParam.InputBools)],
+            "Write various things",
+            Core.Id,
+            extendedDesc: "args[1] determines whether to preserve text formatting codes. Leave blank to preserve colors but not images"
+        );
 
-        Command.Register("cleanup", _Cmd_cleanup, [new(_Cleanable)],
-            "Sort and cleanup various things", Core.Id);
+        Command.Register(
+            "cleanup",
+            _Cmd_cleanup,
+            [new(_Cleanable)],
+            "Sort and cleanup various things",
+            Core.Id
+        );
 
-        Command.Register("reload", _Cmd_reload, [new(_Reloadable)],
-            "Reload various assets", Core.Id);
+        Command.Register(
+            "reload",
+            _Cmd_reload,
+            [new(_Reloadable)],
+            "Reload various assets",
+            Core.Id
+        );
 
-        Command.Register("cycletheme", _Cmd_cycletheme, [],
-            "Cycles the current theme", Core.Id);
+        Command.Register("cycletheme", _Cmd_cycletheme, [], "Cycles the current theme", Core.Id);
 
-        Command.Register(_Setting, _Cmd_setting,
-            [new("setting key/reload/reset",
-            [.. Settings.AllSettings.Keys, "reload", "reset"]),
-            new("value")], "Alter settings", Core.Id,
+        Command.Register(
+            _Setting,
+            _Cmd_setting,
+            [
+                new("setting key/reload/reset", [.. Settings.AllSettings.Keys, "reload", "reset"]),
+                new("value"),
+            ],
+            "Alter settings",
+            Core.Id,
             extendedDesc: """
             Omit value to print the current value
             `reload` to reload from file, `reset` to reset to default
             If a value is invalid, the default will be used instead
-            """);
+            """
+        );
 
-        Command.Register("actorinfo", _Cmd_actorinfo, [new("stage index")],
-        "Get detailed actor info", Core.Id);
+        Command.Register(
+            "actorinfo",
+            _Cmd_actorinfo,
+            [new("stage index")],
+            "Get detailed actor info",
+            Core.Id
+        );
 
         #endregion
 
@@ -205,30 +309,66 @@ public static class Commands
         const string UnitIndex = "unit index 0-7";
         CommandParam unitIndexParam = new(UnitIndex, CommandParam.InputNumbers0To7);
 
-        Command.Register("unitinfo", _Cmd_unitinfo, [unitIndexParam],
-            "Get detailed unit info", Core.Id);
+        Command.Register(
+            "unitinfo",
+            _Cmd_unitinfo,
+            [unitIndexParam],
+            "Get detailed unit info",
+            Core.Id
+        );
 
-        Command.Register("sethp", _Cmd_sethp, [unitIndexParam, new("hp")],
-        "Set unit HP", Core.Id, isCheat: true);
+        Command.Register(
+            "sethp",
+            _Cmd_sethp,
+            [unitIndexParam, new("hp")],
+            "Set unit HP",
+            Core.Id,
+            isCheat: true
+        );
 
-        Command.Register("setsp", _Cmd_setsp, [unitIndexParam, new("sp")],
-        "Set unit SP", Core.Id, isCheat: true);
+        Command.Register(
+            "setsp",
+            _Cmd_setsp,
+            [unitIndexParam, new("sp")],
+            "Set unit SP",
+            Core.Id,
+            isCheat: true
+        );
 
-        Command.Register("setstatmult", _Cmd_setstatmult, [unitIndexParam,
-            new("stat id", [], Registry.IdsOf<Stat>),
-            new("mult")], "Set unit stat multipliers", Core.Id, isCheat: true);
+        Command.Register(
+            "setstatmult",
+            _Cmd_setstatmult,
+            [unitIndexParam, new("stat id", [], Registry.IdsOf<Stat>), new("mult")],
+            "Set unit stat multipliers",
+            Core.Id,
+            isCheat: true
+        );
 
-        Command.Register("resetunit", _Cmd_resetunit, [unitIndexParam],
-            "Reset buffs and stat changes", Core.Id, isCheat: true,
-            extendedDesc: "Omit unit to reset all");
+        Command.Register(
+            "resetunit",
+            _Cmd_resetunit,
+            [unitIndexParam],
+            "Reset buffs and stat changes",
+            Core.Id,
+            isCheat: true,
+            extendedDesc: "Omit unit to reset all"
+        );
 
-        Command.Register("buff", _Cmd_buff, [unitIndexParam,
-            new(["give", "remove"]),
-            new("buff id", [], Registry.IdsOf<Buff>),
-            new("turns", CommandParam.InputNumbers1To9),
-            new("stacks", CommandParam.InputNumbers1To9)],
-            "Give/remove buffs in battle", Core.Id, isCheat: true,
-            extendedDesc: "Can omit turns and stacks if removing");
+        Command.Register(
+            "buff",
+            _Cmd_buff,
+            [
+                unitIndexParam,
+                new(["give", "remove"]),
+                new("buff id", [], Registry.IdsOf<Buff>),
+                new("turns", CommandParam.InputNumbers1To9),
+                new("stacks", CommandParam.InputNumbers1To9),
+            ],
+            "Give/remove buffs in battle",
+            Core.Id,
+            isCheat: true,
+            extendedDesc: "Can omit turns and stacks if removing"
+        );
 
         // todo passive
 
@@ -240,8 +380,13 @@ public static class Commands
 
         // Must be last
         string[] manArgs = ["cmd", "kb"];
-        Command.Register(_Man, _Cmd_man, [new("cmd/kb/command name",
-            ["cmd", "kb", _Man, .. Command.Cmds.Keys])], _BasicInfo, Core.Id);
+        Command.Register(
+            _Man,
+            _Cmd_man,
+            [new("cmd/kb/command name", ["cmd", "kb", _Man, .. Command.Cmds.Keys])],
+            _BasicInfo,
+            Core.Id
+        );
     }
 
     #region Basic
@@ -258,17 +403,23 @@ public static class Commands
             case "cmd":
                 const int Cap = 3000;
                 StringBuilder sb = new("Command list:", Cap);
-                foreach (KeyValuePair<string, Command> kvp in
-                    Command.Cmds.Where(kvp => kvp.Value.IsVisible))
+                foreach (
+                    KeyValuePair<string, Command> kvp in Command.Cmds.Where(kvp =>
+                        kvp.Value.IsVisible
+                    )
+                )
                 {
-                    sb.Append($"\n{ThemeColor.Imp.Str}[{kvp.Key}]{ThemeColor.White.Str} {kvp.Value.Desc}");
+                    sb.Append(
+                        $"\n{ThemeColor.Imp.Str}[{kvp.Key}]{ThemeColor.White.Str} {kvp.Value.Desc}"
+                    );
                 }
 
                 Assert.CapIs(sb, Cap); // todo remove before final release
                 return new(sb.ToString());
 
             case "kb":
-                return new($"""
+                return new(
+                    $"""
                     {ThemeColor.Imp.Str}[Left/Right]{ThemeColor.White.Str} Move cursor
                     {ThemeColor.Imp.Str}[BkSp/Del]{ThemeColor.White.Str} Delete to left/right
                     {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space/punctuation-separated)
@@ -290,7 +441,8 @@ public static class Commands
                     Hold {ThemeColor.Imp.Str}[Shift]{ThemeColor.White.Str} to move faster in all cases
 
                     Non-control keys are used to type
-                    """);
+                    """
+                );
         }
 
         if (!Command.Cmds.TryGetValue(args[1], out Command cmd))
@@ -424,6 +576,7 @@ public static class Commands
     }
 
     private const string _WcRes = "{0} lines, {1} words, {2} chars";
+
     private static CommandResult _Cmd_wc(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
@@ -621,8 +774,11 @@ public static class Commands
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, $"Must pass the overlay to target ({string.Join(
-                '/', _Overlays)})");
+            return new(
+                ExitCode.Err,
+                $"Must pass the overlay to target ({string.Join(
+                '/', _Overlays)})"
+            );
         }
 
         _OverlayChange ch = _OverlayChange.Toggle;
@@ -763,14 +919,17 @@ public static class Commands
     {
         Show,
         Hide,
-        Toggle
+        Toggle,
     }
 
     private static CommandResult _Cmd_write(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
         {
-            return new(ExitCode.Err, $"Must pass the item to write ({_Writable}\n{Command.Cmds[_Write].ExtendedDesc}");
+            return new(
+                ExitCode.Err,
+                $"Must pass the item to write ({_Writable}\n{Command.Cmds[_Write].ExtendedDesc}"
+            );
         }
 
         _Preserve fmt = _Preserve.NonImages;
@@ -828,7 +987,7 @@ public static class Commands
                 _Preserve.NonImages => str.RemoveImageCodes(),
                 _Preserve.True => str,
                 _Preserve.False => str.RemoveFormattingCodes(),
-                _ => throw new ClosedEnumsWhenException()
+                _ => throw new ClosedEnumsWhenException(),
             };
         }
     }
@@ -837,7 +996,7 @@ public static class Commands
     {
         NonImages,
         True,
-        False
+        False,
     }
 
     private static CommandResult _Cmd_cleanup(ReadOnlySpan<string> args)
@@ -863,6 +1022,7 @@ public static class Commands
     }
 
     private const string _ReloadedSettings = "Reloaded settings";
+
     private static CommandResult _Cmd_reload(ReadOnlySpan<string> args)
     {
         if (args.Length == 1)
@@ -978,14 +1138,18 @@ public static class Commands
 
         if (index < 0 || index >= Stage._Actors.Count)
         {
-            return new(ExitCode.Err,
-                $"stage index (args[1]) must be >= 0 and < {Stage._Actors.Count}, was {index}");
+            return new(
+                ExitCode.Err,
+                $"stage index (args[1]) must be >= 0 and < {Stage._Actors.Count}, was {index}"
+            );
         }
 
         IActor a = Stage._Actors[index];
         ActorData d = a.Data;
 
-        return new(ExitCode.Ok, $"""
+        return new(
+            ExitCode.Ok,
+            $"""
             Stage[{index}]: {a}
             {nameof(d.IsVisible)}: {d.IsVisible}
             {nameof(d.Priority)}: {d.Priority}
@@ -1002,7 +1166,8 @@ public static class Commands
             {nameof(d.OnCreate)}: {d.OnCreate}
             {nameof(d.OnDestroy)}: {d.OnDestroy}
             {nameof(d._routines)} count: {d._routines.Count}
-            """);
+            """
+        );
     }
 
     private static CommandResult _Cmd_unitinfo(ReadOnlySpan<string> args)
@@ -1189,21 +1354,28 @@ public static class Commands
                     return new(ExitCode.Err, _StacksError);
                 }
 
-                unit.GiveBuffInstances(new BuffInstance(buff, turns, Math.Min(stacks, buff.MaxStacks)));
+                unit.GiveBuffInstances(
+                    new BuffInstance(buff, turns, Math.Min(stacks, buff.MaxStacks))
+                );
 
                 return new(
                     $"Gave {ThemeColor.Imp.Str}{stacks}x {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit
-                        .FormatName(false)} for {ThemeColor.Imp.Str}{turns}{ThemeColor.White.Str} turns");
+                        .FormatName(false)} for {ThemeColor.Imp.Str}{turns}{ThemeColor.White.Str} turns"
+                );
 
             case Remove:
                 if (unit.RemoveBuffs(buff))
                 {
-                    return new($"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White
-                        .Str} from {unit.FormatName(false)}");
+                    return new(
+                        $"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White
+                        .Str} from {unit.FormatName(false)}"
+                    );
                 }
 
-                return new(ExitCode.Err,
-                    $"{unit.FormatName(false)} doesn't have {buff.GetNameWithoutIcon()}");
+                return new(
+                    ExitCode.Err,
+                    $"{unit.FormatName(false)} doesn't have {buff.GetNameWithoutIcon()}"
+                );
 
             default:
                 return new(ExitCode.Err, "args[2] must be `give` or `remove`");
