@@ -1,17 +1,11 @@
-# IDE-specific files
+# editor-specific files
 .vs/
 .vscode/
 .idea/
 
-# Build files
-/API/bin/
-/API/obj/
-/Game/bin/
-/Game/obj/
-/Game/Content/obj/
-/Game/Content/bin/
-/Celosia/bin/
-/Celosia/obj/
+# build files
+*bin
+*obj
 
 # Misc
 /Game/pipeline-references/

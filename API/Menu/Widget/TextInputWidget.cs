@@ -206,6 +206,7 @@ public sealed class TextInputWidget : IInputWidget
                     }
 
                     // Word nav
+                    // todo can this be while (index > 0) and then while(iswordsplitter) inside
                     while (this.Index > 0 && _IsWordSplitter(this._Sb[this.Index - 1]))
                     {
                         this._Sb.Remove(this.Index - 1, 1);
@@ -499,7 +500,8 @@ public sealed class TextInputWidget : IInputWidget
 
             for (int i = 0; i < cb.Length; i++)
             {
-                if(cb[i] == '\n') {
+                if (cb[i] == '\n')
+                {
                     cb[i] = ' ';
                     continue;
                 }
