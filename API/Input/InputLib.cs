@@ -91,7 +91,9 @@ public static class InputLib
             int scroll = GetMouseScroll();
             _InputSb.Append($"{(scroll > 0 ? ThemeColor.Pos.Str : ThemeColor.Neg.Str)}{scroll}\n");
 
-            appendBoolKey(IsMouseMiddlePressed(), null);
+            appendBoolKey(IsMouseMiddlePressed());
+            appendBoolKey(IsMouseX1Pressed());
+            appendBoolKey(IsMouseX2Pressed(), null);
 
             l.Text = _InputSb.ToString();
             return false;
@@ -140,7 +142,6 @@ public static class InputLib
             _previousInputSource = LastInputSource;
             return;
         }
-
     }
 
     #region Input Checks
@@ -237,6 +238,38 @@ public static class InputLib
     public static bool IsMouseMiddleJustPressed()
     {
         return _mouseState.MiddleButton == ButtonState.Pressed && _previousMouseState.MiddleButton == ButtonState.Released;
+    }
+
+    /// <returns>
+    /// Whether the mouse X1 button is pressed
+    /// </returns>
+    public static bool IsMouseX1Pressed()
+    {
+        return _mouseState.XButton1 == ButtonState.Pressed;
+    }
+
+    /// <returns>
+    /// Whether the mouse X1 button is pressed this frame and wasn't the previous frame
+    /// </returns>
+    public static bool IsMouseX1JustPressed()
+    {
+        return _mouseState.XButton1 == ButtonState.Pressed && _previousMouseState.XButton1 == ButtonState.Released;
+    }
+
+    /// <returns>
+    /// Whether the mouse X1 button is pressed
+    /// </returns>
+    public static bool IsMouseX2Pressed()
+    {
+        return _mouseState.XButton2 == ButtonState.Pressed;
+    }
+
+    /// <returns>
+    /// Whether the mouse X1 button is pressed this frame and wasn't the previous frame
+    /// </returns>
+    public static bool IsMouseX2JustPressed()
+    {
+        return _mouseState.XButton2 == ButtonState.Pressed && _previousMouseState.XButton2 == ButtonState.Released;
     }
 
     /// <returns>

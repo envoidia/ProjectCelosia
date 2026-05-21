@@ -33,7 +33,7 @@ public interface IInputWidget
     bool ShouldConfirm { get; }
 
     /// <summary>
-    /// Invoked immediately before Index changes
+    /// Should be invoked immediately before Index changes.
     /// </summary>
     Action<int>? OnChangeIndex { get; set; }
 

@@ -13,8 +13,6 @@ namespace API.Debug;
 // todo dont even init any of this stuff until its used
 public static class DebugUtil
 {
-    private const string _ClassName = nameof(DebugUtil);
-
     internal const int _Mb = 1024 * 1024;
 
     private static TimeSpan _avgFrameTime = TimeSpan.FromMilliseconds(10);
@@ -77,7 +75,7 @@ public static class DebugUtil
     private const int _InfoRUpdateRateS = 1;
     private static TimeSpan _timeSinceUpdateInfoR = TimeSpan.FromSeconds(_InfoRUpdateRateS);
 
-    private const int _KeyYOff = 930;
+    private const int _KeyYOff = 1030;
 
     internal static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
@@ -246,6 +244,8 @@ public static class DebugUtil
             {ThemeColor.Imp.Str}[MouseR]{ThemeColor.White.Str}
             {ThemeColor.Imp.Str}[MouseScroll]{ThemeColor.White.Str}
             {ThemeColor.Imp.Str}[MouseMiddle]{ThemeColor.White.Str}
+            {ThemeColor.Imp.Str}[MouseX1]{ThemeColor.White.Str}
+            {ThemeColor.Imp.Str}[MouseX2]{ThemeColor.White.Str}
             """);
 
         Assert.CapIs(sb, Cap); // todo remove before release (it may be wrong depending on lang and binds)
