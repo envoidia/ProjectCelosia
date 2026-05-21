@@ -71,7 +71,7 @@ public sealed class Theme : IDescribable, IRegistrable
 
     private static void _LoadTheme(string path)
     {
-        Exception? parseError = Properties.TryParse(path, out Dictionary<string, string>? themeDict);
+        Exception? parseError = Properties.Parse(path, out Dictionary<string, string>? themeDict);
 
         if (parseError is not null)
         {

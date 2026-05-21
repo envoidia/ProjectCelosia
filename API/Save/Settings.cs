@@ -113,7 +113,7 @@ public static class Settings
     {
         try
         {
-            Exception? parseError = Properties.TryParse(FilePath, out Dictionary<string, string>? dict);
+            Exception? parseError = Properties.Parse(FilePath, out Dictionary<string, string>? dict);
 
             if (parseError is not null)
             {
@@ -272,6 +272,7 @@ public static class Settings
     {
         Core._LogOrEarlyLog($"Failed to parse settings file, resetting to default: {e.Message}",
             nameof(Settings), LogLevel.Err);
+
         Reset();
         Write();
     }

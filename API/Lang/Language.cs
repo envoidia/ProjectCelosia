@@ -76,7 +76,7 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
             entries.Clear();
         }
 
-        Exception? parseError = Properties.TryParse(file, out Dictionary<string, string>? dict);
+        Exception? parseError = Properties.Parse(file, out Dictionary<string, string>? dict);
 
         if (parseError is not null)
         {

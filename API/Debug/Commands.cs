@@ -1112,7 +1112,7 @@ public static class Commands
             Settings.Write();
         }
 
-        Exception? parseError = Properties.TryParse(Settings.FilePath, out Dictionary<string, string>? settings);
+        Exception? parseError = Properties.Parse(Settings.FilePath, out Dictionary<string, string>? settings);
 
         if (parseError is not null)
         {

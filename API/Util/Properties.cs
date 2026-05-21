@@ -20,7 +20,7 @@ public static class Properties
     /// <returns>
     /// null if the file was parsed correctly, otherwise an exception
     /// </returns>
-    public static Exception? TryParse(string path, out Dictionary<string, string>? dict)
+    public static Exception? Parse(string path, out Dictionary<string, string>? dict)
     {
         dict = [];
         ReadOnlySpan<string> lines;
