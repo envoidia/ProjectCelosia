@@ -87,7 +87,7 @@ public static class Commands
         _Settings,
         _Theme,
     ];
-    
+
     private static readonly string[] _Cleanable = [_Stage, "layout"];
     private static readonly string[] _Reloadable = [_Lang, "settings", "themes"];
 
@@ -300,7 +300,8 @@ public static class Commands
             _Setting,
             _Cmd_setting,
             [
-                new("setting key/reload/reset", [.. Settings.AllSettings.Keys, "reload", "reset"]),
+                new("setting key/reload/reset/write",
+                    [.. Settings.AllSettings.Keys, "reload", "reset", "white"]),
                 new("value"),
             ],
             "Alter settings",
@@ -1098,6 +1099,11 @@ public static class Commands
             Settings.Reset();
             Settings.Write();
             return new("Reset settings");
+        }
+
+        if (args[1] == "write")
+        {
+            return new(Settings.ToString());
         }
 
         if (!File.Exists(Settings.FilePath))
