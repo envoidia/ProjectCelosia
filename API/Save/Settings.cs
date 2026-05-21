@@ -196,7 +196,7 @@ public static class Settings
 #if DEBUG
         EnableCheats = true;
 #else
-        EnableCheats = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableCheats)), false);
+        EnableCheats = _ParseBoolSetting(nameof(EnableCheats), false);
 #endif
 
         Core.Graphics.ApplyChanges();

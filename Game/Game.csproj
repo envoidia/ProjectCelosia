@@ -54,4 +54,7 @@
     <Target Name="MoveFiles" AfterTargets="Build" Condition="'$(PublishAot)' == 'false'">
         <Move SourceFiles="$(TargetDir)Celosia.dll" DestinationFolder="$(TargetDir)Mods" />
     </Target>
+    <Target Name="MoveFiles2" AfterTargets="Publish" Condition="'$(PublishAot)' == 'false'">
+        <Move SourceFiles="$(TargetDir)publish/Celosia.dll" DestinationFolder="$(TargetDir)publish/Mods" />
+    </Target>
 </Project>
