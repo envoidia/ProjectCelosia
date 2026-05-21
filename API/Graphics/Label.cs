@@ -86,7 +86,7 @@ public sealed class Label : IActor
 
     public override string ToString()
     {
-        return $"{base.ToString()}: {this.RichTextLayout.Text.Replace("\n", "\\n")}{ThemeColor.White.Str}";
+        return $"{base.ToString()}: {this.RichTextLayout.Text.Replace("\n", "\\n")}{ThemeColor.Fg.Str}";
     }
 
     public void Draw(GameTime gt)
@@ -101,7 +101,7 @@ public sealed class Label : IActor
         switch (this.BackgroundType)
         {
             case BackgroundType.Rectangle:
-                this.Data.DrawBackground(Settings.Theme.TransBlack, this.MinBackgroundSize);
+                this.Data.DrawBackground(Settings.Theme.BgTrans, this.MinBackgroundSize);
                 break;
 
             case BackgroundType.Parellelogram:

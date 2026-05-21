@@ -197,7 +197,7 @@ internal static class _TargetingLib
 
     #region Targeting Reticle
 
-    private static Color _targetColor = Settings.Theme.Imp;
+    private static Color _targetColor = Settings.Theme.Emphasis;
     private static readonly Color[] _CurColors = new Color[8];
 
     private static readonly Vector2 _ReticleSize = new(200);
@@ -215,7 +215,7 @@ internal static class _TargetingLib
 
     private static void _UpdateReticle()
     {
-        _targetColor = _validMainTargets[_indexTarget] ? Settings.Theme.Imp : Settings.Theme.Neg;
+        _targetColor = _validMainTargets[_indexTarget] ? Settings.Theme.Emphasis : Settings.Theme.Negative;
         _reticlePos = _selectedSkillInstance.Skill.Range.GetTargetPositions(_selectingMove, _indexTarget);
     }
 
@@ -237,7 +237,7 @@ internal static class _TargetingLib
 
             bool isImmune = Battle.GetUnitAtPos(sPos).GetAffinity(_selectedSkillInstance.Skill.GetElement()) >= 5;
 
-            _CurColors[i] = Color.Lerp(_CurColors[i], isImmune ? Settings.Theme.Neg : _targetColor, RenderLib.GetInterpolationAmount(gt));
+            _CurColors[i] = Color.Lerp(_CurColors[i], isImmune ? Settings.Theme.Negative : _targetColor, RenderLib.GetInterpolationAmount(gt));
 
             Vector2 pos = new Vector2(sPos >= PosLib.LowestOpp ? OppSpriteX : AllySpriteX,
             GetUnitGraphicY(sPos)) + new Vector2(RenderLib.UnitSpriteSize / 2);

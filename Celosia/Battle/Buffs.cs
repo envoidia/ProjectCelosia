@@ -11,14 +11,14 @@ public static class Buffs
         "__API:BuffDesc2PerStackHp", BuffType.Debuff, 5,
         [new ChangeHp(-20), new ChangeStat(Stats.Str, -50)])
     {
-        DescArgs = [$"{ThemeColor.Neg.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Neg.Str}-5% {ThemeColor.Stat.Str}{Stats.Str.GetName()}"]
+        DescArgs = [$"{ThemeColor.Negative.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Negative.Str}-5% {ThemeColor.Stat.Str}{Stats.Str.GetName()}"]
     };
 
     public static readonly Buff Shock = new(Core.BaseModId, "BuffShock", $"{ThemeColor.Fulgur.Str}/i[power-lightning]",
         "__API:BuffDesc2PerStackHp", BuffType.Debuff, 5,
         [new ChangeHp(-20), new ChangeStat(Stats.Agi, -50)])
     {
-        DescArgs = [$"{ThemeColor.Neg.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Neg.Str}-5% {ThemeColor.Stat.Str}{Stats.Agi.GetName()}"]
+        DescArgs = [$"{ThemeColor.Negative.Str}-2%{ThemeColor.Stat.Str}", $"{ThemeColor.Negative.Str}-5% {ThemeColor.Stat.Str}{Stats.Agi.GetName()}"]
     };
 
     // public static readonly Buff GlaciesAffUp = new(Core.BaseModId, "BuffBurn", "/i[snowflake-2]",

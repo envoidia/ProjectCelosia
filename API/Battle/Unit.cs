@@ -371,14 +371,14 @@ public sealed class Unit
         Dictionary<Element, int> affs = isCurrent ? this._Affinities : this.UnitType._Affinities;
 
         const int Len = 532;
-        StringBuilder sb = new($"{ThemeColor.Stat.Str}{"Affinities".GetLang()}:{ThemeColor.White.Str} ", Len);
+        StringBuilder sb = new($"{ThemeColor.Bg.Str}{"Affinities".GetLang()}:{ThemeColor.Fg.Str} ", Len);
         foreach (Element element in Registry.Of<Element>().Where(e => e.IsVisible))
         {
             sb.Append($"{element.Icon} {affs.GetValueOrDefault(element, 0).Format()}");
 
             if (isCurrent)
             {
-                sb.Append($"{ThemeColor.White.Str}//{this.UnitType._Affinities.GetValueOrDefault(element,
+                sb.Append($"{ThemeColor.Fg.Str}//{this.UnitType._Affinities.GetValueOrDefault(element,
                     0).Format()}");
             }
 
@@ -425,7 +425,7 @@ public sealed class Unit
     public string GetStageStatString(StageType stageType, int stageNew)
     {
         StringBuilder str = new();
-        str.Append(ThemeColor.White.Str).Append(" (");
+        str.Append(ThemeColor.Fg.Str).Append(" (");
         int statCount = stageType.Stats.Length;
 
         for (int i = 0; i < statCount; i++)
@@ -438,7 +438,7 @@ public sealed class Unit
 
             str.Append("LogStageStat".FormatLang([this.FormatName(), stat.GetName(),
                 TextLib.FormatStat(statOld, statDefault), TextLib.FormatStat(statNew, statDefault),
-                statDefault.Format(ThemeColor.Imp), change.Format()]));
+                statDefault.Format(ThemeColor.Emphasis), change.Format()]));
 
             str.Append(i == (statCount - 1) ? ")" : ", ");
         }
@@ -570,10 +570,10 @@ public sealed class Unit
     {
         if (this.IsImmuneToBoolStat(stat))
         {
-            return ThemeColor.Pos + "Immune".GetLang();
+            return ThemeColor.Positive + "Immune".GetLang();
         }
 
-        return (stat.IsPositive ? ThemeColor.Pos : ThemeColor.Neg) +
+        return (stat.IsPositive ? ThemeColor.Positive : ThemeColor.Negative) +
             (this.IsBoolStat(stat) ? "Yes".GetLang() : "No".GetLang());
     }
 
@@ -768,7 +768,7 @@ public sealed class Unit
     // todo weapon
     public string GetEquipString()
     {
-        return $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.White.Str} {(this.Equipped as INameable)?
+        return $"{ThemeColor.Stat.Str}{"Accessory".GetLang()}:{ThemeColor.Fg.Str} {(this.Equipped as INameable)?
             .GetName() ?? "None".GetLang()}";
     }
 
@@ -802,7 +802,7 @@ public sealed class Unit
             else
             {
                 LogLib.Add("LogLoseBuff".IcuFormatLang([this.FormatName(false),
-                    buffInstance.Buff.MaxStacks, ThemeColor.Imp + buffInstance.Stacks,
+                    buffInstance.Buff.MaxStacks, ThemeColor.Emphasis + buffInstance.Stacks,
                     buffInstance.Buff.GetName(), buffInstance.Stacks]));
 
                 foreach (IBuffEffect buffEffect in buffInstance.Buff.BuffEffects)
@@ -898,7 +898,7 @@ public sealed class Unit
         int hpOld = this.Hp;
         this.Hp = Math.Clamp(this.Hp - dmg, 0, this._Stats[Stats.Hp]);
         int hpNew = this.Hp;
-        
+
         msg.Add("LogChangeHp".FormatLang([nameS,
             hpOld.Format(ThemeColor.Hp, false), hpNew.Format(ThemeColor.Hp, false),
             this.GetBaseStat(Stats.Hp).Format(ThemeColor.Hp, false), (-dmg).Format()]));
@@ -919,7 +919,7 @@ public sealed class Unit
     {
         string name = this.UnitType.GetName(
             // Color
-            this.GetSide() == Side.Ally ? ThemeColor.Ally : ThemeColor.Opp) +
+            this.GetSide() == Side.Ally ? ThemeColor.Ally : ThemeColor.Opponent) +
             // Dupe disambiguation
             (this.DupeIndex == 0 ? "" : $" {this.DupeIndex}");
 
@@ -930,7 +930,7 @@ public sealed class Unit
             suffix = name.ToUpperInvariant().EndsWith('S') ? "'" : "'s";
         }
 
-        return name + suffix + ThemeColor.White.Str;
+        return name + suffix + ThemeColor.Fg.Str;
     }
 
     public string GetDbgInfo()

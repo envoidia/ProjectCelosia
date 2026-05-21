@@ -48,7 +48,7 @@ public sealed class UnitType : IDescribable, IRegistrable
 
     public string GetName()
     {
-        return this.GetName(ThemeColor.White);
+        return this.GetName(ThemeColor.Fg);
     }
 
     public string GetDesc()

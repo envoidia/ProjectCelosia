@@ -22,7 +22,7 @@ public sealed class StatBarWidget : StatBarWidgetBase
             field = value;
             this.ThemeChange();
         }
-    } = ThemeColor.Neg;
+    } = ThemeColor.Negative;
 
     public ThemeColor ColorLayer1
     {
@@ -139,12 +139,13 @@ public sealed class StatBarWidget : StatBarWidgetBase
 
     private static void ThemeChangeStatic()
     {
-        _layers = [Settings.Theme.Pos, Settings.Theme.StatBarLayer4, Settings.Theme.StatBarLayer5, Settings.Theme.White];
+        _layers = [Settings.Theme.Positive, Settings.Theme.StatBarLayer4, Settings.Theme.StatBarLayer5];
     }
 
     private void _UpdateText()
     {
-        this.Text.Text = $"{ThemeColor.Black.Str}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
+        this.Text.Text =
+            $"{ThemeColor.BgSecondary.Str}{this.Val.FormatNoColor(false)}//{this.MaxVal.FormatNoColor(false)}";
         this.CalcLayout();
     }
 

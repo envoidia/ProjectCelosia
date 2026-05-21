@@ -68,7 +68,7 @@ public static class InputLib
                 double s = held.TotalSeconds;
 
                 Color c = CheckRaw(Keybinds.NonMergedKeybinds[i])
-                    ? Settings.Theme.Cooldown : Settings.Theme.White;
+                    ? Settings.Theme.Cooldown : Settings.Theme.Fg;
 
                 if ((KeybindId) i is KeybindId.Hotkey1 or KeybindId.Hotkey2)
                 {
@@ -79,7 +79,7 @@ public static class InputLib
                 }
 
                 _InputSb.Append($"{(CheckRaw(Keybinds.NonMergedKeybinds[i])
-                    ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)}{s.ToString("0.##")}\n");
+                    ? ThemeColor.Cooldown.Str : ThemeColor.Fg.Str)}{s.ToString("0.##")}\n");
             }
 
             Point pos = GetMousePos().ToPoint();
@@ -89,7 +89,7 @@ public static class InputLib
             appendBoolKey(IsMouseRightPressed());
 
             int scroll = GetMouseScroll();
-            _InputSb.Append($"{(scroll > 0 ? ThemeColor.Pos.Str : ThemeColor.Neg.Str)}{scroll}\n");
+            _InputSb.Append($"{(scroll > 0 ? ThemeColor.Positive.Str : ThemeColor.Negative.Str)}{scroll}\n");
 
             appendBoolKey(IsMouseMiddlePressed());
             appendBoolKey(IsMouseX1Pressed());
@@ -100,7 +100,7 @@ public static class InputLib
 
             static void appendBoolKey(bool isHeld, char? ending = '\n')
             {
-                _InputSb.Append($"{(isHeld ? ThemeColor.Pos.Str : ThemeColor.Neg.Str)}{(isHeld
+                _InputSb.Append($"{(isHeld ? ThemeColor.Positive.Str : ThemeColor.Negative.Str)}{(isHeld
                     ? "true" : "false")}{ending}");
             }
         });

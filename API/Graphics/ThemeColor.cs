@@ -1,56 +1,99 @@
+using API.Extensions;
 using API.Util;
 
 namespace API.Graphics;
 
 /// <summary>
 /// For when you need to store a color that could change with the <c>Theme</c>.
-/// Use <c>Theme.Get</c> to convert to a <c>ColorCode</c> and <c>ThemeColor.Str</c> to convert to a string
+/// Use <c>Theme.Get</c> to convert to a <c>Color</c> and <c>ThemeColor.Str</c> to convert to a string
 /// </summary>
 public enum ThemeColor
 {
-    White,
-    Gray,
-    Black,
-    TransBlack,
-
+    /// <inheritdoc cref="Theme.Fg"/>
     Fg,
+    /// <inheritdoc cref="Theme.Midtone"/>
+    Midtone,
+    /// <inheritdoc cref="Theme.Bg"/>
     Bg,
-    Accent,
+    /// <inheritdoc cref="Theme.BgSecondary"/>
+    BgSecondary,
+    /// <inheritdoc cref="Theme.BgTrans"/>
+    BgTrans,
 
-    Pos,
-    Neg,
-    Imp,
+    /// <inheritdoc cref="Theme.Accent"/>
+    Accent,
+    /// <inheritdoc cref="Theme.AccentDeemphasized"/>
+    AccentDeemphasized,
+
+    /// <inheritdoc cref="Theme.Positive"/>
+    Positive,
+    /// <inheritdoc cref="Theme.Negative"/>
+    Negative,
+    /// <inheritdoc cref="Theme.Emphasis"/>
+    Emphasis,
+
+    /// <inheritdoc cref="Theme.Ally"/>
     Ally,
-    Opp,
+    /// <inheritdoc cref="Theme.Opponent"/>
+    Opponent,
+    /// <inheritdoc cref="Theme.Turn"/>
     Turn,
+    /// <inheritdoc cref="Theme.Hp"/>
     Hp,
+    /// <inheritdoc cref="Theme.Sp"/>
     Sp,
+    /// <inheritdoc cref="Theme.Shield"/>
     Shield,
+    /// <inheritdoc cref="Theme.Bloom"/>
     Bloom,
+    /// <inheritdoc cref="Theme.Buff"/>
     Buff,
+    /// <inheritdoc cref="Theme.Skill"/>
     Skill,
+    /// <inheritdoc cref="Theme.Element"/>
     Element,
+    /// <inheritdoc cref="Theme.Passive"/>
     Passive,
+    /// <inheritdoc cref="Theme.Stat"/>
     Stat,
+    /// <inheritdoc cref="Theme.Reticle"/>
+    Reticle,
+    /// <inheritdoc cref="Theme.Cooldown"/>
     Cooldown,
 
+    /// <inheritdoc cref="Theme.SpBack"/>
     SpBack,
+    /// <inheritdoc cref="Theme.Overheal"/>
     Overheal,
+    /// <inheritdoc cref="Theme.StatBarLayer4"/>
     StatBarLayer4,
+    /// <inheritdoc cref="Theme.StatBarLayer5"/>
     StatBarLayer5,
 
+    /// <inheritdoc cref="Theme.Atk"/>
     Atk,
+    /// <inheritdoc cref="Theme.Def"/>
     Def,
+    /// <inheritdoc cref="Theme.Fth"/>
     Fth,
+    /// <inheritdoc cref="Theme.Agi"/>
     Agi,
 
+    /// <inheritdoc cref="Theme.Vis"/>
     Vis,
+    /// <inheritdoc cref="Theme.Ignis"/>
     Ignis,
+    /// <inheritdoc cref="Theme.Glacies"/>
     Glacies,
+    /// <inheritdoc cref="Theme.Fulgur"/>
     Fulgur,
+    /// <inheritdoc cref="Theme.Ventus"/>
     Ventus,
+    /// <inheritdoc cref="Theme.Terra"/>
     Terra,
+    /// <inheritdoc cref="Theme.Lux"/>
     Lux,
+    /// <inheritdoc cref="Theme.Malum"/>
     Malum
 }
 
@@ -62,49 +105,58 @@ public static class ThemeColorExtensions
         {
             get
             {
-                return @this switch
-                {
-                    ThemeColor.White => "/c[white]",
-                    ThemeColor.Gray => "/c[gray]",
-                    ThemeColor.Black => "/c[black]",
-                    ThemeColor.TransBlack => "/c[transBlack]",
-                    ThemeColor.Fg => "/c[fg]",
-                    ThemeColor.Bg => "/c[bg]",
-                    ThemeColor.Accent => "/c[accent]",
-                    ThemeColor.Pos => "/c[pos]",
-                    ThemeColor.Neg => "/c[neg]",
-                    ThemeColor.Imp => "/c[imp]",
-                    ThemeColor.Ally => "/c[ally]",
-                    ThemeColor.Opp => "/c[opp]",
-                    ThemeColor.Turn => "/c[turn]",
-                    ThemeColor.Hp => "/c[hp]",
-                    ThemeColor.Sp => "/c[sp]",
-                    ThemeColor.Shield => "/c[shield]",
-                    ThemeColor.Bloom => "/c[bloom]",
-                    ThemeColor.Buff => "/c[buff]",
-                    ThemeColor.Skill => "/c[skill]",
-                    ThemeColor.Element => "/c[element]",
-                    ThemeColor.Passive => "/c[passive]",
-                    ThemeColor.Stat => "/c[stat]",
-                    ThemeColor.Cooldown => "/c[cooldown]",
-                    ThemeColor.SpBack => "/c[spBack]",
-                    ThemeColor.Overheal => "/c[overheal]",
-                    ThemeColor.StatBarLayer4 => "/c[statBarLayer4]",
-                    ThemeColor.StatBarLayer5 => "/c[statBarLayer5]",
-                    ThemeColor.Atk => "/c[atk]",
-                    ThemeColor.Def => "/c[def]",
-                    ThemeColor.Fth => "/c[fth]",
-                    ThemeColor.Agi => "/c[agi]",
-                    ThemeColor.Vis => "/c[vis]",
-                    ThemeColor.Ignis => "/c[ignis]",
-                    ThemeColor.Glacies => "/c[glacies]",
-                    ThemeColor.Fulgur => "/c[fulgur]",
-                    ThemeColor.Ventus => "/c[ventus]",
-                    ThemeColor.Terra => "/c[terra]",
-                    ThemeColor.Lux => "/c[lux]",
-                    ThemeColor.Malum => "/c[malum]",
-                    _ => throw new ClosedEnumsWhenException()
-                };
+                return $"/c[{@this.ToString().ToLower()}]";
+                // return @this switch
+                // {
+                //     ThemeColor.Fg => "/c[fg]",
+                //     ThemeColor.Midtone => "/c[midtone]",
+                //     ThemeColor.Bg => "/c[bg]",
+                //     ThemeColor.BgSecondary => "/c[bgSecondary]",
+                //     ThemeColor.BgTrans => "/c[bgTrans]",
+
+                //     ThemeColor.Accent => "/c[accent]",
+                //     ThemeColor.AccentDeemphasized => "/c[accentDeemphasized]",
+
+                //     ThemeColor.Positive => "/c[positive]",
+                //     ThemeColor.Negative => "/c[negative]",
+                //     ThemeColor.Emphasis => "/c[emphasis]",
+
+                //     ThemeColor.Ally => "/c[ally]",
+                //     ThemeColor.Opponent => "/c[opponent]",
+                //     ThemeColor.Turn => "/c[turn]",
+                //     ThemeColor.Hp => "/c[hp]",
+                //     ThemeColor.Sp => "/c[sp]",
+                //     ThemeColor.Shield => "/c[shield]",
+                //     ThemeColor.Bloom => "/c[bloom]",
+                //     ThemeColor.Buff => "/c[buff]",
+                //     ThemeColor.Skill => "/c[skill]",
+                //     ThemeColor.Element => "/c[element]",
+                //     ThemeColor.Passive => "/c[passive]",
+                //     ThemeColor.Stat => "/c[stat]",
+                //     ThemeColor.Reticle => "/c[reticle]",
+                //     ThemeColor.Cooldown => "/c[cooldown]",
+
+                //     ThemeColor.SpBack => "/c[spBack]",
+                //     ThemeColor.Overheal => "/c[overheal]",
+                //     ThemeColor.StatBarLayer4 => "/c[statBarLayer4]",
+                //     ThemeColor.StatBarLayer5 => "/c[statBarLayer5]",
+
+                //     ThemeColor.Atk => "/c[atk]",
+                //     ThemeColor.Def => "/c[def]",
+                //     ThemeColor.Fth => "/c[fth]",
+                //     ThemeColor.Agi => "/c[agi]",
+
+                //     ThemeColor.Vis => "/c[vis]",
+                //     ThemeColor.Ignis => "/c[ignis]",
+                //     ThemeColor.Glacies => "/c[glacies]",
+                //     ThemeColor.Fulgur => "/c[fulgur]",
+                //     ThemeColor.Ventus => "/c[ventus]",
+                //     ThemeColor.Terra => "/c[terra]",
+                //     ThemeColor.Lux => "/c[lux]",
+                //     ThemeColor.Malum => "/c[malum]",
+
+                //     _ => throw new ClosedEnumsWhenException()
+                // };
             }
         }
     }

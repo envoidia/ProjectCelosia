@@ -10,7 +10,7 @@ public static class TextLib
     /// </returns>
     public static ThemeColor GetColor(float val, int threshold, bool isPositive = true)
     {
-        return val > threshold ? GetIncColor(isPositive) : val < threshold ? GetDecColor(isPositive) : ThemeColor.Imp;
+        return val > threshold ? GetIncColor(isPositive) : val < threshold ? GetDecColor(isPositive) : ThemeColor.Emphasis;
     }
 
     /// <returns>
@@ -18,7 +18,7 @@ public static class TextLib
     /// </returns>
     public static ThemeColor GetIncColor(bool isPositive)
     {
-        return isPositive ? ThemeColor.Pos : ThemeColor.Neg;
+        return isPositive ? ThemeColor.Positive : ThemeColor.Negative;
     }
 
     /// <returns>
@@ -26,7 +26,7 @@ public static class TextLib
     /// </returns>
     public static ThemeColor GetDecColor(bool isPositive)
     {
-        return isPositive ? ThemeColor.Neg : ThemeColor.Pos;
+        return isPositive ? ThemeColor.Negative : ThemeColor.Positive;
     }
 
     /// <summary>
@@ -34,6 +34,6 @@ public static class TextLib
     /// </summary>
     public static string FormatStat(int stat, int statDefault)
     {
-        return stat.Format(stat > statDefault ? ThemeColor.Pos : stat < statDefault ? ThemeColor.Neg : ThemeColor.Imp, false);
+        return stat.Format(stat > statDefault ? ThemeColor.Positive : stat < statDefault ? ThemeColor.Negative : ThemeColor.Emphasis, false);
     }
 }

@@ -42,7 +42,7 @@ public static class StringExtensions
             // Default to ID
             DebugConsole.Log($"Lang entry {key} not found", nameof(StringExtensions),
                 LogLevel.Warning);
-            return $"{ThemeColor.Neg.Str}MISSING LANG ENTRY: {key}{ThemeColor.White.Str}";
+            return $"{ThemeColor.Negative.Str}MISSING LANG ENTRY: {key}{ThemeColor.Fg.Str}";
         }
 
         /// <returns>
@@ -103,14 +103,6 @@ public static class StringExtensions
         public string IcuFormatLang(object args)
         {
             return @this.IcuFormatLang(Core.Id, [args]);
-        }
-
-        /// <returns>
-        /// The provided <c>string</c> with the first character lowercased
-        /// </returns>
-        public string FirstToLower()
-        {
-            return string.IsNullOrEmpty(@this) ? @this : char.ToLower(@this[0]) + @this[1..];
         }
     }
 }

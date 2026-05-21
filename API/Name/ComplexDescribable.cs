@@ -52,7 +52,7 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
 
     public virtual string GetName()
     {
-        return this.GetName(ThemeColor.White);
+        return this.GetName(ThemeColor.Fg);
     }
 
     public virtual string GetDesc()
@@ -83,9 +83,9 @@ public abstract class ComplexDescribable(string keyName, string icon, string key
 
         foreach (IDescribable inclusion in di)
         {
-            formattedInclusions.Append('\n').Append(ThemeColor.White.Str).Append('(')
-                .Append(inclusion.GetName()).Append(ThemeColor.White.Str).Append(": ")
-                .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.White.Str).Append(')');
+            formattedInclusions.Append('\n').Append(ThemeColor.Fg.Str).Append('(')
+                .Append(inclusion.GetName()).Append(ThemeColor.Fg.Str).Append(": ")
+                .Append(inclusion.GetDesc().Replace("\n", ". ")).Append(ThemeColor.Fg.Str).Append(')');
         }
 
         if (formattedInclusions.Capacity > Cap) // todo remove

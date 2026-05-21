@@ -425,7 +425,7 @@ public static class Commands
                 )
                 {
                     sb.Append(
-                        $"\n{ThemeColor.Imp.Str}[{kvp.Key}]{ThemeColor.White.Str} {kvp.Value.Desc}"
+                        $"\n{ThemeColor.Emphasis.Str}[{kvp.Key}]{ThemeColor.Fg.Str} {kvp.Value.Desc}"
                     );
                 }
 
@@ -435,25 +435,25 @@ public static class Commands
             case "kb":
                 return new(
                     $"""
-                    {ThemeColor.Imp.Str}[Left/Right]{ThemeColor.White.Str} Move cursor
-                    {ThemeColor.Imp.Str}[BkSp/Del]{ThemeColor.White.Str} Delete to left/right
-                    {ThemeColor.Imp.Str}[Ctrl]{ThemeColor.White.Str} Move and delete by word (space/punctuation-separated)
-                    {ThemeColor.Imp.Str}[Alt]{ThemeColor.White.Str} Move and delete by word part (case/space/punctuation-separated)
-                    {ThemeColor.Imp.Str}[Home/End]{ThemeColor.White.Str} Cursor to start/end
+                    {ThemeColor.Emphasis.Str}[Left/Right]{ThemeColor.Fg.Str} Move cursor
+                    {ThemeColor.Emphasis.Str}[BkSp/Del]{ThemeColor.Fg.Str} Delete to left/right
+                    {ThemeColor.Emphasis.Str}[Ctrl]{ThemeColor.Fg.Str} Move and delete by word (space/punctuation-separated)
+                    {ThemeColor.Emphasis.Str}[Alt]{ThemeColor.Fg.Str} Move and delete by word part (case/space/punctuation-separated)
+                    {ThemeColor.Emphasis.Str}[Home/End]{ThemeColor.Fg.Str} Cursor to start/end
 
-                    {ThemeColor.Imp.Str}[Ctrl+Shift+BkSp/Del]{ThemeColor.White.Str} Delete all to left/right
-                    {ThemeColor.Imp.Str}[Ctrl+Shift+K]{ThemeColor.White.Str} Delete all
+                    {ThemeColor.Emphasis.Str}[Ctrl+Shift+BkSp/Del]{ThemeColor.Fg.Str} Delete all to left/right
+                    {ThemeColor.Emphasis.Str}[Ctrl+Shift+K]{ThemeColor.Fg.Str} Delete all
 
-                    {ThemeColor.Imp.Str}[Up/Down]{ThemeColor.White.Str} Move through command history
-                    {ThemeColor.Imp.Str}[Ctrl+Up/Down]{ThemeColor.White.Str} Move through output history
-                    {ThemeColor.Imp.Str}[Ctrl+Home/End]{ThemeColor.White.Str} To top/bottom of output history
+                    {ThemeColor.Emphasis.Str}[Up/Down]{ThemeColor.Fg.Str} Move through command history
+                    {ThemeColor.Emphasis.Str}[Ctrl+Up/Down]{ThemeColor.Fg.Str} Move through output history
+                    {ThemeColor.Emphasis.Str}[Ctrl+Home/End]{ThemeColor.Fg.Str} To top/bottom of output history
 
-                    {ThemeColor.Imp.Str}[Tab]{ThemeColor.White.Str} Accept autocomplete
-                    {ThemeColor.Imp.Str}[Ctrl+C/V/X]{ThemeColor.White.Str} Copy/paste/cut
-                    {ThemeColor.Imp.Str}[Enter]{ThemeColor.White.Str} Execute command
-                    {ThemeColor.Imp.Str}[Esc]{ThemeColor.White.Str} Toggle focus
+                    {ThemeColor.Emphasis.Str}[Tab]{ThemeColor.Fg.Str} Accept autocomplete
+                    {ThemeColor.Emphasis.Str}[Ctrl+C/V/X]{ThemeColor.Fg.Str} Copy/paste/cut
+                    {ThemeColor.Emphasis.Str}[Enter]{ThemeColor.Fg.Str} Execute command
+                    {ThemeColor.Emphasis.Str}[Esc]{ThemeColor.Fg.Str} Toggle focus
 
-                    Hold {ThemeColor.Imp.Str}[Shift]{ThemeColor.White.Str} to move faster in all cases
+                    Hold {ThemeColor.Emphasis.Str}[Shift]{ThemeColor.Fg.Str} to move faster in all cases
 
                     Non-control keys are used to type
                     """
@@ -1374,15 +1374,15 @@ public static class Commands
                 );
 
                 return new(
-                    $"Gave {ThemeColor.Imp.Str}{stacks}x {buff.GetNameWithoutIcon()}{ThemeColor.White.Str} to {unit
-                        .FormatName(false)} for {ThemeColor.Imp.Str}{turns}{ThemeColor.White.Str} turns"
+                    $"Gave {ThemeColor.Emphasis.Str}{stacks}x {buff.GetNameWithoutIcon()}{ThemeColor.Fg.Str} to {unit
+                        .FormatName(false)} for {ThemeColor.Emphasis.Str}{turns}{ThemeColor.Fg.Str} turns"
                 );
 
             case Remove:
                 if (unit.RemoveBuffs(buff))
                 {
                     return new(
-                        $"Removed {buff.GetNameWithoutIcon()}{ThemeColor.White
+                        $"Removed {buff.GetNameWithoutIcon()}{ThemeColor.Fg
                         .Str} from {unit.FormatName(false)}"
                     );
                 }

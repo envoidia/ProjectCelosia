@@ -53,7 +53,7 @@ public sealed class Keybind(string keyName, KeybindId id, Keys key, Buttons butt
 
     public string GetName()
     {
-        return this.GetName(ThemeColor.White);
+        return this.GetName(ThemeColor.Fg);
     }
 
     public string GetDesc()

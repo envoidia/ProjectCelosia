@@ -199,12 +199,12 @@ public static class BattleLib
                 mult = -1;
             }
 
-            _Actors.Add(_Sprites[i] = new(ThemeColor.TransBlack)
+            _Actors.Add(_Sprites[i] = new(ThemeColor.BgTrans)
             {
                 Position = new(x2, y),
                 Size = new(RenderLib.UnitSpriteSize),
                 AnimFromDir = dir,
-                OutlineColor = ThemeColor.White
+                OutlineColor = ThemeColor.Fg
             });
 
             _Actors.Add(_Names[i] = new()
@@ -370,8 +370,8 @@ public static class BattleLib
         for (int i = 0; i < TeamCount; i++)
         {
             _BloomLabels[i].Text =
-                $"{ThemeColor.Stat.Str}{"Bloom".GetLang()}{ThemeColor.White.Str}: {ThemeColor.Bloom.Str}{Battle
-                    .GetTeamBySide((Side) i).Bloom}{ThemeColor.White.Str}//{ThemeColor.Bloom.Str}1,000";
+                $"{ThemeColor.Stat.Str}{"Bloom".GetLang()}{ThemeColor.Fg.Str}: {ThemeColor.Bloom.Str}{Battle
+                    .GetTeamBySide((Side) i).Bloom}{ThemeColor.Fg.Str}//{ThemeColor.Bloom.Str}1,000";
         }
 
         Unit[] units = Battle.GetAllUnits();
@@ -387,7 +387,7 @@ public static class BattleLib
             // Stat display
             // todo remove
             // _Stats[i].Text = $"{u.FormatName(false)}\n{"StatHp".GetLang()}: {u.Hp}{(u.Shield > 0 ? $"{u.Shield.Format(
-            //     ThemeColor.Shield, false)}{ThemeColor.White.Str}" : "")}//{u.GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(u.IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{u.Sp
+            //     ThemeColor.Shield, false)}{ThemeColor.Fg.Str}" : "")}//{u.GetBaseStat(Stats.Hp)}\n{"StatSp".GetLang()}: {(u.IsBoolStat(BoolStats.InfiniteSp) ? '∞' : $"{u.Sp
             //     .Format(false)}//{1000.Format(false)}")}";
 
             // Stat display
@@ -416,7 +416,7 @@ public static class BattleLib
 
                     buffCount++;
 
-                    sb.Append(stageType.Icon).Append(ThemeColor.White.Str).Append((stage >= 1) ? '+' : "")
+                    sb.Append(stageType.Icon).Append(ThemeColor.Fg.Str).Append((stage >= 1) ? '+' : "")
                     .Append(stage).Append('(').Append(u.GetStageTurns(stageType)).Append(") ");
                 }
             }
@@ -435,15 +435,15 @@ public static class BattleLib
 
                 if (buffInstance.Buff == Buffs.Defend)
                 {
-                    sb.Append($"{buffInstance.Buff.Icon}{ThemeColor.White.Str}x{u.Defend.Format()}({buffInstance.Turns}) ");
+                    sb.Append($"{buffInstance.Buff.Icon}{ThemeColor.Fg.Str}x{u.Defend.Format()}({buffInstance.Turns}) ");
                 }
                 else if (buffInstance.Buff == Buffs.Shield)
                 {
-                    sb.Append($"{buffInstance.Buff.Icon}{ThemeColor.White.Str}x{u.Shield.Format()}({buffInstance.Turns}) ");
+                    sb.Append($"{buffInstance.Buff.Icon}{ThemeColor.Fg.Str}x{u.Shield.Format()}({buffInstance.Turns}) ");
                 }
                 else
                 {
-                    sb.Append(buffInstance.Buff.Icon + ThemeColor.White.Str);
+                    sb.Append(buffInstance.Buff.Icon + ThemeColor.Fg.Str);
 
                     if (buffInstance.Buff.MaxStacks > 1)
                     {
@@ -603,7 +603,7 @@ public static class BattleLib
 
         int y = 300 + (450 * index);
 
-        _SkillList.SetTextL([.. skills.Select(s => s.Skill.GetName(ThemeColor.White))]);
+        _SkillList.SetTextL([.. skills.Select(s => s.Skill.GetName(ThemeColor.Fg))]);
         _SkillList.SetTextR([.. skills.Select(s => s.GetCostCdFormatted(u))]);
         _SkillList.Position = new(650 + RenderLib.UnitSpriteSize, y);
 
@@ -629,7 +629,7 @@ public static class BattleLib
     {
         for (int i = 0; i < UnitCount; i++)
         {
-            _Sprites[i].FillColor = ThemeColor.TransBlack;
+            _Sprites[i].FillColor = ThemeColor.BgTrans;
             _Affinities[i].Text = "";
         }
     }
@@ -662,7 +662,7 @@ public static class BattleLib
 
         for (int i = 0; i < UnitCount; i++)
         {
-            _Sprites[i].FillColor = _validMainTargets[i] ? ThemeColor.Accent : ThemeColor.TransBlack;
+            _Sprites[i].FillColor = _validMainTargets[i] ? ThemeColor.Accent : ThemeColor.BgTrans;
         }
     }
 
@@ -965,7 +965,7 @@ public static class BattleLib
 
     public static string GetTurnString(int turn)
     {
-        return $"{ThemeColor.Turn.Str}{"Turn".GetLang()} {turn}{ThemeColor.White.Str}";
+        return $"{ThemeColor.Turn.Str}{"Turn".GetLang()} {turn}{ThemeColor.Fg.Str}";
     }
 
     public static int GetUnitGraphicY(int pos)

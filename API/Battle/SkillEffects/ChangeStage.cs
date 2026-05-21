@@ -50,13 +50,13 @@ public sealed class ChangeStage(StageType stageType, int turns, int stacks) : Sk
             unit.SetStageTurns(stageType, turnsMod);
             if (stageNew != stageOld)
             {
-                msg = str + "LogTurnsNameless".FormatLang([ThemeColor.Imp.Str + turnsOld,
-                    ThemeColor.Imp.Str + turnsMod]) + str2;
+                msg = str + "LogTurnsNameless".FormatLang([ThemeColor.Emphasis.Str + turnsOld,
+                    ThemeColor.Emphasis.Str + turnsMod]) + str2;
             }
             else
             {
                 msg = "LogChangeStageTurns".FormatLang([unit.FormatName(), stageName,
-                    ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]);
+                    ThemeColor.Emphasis.Str + turnsOld, ThemeColor.Emphasis.Str + turnsMod]);
             }
         }
         else if (stageNew != stageOld)

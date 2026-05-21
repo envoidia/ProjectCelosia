@@ -235,17 +235,17 @@ public static class DebugUtil
         for (int i = 0; i < Keybinds.NonMergedKeybinds.Count; i++)
         {
             Keybind kb = Keybinds.NonMergedKeybinds[i];
-            sb.Append($"{ThemeColor.Imp.Str}[{kb.GetCurrentGlyphName()}]{ThemeColor.White.Str} {kb.GetName()}\n");
+            sb.Append($"{ThemeColor.Emphasis.Str}[{kb.GetCurrentGlyphName()}]{ThemeColor.Fg.Str} {kb.GetName()}\n");
         }
 
         sb.Append($"""
-            {ThemeColor.Imp.Str}[MousePos]{ThemeColor.White.Str}
-            {ThemeColor.Imp.Str}[MouseL]{ThemeColor.White.Str}
-            {ThemeColor.Imp.Str}[MouseR]{ThemeColor.White.Str}
-            {ThemeColor.Imp.Str}[MouseScroll]{ThemeColor.White.Str}
-            {ThemeColor.Imp.Str}[MouseMiddle]{ThemeColor.White.Str}
-            {ThemeColor.Imp.Str}[MouseX1]{ThemeColor.White.Str}
-            {ThemeColor.Imp.Str}[MouseX2]{ThemeColor.White.Str}
+            {ThemeColor.Emphasis.Str}[MousePos]{ThemeColor.Fg.Str}
+            {ThemeColor.Emphasis.Str}[MouseL]{ThemeColor.Fg.Str}
+            {ThemeColor.Emphasis.Str}[MouseR]{ThemeColor.Fg.Str}
+            {ThemeColor.Emphasis.Str}[MouseScroll]{ThemeColor.Fg.Str}
+            {ThemeColor.Emphasis.Str}[MouseMiddle]{ThemeColor.Fg.Str}
+            {ThemeColor.Emphasis.Str}[MouseX1]{ThemeColor.Fg.Str}
+            {ThemeColor.Emphasis.Str}[MouseX2]{ThemeColor.Fg.Str}
             """);
 
         Assert.CapIs(sb, Cap); // todo remove before release (it may be wrong depending on lang and binds)

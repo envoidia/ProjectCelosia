@@ -96,12 +96,12 @@ internal sealed class _InspectLib
     // private static readonly GuiBoxChain _PageListBox = new(638, 446, 501) { Priority = RenderPriority.B2Med };
 
     // Current unit items
-    private static readonly ARectangle _UnitBounds = new(ThemeColor.TransBlack)
+    private static readonly ARectangle _UnitBounds = new(ThemeColor.BgTrans)
     {
         Position = new(40, 95),
         Size = new(RenderLib.UnitSpriteSize),
         Priority = RenderPriority.B3Med,
-        OutlineColor = ThemeColor.White
+        OutlineColor = ThemeColor.Fg
     };
 
     private const int _StatStartX = 450;
@@ -371,7 +371,7 @@ internal sealed class _InspectLib
     {
         Unit u = _GetUnitsSortedByAgi()[index];
 
-        _Lvl.Text = $"Lvl {ThemeColor.Imp.Str}{u.Lvl + 1}";
+        _Lvl.Text = $"Lvl {ThemeColor.Emphasis.Str}{u.Lvl + 1}";
 
         // HP and SP
         // todo account for infinite sp
@@ -407,7 +407,7 @@ internal sealed class _InspectLib
         {
             case _InspectPage.Skills:
                 _PageItems.SetTextL([.. u.SkillInstances.Select(s
-                    => s.Skill.GetName(ThemeColor.White))]);
+                    => s.Skill.GetName(ThemeColor.Fg))]);
 
                 _PageItems.SetTextR([.. u.SkillInstances.Select(s
                     => s.GetCostCdFormatted(u))]);
@@ -422,7 +422,7 @@ internal sealed class _InspectLib
                 _PageItems.SetTextR(); // todo
 
                 _PageItems.SetTextL([.. u.Passives.Select(s
-                    => s.GetName(ThemeColor.White))]);
+                    => s.GetName(ThemeColor.Fg))]);
 
                 _PageItems.CalcLayout();
 
@@ -432,7 +432,7 @@ internal sealed class _InspectLib
 
             case _InspectPage.Buffs:
                 _PageItems.SetTextL([.. u.BuffInstances.Select(b
-                    => b.Buff.GetName(ThemeColor.White))]);
+                    => b.Buff.GetName(ThemeColor.Fg))]);
 
                 _PageItems.SetTextR([.. u.BuffInstances.Select(b
                     => b.GetTurnsStacksFormatted())]);
@@ -485,7 +485,7 @@ internal sealed class _InspectLib
             return;
         }
 
-        _Desc.Text = $"{cd.GetName()}{ThemeColor.White.Str}\n\n{cd.GetFullDesc()}";
+        _Desc.Text = $"{cd.GetName()}{ThemeColor.Fg.Str}\n\n{cd.GetFullDesc()}";
     }
 
     private static void _SetStatVisibility(bool visible)

@@ -37,7 +37,7 @@ public sealed class StatMod : INameable, IRegistrable
         {
             > 0 => val.Format(TextLib.GetIncColor(this.IsPositive)),
             < 0 => val.Format(TextLib.GetDecColor(this.IsPositive)),
-            _ => val.Format(ThemeColor.Imp)
+            _ => val.Format(ThemeColor.Emphasis)
         };
     }
 

@@ -22,7 +22,7 @@ public static class NumberExtensions
         public string Format(ThemeColor color, bool useSign = true, char? suffix = null, float divisor = 1f)
         {
             return color.Str + (useSign && @this > 0 ? '+' : null) + ((int) (@this / divisor)).ToString(IntegerFormat) +
-            suffix + ThemeColor.White.Str;
+            suffix + ThemeColor.Fg.Str;
         }
 
         /// <returns>
@@ -44,7 +44,7 @@ public static class NumberExtensions
         {
             if (!useSign)
             {
-                return @this.Format(ThemeColor.White, false);
+                return @this.Format(ThemeColor.Fg, false);
             }
 
             return @this.Format(TextLib.GetColor(@this, threshold, isPositive));
@@ -92,7 +92,7 @@ public static class NumberExtensions
         public string Format(int threshold, bool isPositive = true, bool useSign = true, char? suffix = null, float divisor = 1f)
         {
             return TextLib.GetColor(@this, threshold, isPositive).Str + (useSign && @this > 0 ? '+' : null) + (@this / divisor)
-            .ToString(NumberFormat) + suffix + ThemeColor.White.Str;
+            .ToString(NumberFormat) + suffix + ThemeColor.Fg.Str;
         }
 
         /// <returns>

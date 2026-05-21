@@ -32,9 +32,9 @@ public static class LogLib
     /// </summary>
     private static int _logScroll = 0;
 
-    private static readonly ARectangle _Scrollbar = new(ThemeColor.White, RenderPriority.B3Med)
+    private static readonly ARectangle _Scrollbar = new(ThemeColor.Fg, RenderPriority.B3Med)
     {
-        OutlineColor = ThemeColor.White,
+        OutlineColor = ThemeColor.Fg,
         Rotation = ListWidget.NormalSlant / -84.85f
     };
 

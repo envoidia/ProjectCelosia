@@ -56,8 +56,8 @@ public static class DebugConsole
             if (value && (StateMachine.State.Menus.Count == 0 || StateMachine.State.Menus[^1] != _Menu))
             {
                 StateMachine.State.AddMenu(_Menu);
-                _color = ThemeColor.Imp;
-                _colorErr = ThemeColor.Neg;
+                _color = ThemeColor.Emphasis;
+                _colorErr = ThemeColor.Negative;
                 _Input.OnChangeText!.Invoke();
 
                 return;
@@ -66,8 +66,8 @@ public static class DebugConsole
             if (StateMachine.State.Menus.Count > 0 && StateMachine.State.Menus[^1] == _Menu)
             {
                 StateMachine.State.RemoveMenu();
-                _color = ThemeColor.Gray;
-                _colorErr = ThemeColor.Gray;
+                _color = ThemeColor.Midtone;
+                _colorErr = ThemeColor.Midtone;
                 _Input.OnChangeText!.Invoke();
             }
         }
@@ -104,17 +104,17 @@ public static class DebugConsole
         IsVisible = false
     };
 
-    private static readonly ARectangle _Cursor = new(ThemeColor.Gray, RenderPriority.Highest)
+    private static readonly ARectangle _Cursor = new(ThemeColor.Midtone, RenderPriority.Highest)
     {
         Position = new(_TextXWithOff, World.H - 50),
         IsVisible = false
     };
 
-    private static readonly ARectangle _Scrollbar = new(ThemeColor.Gray, RenderPriority.Highest)
+    private static readonly ARectangle _Scrollbar = new(ThemeColor.Midtone, RenderPriority.Highest)
     {
         X = 10,
         Alignment = Alignment.BottomLeft,
-        OutlineColor = ThemeColor.Gray
+        OutlineColor = ThemeColor.Midtone
     };
 
     private const int _InHistLimit = 128;
@@ -202,7 +202,7 @@ public static class DebugConsole
 
             _CommandHint.X = _Command.X + _Command.Width - 18;
 
-            _CommandHint.Text = $"{ThemeColor.Gray.Str}{match}{(text.EndsWith(' ')
+            _CommandHint.Text = $"{ThemeColor.Midtone.Str}{match}{(text.EndsWith(' ')
                 ? null : ' ')}{hints}{(_Focused ? "" : "([Esc] to focus)")}";
         }
     };
@@ -213,12 +213,12 @@ public static class DebugConsole
         GetInputPrompt = static () => null
     };
 
-    internal static readonly ARectangle _Line = new(ThemeColor.Gray, RenderPriority.Highest)
+    internal static readonly ARectangle _Line = new(ThemeColor.Midtone, RenderPriority.Highest)
     {
         Position = new(0, World.H - 60),
         Size = new(_MinBgWidth, 1),
         IsVisible = false,
-        OutlineColor = ThemeColor.Gray
+        OutlineColor = ThemeColor.Midtone
     };
 
     #endregion
@@ -242,12 +242,12 @@ public static class DebugConsole
         string color1 = logLevel switch
         {
             LogLevel.Info => ThemeColor.Accent.Str,
-            LogLevel.Warning => ThemeColor.Imp.Str,
-            LogLevel.Err => ThemeColor.Neg.Str,
+            LogLevel.Warning => ThemeColor.Emphasis.Str,
+            LogLevel.Err => ThemeColor.Negative.Str,
             _ => throw new ClosedEnumsWhenException()
         };
 
-        string color2 = logLevel == LogLevel.Info ? ThemeColor.White.Str : color1;
+        string color2 = logLevel == LogLevel.Info ? ThemeColor.Fg.Str : color1;
 
         ReadOnlySpan<string> msgLines = msg.Split('\n');
 

@@ -56,7 +56,7 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
                 buffInstance.Stacks = stacksNew;
 
                 str.Append("LogGiveBuffStacks".FormatLang([unit.FormatName(), buffName,
-                    ThemeColor.Imp.Str + stacksOld, ThemeColor.Imp.Str + stacksNew]));
+                    ThemeColor.Emphasis.Str + stacksOld, ThemeColor.Emphasis.Str + stacksNew]));
             }
 
             int turnsOld = buffInstance.Turns;
@@ -66,14 +66,14 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
 
                 if (stacksNew != stacksOld)
                 {
-                    str.Append("LogTurnsNameless".FormatLang([ThemeColor.Imp.Str + turnsOld,
-                        ThemeColor.Imp.Str + turnsMod]));
+                    str.Append("LogTurnsNameless".FormatLang([ThemeColor.Emphasis.Str + turnsOld,
+                        ThemeColor.Emphasis.Str + turnsMod]));
                 }
                 else
                 {
                     str.Clear();
                     str.Append("LogGiveBuffTurns".FormatLang([unit.FormatName(),
-                        buffName, ThemeColor.Imp.Str + turnsOld, ThemeColor.Imp.Str + turnsMod]));
+                        buffName, ThemeColor.Emphasis.Str + turnsOld, ThemeColor.Emphasis.Str + turnsMod]));
                 }
             }
 
@@ -96,8 +96,8 @@ public sealed class GiveBuff(Buff buff, int turns, int stacks = 1) : SkillEffect
         {
             // Add buff
             LogLib.Add("LogGiveBuffGain".IcuFormatLang([unit.FormatName(false),
-                buffName, buff.MaxStacks, ThemeColor.Imp.Str + stacksMod, stacksMod,
-                ThemeColor.Imp.Str + turnsMod, turnsMod]));
+                buffName, buff.MaxStacks, ThemeColor.Emphasis.Str + stacksMod, stacksMod,
+                ThemeColor.Emphasis.Str + turnsMod, turnsMod]));
 
             unit.GiveBuffInstances(new BuffInstance(buff, turnsMod, stacksMod));
         }

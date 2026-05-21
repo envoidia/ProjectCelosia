@@ -72,20 +72,20 @@ public sealed class Theme : IDescribable, IRegistrable
 
             Apollo = new(Core.Id, "ThemeApollo")
             {
-                White = whites[3],
-                Gray = whites[0],
-                Black = grayBlues[0],
-                TransBlack = new(grayBlues[0], TransAlpha),
-
+                BgTrans = new(grayBlues[0], TransAlpha),
+                Midtone = whites[0],
                 Fg = whites[3],
                 Bg = grayBlues[1],
                 Accent = blues[1],
+                AccentDeemphasized = Color.Blue,
 
-                Pos = greens[2],
-                Neg = redOranges[4],
-                Imp = greens[5],
+                BgSecondary = Color.Red,
+                Reticle = Color.Red,
+                Positive = greens[2],
+                Negative = redOranges[4],
+                Emphasis = greens[5],
                 Ally = blues[3],
-                Opp = redOranges[3],
+                Opponent = redOranges[3],
                 Turn = pinks[4],
                 Hp = greens[3],
                 Sp = pinks[3],
@@ -148,20 +148,20 @@ public sealed class Theme : IDescribable, IRegistrable
 
             Void = new(Core.Id, "ThemeVoid")
             {
-                White = white,
-                Gray = gray,
-                Black = black,
-                TransBlack = new(black, TransAlpha),
+                BgTrans = new(black, TransAlpha), Midtone = gray,
 
                 Fg = white,
                 Bg = black,
                 Accent = gray,
+                AccentDeemphasized = Color.Blue,
 
-                Pos = blueGreen,
-                Neg = salmon,
-                Imp = paleYellow,
+                BgSecondary = Color.Red,
+                Reticle = Color.Red,
+                Positive = blueGreen,
+                Negative = salmon,
+                Emphasis = paleYellow,
                 Ally = electricBlue,
-                Opp = darkPink,
+                Opponent = darkPink,
                 Turn = bluePurple,
                 Hp = green,
                 Sp = bluePurple,
@@ -224,20 +224,20 @@ public sealed class Theme : IDescribable, IRegistrable
 
             VSCode = new(Core.Id, "ThemeVSCode")
             {
-                White = white,
-                Gray = gray,
-                Black = black,
-                TransBlack = new(black, TransAlpha),
+                BgTrans = new(black, TransAlpha), Midtone = gray,
 
                 Fg = white,
                 Bg = black,
                 Accent = darkElectricBlue,
+                AccentDeemphasized = Color.Blue,
 
-                Pos = blueGreen,
-                Neg = red,
-                Imp = paleYellow,
+                BgSecondary = Color.Red,
+                Reticle = Color.Red,
+                Positive = blueGreen,
+                Negative = red,
+                Emphasis = paleYellow,
                 Ally = paleBlue,
-                Opp = red,
+                Opponent = red,
                 Turn = darkPink,
                 Hp = paleGreen,
                 Sp = paleBlue,
@@ -283,20 +283,20 @@ public sealed class Theme : IDescribable, IRegistrable
 
             HighContrast = new(Core.Id, "ThemeHighContrast")
             {
-                White = Color.White,
-                Gray = Color.Gray,
-                Black = Color.Black,
-                TransBlack = new(Color.Black, TransAlpha),
+                BgTrans = new(Color.Black, TransAlpha), Midtone = Color.Gray,
 
                 Fg = Color.White,
                 Bg = Color.Black,
                 Accent = new(160, 32, 240),
+                AccentDeemphasized = Color.Blue,
 
-                Pos = Color.Lime,
-                Neg = lightRed,
-                Imp = Color.Yellow,
+                BgSecondary = Color.Red,
+                Reticle = Color.Red,
+                Positive = Color.Lime,
+                Negative = lightRed,
+                Emphasis = Color.Yellow,
                 Ally = new(131, 170, 240), // todo not readable enough
-                Opp = new(255, 116, 116),
+                Opponent = new(255, 116, 116),
                 Turn = new(160, 52, 255),
                 Hp = new(26, 225, 50),
                 Sp = new(187, 0, 255),
@@ -354,20 +354,21 @@ public sealed class Theme : IDescribable, IRegistrable
 
             MikuMikuTheme = new(Core.Id, "ThemeMikuMikuTheme")
             {
-                White = white,
-                Gray = gray,
-                Black = black,
-                TransBlack = new(black, TransAlpha),
+                BgTrans = new(black, TransAlpha),
 
                 Fg = paleBlue,
+                Midtone = gray,
                 Bg = black,
                 Accent = darkBlue,
+                AccentDeemphasized = Color.Blue,
 
-                Pos = hair[1],
-                Neg = pink,
-                Imp = paleGreen,
+                BgSecondary = Color.Red,
+                Reticle = Color.Red,
+                Positive = hair[1],
+                Negative = pink,
+                Emphasis = paleGreen,
                 Ally = hair[0],
-                Opp = redPink,
+                Opponent = redPink,
                 Turn = hotPink,
                 Hp = paleGreen,
                 Sp = hotPink,
@@ -416,20 +417,21 @@ public sealed class Theme : IDescribable, IRegistrable
 
             RedMode = new(Core.Id, "ThemeRedMode")
             {
-                White = white,
-                Gray = r[9],
-                Black = r[0],
-                TransBlack = new(r[0], TransAlpha),
+                BgTrans = new(r[0], TransAlpha),
 
                 Fg = white,
+                Midtone = r[9],
                 Bg = r[0],
                 Accent = r[2],
+                AccentDeemphasized = Color.Blue,
 
-                Pos = r[9],
-                Neg = r[7],
-                Imp = r[8],
+                BgSecondary = Color.Red,
+                Reticle = Color.Red,
+                Positive = r[9],
+                Negative = r[7],
+                Emphasis = r[8],
                 Ally = r[9],
-                Opp = r[7],
+                Opponent = r[7],
                 Turn = r[8],
                 Hp = r[9],
                 Sp = r[6],
@@ -479,33 +481,14 @@ public sealed class Theme : IDescribable, IRegistrable
     {
         get
         {
-            return [this.White, this.Gray, this.Black, this.TransBlack, this.Fg, this.Bg, this.Accent,
-        this.Pos, this.Neg, this.Imp, this.Ally, this.Opp, this.Turn, this.Hp, this.Sp, this.Shield, this.Bloom,
-        this.Buff, this.Skill, this.Element, this.Passive, this.Stat, this.Cooldown, this.SpBack, this.Overheal,
-        this.StatBarLayer4, this.StatBarLayer5, this.Atk, this.Def, this.Fth, this.Agi, this.Vis, this.Ignis,
-        this.Glacies, this.Fulgur, this.Ventus, this.Terra, this.Lux, this.Malum];
+            return [this.Fg, this.Midtone, this.Bg, this.BgSecondary, this.BgTrans, this.Accent,
+                this.AccentDeemphasized, this.Positive, this.Negative, this.Emphasis, this.Ally, this.Opponent,
+                this.Turn, this.Hp, this.Sp, this.Shield, this.Bloom, this.Buff, this.Skill, this.Element,
+                this.Passive, this.Stat, this.Reticle, this.Cooldown, this.SpBack, this.Overheal, this.StatBarLayer4,
+                this.StatBarLayer5, this.Atk, this.Def, this.Fth, this.Agi, this.Vis, this.Ignis, this.Glacies,
+                this.Fulgur, this.Ventus, this.Terra, this.Lux, this.Malum];
         }
     }
-
-    /// <summary>
-    /// Not necessarily actually white, but (probably) close
-    /// </summary>
-    public required Color White { get; init; }
-
-    /// <summary>
-    /// Not necessarily actually gray, but (probably) close
-    /// </summary>
-    public required Color Gray { get; init; }
-
-    /// <summary>
-    /// Not necessarily actually black, but (probably) close
-    /// </summary>
-    public required Color Black { get; init; }
-
-    /// <summary>
-    /// Partially transparent version of black
-    /// </summary>
-    public required Color TransBlack { get; init; }
 
     /// <summary>
     /// Main foreground
@@ -513,9 +496,24 @@ public sealed class Theme : IDescribable, IRegistrable
     public required Color Fg { get; init; }
 
     /// <summary>
+    /// Middle point between <c>Fg</c> and <c>Bg</c>
+    /// </summary>
+    public required Color Midtone { get; init; }
+
+    /// <summary>
     /// Main background
     /// </summary>
     public required Color Bg { get; init; }
+
+    /// <summary>
+    /// Secondary background
+    /// </summary>
+    public required Color BgSecondary { get; init; }
+
+    /// <summary>
+    /// Partially transparent version of bg
+    /// </summary>
+    public required Color BgTrans { get; init; }
 
     /// <summary>
     /// Main accent
@@ -523,19 +521,24 @@ public sealed class Theme : IDescribable, IRegistrable
     public required Color Accent { get; init; }
 
     /// <summary>
+    /// Less emphasized accent (eg for mouse hover)
+    /// </summary>
+    public required Color AccentDeemphasized { get; init; }
+
+    /// <summary>
     /// Positive/good stuff
     /// </summary>
-    public required Color Pos { get; init; }
+    public required Color Positive { get; init; }
 
     /// <summary>
     /// Negative/bad stuff
     /// </summary>
-    public required Color Neg { get; init; }
+    public required Color Negative { get; init; }
 
     /// <summary>
-    /// General important stuff that isn't neccessarily positive or negative
+    /// Neutral emphasis
     /// </summary>
-    public required Color Imp { get; init; }
+    public required Color Emphasis { get; init; }
 
     #endregion
 
@@ -549,7 +552,7 @@ public sealed class Theme : IDescribable, IRegistrable
     /// <summary>
     /// Opponent names
     /// </summary>
-    public required Color Opp { get; init; }
+    public required Color Opponent { get; init; }
 
     /// <summary>
     /// Current turn text
@@ -602,6 +605,11 @@ public sealed class Theme : IDescribable, IRegistrable
     public required Color Stat { get; init; }
 
     /// <summary>
+    /// Targeting menu reticle
+    /// </summary>
+    public required Color Reticle { get; init; }
+
+    /// <summary>
     /// Cooldown text
     /// </summary>
     public required Color Cooldown { get; init; }
@@ -629,22 +637,22 @@ public sealed class Theme : IDescribable, IRegistrable
     #region StageTypes
 
     /// <summary>
-    /// Atk stage
+    /// Attack stage
     /// </summary>
     public required Color Atk { get; init; }
 
     /// <summary>
-    /// Def stage
+    /// Defense stage
     /// </summary>
     public required Color Def { get; init; }
 
     /// <summary>
-    /// Fth stage
+    /// Faith stage
     /// </summary>
     public required Color Fth { get; init; }
 
     /// <summary>
-    /// Agi stage
+    /// Agility stage
     /// </summary>
     public required Color Agi { get; init; }
 
@@ -704,20 +712,20 @@ public sealed class Theme : IDescribable, IRegistrable
     {
         return tc switch
         {
-            ThemeColor.White => this.White,
-            ThemeColor.Gray => this.Gray,
-            ThemeColor.Black => this.Black,
-            ThemeColor.TransBlack => this.TransBlack,
-
             ThemeColor.Fg => this.Fg,
+            ThemeColor.Midtone => this.Midtone,
             ThemeColor.Bg => this.Bg,
-            ThemeColor.Accent => this.Accent,
+            ThemeColor.BgSecondary => this.BgSecondary,
+            ThemeColor.BgTrans => this.BgTrans,
 
-            ThemeColor.Pos => this.Pos,
-            ThemeColor.Neg => this.Neg,
-            ThemeColor.Imp => this.Imp,
+            ThemeColor.Accent => this.Accent,
+            ThemeColor.AccentDeemphasized => this.AccentDeemphasized,
+
+            ThemeColor.Positive => this.Positive,
+            ThemeColor.Negative => this.Negative,
+            ThemeColor.Emphasis => this.Emphasis,
             ThemeColor.Ally => this.Ally,
-            ThemeColor.Opp => this.Opp,
+            ThemeColor.Opponent => this.Opponent,
             ThemeColor.Turn => this.Turn,
             ThemeColor.Hp => this.Hp,
             ThemeColor.Sp => this.Sp,
@@ -728,6 +736,7 @@ public sealed class Theme : IDescribable, IRegistrable
             ThemeColor.Element => this.Element,
             ThemeColor.Passive => this.Passive,
             ThemeColor.Stat => this.Stat,
+            ThemeColor.Reticle => this.Reticle,
             ThemeColor.Cooldown => this.Cooldown,
 
             ThemeColor.SpBack => this.SpBack,
@@ -788,7 +797,7 @@ public sealed class Theme : IDescribable, IRegistrable
 
         foreach (ThemeColor tc in Enum.GetValues<ThemeColor>())
         {
-            colorMap[tc.ToString().FirstToLower()] = Settings.Theme.Get(tc);
+            colorMap[tc.ToString().ToLower()] = Settings.Theme.Get(tc);
         }
         foreach (KeyValuePair<string, Color> kvp in colorMap)
         {
@@ -813,7 +822,7 @@ public sealed class Theme : IDescribable, IRegistrable
         for (int i = 0; i < tcs.Length; i++)
         {
             sb.Append($"{tcs[i]} = {(renderColor ? tcs[i].Str : null)}{this.Get(tcs[i])
-                .ToRgbaStr()}{(renderColor ? ThemeColor.White.Str : null)}");
+                .ToRgbaStr()}{(renderColor ? ThemeColor.Fg.Str : null)}");
 
             if (i != tcs.Length - 1)
             {
@@ -832,7 +841,7 @@ public sealed class Theme : IDescribable, IRegistrable
 
     public string GetName()
     {
-        return this.GetName(ThemeColor.White);
+        return this.GetName(ThemeColor.Fg);
     }
 
     public string GetDesc()

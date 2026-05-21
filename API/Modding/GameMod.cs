@@ -59,7 +59,7 @@ public sealed class GameMod(string id, Version version) : IDescribable
 
     public string GetName()
     {
-        return this.GetName(ThemeColor.White);
+        return this.GetName(ThemeColor.Fg);
     }
 
     public string GetName(ThemeColor color)

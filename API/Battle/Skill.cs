@@ -121,18 +121,18 @@ public sealed class Skill : ComplexDescribable, IRegistrable
                 continue;
             }
 
-            skillTypes.Add(effectType.GetName() + ThemeColor.White.Str);
+            skillTypes.Add(effectType.GetName() + ThemeColor.Fg.Str);
         }
 
         string skillTypesStr = skillTypes.Count != 0
             ? string.Join(", ", skillTypes)
-            : SkillTypes.Stat.GetName() + ThemeColor.White.Str;
+            : SkillTypes.Stat.GetName() + ThemeColor.Fg.Str;
 
         return "SkillDesc".FormatLang([skillTypesStr, this.GetElement().GetName(),
-            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Imp.Str}{pow} {ThemeColor.White.Str}{"Pow".GetLang()}",
+            this.Range.GetName(), pow == 0 ? "" : $", {ThemeColor.Emphasis.Str}{pow} {ThemeColor.Fg.Str}{"Pow".GetLang()}",
             this.Prio == 0
                 ? ""
-                : $", {((int) this.Prio).Format()} {ThemeColor.White.Str}{"Prio".GetLang()}",
+                : $", {((int) this.Prio).Format()} {ThemeColor.Fg.Str}{"Prio".GetLang()}",
             this._GetFormattedDescInclusions()]);
     }
 

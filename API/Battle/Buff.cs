@@ -46,7 +46,7 @@ public sealed class Buff : ComplexDescribable, IRegistrable
     public override string GetFullDesc()
     {
         return "BuffDesc".FormatLang([this.BuffType.GetName(),
-            this.MaxStacks == 1 ? "" : "BuffDescStacksTo".FormatLang(ThemeColor.Imp.Str + this.MaxStacks),
+            this.MaxStacks == 1 ? "" : "BuffDescStacksTo".FormatLang(ThemeColor.Emphasis.Str + this.MaxStacks),
             this._GetFormattedDescInclusions()]);
     }
 }

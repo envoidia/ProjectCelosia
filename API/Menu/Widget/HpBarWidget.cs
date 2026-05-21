@@ -68,7 +68,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
 
         if (this._barLens[2] != 1)
         {
-            drawBar(Settings.Theme.Neg, this._barLens[2], 1 - this._barLens[2]);
+            drawBar(Settings.Theme.Negative, this._barLens[2], 1 - this._barLens[2]);
         }
 
         this.Title.Data.Act(gt);
@@ -107,7 +107,7 @@ public sealed class HpBarWidget(Vector2 pos, int width, RenderPriority renderPri
         Array.Sort(this._barLens, this._layers);
 
         string shield = this.Shield > 0 ? $"+{this.Shield.FormatNoColor(false)}" : "";
-        this.Text.Text = $"{ThemeColor.Black.Str}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
+        this.Text.Text = $"{ThemeColor.BgSecondary.Str}{this.Hp.FormatNoColor(false)}{shield}//{this.MaxHp.FormatNoColor(false)}";
 
         this.CalcLayout();
     }
