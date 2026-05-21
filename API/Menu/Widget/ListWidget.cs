@@ -112,6 +112,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// </summary>
     public List<Progress> Progs { get; private set; } = null!;
 
+    public List<bool> IsHovered = null!;
+
     public ActorData Data { get; private set; } = null!;
 
     /// <inheritdoc cref="ActorData.AnimFromDir" />
@@ -193,6 +195,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         }
 
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
+        this.IsHovered = [.. Enumerable.Repeat(false, capacity)];
     }
 
     private void _OnChangeIndex(int newIndex)
@@ -319,7 +322,10 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             });
 
             this.Progs.Add(Progress.Zero);
+            this.IsHovered.Add(false);
         }
+
+        Assert.Eq(labels.Count, this.Progs.Count, this.IsHovered.Count);
     }
 
     public void CalcLayout()
@@ -383,29 +389,45 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         if (Settings.EnableMouse)
         {
-            if (InputLib.IsMouseLeftJustPressed())
-            {
-                checkMouseInBounds(this.LabelsL);
-            }
-
+            checkMouseInBounds(this.LabelsL);
             this.CheckScroll();
         }
 
         void checkMouseInBounds(List<Label> labels)
         {
+            bool anyHovered = false;
+
             for (int i = 0; i < labels.Count; i++)
             {
                 if (this._IndexIsShown(i) && labels[i].ContainsMouse(this.Width))
                 {
-                    if (this.Index == i)
+                    for (int j = 0; j < this.IsHovered.Count; j++)
                     {
-                        this.ShouldConfirm = true;
-                        break;
+                        anyHovered = true;
+                        this.IsHovered[j] = i == j;
                     }
 
-                    this.OnChangeIndex?.Invoke(i);
-                    this.Index = i;
+                    if (InputLib.IsMouseLeftJustPressed())
+                    {
+                        if (this.Index == i)
+                        {
+                            this.ShouldConfirm = true;
+                            break;
+                        }
+
+                        this.OnChangeIndex?.Invoke(i);
+                        this.Index = i;
+                    }
+
                     break;
+                }
+            }
+
+            if (!anyHovered)
+            {
+                for (int i = 0; i < this.IsHovered.Count; i++)
+                {
+                    this.IsHovered[i] = false;
                 }
             }
         }
@@ -459,7 +481,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         for (int i = 0; i < this.OptCount; i++)
         {
             this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], IActor.DefaultSpeed, gt,
-                i == this.Index ? AnimDirs.In : AnimDirs.Out);
+                i == this.Index || this.IsHovered[i] ? AnimDirs.In : AnimDirs.Out);
 
             if (!this._IndexIsShown(i))
             {
@@ -474,7 +496,9 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
                 RenderLib.DrawParallelogram(
                     new(x + (this.Slant * (i - this.Scroll)), this.Position.Y + h - this.Padding.T),
                     new(this.Width + this.Padding.LR + extraWidth, l.Height + l.Padding.TB + this.Padding.TB),
-                    this.Origin, Settings.Theme.Accent, Color.Red,
+                    this.Origin, i == this.Index
+                    ? Settings.Theme.Accent
+                    : Settings.Theme.AccentDeemphasized, Color.Red,
                     0, RenderLib.DefaultSlant, RenderLib.DefaultSlant,
                     Progress.Min(this.Prog, this.Progs[i]));
             }

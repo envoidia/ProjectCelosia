@@ -163,8 +163,6 @@ public static class Settings
             }
             else
             {
-                Console.WriteLine(string.Join('\n', Core._earlyLogs!.Select(log => log.Msg)));
-
                 Core._LogOrEarlyLog($"\"Theme\" invalid, defaulting to {Theme.SeleneAbyss.GetId()}",
                     nameof(Settings), LogLevel.Err);
 
@@ -173,8 +171,6 @@ public static class Settings
         }
         else
         {
-            Console.WriteLine(string.Join('\n', Core._earlyLogs!.Select(log => log.Msg)));
-
             Core._LogOrEarlyLog($"\"Theme\" unset, defaulting to {Theme.SeleneAbyss.GetId()}",
                 nameof(Settings), LogLevel.Err);
 

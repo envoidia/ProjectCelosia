@@ -7,7 +7,6 @@ using API.Input;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace API.Menu.Widget;
 
@@ -74,6 +73,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
     /// </summary>
     public List<Progress> Progs { get; private set; }
 
+    public List<bool> IsHovered = null!;
+
     public ActorData Data { get; private set; }
 
     /// <inheritdoc cref="ActorData.AnimFromDir" />
@@ -113,6 +114,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
         this.Labels = new List<Label>(capacity);
 
         this.Progs = [.. Enumerable.Repeat(Progress.Zero, capacity)];
+        this.IsHovered = [.. Enumerable.Repeat(false, capacity)];
         this.OptCount = capacity;
 
         InputLib.OnDeviceChange += this._UpdateInputPrompt;
@@ -165,11 +167,14 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
             });
 
             this.Progs.Add(Progress.Zero);
+            this.IsHovered.Add(false);
         }
 
         this.OptCount = optionText.Length;
 
         this.CalcLayout();
+
+        Assert.Eq(this.Labels.Count, this.Progs.Count, this.IsHovered.Count);
     }
 
     public void CalcLayout()
@@ -228,10 +233,21 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
                     this.OnChangeIndex?.Invoke(newIndex);
                     this.Index = newIndex;
                 }
+            }
 
-                for (int i = 0; i < this.Labels.Count; i++)
+            bool anyHovered = false;
+
+            for (int i = 0; i < this.Labels.Count; i++)
+            {
+                if (this.Labels[i].ContainsMouse())
                 {
-                    if (this.Labels[i].ContainsMouse())
+                    for (int j = 0; j < this.IsHovered.Count; j++)
+                    {
+                        anyHovered = true;
+                        this.IsHovered[j] = i == j;
+                    }
+
+                    if (InputLib.IsMouseLeftJustPressed())
                     {
                         if (this.Index == i)
                         {
@@ -241,8 +257,17 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
 
                         this.OnChangeIndex?.Invoke(i);
                         this.Index = i;
-                        break;
                     }
+
+                    break;
+                }
+            }
+
+            if (!anyHovered)
+            {
+                for (int i = 0; i < this.IsHovered.Count; i++)
+                {
+                    this.IsHovered[i] = false;
                 }
             }
 
@@ -285,7 +310,7 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
             for (int i = 0; i < this.OptCount; i++)
             {
                 this.Progs[i] = RenderLib.UpdateProg(this.Progs[i], this.Speed, gt,
-                    i == this.Index ? AnimDirs.In : AnimDirs.Out);
+                    i == this.Index || this.IsHovered[i] ? AnimDirs.In : AnimDirs.Out);
 
                 float yOff = (float) this.Progs[i] * _YOffset;
 
@@ -302,7 +327,10 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
                 if (this.Progs[i] != 0)
                 {
                     // Cursor
-                    RenderLib.DrawParallelogram(pos, size, this.Origin, Settings.Theme.Accent,
+                    RenderLib.DrawParallelogram(pos, size, this.Origin,
+                        i == this.Index
+                        ? Settings.Theme.Accent
+                        : Settings.Theme.AccentDeemphasized,
                         Color.Red, 0f, 6, 6,
                         Progress.Min(this.Prog, this.Progs[i]));
                 }

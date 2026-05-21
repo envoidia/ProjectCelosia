@@ -148,8 +148,6 @@ public sealed class Theme : IDescribable, IRegistrable
                 Malum = parseColor(nameof(Malum)),
             };
 
-            Console.WriteLine(t.ToDetailedString(false));
-
             Color parseColor(string key)
             {
                 if (!themeDict.TryGetValue(key, out string? colorStr))

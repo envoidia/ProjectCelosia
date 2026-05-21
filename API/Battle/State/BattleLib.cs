@@ -662,7 +662,7 @@ public static class BattleLib
 
         for (int i = 0; i < UnitCount; i++)
         {
-            _Sprites[i].FillColor = _validMainTargets[i] ? ThemeColor.Accent : ThemeColor.BgTrans;
+            _Sprites[i].FillColor = _validMainTargets[i] ? ThemeColor.AccentDeemphasized : ThemeColor.BgTrans;
         }
     }
 
