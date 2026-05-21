@@ -71,126 +71,126 @@ public sealed class Theme : IDescribable, IRegistrable
 
     private static void _LoadTheme(string path)
     {
-        try
+        Exception? parseError = Properties.TryParse(path, out Dictionary<string, string>? themeDict);
+
+        if (parseError is not null)
         {
-            Dictionary<string, string> themeDict = Properties.Parse(path);
-
-            themeDict.TryGetValue("Name", out string? name);
-            themeDict.TryGetValue("Desc", out string? desc);
-
-            bool useLangKey;
-
-            if (themeDict.TryGetValue(nameof(UseLangKey), out string? useLangKeyStr))
-            {
-                if (!bool.TryParse(useLangKeyStr, out bool useLangKeyInner))
-                {
-                    Core._LogOrEarlyLog("\"UseLangKey\" is present but invalid. Defaulting to false",
-                        nameof(_LoadTheme), LogLevel.Err);
-                }
-
-                useLangKey = useLangKeyInner;
-            }
-            else
-            {
-                useLangKey = false;
-            }
-
-            string nameOrMissing = name ?? "MISSING NAME";
-
-            Theme t = new(Core.Id, nameOrMissing,
-                desc is null && !useLangKey ? "MISSING DESC" : desc, $"Theme{nameOrMissing}")
-            {
-                Fg = parseColor(nameof(Fg)),
-                Midtone = parseColor(nameof(Midtone)),
-                Bg = parseColor(nameof(Bg)),
-                BgSecondary = parseColor(nameof(BgSecondary)),
-                BgTrans = parseColor(nameof(BgTrans)),
-
-                Accent = parseColor(nameof(Accent)),
-                AccentDeemphasized = parseColor(nameof(AccentDeemphasized)),
-
-                Positive = parseColor(nameof(Positive)),
-                Negative = parseColor(nameof(Negative)),
-                Emphasis = parseColor(nameof(Emphasis)),
-
-                Ally = parseColor(nameof(Ally)),
-                Opponent = parseColor(nameof(Opponent)),
-                Turn = parseColor(nameof(Turn)),
-                Hp = parseColor(nameof(Hp)),
-                Sp = parseColor(nameof(Sp)),
-                Shield = parseColor(nameof(Shield)),
-                Bloom = parseColor(nameof(Bloom)),
-                Buff = parseColor(nameof(Buff)),
-                Skill = parseColor(nameof(Skill)),
-                Element = parseColor(nameof(Element)),
-                Passive = parseColor(nameof(Passive)),
-                Stat = parseColor(nameof(Stat)),
-                Reticle = parseColor(nameof(Reticle)),
-                Cooldown = parseColor(nameof(Cooldown)),
-
-                SpBack = parseColor(nameof(SpBack)),
-                Overheal = parseColor(nameof(Overheal)),
-                StatBarLayer4 = parseColor(nameof(StatBarLayer4)),
-                StatBarLayer5 = parseColor(nameof(StatBarLayer5)),
-
-                Atk = parseColor(nameof(Atk)),
-                Def = parseColor(nameof(Def)),
-                Fth = parseColor(nameof(Fth)),
-                Agi = parseColor(nameof(Agi)),
-
-                Vis = parseColor(nameof(Vis)),
-                Ignis = parseColor(nameof(Ignis)),
-                Glacies = parseColor(nameof(Glacies)),
-                Fulgur = parseColor(nameof(Fulgur)),
-                Ventus = parseColor(nameof(Ventus)),
-                Terra = parseColor(nameof(Terra)),
-                Lux = parseColor(nameof(Lux)),
-                Malum = parseColor(nameof(Malum)),
-            };
-
-            Color parseColor(string key)
-            {
-                if (!themeDict.TryGetValue(key, out string? colorStr))
-                {
-                    Core._LogOrEarlyLog($"\"{key}\" is missing. Defaulting to red",
-                        nameof(_LoadTheme), LogLevel.Err);
-                    return Color.Red;
-                }
-
-                Assert.NotNull(colorStr);
-
-                string colorStrFormatted = colorStr.Replace("#", "");
-
-                if (colorStrFormatted.Length == 6)
-                {
-                    colorStrFormatted += "ff";
-                }
-                else if (colorStrFormatted.Length != 8)
-                {
-                    return invalidColor();
-                }
-
-                if (!uint.TryParse(colorStrFormatted, NumberStyles.HexNumber,
-                    CultureInfo.InvariantCulture, out uint colorVal))
-                {
-                    return invalidColor();
-                }
-
-                return Color.FromRgba(colorVal);
-
-                Color invalidColor()
-                {
-                    Core._LogOrEarlyLog(
-                        $"\"{key}\" should be a 6 or 8 digit hex color (#rrggbb or #rrggbbaa), but was {colorStr}. Defaulting to red",
-                        nameof(_LoadTheme), LogLevel.Err);
-                    return Color.Red;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Core._LogOrEarlyLog($"Failed to read theme file at {path}: {e.Message}",
+            Core._LogOrEarlyLog($"Failed to read theme file at {path}: {parseError.Message}",
                 nameof(_LoadTheme), LogLevel.Err);
+        }
+
+        Assert.NotNull(themeDict);
+
+        themeDict!.TryGetValue("Name", out string? name);
+        themeDict.TryGetValue("Desc", out string? desc);
+
+        bool useLangKey;
+
+        if (themeDict.TryGetValue(nameof(UseLangKey), out string? useLangKeyStr))
+        {
+            if (!bool.TryParse(useLangKeyStr, out bool useLangKeyInner))
+            {
+                Core._LogOrEarlyLog("\"UseLangKey\" is present but invalid. Defaulting to false",
+                    nameof(_LoadTheme), LogLevel.Err);
+            }
+
+            useLangKey = useLangKeyInner;
+        }
+        else
+        {
+            useLangKey = false;
+        }
+
+        string nameOrMissing = name ?? "MISSING NAME";
+
+        Theme t = new(Core.Id, nameOrMissing,
+            desc is null && !useLangKey ? "MISSING DESC" : desc, $"Theme{nameOrMissing}")
+        {
+            Fg = parseColor(nameof(Fg)),
+            Midtone = parseColor(nameof(Midtone)),
+            Bg = parseColor(nameof(Bg)),
+            BgSecondary = parseColor(nameof(BgSecondary)),
+            BgTrans = parseColor(nameof(BgTrans)),
+
+            Accent = parseColor(nameof(Accent)),
+            AccentDeemphasized = parseColor(nameof(AccentDeemphasized)),
+
+            Positive = parseColor(nameof(Positive)),
+            Negative = parseColor(nameof(Negative)),
+            Emphasis = parseColor(nameof(Emphasis)),
+
+            Ally = parseColor(nameof(Ally)),
+            Opponent = parseColor(nameof(Opponent)),
+            Turn = parseColor(nameof(Turn)),
+            Hp = parseColor(nameof(Hp)),
+            Sp = parseColor(nameof(Sp)),
+            Shield = parseColor(nameof(Shield)),
+            Bloom = parseColor(nameof(Bloom)),
+            Buff = parseColor(nameof(Buff)),
+            Skill = parseColor(nameof(Skill)),
+            Element = parseColor(nameof(Element)),
+            Passive = parseColor(nameof(Passive)),
+            Stat = parseColor(nameof(Stat)),
+            Reticle = parseColor(nameof(Reticle)),
+            Cooldown = parseColor(nameof(Cooldown)),
+
+            SpBack = parseColor(nameof(SpBack)),
+            Overheal = parseColor(nameof(Overheal)),
+            StatBarLayer4 = parseColor(nameof(StatBarLayer4)),
+            StatBarLayer5 = parseColor(nameof(StatBarLayer5)),
+
+            Atk = parseColor(nameof(Atk)),
+            Def = parseColor(nameof(Def)),
+            Fth = parseColor(nameof(Fth)),
+            Agi = parseColor(nameof(Agi)),
+
+            Vis = parseColor(nameof(Vis)),
+            Ignis = parseColor(nameof(Ignis)),
+            Glacies = parseColor(nameof(Glacies)),
+            Fulgur = parseColor(nameof(Fulgur)),
+            Ventus = parseColor(nameof(Ventus)),
+            Terra = parseColor(nameof(Terra)),
+            Lux = parseColor(nameof(Lux)),
+            Malum = parseColor(nameof(Malum)),
+        };
+
+        Color parseColor(string key)
+        {
+            if (!themeDict.TryGetValue(key, out string? colorStr))
+            {
+                Core._LogOrEarlyLog($"\"{key}\" is missing. Defaulting to red",
+                    nameof(_LoadTheme), LogLevel.Err);
+                return Color.Red;
+            }
+
+            Assert.NotNull(colorStr);
+
+            string colorStrFormatted = colorStr.Replace("#", "");
+
+            if (colorStrFormatted.Length == 6)
+            {
+                colorStrFormatted += "ff";
+            }
+            else if (colorStrFormatted.Length != 8)
+            {
+                return invalidColor();
+            }
+
+            if (!uint.TryParse(colorStrFormatted, NumberStyles.HexNumber,
+                CultureInfo.InvariantCulture, out uint colorVal))
+            {
+                return invalidColor();
+            }
+
+            return Color.FromRgba(colorVal);
+
+            Color invalidColor()
+            {
+                Core._LogOrEarlyLog(
+                    $"\"{key}\" should be a 6 or 8 digit hex color (#rrggbb or #rrggbbaa), but was {colorStr}. Defaulting to red",
+                    nameof(_LoadTheme), LogLevel.Err);
+                return Color.Red;
+            }
         }
     }
 
@@ -281,6 +281,7 @@ public sealed class Theme : IDescribable, IRegistrable
             // todo how do i even handle this scenario properly
             Core._LogOrEarlyLog($"Default theme ({_SeleneAbyssId}) was missing, failed to recreate: {e.Message}",
                 nameof(_LoadThemes), LogLevel.Err);
+            throw e; // i dont like this
         }
 
         return _LoadThemeFiles();

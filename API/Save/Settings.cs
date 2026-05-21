@@ -111,15 +111,23 @@ public static class Settings
     /// </summary>
     public static void Reload()
     {
-        if (File.Exists(FilePath))
+        try
         {
-            AllSettings = Properties.Parse(FilePath);
+            Exception? parseError = Properties.TryParse(FilePath, out Dictionary<string, string>? dict);
+
+            if (parseError is not null)
+            {
+                AllSettings = [];
+                _ResetWithErrorMsg(parseError);
+            }
+
+            Assert.NotNull(dict);
+            AllSettings = dict!;
         }
-        else
+        catch (Exception e)
         {
             AllSettings = [];
-            Reset();
-            Write();
+            _ResetWithErrorMsg(e);
         }
 
         // Gameplay
@@ -259,6 +267,14 @@ public static class Settings
     #endregion
 
     #region Parsing
+
+    internal static void _ResetWithErrorMsg(Exception e)
+    {
+        Core._LogOrEarlyLog($"Failed to parse settings file, resetting to default: {e.Message}",
+            nameof(Settings), LogLevel.Err);
+        Reset();
+        Write();
+    }
 
     private static int _ParseIntSetting(string? key, int defaultValue)
     {

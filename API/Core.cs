@@ -279,7 +279,7 @@ public sealed class Core : Game
     /// <summary>
     /// Queue log messages before <c>DebugConsole</c> is loaded
     /// </summary>
-    internal static void _AddEarlyLog(LogMessage log)
+    private static void _AddEarlyLog(LogMessage log)
     {
         Assert.True(_allowEarlyLogging);
         Assert.NotNull(_earlyLogs!);

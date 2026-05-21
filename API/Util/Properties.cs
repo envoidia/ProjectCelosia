@@ -15,13 +15,24 @@ namespace API.Util;
 public static class Properties
 {
     /// <summary>
-    /// Parses the given .properties file
+    /// Tries to parse the given .properties file
     /// </summary>
-    /// <returns>A dictionary formed from the given file</returns>
-    public static Dictionary<string, string> Parse(string path)
+    /// <returns>
+    /// null if the file was parsed correctly, otherwise an exception
+    /// </returns>
+    public static Exception? TryParse(string path, out Dictionary<string, string>? dict)
     {
-        Dictionary<string, string> dict = [];
-        ReadOnlySpan<string> lines = File.ReadAllLines(path);
+        dict = [];
+        ReadOnlySpan<string> lines;
+
+        try
+        {
+            lines = File.ReadAllLines(path);
+        }
+        catch (Exception e)
+        {
+            return e;
+        }
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -36,15 +47,18 @@ public static class Properties
 
             if (parts.Length == 2)
             {
-                dict.Add(parts[0], parts[1].Replace("\\n", "\n"));
+                dict.Add(parts[0], parts[1]
+                    // Unescape newlines
+                    .Replace("\\n", "\n"));
                 continue;
             }
 
-            throw new FormatException($"Malformed properties file {path}: line {i
+            dict = null;
+            return new FormatException($"Malformed properties file {path}: line {i
                 + 1}, \"{lines[i]}\" is not a comment and is missing separator =");
         }
 
-        return dict;
+        return null;
     }
 
     /// <summary>

@@ -1112,11 +1112,18 @@ public static class Commands
             Settings.Write();
         }
 
-        Dictionary<string, string> settings = Properties.Parse(Settings.FilePath);
+        Exception? parseError = Properties.TryParse(Settings.FilePath, out Dictionary<string, string>? settings);
+
+        if (parseError is not null)
+        {
+            Settings._ResetWithErrorMsg(parseError);
+        }
+
+        Assert.NotNull(settings);
 
         if (args.Length == 2)
         {
-            if (!settings.TryGetValue(args[1], out string val))
+            if (!settings!.TryGetValue(args[1], out string val))
             {
                 return new(ExitCode.Err, $"Setting `{args[1]}` couldn't be found");
             }

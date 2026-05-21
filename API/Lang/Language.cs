@@ -76,7 +76,19 @@ public record Language(string Name, string LocaleCode, bool UseHarfBuzz = false)
             entries.Clear();
         }
 
-        foreach (KeyValuePair<string, string> kvp in Properties.Parse(file))
+        Exception? parseError = Properties.TryParse(file, out Dictionary<string, string>? dict);
+
+        if (parseError is not null)
+        {
+            // todo how to handle this situation
+            DebugConsole.Log($"Failed to parse lang file {file}: {parseError.Message}",
+                nameof(AddLangFile), LogLevel.Err);
+            throw parseError; // i dont like this
+        }
+
+        Assert.NotNull(dict);
+
+        foreach (KeyValuePair<string, string> kvp in dict!)
         {
             if (entries.GetValueOrDefault(kvp.Key) is not null)
             {
