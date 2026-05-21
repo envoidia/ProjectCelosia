@@ -26,11 +26,11 @@
         <None Remove="Icon.ico" />
         <None Remove="Icon.bmp" />
 
-        <None Update="Font\koruri.ttf">
+        <None Update="Font/koruri.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
 
-        <None Update="Font\lilex.ttf">
+        <None Update="Font/lilex.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
 
@@ -43,8 +43,8 @@
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
         <PackageReference Include="ResolutionBuddy" Version="5.0.0" />
 
-        <ProjectReference Include="..\API\API.csproj" />
-        <ProjectReference Include="..\Celosia\Celosia.csproj" />
+        <ProjectReference Include="../API/API.csproj" />
+        <ProjectReference Include="../Celosia/Celosia.csproj" />
     </ItemGroup>
 
     <Target Name="EnsureContentOutputPath" BeforeTargets="CopyFilesToOutputDirectory">

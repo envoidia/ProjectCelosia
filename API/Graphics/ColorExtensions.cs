@@ -68,7 +68,7 @@ public static class ColorExtensions
         {
             get
             {
-                return new(1f, 0f, 1f, 0.2f);
+                return new(0f, 1f, 0f, 0.2f);
             }
         }
 
@@ -87,16 +87,16 @@ public static class ColorExtensions
             uint alpha;
 
             // RGB input
-            if ((rgba & 0xFF000000) == 0)
+            if ((rgba & 0xff000000) == 0)
             {
-                rgb = rgba & 0x00FFFFFF;
-                alpha = 0xFF;
+                rgb = rgba & 0x00ffffff;
+                alpha = 0xff;
             }
             // RGBA input
             else
             {
-                rgb = (rgba >> 8) & 0x00FFFFFF;
-                alpha = rgba & 0xFF;
+                rgb = (rgba >> 8) & 0x00ffffff;
+                alpha = rgba & 0xff;
             }
 
             return new Color(

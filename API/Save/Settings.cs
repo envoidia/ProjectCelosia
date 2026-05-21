@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using API.Debug;
 using API.Graphics;
@@ -161,18 +163,22 @@ public static class Settings
             }
             else
             {
-                Core._LogOrEarlyLog($"\"Theme\" invalid, defaulting to {Theme.Apollo.GetId()}",
+                Console.WriteLine(string.Join('\n', Core._earlyLogs!.Select(log => log.Msg)));
+
+                Core._LogOrEarlyLog($"\"Theme\" invalid, defaulting to {Theme.SeleneAbyss.GetId()}",
                     nameof(Settings), LogLevel.Err);
 
-                Theme = Theme.Apollo;
+                Theme = Theme.SeleneAbyss;
             }
         }
         else
         {
-            Core._LogOrEarlyLog($"\"Theme\" unset, defaulting to {Theme.Apollo.GetId()}",
+            Console.WriteLine(string.Join('\n', Core._earlyLogs!.Select(log => log.Msg)));
+
+            Core._LogOrEarlyLog($"\"Theme\" unset, defaulting to {Theme.SeleneAbyss.GetId()}",
                 nameof(Settings), LogLevel.Err);
 
-            Theme = Theme.Apollo;
+            Theme = Theme.SeleneAbyss;
         }
 
         // Audio
@@ -218,7 +224,7 @@ public static class Settings
         AllSettings[nameof(Resolution)] = Auto.ToString();
         AllSettings[nameof(Fullscreen)] = t;
         AllSettings[nameof(EnableVsync)] = t;
-        AllSettings[nameof(Theme)] = Theme.Apollo.GetId();
+        AllSettings[nameof(Theme)] = Theme.SeleneAbyss.GetId();
 
         // Audio
         AllSettings[nameof(MusicVolume)] = vol;

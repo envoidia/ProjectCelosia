@@ -16,13 +16,8 @@
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
         <ProjectReference Include="..\API\API.csproj" />
 
-        <None Update="Lang/Lang.en-US.properties">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <None Update="Lang/CelosiaLang.en-US.properties">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-     <ItemGroup>
-    <None Update="Lang/CelosiaLang.en-US.properties">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     </ItemGroup>
 </Project>

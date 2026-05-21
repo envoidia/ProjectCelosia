@@ -67,7 +67,7 @@ public sealed class Core : Game
     #endregion
 
     internal static bool _allowEarlyLogging = true;
-    private static List<LogMessage>? _earlyLogs = new(8);
+    internal static List<LogMessage>? _earlyLogs = new(8);
 
     // temp debug
     public static Battle.Battle Battle = null!;
