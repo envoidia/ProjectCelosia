@@ -13,11 +13,23 @@ public static class Assert
 {
     private const string _DebugSymbol = "DEBUG";
 
+    [Conditional(_DebugSymbol)]
+    public static void True(bool v)
+    {
+        System.Diagnostics.Debug.Assert(v, "Value must be true");
+    }
+
+    [Conditional(_DebugSymbol)]
+    public static void False(bool v)
+    {
+        System.Diagnostics.Debug.Assert(!v, "Value must be false false");
+    }
+
     /// <summary>
     /// Asserts that this call is unreachable
     /// </summary>
     [Conditional(_DebugSymbol)]
-    public static void Unreachable(object v)
+    public static void Unreachable()
     {
         System.Diagnostics.Debug.Assert(false, "Code thought to be unreachable was executed");
     }
@@ -26,7 +38,7 @@ public static class Assert
     /// Asserts that this call is unreachable with a custom message
     /// </summary>
     [Conditional(_DebugSymbol)]
-    public static void Unreachable(object v, string msg)
+    public static void Unreachable(string msg)
     {
         System.Diagnostics.Debug.Assert(false, msg);
     }
@@ -52,7 +64,7 @@ public static class Assert
     /// Asserts that a value is null
     /// </summary>
     [Conditional(_DebugSymbol)]
-    public static void Null(object v)
+    public static void Null(object? v)
     {
         System.Diagnostics.Debug.Assert(v is null, $"{v} must be null");
     }
@@ -61,7 +73,7 @@ public static class Assert
     /// Asserts that a value is not null
     /// </summary>
     [Conditional(_DebugSymbol)]
-    public static void NotNull(object v)
+    public static void NotNull(object? v)
     {
         System.Diagnostics.Debug.Assert(v is not null, $"{v} cannot be null");
     }

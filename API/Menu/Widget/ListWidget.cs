@@ -273,13 +273,19 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     public void SetTextL(params ReadOnlySpan<string> text)
     {
         this._SetText(this.LabelsL, text, Alignment.TopLeft);
+
+        if (this.LabelsR is not null)
+        {
+            Assert.Eq(this.LabelsL.Count, this.LabelsR.Count);
+        }
     }
 
     /// <inheritdoc cref="SetTextL" />
     public void SetTextR(params ReadOnlySpan<string> text)
     {
-        Assert.NotNull(this.LabelsR!);
+        Assert.NotNull(this.LabelsR);
         this._SetText(this.LabelsR!, text, Alignment.TopRight);
+        Assert.Eq(this.LabelsL.Count, this.LabelsR!.Count);
     }
 
     private void _SetText(List<Label> labels, ReadOnlySpan<string> text, Alignment align)

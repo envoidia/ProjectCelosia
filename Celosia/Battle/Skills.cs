@@ -8,7 +8,7 @@ namespace Celosia.Battle;
 public static class Skills
 {
     public static readonly Skill Fireball = new(Core.BaseModId, "SkillFireball",
-        "__API:SkillDescBuff", Ranges.Other1R, 50)
+        "__Core:SkillDescBuff", Ranges.Other1R, 50)
     {
         SkillEffects = [new Damage(50, SkillTypes.Mag, Elements.Ignis),
             new GiveBuff(Buffs.Burn, 3)
@@ -18,7 +18,7 @@ public static class Skills
     };
 
     public static readonly Skill HeatWave = new(Core.BaseModId, "SkillHeatWave",
-        "__API:SkillDescBuff", Ranges.ColumnOf31RNoSelf, 100)
+        "__Core:SkillDescBuff", Ranges.ColumnOf31RNoSelf, 100)
     {
         SkillEffects = [new Damage(35, SkillTypes.Mag, Elements.Ignis),
             new GiveBuff(Buffs.Burn, 1)

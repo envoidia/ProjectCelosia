@@ -106,57 +106,6 @@ public static class ThemeColorExtensions
             get
             {
                 return $"/c[{@this.ToString().ToLower()}]";
-                // return @this switch
-                // {
-                //     ThemeColor.Fg => "/c[fg]",
-                //     ThemeColor.Midtone => "/c[midtone]",
-                //     ThemeColor.Bg => "/c[bg]",
-                //     ThemeColor.BgSecondary => "/c[bgSecondary]",
-                //     ThemeColor.BgTrans => "/c[bgTrans]",
-
-                //     ThemeColor.Accent => "/c[accent]",
-                //     ThemeColor.AccentDeemphasized => "/c[accentDeemphasized]",
-
-                //     ThemeColor.Positive => "/c[positive]",
-                //     ThemeColor.Negative => "/c[negative]",
-                //     ThemeColor.Emphasis => "/c[emphasis]",
-
-                //     ThemeColor.Ally => "/c[ally]",
-                //     ThemeColor.Opponent => "/c[opponent]",
-                //     ThemeColor.Turn => "/c[turn]",
-                //     ThemeColor.Hp => "/c[hp]",
-                //     ThemeColor.Sp => "/c[sp]",
-                //     ThemeColor.Shield => "/c[shield]",
-                //     ThemeColor.Bloom => "/c[bloom]",
-                //     ThemeColor.Buff => "/c[buff]",
-                //     ThemeColor.Skill => "/c[skill]",
-                //     ThemeColor.Element => "/c[element]",
-                //     ThemeColor.Passive => "/c[passive]",
-                //     ThemeColor.Stat => "/c[stat]",
-                //     ThemeColor.Reticle => "/c[reticle]",
-                //     ThemeColor.Cooldown => "/c[cooldown]",
-
-                //     ThemeColor.SpBack => "/c[spBack]",
-                //     ThemeColor.Overheal => "/c[overheal]",
-                //     ThemeColor.StatBarLayer4 => "/c[statBarLayer4]",
-                //     ThemeColor.StatBarLayer5 => "/c[statBarLayer5]",
-
-                //     ThemeColor.Atk => "/c[atk]",
-                //     ThemeColor.Def => "/c[def]",
-                //     ThemeColor.Fth => "/c[fth]",
-                //     ThemeColor.Agi => "/c[agi]",
-
-                //     ThemeColor.Vis => "/c[vis]",
-                //     ThemeColor.Ignis => "/c[ignis]",
-                //     ThemeColor.Glacies => "/c[glacies]",
-                //     ThemeColor.Fulgur => "/c[fulgur]",
-                //     ThemeColor.Ventus => "/c[ventus]",
-                //     ThemeColor.Terra => "/c[terra]",
-                //     ThemeColor.Lux => "/c[lux]",
-                //     ThemeColor.Malum => "/c[malum]",
-
-                //     _ => throw new ClosedEnumsWhenException()
-                // };
             }
         }
     }

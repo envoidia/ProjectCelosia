@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -35,7 +36,7 @@ public sealed class Core : Game
     /// <summary>
     /// "Mod ID" of Core
     /// </summary>
-    public const string Id = "__API";
+    public const string Id = "__Core";
 
     /// <summary>
     /// Mod ID of the base mod
@@ -64,6 +65,9 @@ public sealed class Core : Game
     public static DynamicSpriteFont Mono40 = null!;
 
     #endregion
+
+    internal static bool _allowEarlyLogging = true;
+    private static List<LogMessage>? _earlyLogs = new(8);
 
     // temp debug
     public static Battle.Battle Battle = null!;
@@ -162,9 +166,6 @@ public sealed class Core : Game
             new(World.WindowW, World.WindowH), false,
             false, false));
 
-#if DEBUG
-        this.IsMouseVisible = true;
-#endif
     }
 
     protected override void Initialize()
@@ -192,7 +193,16 @@ public sealed class Core : Game
         DebugUtil._Init();
         DebugConsole._Init();
 
-        // Must be after Settings
+        _allowEarlyLogging = false;
+        Assert.NotNull(_earlyLogs);
+
+        foreach (LogMessage log in _earlyLogs!)
+        {
+            DebugConsole.Log(log);
+        }
+
+        _earlyLogs = null;
+
         StatBarWidget._Init();
 
         // Must be after inits
@@ -217,7 +227,6 @@ public sealed class Core : Game
     protected override void LoadContent()
     {
         _iconsAtlas = this.Content.Load<Texture2DAtlas>("img/icons");
-
         base.LoadContent();
     }
 
@@ -266,4 +275,14 @@ public sealed class Core : Game
     }
 
     #endregion
+
+    /// <summary>
+    /// Queue log messages before <c>DebugConsole</c> is loaded
+    /// </summary>
+    internal static void _AddEarlyLog(LogMessage log)
+    {
+        Assert.True(_allowEarlyLogging);
+        Assert.NotNull(_earlyLogs!);
+        _earlyLogs!.Add(log);
+    }
 }

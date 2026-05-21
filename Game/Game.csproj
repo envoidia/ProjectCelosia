@@ -10,7 +10,7 @@
         <IsAotCompatible>true</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-        <!-- CS1591: Missing XML comment for publicly visible type or member 
+        <!-- CS1591: Missing XML comment for publicly visible type or member
         CS1573: Parameter has no matching param tag in the XML comment (but other parameters do)
         CA2211: Non-constant (static) fields should not be visible -->
         <NoWarn>1591, 1573, CA2211</NoWarn>
@@ -18,7 +18,8 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Icon.ico</ApplicationIcon>
 
-        <MonoGameExtendedPipelineReferencePath>$(MSBuildThisFileDirectory)pipeline-references</MonoGameExtendedPipelineReferencePath>
+        <MonoGameExtendedPipelineReferencePath
+        >$(MSBuildThisFileDirectory)pipeline-references</MonoGameExtendedPipelineReferencePath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,8 +29,8 @@
         <None Update="Font\koruri.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        
-        <None Update="Font\droid_sans_mono.ttf">
+
+        <None Update="Font\lilex.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
 

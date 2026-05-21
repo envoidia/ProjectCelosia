@@ -3,7 +3,6 @@ using API.Util;
 
 namespace API.Extensions;
 
-// todo split
 public static class NumberExtensions
 {
     public const string NumberFormat = "N";

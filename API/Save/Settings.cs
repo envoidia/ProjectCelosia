@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using API.Extensions;
+using System.Text;
+using API.Debug;
 using API.Graphics;
 using API.Modding;
 using API.Util;
@@ -74,6 +75,7 @@ public static class Settings
 
     #region Audio
 
+    private const float _DefaultVolume = 0.75f;
     public static Progress MusicVolume;
     public static Progress SfxVolume;
 
@@ -95,6 +97,8 @@ public static class Settings
 
     #endregion
 
+    #region Methods
+
     internal static void _Init()
     {
         Reload();
@@ -111,34 +115,84 @@ public static class Settings
         }
         else
         {
-            AllSettings = new();
+            AllSettings = [];
             Reset();
             Write();
         }
 
         // Gameplay
-        Language = Lang.Language.Langs.GetValueOrDefault(
-            AllSettings.GetValueOrDefault(nameof(Language), Lang.Language.EnUS), Lang.Language.English);
+        bool langIsSet = AllSettings.TryGetValue(nameof(Language), out string langId);
 
-        BattleSpeed = float.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(BattleSpeed)), 1f);
-        ShowInvalidMoveWarning = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(ShowInvalidMoveWarning)), true);
+        if (langIsSet)
+        {
+            if (!Lang.Language.Langs.TryGetValue(langId, out Lang.Language l))
+            {
+                _SettingLog(
+                    new LogMessage($"\"Language\" invalid, defaulting to {Lang.Language.EnUS}",
+                    nameof(Settings), LogLevel.Err));
+
+                Language = Lang.Language.English;
+            }
+            else
+            {
+                Language = l;
+            }
+        }
+        else
+        {
+            _SettingLog(
+                new LogMessage($"\"Language\" unset, defaulting to {Lang.Language.EnUS}",
+                nameof(Settings), LogLevel.Err));
+
+            Language = Lang.Language.English;
+        }
+
+        BattleSpeed = _ParseFloatSetting(nameof(BattleSpeed), 1f);
+        ShowInvalidMoveWarning = _ParseBoolSetting(nameof(ShowInvalidMoveWarning), true);
 
         // Display
-        Resolution = int.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(Resolution)), Auto);
-        Fullscreen = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(Fullscreen)), true);
-        EnableVsync = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableVsync)), true);
+        Resolution = _ParseIntSetting(nameof(Resolution), Auto);
+        Fullscreen = _ParseBoolSetting(nameof(Fullscreen), true);
+        EnableVsync = _ParseBoolSetting(nameof(EnableVsync), true);
 
-        IRegistrable? r = Registry.Get(AllSettings.GetValueOrDefault(nameof(Theme), Theme.Apollo.GetId()));
-        Theme = r is Theme t ? t : Theme.Apollo;
+        bool themeIsSet = AllSettings.TryGetValue(nameof(Theme), out string themeId);
+
+        if (themeIsSet)
+        {
+            IRegistrable? themeMaybe = Registry.Get(themeId!);
+
+            if (themeMaybe is Theme t)
+            {
+                Theme = t;
+            }
+            else
+            {
+                _SettingLog(
+                    new LogMessage($"\"Theme\" invalid, defaulting to {Theme.Apollo.GetId()}",
+                    nameof(Settings), LogLevel.Err));
+
+                Theme = Theme.Apollo;
+            }
+        }
+        else
+        {
+            _SettingLog(
+                new LogMessage($"\"Theme\" unset, defaulting to {Theme.Apollo.GetId()}",
+                nameof(Settings), LogLevel.Err));
+
+            Theme = Theme.Apollo;
+        }
 
         // Audio
-        MusicVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(MusicVolume)), new(0.75f));
-        SfxVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(SfxVolume)), new(0.75f));
+        MusicVolume = new Progress(_ParseFloatSetting(nameof(MusicVolume), _DefaultVolume));
+        SfxVolume = new Progress(_ParseFloatSetting(nameof(SfxVolume), _DefaultVolume));
 
         // Controls
-        EnableMouse = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableMouse)), true);
-        ShowInputGuide = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(ShowInputGuide)), true);
-        DetectNintendoController = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(DetectNintendoController)), true);
+        EnableMouse = _ParseBoolSetting(nameof(EnableMouse), true);
+        Core.Instance.IsMouseVisible = EnableMouse;
+
+        ShowInputGuide = _ParseBoolSetting(nameof(ShowInputGuide), true);
+        DetectNintendoController = _ParseBoolSetting(nameof(DetectNintendoController), true);
 
         // Debug
 #if DEBUG
@@ -159,27 +213,134 @@ public static class Settings
     {
         AllSettings.Clear();
 
+        string t = true.ToString();
+        string f = false.ToString();
+        string vol = _DefaultVolume.ToString();
+
         // Gameplay
         AllSettings[nameof(BattleSpeed)] = "1";
-        AllSettings[nameof(ShowInvalidMoveWarning)] = "true";
+        AllSettings[nameof(ShowInvalidMoveWarning)] = t;
 
         // Display
         AllSettings[nameof(Language)] = Lang.Language.EnUS;
         AllSettings[nameof(Resolution)] = Auto.ToString();
-        AllSettings[nameof(Fullscreen)] = "true";
-        AllSettings[nameof(EnableVsync)] = "true";
+        AllSettings[nameof(Fullscreen)] = t;
+        AllSettings[nameof(EnableVsync)] = t;
         AllSettings[nameof(Theme)] = Theme.Apollo.GetId();
 
         // Audio
-        AllSettings[nameof(MusicVolume)] = "0.75";
-        AllSettings[nameof(SfxVolume)] = "0.75";
+        AllSettings[nameof(MusicVolume)] = vol;
+        AllSettings[nameof(SfxVolume)] = vol;
 
         // Controls
-        AllSettings[nameof(EnableMouse)] = "true";
-        AllSettings[nameof(ShowInputGuide)] = "true";
-        AllSettings[nameof(DetectNintendoController)] = "true";
+        AllSettings[nameof(EnableMouse)] = t;
+        AllSettings[nameof(ShowInputGuide)] = t;
+        AllSettings[nameof(DetectNintendoController)] = t;
 
         // Debug
-        AllSettings[nameof(EnableCheats)] = "false";
+        AllSettings[nameof(EnableCheats)] = f;
     }
+
+    public new static string ToString()
+    {
+        const int Cap = 1000;
+        StringBuilder sb = new(Cap);
+
+        int i = 0;
+        foreach (KeyValuePair<string, string> kvp in AllSettings)
+        {
+            sb.Append($"{kvp.Key} = {kvp.Value}");
+
+            i++;
+            if (i != AllSettings.Count)
+            {
+                sb.Append('\n');
+            }
+        }
+
+        Assert.CapIs(sb, Cap); // todo remove before final release
+        return sb.ToString();
+    }
+
+    #endregion
+
+    #region Parsing
+
+    private static int _ParseIntSetting(string? key, int defaultValue)
+    {
+        if (!AllSettings.TryGetValue(key, out string setting))
+        {
+            _LogMissing(key, defaultValue);
+            return defaultValue;
+        }
+
+        if (!int.TryParse(setting, out int res))
+        {
+            _LogInvalid(key, defaultValue, res);
+            return defaultValue;
+        }
+
+        return res;
+    }
+
+    private static float _ParseFloatSetting(string? key, float defaultValue)
+    {
+        if (!AllSettings.TryGetValue(key, out string setting))
+        {
+            _LogMissing(key, defaultValue);
+            return defaultValue;
+        }
+
+        if (!float.TryParse(setting, out float res))
+        {
+            _LogInvalid(key, defaultValue, res);
+            return defaultValue;
+        }
+
+        return res;
+    }
+
+    private static bool _ParseBoolSetting(string? key, bool defaultValue)
+    {
+        if (!AllSettings.TryGetValue(key, out string setting))
+        {
+            _LogMissing(key, defaultValue);
+            return defaultValue;
+        }
+
+        if (!bool.TryParse(setting, out bool res))
+        {
+            _LogInvalid(key, defaultValue, res);
+            return defaultValue;
+        }
+
+        return res;
+    }
+
+    private static void _LogMissing<T>(string? key, T defaultValue)
+    {
+        _SettingLog(
+            new LogMessage($"\"{key}\" missing, using default of {defaultValue}",
+            nameof(Settings), LogLevel.Err));
+    }
+
+    private static void _LogInvalid<T>(string? key, T defaultValue, T res)
+    {
+        _SettingLog(
+            new LogMessage($"\"{key}\" should be a {typeof(T)} but was set to {res}, using default of {defaultValue}",
+            nameof(Settings), LogLevel.Err));
+    }
+
+    private static void _SettingLog(LogMessage log)
+    {
+        if (Core._allowEarlyLogging)
+        {
+            Core._AddEarlyLog(log);
+            return;
+        }
+
+        DebugConsole.Log(log);
+    }
+
+    #endregion
 }

@@ -75,6 +75,7 @@ public static class Commands
     private const string _Lang = "lang";
     private const string _Stage = "stage";
     private const string _BattleLog = "battlelog";
+    private const string _Settings = "settings";
 
     private static readonly string[] _Writable =
     [
@@ -83,8 +84,10 @@ public static class Commands
         _Lang,
         _Stage,
         _BattleLog,
+        _Settings,
         _Theme,
     ];
+    
     private static readonly string[] _Cleanable = [_Stage, "layout"];
     private static readonly string[] _Reloadable = [_Lang, "settings", "themes"];
 
@@ -987,6 +990,9 @@ public static class Commands
 
             case _BattleLog:
                 return new(format($"Battle Log: {string.Join('\n', LogLib._LogText)}", fmt));
+
+            case _Settings:
+                return new(format(Settings.ToString(), fmt));
 
             case _Theme:
                 return new(Settings.Theme.ToDetailedString(fmt != _Preserve.False));
