@@ -53,26 +53,40 @@ public static class Commands
 
     private const string _Arg1MustBeBool = "args[1] ({1}) must be a bool (true or false)";
 
+    private const string _Info = "info";
+    private const string _Console = "console";
+    private const string _Ui = "ui";
+    private const string _Theme = "theme";
+    private const string _Input = "input";
+    private const string _Perf = "perf";
+
     private static readonly string[] _Overlays =
     [
-        "info",
-        "console",
-        "outline",
-        "theme",
-        "input",
-        "perf",
+        _Info,
+        _Console,
+        _Ui,
+        _Theme,
+        _Input,
+        _Perf,
     ];
+
+    private const string _Modlist = "modlist";
+    private const string _Registry = "registry";
+    private const string _Lang = "lang";
+    private const string _Stage = "stage";
+    private const string _BattleLog = "battlelog";
+
     private static readonly string[] _Writable =
     [
-        "modlist",
-        "registry",
-        "lang",
-        "stage",
-        "battlelog",
-        "theme",
+        _Modlist,
+        _Registry,
+        _Lang,
+        _Stage,
+        _BattleLog,
+        _Theme,
     ];
-    private static readonly string[] _Cleanable = ["stage", "layout"];
-    private static readonly string[] _Reloadable = ["lang", "settings", "themes"];
+    private static readonly string[] _Cleanable = [_Stage, "layout"];
+    private static readonly string[] _Reloadable = [_Lang, "settings", "themes"];
 
     #endregion
 
@@ -88,7 +102,8 @@ public static class Commands
             Core.Id
         );
 
-        Command.Register("help", static _ => new(_Help), [], _BasicInfo, Core.Id);
+        Command.Register("help", static _ => new(_Help),
+            [], _BasicInfo, Core.Id);
 
         Command.Register(
             "clear",
@@ -796,7 +811,7 @@ public static class Commands
 
         switch (args[1])
         {
-            case "info":
+            case _Info:
                 switch (ch)
                 {
                     case _OverlayChange.Show:
@@ -815,7 +830,7 @@ public static class Commands
                         throw new ClosedEnumsWhenException();
                 }
 
-            case "console":
+            case _Console:
                 switch (ch)
                 {
                     case _OverlayChange.Show:
@@ -834,7 +849,7 @@ public static class Commands
                         throw new ClosedEnumsWhenException();
                 }
 
-            case "outline":
+            case _Ui:
                 switch (ch)
                 {
                     case _OverlayChange.Show:
@@ -853,7 +868,7 @@ public static class Commands
                         throw new ClosedEnumsWhenException();
                 }
 
-            case "theme":
+            case _Theme:
                 switch (ch)
                 {
                     case _OverlayChange.Show:
@@ -872,7 +887,7 @@ public static class Commands
                         throw new ClosedEnumsWhenException();
                 }
 
-            case "input":
+            case _Input:
                 switch (ch)
                 {
                     case _OverlayChange.Show:
@@ -891,7 +906,7 @@ public static class Commands
                         throw new ClosedEnumsWhenException();
                 }
 
-            case "perf":
+            case _Perf:
                 switch (ch)
                 {
                     case _OverlayChange.Show:
@@ -946,7 +961,7 @@ public static class Commands
 
         switch (args[1])
         {
-            case "modlist":
+            case _Modlist:
                 StringBuilder sb = new("Modlist: ", 256);
                 int iMax = ModLoader._LoadedMods.Count - 1;
                 for (int i = 0; i <= iMax; i++)
@@ -961,19 +976,19 @@ public static class Commands
 
                 return new(sb.ToString());
 
-            case "registry":
+            case _Registry:
                 return new(format(Registry.ToString(), fmt));
 
-            case "lang":
+            case _Lang:
                 return new(format(Settings.Language.ToString(), fmt));
 
-            case "stage":
+            case _Stage:
                 return new(format(Stage.ToString(), fmt));
 
-            case "battlelog":
+            case _BattleLog:
                 return new(format($"Battle Log: {string.Join('\n', LogLib._LogText)}", fmt));
 
-            case "theme":
+            case _Theme:
                 return new(Settings.Theme.ToDetailedString(fmt != _Preserve.False));
 
             default:
@@ -1008,7 +1023,7 @@ public static class Commands
 
         switch (args[1])
         {
-            case "stage":
+            case _Stage:
                 Stage.Sort();
                 return new("Sorted Stage");
 
@@ -1032,7 +1047,7 @@ public static class Commands
 
         switch (args[1])
         {
-            case "lang":
+            case _Lang:
                 Language.Reload();
                 return new("Reloaded lang files");
 
