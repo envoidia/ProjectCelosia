@@ -77,7 +77,7 @@ public static class DebugUtil
     private const int _InfoRUpdateRateS = 1;
     private static TimeSpan _timeSinceUpdateInfoR = TimeSpan.FromSeconds(_InfoRUpdateRateS);
 
-    private const int _KeyYOff = 700;
+    private const int _KeyYOff = 930;
 
     internal static readonly GraphWidget _PerfGraph = new(new(700), new(1500, 500),
         "Blue = update time, Green = draw time, Red = total", "Time (ms)", RenderPriority.Highest)
@@ -92,7 +92,7 @@ public static class DebugUtil
     private static readonly Label _DebugInfoKeyNames = new(RenderPriority.Highest, Core.Mono40)
     {
         Text = "_GetKeyNameText()",
-        Position = World.Vec - new Vector2(472, _KeyYOff),
+        Position = World.Vec - new Vector2(544, _KeyYOff),
         Padding = new(10),
         BackgroundType = BackgroundType.Rectangle,
         AnimType = AnimType.None,
@@ -101,7 +101,7 @@ public static class DebugUtil
 
     private static readonly Label _DebugInfoKeyHeld = new(RenderPriority.Highest, Core.Mono40)
     {
-        Position = World.Vec - new Vector2(112, _KeyYOff),
+        Position = World.Vec - new Vector2(190, _KeyYOff),
         Padding = new(10, 120, 10, 10),
         BackgroundType = BackgroundType.Rectangle,
         AnimType = AnimType.None,
@@ -237,13 +237,16 @@ public static class DebugUtil
         for (int i = 0; i < Keybinds.NonMergedKeybinds.Count; i++)
         {
             Keybind kb = Keybinds.NonMergedKeybinds[i];
-            sb.Append($"{ThemeColor.Imp.Str}[{kb.GetCurrentGlyphName()}]{ThemeColor.White.Str} {kb.GetName()}");
-
-            if (i != Keybinds.NonMergedKeybinds.Count - 1)
-            {
-                sb.Append('\n');
-            }
+            sb.Append($"{ThemeColor.Imp.Str}[{kb.GetCurrentGlyphName()}]{ThemeColor.White.Str} {kb.GetName()}\n");
         }
+
+        sb.Append($"""
+            {ThemeColor.Imp.Str}[MousePos]{ThemeColor.White.Str}
+            {ThemeColor.Imp.Str}[MouseL]{ThemeColor.White.Str}
+            {ThemeColor.Imp.Str}[MouseR]{ThemeColor.White.Str}
+            {ThemeColor.Imp.Str}[MouseScroll]{ThemeColor.White.Str}
+            {ThemeColor.Imp.Str}[MouseMiddle]{ThemeColor.White.Str}
+            """);
 
         Assert.CapIs(sb, Cap); // todo remove before release (it may be wrong depending on lang and binds)
         return sb.ToString();

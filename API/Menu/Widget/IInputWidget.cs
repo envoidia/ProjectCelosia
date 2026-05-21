@@ -1,4 +1,7 @@
 using System;
+using API.Debug;
+using API.Graphics;
+using API.Input;
 using Microsoft.Xna.Framework;
 
 namespace API.Menu.Widget;
@@ -19,12 +22,18 @@ public interface IInputWidget
     int Index { get; set; }
 
     /// <summary>
-    /// Amount of selectable options
+    /// Amount of selectable optithisons
     /// </summary>
     int OptCount { get; }
 
     /// <summary>
-    /// Invoked when Index changes
+    /// Whether <c>this</c> should be considered to be "confirmed" separately from a press of the confirm key
+    /// (such as by mouse input)
+    /// </summary>
+    bool ShouldConfirm { get; }
+
+    /// <summary>
+    /// Invoked immediately before Index changes
     /// </summary>
     Action<int>? OnChangeIndex { get; set; }
 
@@ -64,6 +73,25 @@ public static class InputWidgetExtensions
             }
 
             return @this.Index;
+        }
+
+        public void CheckScroll()
+        {
+            Assert.Is<IActor>(@this);
+            IActor actor = (IActor) @this;
+
+            if (actor.ContainsMouse())
+            {
+                int newIndex = Math.Clamp(@this.Index - (InputLib.GetMouseScroll() / InputLib.ScrollPerMouseWheelTick),
+                    0, @this.OptCount - 1);
+                if (@this.Index == newIndex)
+                {
+                    return;
+                }
+
+                @this.OnChangeIndex?.Invoke(newIndex);
+                @this.Index = newIndex;
+            }
         }
     }
 }

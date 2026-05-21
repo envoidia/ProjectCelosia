@@ -41,6 +41,11 @@ internal static class _TargetingLib
     /// </summary>
     private static int _extraActions = 0;
 
+    /// <summary>
+    /// Indicates that the targeting input check has has found confirmation input
+    /// </summary>
+    private const int _TargetingConfirm = -1;
+
     private static void _Update(GameTime gt)
     {
         _CheckOpenLogInspect();
@@ -56,17 +61,17 @@ internal static class _TargetingLib
             return;
         }
 
-        // todo move to InputWidget + rendering
-        int newIndex = MenuLib.CheckMovementTargeting(_indexTarget, _selectingMove,
+        // todo move to InputWidget
+        int newIndex = _CheckInputTargeting(_indexTarget, _selectingMove,
             _selectedSkillInstance.Skill.Range);
 
-        if (newIndex != _indexTarget)
+        if (newIndex != _indexTarget && newIndex != _TargetingConfirm)
         {
             _indexTarget = newIndex;
             _UpdateReticle();
         }
 
-        if (!InputLib.Check(Keybinds.Confirm))
+        if (newIndex != _TargetingConfirm)
         {
             return;
         }
@@ -98,6 +103,96 @@ internal static class _TargetingLib
         _UpdateStatDisplay(_selectingMove);
 
         States.Battle.RemoveMenu();
+    }
+
+    public static int _CheckInputTargeting(int index, int selectingMove, Range range)
+    {
+        // Check for confirm input
+        if (InputLib.Check(Keybinds.Confirm))
+        {
+            return _TargetingConfirm;
+        }
+
+        int indexI = index;
+        int newIndex = index;
+
+        // Lock cursor to self for self Ranges
+        if (range == Ranges.Self || range == Ranges.SelfUpDown)
+        {
+            if (InputLib.IsMouseLeftJustPressed() && checkClickSprites(index, newIndex) == _TargetingConfirm)
+            {
+                return _TargetingConfirm;
+            }
+
+            return selectingMove;
+        }
+
+        // Move selection
+        if (InputLib.Check(Keybinds.Up, true))
+        {
+            // On player side
+            if (index < PosLib.LowestOpp)
+            {
+                newIndex = (indexI - 1) < 0 ? PosLib.HighestAlly : index - 1;
+            }
+            else
+            {
+                newIndex = (indexI - 1) < PosLib.LowestOpp ? PosLib.HighestOpp : index - 1;
+            }
+        }
+        else if (InputLib.Check(Keybinds.Down, true))
+        {
+            // On player side
+            if (index < PosLib.LowestOpp)
+            {
+                newIndex = (indexI + 1) >= PosLib.LowestOpp ? 0 : index + 1;
+            }
+            else
+            {
+                newIndex = (indexI + 1) > PosLib.HighestOpp ? PosLib.LowestOpp : index + 1;
+            }
+        }
+        else if (InputLib.Check(Keybinds.Left, Keybinds.Right, true))
+        {
+            newIndex = indexI < PosLib.LowestOpp ? index + PosLib.LowestOpp : index - PosLib.LowestOpp;
+        }
+
+        if (Settings.EnableMouse && InputLib.IsMouseLeftJustPressed())
+        {
+            newIndex = checkClickSprites(index, newIndex);
+            if (newIndex == _TargetingConfirm)
+            {
+                return newIndex;
+            }
+        }
+
+        // Lock cursor to valid side
+        if ((range.Side == Side.Both) || (range.Side == PosLib.GetRelativeSide(selectingMove, newIndex)))
+        {
+            return newIndex;
+        }
+
+        return index;
+
+        static int checkClickSprites(int index, int newIndex)
+        {
+            for (int i = 0; i < _Sprites.Length; i++)
+            {
+                if (_Sprites[i].ContainsMouse())
+                {
+                    newIndex = i;
+
+                    if (index == newIndex)
+                    {
+                        return _TargetingConfirm;
+                    }
+
+                    break;
+                }
+            }
+
+            return newIndex;
+        }
     }
 
     #region Targeting Reticle

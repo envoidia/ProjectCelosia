@@ -46,7 +46,7 @@ public static class Keybinds
         Keys.LeftShift, Buttons.LeftTrigger);
 
     /// <summary>
-    /// Used for various hotkeys
+    /// Used for various hotkeys (todo: remove if never actually used)
     /// </summary>
     public static readonly Keybind Hotkey2 = new("KeyHotkey2", KeybindId.Hotkey2,
         Keys.LeftControl, Buttons.RightTrigger);

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using API.Extensions;
+using API.Input;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
 
@@ -182,6 +184,8 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
 
     internal readonly List<Routine> _routines = [];
 
+    public const int NoWidthOverride = -1;
+    
     /// <summary>
     /// Called when this is added to the stage. Does not add it to the <c>Stage</c>
     /// </summary>
@@ -300,6 +304,12 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
             colors.Item2);
         }
 
+        // Mouse
+        if (this.ContainsMouse())
+        {
+            this.DrawBackground(Color.ActorMouseHover);
+        }
+
         // Position
         Core.ShapeBatch.DrawRectangle(this.Position - this.Origin.ToVector2(),
             new(this.Width, this.Height),
@@ -343,5 +353,22 @@ public sealed class ActorData(IActor actor, RenderPriority renderPriority = Rend
             Dir.Down => new(this.X, this.Y + this.Height + 500),
             _ => throw new ClosedEnumsWhenException()
         };
+    }
+
+    /// <returns>
+    /// Whether the mouse cursor is contained within <c>this</c>
+    /// </returns>
+    /// <param name="widthOverride">If supplied, is used as bounds width</param>
+    public bool ContainsMouse(int widthOverride = NoWidthOverride)
+    {
+        Point size = this.Size;
+
+        if (widthOverride != NoWidthOverride)
+        {
+            size.X = widthOverride;
+        }
+
+        return new Rectangle(this.Position.ToPoint() - this.Origin - new Point(this.Padding.LT),
+            size + new Point(this.Padding.RB)).Contains(InputLib.GetMousePos());
     }
 }

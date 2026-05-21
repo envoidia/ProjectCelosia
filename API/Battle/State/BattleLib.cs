@@ -58,9 +58,11 @@ public static class BattleLib
 
     private static readonly Label[] _BloomLabels = new Label[TeamCount];
 
-
-    // Per-unit graphics
-    private static readonly ARectangle[] _Sprites = new ARectangle[UnitCount];
+    /// <summary>
+    /// Per-unit graphics.
+    /// Used as mouse click points for the targeting menu
+    /// </summary>
+    internal static readonly ARectangle[] _Sprites = new ARectangle[UnitCount];
     private static readonly Label[] _Names = new Label[UnitCount]; // todo remove
 
     private static readonly HpBarWidget[] _HpBars = new HpBarWidget[UnitCount];
@@ -567,7 +569,7 @@ public static class BattleLib
 
         _SkillList.Input(gt);
 
-        if (!InputLib.Check(Keybinds.Confirm))
+        if (!_SkillList.ShouldConfirm && !InputLib.Check(Keybinds.Confirm))
         {
             return;
         }

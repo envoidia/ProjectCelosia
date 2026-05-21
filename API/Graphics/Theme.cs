@@ -29,11 +29,10 @@ public sealed class Theme : IDescribable, IRegistrable
     public string ModId { get; }
     public string ItemId { get; init; }
 
-    // todo determine a good level
     /// <summary>
     /// Alpha to use for translucent colors
     /// </summary>
-    public const int TransAlpha = 120;
+    public const int TransAlpha = 160;
 
     public Theme(string modId, string keyName, string? itemId = null)
     {

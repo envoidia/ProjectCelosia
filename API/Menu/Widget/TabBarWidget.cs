@@ -7,6 +7,7 @@ using API.Input;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace API.Menu.Widget;
 
@@ -63,6 +64,8 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
             this.Index = Math.Clamp(this.Index, 0, Math.Max(value - 1, 0));
         }
     }
+
+    public bool ShouldConfirm { get; private set; } = false;
 
     public Action<int>? OnChangeIndex { get; set; }
 
@@ -204,7 +207,47 @@ public sealed class TabBarWidget : ILayoutWidget, IInputWidget, IActor
 
     public void Input(GameTime gt)
     {
+        this.ShouldConfirm = false;
+
         this.Index = this.CheckInput();
+
+        if (Settings.EnableMouse)
+        {
+            if (InputLib.IsMouseLeftJustPressed())
+            {
+                if (this.PromptL.ContainsMouse())
+                {
+                    int newIndex = Math.Clamp(this.Index - 1, 0, this.OptCount - 1);
+                    this.OnChangeIndex?.Invoke(newIndex);
+                    this.Index = newIndex;
+                }
+
+                if (this.PromptR.ContainsMouse())
+                {
+                    int newIndex = Math.Clamp(this.Index + 1, 0, this.OptCount - 1);
+                    this.OnChangeIndex?.Invoke(newIndex);
+                    this.Index = newIndex;
+                }
+
+                for (int i = 0; i < this.Labels.Count; i++)
+                {
+                    if (this.Labels[i].ContainsMouse())
+                    {
+                        if (this.Index == i)
+                        {
+                            this.ShouldConfirm = true;
+                            break;
+                        }
+
+                        this.OnChangeIndex?.Invoke(i);
+                        this.Index = i;
+                        break;
+                    }
+                }
+            }
+
+            this.CheckScroll();
+        }
     }
 
     public void OnCreate()

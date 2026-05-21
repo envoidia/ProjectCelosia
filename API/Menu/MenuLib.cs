@@ -1,7 +1,10 @@
 using System;
 using API.Battle;
+using API.Battle.State;
+using API.Graphics;
 using API.Input;
 using API.Menu.Widget;
+using API.Save;
 
 namespace API.Menu;
 
@@ -23,56 +26,6 @@ public static class MenuLib
         }
 
         return Math.Min(index, optCount - 1);
-    }
-
-    public static int CheckMovementTargeting(int index, int selectingMove, Battle.Range range)
-    {
-        // Lock cursor to self for self Ranges
-        if ((range == Ranges.Self) || (range == Ranges.SelfUpDown))
-        {
-            return selectingMove;
-        }
-
-        int indexI = index;
-        int newIndex = index;
-
-        // Move selection
-        if (InputLib.Check(Keybinds.Up, true))
-        {
-            // On player side
-            if (index < PosLib.LowestOpp)
-            {
-                newIndex = (indexI - 1) < 0 ? PosLib.HighestAlly : index - 1;
-            }
-            else
-            {
-                newIndex = (indexI - 1) < PosLib.LowestOpp ? PosLib.HighestOpp : index - 1;
-            }
-        }
-        else if (InputLib.Check(Keybinds.Down, true))
-        {
-            // On player side
-            if (index < PosLib.LowestOpp)
-            {
-                newIndex = (indexI + 1) >= PosLib.LowestOpp ? 0 : index + 1;
-            }
-            else
-            {
-                newIndex = (indexI + 1) > PosLib.HighestOpp ? PosLib.LowestOpp : index + 1;
-            }
-        }
-        else if (InputLib.Check(Keybinds.Left, Keybinds.Right, true))
-        {
-            newIndex = indexI < PosLib.LowestOpp ? index + PosLib.LowestOpp : index - PosLib.LowestOpp;
-        }
-
-        // Lock cursor to valid side
-        if ((range.Side == Side.Both) || (range.Side == PosLib.GetRelativeSide(selectingMove, newIndex)))
-        {
-            return newIndex;
-        }
-
-        return index;
     }
 
     /// <param name="logScroll">Amount of lines scrolled down? probably?</param>

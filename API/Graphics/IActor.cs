@@ -279,9 +279,16 @@ public static class ActorExtensions
             @this.Data.AddRoutine(routine);
         }
 
+        // <inheritdoc cref="ActorData.UpdateProg" />
         public bool UpdateProg(GameTime gt, AnimDirs dir)
         {
             return @this.Data.UpdateProg(gt, dir);
+        }
+
+        // <inheritdoc cref="ActorData.UpdateProg" />
+        public bool ContainsMouse(int widthOverride = ActorData.NoWidthOverride)
+        {
+            return @this.Data.ContainsMouse(widthOverride);
         }
     }
 }

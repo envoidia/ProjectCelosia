@@ -83,6 +83,7 @@ public static class Settings
 
     // todo
 
+    public static bool EnableMouse;
     public static bool ShowInputGuide;
     public static bool DetectNintendoController;
 
@@ -135,6 +136,7 @@ public static class Settings
         SfxVolume = Progress.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(SfxVolume)), new(0.75f));
 
         // Controls
+        EnableMouse = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(EnableMouse)), true);
         ShowInputGuide = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(ShowInputGuide)), true);
         DetectNintendoController = bool.ParseOrDefault(AllSettings.GetValueOrDefault(nameof(DetectNintendoController)), true);
 
@@ -173,6 +175,7 @@ public static class Settings
         AllSettings[nameof(SfxVolume)] = "0.75";
 
         // Controls
+        AllSettings[nameof(EnableMouse)] = "true";
         AllSettings[nameof(ShowInputGuide)] = "true";
         AllSettings[nameof(DetectNintendoController)] = "true";
 

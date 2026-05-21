@@ -75,7 +75,9 @@ public sealed class TextInputWidget : IInputWidget
         }
     }
 
-    public int OptCount { get; set; }
+    public int OptCount { get; private set; }
+
+    public bool ShouldConfirm { get; private set; }
 
     public Action<int>? OnChangeIndex { get; set; }
 

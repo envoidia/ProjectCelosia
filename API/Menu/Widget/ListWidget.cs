@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using API.Debug;
 using API.Graphics;
+using API.Input;
 using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework;
@@ -19,18 +20,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
     private const int _GapBeforeRight = 400;
 
-    /// <summary>
-    /// Whether this has a right-side component
-    /// </summary>
-    public bool HasRight
-    {
-        get
-        {
-            return this.LabelsR is not null;
-        }
-    }
-
-    public List<Label> LabelsR { get; private set; } = null!;
+    public List<Label>? LabelsR { get; private set; } = null!;
 
     /// <summary>
     /// Set width for this. 0 means dynamic width.
@@ -112,6 +102,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             this.Index = Math.Clamp(this.Index, 0, Math.Max(value - 1, 0));
         }
     } = 0;
+
+    public bool ShouldConfirm { get; private set; } = false;
 
     public Action<int>? OnChangeIndex { get; set; }
 
@@ -241,10 +233,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             {
                 l.IsVisible = false;
 
-                if (this.HasRight)
-                {
-                    this.LabelsR[i].IsVisible = false;
-                }
+                this.LabelsR?[i].IsVisible = false;
 
                 continue;
             }
@@ -257,7 +246,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             h += l.Padding.T;
             l.Position = this.Position + new Vector2(l.Padding.L + (this.Slant * shownCount), h);
 
-            if (this.HasRight)
+            if (this.LabelsR is not null)
             {
                 Label lr = this.LabelsR[i];
 
@@ -289,8 +278,8 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
     /// <inheritdoc cref="SetTextL" />
     public void SetTextR(params ReadOnlySpan<string> text)
     {
-        Assert.NotNull(this.LabelsR);
-        this._SetText(this.LabelsR, text, Alignment.TopRight);
+        Assert.NotNull(this.LabelsR!);
+        this._SetText(this.LabelsR!, text, Alignment.TopRight);
     }
 
     private void _SetText(List<Label> labels, ReadOnlySpan<string> text, Alignment align)
@@ -352,7 +341,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
             int w = l.Width + l.Padding.LR;
 
-            if (this.HasRight)
+            if (this.LabelsR is not null)
             {
                 Label lr = this.LabelsR[i];
 
@@ -374,7 +363,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
         this.Origin = this.Data.CalcOrigin();
 
-        if (this.HasRight)
+        if (this.LabelsR is not null)
         {
             Assert.Eq(this.LabelsL.Count, this.LabelsR.Count);
         }
@@ -382,7 +371,38 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
 
     public void Input(GameTime gt)
     {
+        this.ShouldConfirm = false;
+
         this.Index = this.CheckInput();
+
+        if (Settings.EnableMouse)
+        {
+            if (InputLib.IsMouseLeftJustPressed())
+            {
+                checkMouseInBounds(this.LabelsL);
+            }
+
+            this.CheckScroll();
+        }
+
+        void checkMouseInBounds(List<Label> labels)
+        {
+            for (int i = 0; i < labels.Count; i++)
+            {
+                if (this._IndexIsShown(i) && labels[i].ContainsMouse(this.Width))
+                {
+                    if (this.Index == i)
+                    {
+                        this.ShouldConfirm = true;
+                        break;
+                    }
+
+                    this.OnChangeIndex?.Invoke(i);
+                    this.Index = i;
+                    break;
+                }
+            }
+        }
     }
 
     public void OnCreate()
@@ -390,11 +410,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         for (int i = 0; i < this.OptCount; i++)
         {
             this.LabelsL[i].Create();
-
-            if (this.HasRight)
-            {
-                this.LabelsR[i].Create();
-            }
+            this.LabelsR?[i].Create();
         }
     }
 
@@ -403,11 +419,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
         for (int i = 0; i < this.OptCount; i++)
         {
             this.LabelsL[i].Destroy();
-
-            if (this.HasRight)
-            {
-                this.LabelsR[i].Destroy();
-            }
+            this.LabelsR?[i].Destroy();
         }
     }
 
@@ -470,7 +482,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
                 l.Data.DrawDebug(false);
             }
 
-            if (this.HasRight)
+            if (this.LabelsR is not null)
             {
                 Label lr = this.LabelsR[i];
                 lr.Data.Act(gt);
@@ -503,7 +515,7 @@ public sealed class ListWidget : ILayoutWidget, IInputWidget, IActor
             float centerY = y1 + (barLength / 2f);
             float x1 = this.X + this.Width + this.Padding.LR
                + (this.Slant == 0 ? -25 : (((this.Y - 5) - centerY) / RenderLib.DefaultSlant))
-               + (this.HasRight ? -18 : 15);
+               + (this.LabelsR is not null ? -18 : 15);
 
             Vector2 pos = new(x1, y1);
 

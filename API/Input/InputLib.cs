@@ -13,11 +13,18 @@ public static class InputLib
 {
     #region Fields
 
-    // todo docs
     public static KeyboardState PreviousKeyboardState { get; private set; }
     public static KeyboardState KeyboardState { get; private set; }
 
     private static GamePadState _gamePadState;
+
+    private static MouseState _previousMouseState;
+    private static MouseState _mouseState;
+
+    /// <summary>
+    /// Amount of reported scroll per tick on the mouse wheel
+    /// </summary>
+    public const int ScrollPerMouseWheelTick = 120;
 
     private static InputDevice _previousInputSource = InputDevice.Keyboard;
     public static InputDevice LastInputSource { get; private set; } = InputDevice.Keyboard;
@@ -63,13 +70,37 @@ public static class InputLib
                 Color c = CheckRaw(Keybinds.NonMergedKeybinds[i])
                     ? Settings.Theme.Cooldown : Settings.Theme.White;
 
-                _InputSb.Append(CheckRaw(Keybinds.NonMergedKeybinds[i])
-                    ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)
-                    .Append(s.ToString("0.##")).Append('\n');
+                if ((KeybindId) i is KeybindId.Hotkey1 or KeybindId.Hotkey2)
+                {
+                    bool isHeld = CheckRaw(Keybinds.NonMergedKeybinds[i]);
+                    appendBoolKey(isHeld);
+
+                    continue;
+                }
+
+                _InputSb.Append($"{(CheckRaw(Keybinds.NonMergedKeybinds[i])
+                    ? ThemeColor.Cooldown.Str : ThemeColor.White.Str)}{s.ToString("0.##")}\n");
             }
+
+            Point pos = GetMousePos().ToPoint();
+            _InputSb.Append($"{pos.X}, {pos.Y}\n");
+
+            appendBoolKey(IsMouseLeftPressed());
+            appendBoolKey(IsMouseRightPressed());
+
+            int scroll = GetMouseScroll();
+            _InputSb.Append($"{(scroll > 0 ? ThemeColor.Pos.Str : ThemeColor.Neg.Str)}{scroll}\n");
+
+            appendBoolKey(IsMouseMiddlePressed(), null);
 
             l.Text = _InputSb.ToString();
             return false;
+
+            static void appendBoolKey(bool isHeld, char? ending = '\n')
+            {
+                _InputSb.Append($"{(isHeld ? ThemeColor.Pos.Str : ThemeColor.Neg.Str)}{(isHeld
+                    ? "true" : "false")}{ending}");
+            }
         });
 
     /// <summary>
@@ -93,6 +124,9 @@ public static class InputLib
     {
         PreviousKeyboardState = KeyboardState;
         KeyboardState = Keyboard.GetState();
+
+        _previousMouseState = _mouseState;
+        _mouseState = Mouse.GetState();
 
         // todo check all
         // _gamePadState = GamePad.GetState(PlayerIndex.One);
@@ -155,6 +189,70 @@ public static class InputLib
     public static bool IsAltPressed()
     {
         return IsKeyPressed(Keys.LeftAlt) || IsKeyPressed(Keys.RightAlt);
+    }
+
+    /// <returns>
+    /// Whether the mouse left button is pressed
+    /// </returns>
+    public static bool IsMouseLeftPressed()
+    {
+        return _mouseState.LeftButton == ButtonState.Pressed;
+    }
+
+    /// <returns>
+    /// Whether the mouse left button is pressed this frame and wasn't the previous frame
+    /// </returns>
+    public static bool IsMouseLeftJustPressed()
+    {
+        return _mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
+    }
+
+    /// <returns>
+    /// Whether the mouse right button is pressed
+    /// </returns>
+    public static bool IsMouseRightPressed()
+    {
+        return _mouseState.RightButton == ButtonState.Pressed;
+    }
+
+    /// <returns>
+    /// Whether the mouse right button is pressed this frame and wasn't the previous frame
+    /// </returns>
+    public static bool IsMouseRightJustPressed()
+    {
+        return _mouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released;
+    }
+
+    /// <returns>
+    /// Whether the mouse middle button is pressed
+    /// </returns>
+    public static bool IsMouseMiddlePressed()
+    {
+        return _mouseState.MiddleButton == ButtonState.Pressed;
+    }
+
+    /// <returns>
+    /// Whether the mouse middle button is pressed this frame and wasn't the previous frame
+    /// </returns>
+    public static bool IsMouseMiddleJustPressed()
+    {
+        return _mouseState.MiddleButton == ButtonState.Pressed && _previousMouseState.MiddleButton == ButtonState.Released;
+    }
+
+    /// <returns>
+    /// Mouse position mapped to world coordinates
+    /// </returns>
+    public static Vector2 GetMousePos()
+    {
+        return _mouseState.Position.ToVector2() * (World.W / (float) World.WindowW);
+    }
+
+    /// <returns>
+    /// Change in mouse scroll wheel value since last frame
+    /// </returns>
+    public static int GetMouseScroll()
+    {
+        return _mouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
     }
 
     /// <summary>

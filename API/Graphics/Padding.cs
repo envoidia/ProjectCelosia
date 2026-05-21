@@ -12,11 +12,27 @@ public readonly record struct Padding(int L, int R, int T, int B)
         }
     }
 
+    public int LT
+    {
+        get
+        {
+            return this.L + this.T;
+        }
+    }
+
     public int TB
     {
         get
         {
             return this.T + this.B;
+        }
+    }
+
+    public int RB
+    {
+        get
+        {
+            return this.R + this.B;
         }
     }
 

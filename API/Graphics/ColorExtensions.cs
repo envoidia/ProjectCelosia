@@ -56,19 +56,19 @@ public static class ColorExtensions
             }
         }
 
-        public static Color ActorMarked
-        {
-            get
-            {
-                return new(1f, 0f, 0f, 0.1f);
-            }
-        }
-
         public static Color ActorDisabledInput
         {
             get
             {
-                return new(0f, 0f, 1f, 0.1f);
+                return new(0f, 0f, 1f, 0.2f);
+            }
+        }
+
+        public static Color ActorMouseHover
+        {
+            get
+            {
+                return new(1f, 0f, 1f, 0.2f);
             }
         }
 
