@@ -6,6 +6,7 @@ using API.Graphics;
 using API.Input;
 using API.Menu.State;
 using API.Menu.Widget;
+using API.Save;
 using API.Util;
 using Microsoft.Xna.Framework.Input;
 
@@ -135,7 +136,14 @@ public static class DebugConsole
         get => _outHistIndex;
         set
         {
-            _outHistIndex = Math.Clamp(value, 0, _OutHist.Count - _DisplayedOutHistLines);
+            int max = _OutHist.Count - _DisplayedOutHistLines;
+
+            if (max < 0)
+            {
+                return;
+            }
+
+            _outHistIndex = Math.Clamp(value, 0, max);
             _UpdateOutHistText();
         }
     }
@@ -348,6 +356,12 @@ public static class DebugConsole
             }
 
             _InHistIndex--;
+            return;
+        }
+
+        if (Settings.EnableMouse && (InputLib.GetMouseScroll() / InputLib.ScrollPerMouseWheelTick) is int scroll and not 0)
+        {
+            _OutHistIndex += scroll;
             return;
         }
 
