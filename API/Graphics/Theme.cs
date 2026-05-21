@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Text;
 using API.Debug;
 using API.Extensions;
@@ -23,6 +25,11 @@ public sealed class Theme : IDescribable, IRegistrable
     /// </summary>
     public static event Action? OnChange;
 
+    /// <summary>
+    /// Whether the name and desc should be treated as keys
+    /// </summary>
+    public readonly bool UseLangKey;
+
     public string KeyName { get; }
     public string KeyDesc { get; }
 
@@ -34,10 +41,10 @@ public sealed class Theme : IDescribable, IRegistrable
     /// </summary>
     public const int TransAlpha = 160;
 
-    public Theme(string modId, string keyName, string? itemId = null)
+    public Theme(string modId, string keyName, string? keyDesc = null, string? itemId = null)
     {
         this.KeyName = keyName;
-        this.KeyDesc = $"{keyName}Desc";
+        this.KeyDesc = keyDesc ?? $"{keyName}Desc";
 
         this.ModId = modId;
         this.ItemId = itemId ?? keyName;
@@ -50,13 +57,15 @@ public sealed class Theme : IDescribable, IRegistrable
     // todo not props
     public static Theme Apollo { get; set; } = null!;
     public static Theme Void { get; set; } = null!;
-    public static Theme VSCode { get; set; } = null!;
+    // public static Theme VSCode { get; set; } = null!;
     public static Theme HighContrast { get; set; } = null!;
     public static Theme MikuMikuTheme { get; set; } = null!;
     public static Theme RedMode { get; set; } = null!;
 
     internal static void _Init()
     {
+        _LoadThemes();
+
         // https://lospec.com/palette-list/apollo
         #region Apollo
 
@@ -124,27 +133,27 @@ public sealed class Theme : IDescribable, IRegistrable
         #region Void
 
         {
-            Color white = Color.FromRgb(0xc0c0c0);
-            Color gray = Color.FromRgb(0x545454);
-            Color black = Color.FromRgb(0x1f1f1f);
+            Color white = Color.FromRgba(0xc0c0c0);
+            Color gray = Color.FromRgba(0x545454);
+            Color black = Color.FromRgba(0x1f1f1f);
 
-            Color paleYellow = Color.FromRgb(0xDCDCAA);
+            Color paleYellow = Color.FromRgba(0xDCDCAA);
 
-            Color green = Color.FromRgb(0x76b668);
-            Color paleBlueGreen = Color.FromRgb(0x66c8cc);
-            Color blueGreen = Color.FromRgb(0x32bb99);
+            Color green = Color.FromRgba(0x76b668);
+            Color paleBlueGreen = Color.FromRgba(0x66c8cc);
+            Color blueGreen = Color.FromRgba(0x32bb99);
 
-            Color paleBlue = Color.FromRgb(0xb5c0ff);
-            Color electricBlue = Color.FromRgb(0x4ab0e7);
-            Color blue = Color.FromRgb(0x6798ff);
-            Color bluePurple = Color.FromRgb(0x8189eb);
+            Color paleBlue = Color.FromRgba(0xb5c0ff);
+            Color electricBlue = Color.FromRgba(0x4ab0e7);
+            Color blue = Color.FromRgba(0x6798ff);
+            Color bluePurple = Color.FromRgba(0x8189eb);
 
-            Color palePurple = Color.FromRgb(0xdac9ff);
-            Color lightPurple = Color.FromRgb(0xbe8ff9);
+            Color palePurple = Color.FromRgba(0xdac9ff);
+            Color lightPurple = Color.FromRgba(0xbe8ff9);
 
-            Color salmon = Color.FromRgb(0xed94bb);
-            Color lightPink = Color.FromRgb(0xe9aee4);
-            Color darkPink = Color.FromRgb(0xda86d1);
+            Color salmon = Color.FromRgba(0xed94bb);
+            Color lightPink = Color.FromRgba(0xe9aee4);
+            Color darkPink = Color.FromRgba(0xda86d1);
 
             Void = new(Core.Id, "ThemeVoid")
             {
@@ -197,82 +206,82 @@ public sealed class Theme : IDescribable, IRegistrable
 
         #endregion
 
-        #region VSCode
+        // #region VSCode
 
-        {
-            Color white = Color.FromRgb(0xfef5f7);
-            Color gray = Color.FromRgb(0xa0a0a0);
-            Color black = Color.FromRgb(0x1f1f1f);
+        // {
+        //     Color white = Color.FromRgb(0xfef5f7);
+        //     Color gray = Color.FromRgb(0xa0a0a0);
+        //     Color black = Color.FromRgb(0x1f1f1f);
 
-            Color red = Color.FromRgb(0xd16969);
-            Color orange = Color.FromRgb(0xCE9178);
+        //     Color red = Color.FromRgb(0xd16969);
+        //     Color orange = Color.FromRgb(0xCE9178);
 
-            Color paleYellow = Color.FromRgb(0xDCDCAA);
-            Color yellow = Color.FromRgb(0xffd606);
+        //     Color paleYellow = Color.FromRgb(0xDCDCAA);
+        //     Color yellow = Color.FromRgb(0xffd606);
 
-            Color paleGreen = Color.FromRgb(0xb5cea8);
-            Color blueGreen = Color.FromRgb(0x4EC9B0);
+        //     Color paleGreen = Color.FromRgb(0xb5cea8);
+        //     Color blueGreen = Color.FromRgb(0x4EC9B0);
 
-            Color paleBlue = Color.FromRgb(0x9CDCFE);
-            Color lightBlue = Color.FromRgb(0x4FC1FF);
-            Color electricBlue = Color.FromRgb(0x1e99f5);
-            Color darkElectricBlue = Color.FromRgb(0x0877d3);
-            Color dirtyBlue = Color.FromRgb(0x5798d2);
+        //     Color paleBlue = Color.FromRgb(0x9CDCFE);
+        //     Color lightBlue = Color.FromRgb(0x4FC1FF);
+        //     Color electricBlue = Color.FromRgb(0x1e99f5);
+        //     Color darkElectricBlue = Color.FromRgb(0x0877d3);
+        //     Color dirtyBlue = Color.FromRgb(0x5798d2);
 
-            Color darkPink = Color.FromRgb(0xC586C0);
-            Color magenta = Color.FromRgb(0xd96fd5);
+        //     Color darkPink = Color.FromRgb(0xC586C0);
+        //     Color magenta = Color.FromRgb(0xd96fd5);
 
-            VSCode = new(Core.Id, "ThemeVSCode")
-            {
-                BgTrans = new(black, TransAlpha), Midtone = gray,
+        //     VSCode = new(Core.Id, "ThemeVSCode")
+        //     {
+        //         BgTrans = new(black, TransAlpha), Midtone = gray,
 
-                Fg = white,
-                Bg = black,
-                Accent = darkElectricBlue,
-                AccentDeemphasized = Color.Blue,
+        //         Fg = white,
+        //         Bg = black,
+        //         Accent = darkElectricBlue,
+        //         AccentDeemphasized = Color.Red,
 
-                BgSecondary = Color.Red,
-                Reticle = Color.Red,
-                Positive = blueGreen,
-                Negative = red,
-                Emphasis = paleYellow,
-                Ally = paleBlue,
-                Opponent = red,
-                Turn = darkPink,
-                Hp = paleGreen,
-                Sp = paleBlue,
-                Shield = paleBlue,
-                Bloom = magenta,
-                Buff = dirtyBlue,
-                Skill = blueGreen,
-                Element = blueGreen,
-                Passive = dirtyBlue,
-                Stat = paleYellow,
-                Cooldown = electricBlue,
+        //         BgSecondary = Color.Red,
+        //         Reticle = Color.Red,
+        //         Positive = blueGreen,
+        //         Negative = red,
+        //         Emphasis = paleYellow,
+        //         Ally = paleBlue,
+        //         Opponent = red,
+        //         Turn = darkPink,
+        //         Hp = paleGreen,
+        //         Sp = paleBlue,
+        //         Shield = paleBlue,
+        //         Bloom = magenta,
+        //         Buff = dirtyBlue,
+        //         Skill = blueGreen,
+        //         Element = blueGreen,
+        //         Passive = dirtyBlue,
+        //         Stat = paleYellow,
+        //         Cooldown = electricBlue,
 
-                SpBack = magenta,
-                Overheal = darkPink,
-                StatBarLayer4 = electricBlue,
-                StatBarLayer5 = magenta,
+        //         SpBack = magenta,
+        //         Overheal = darkPink,
+        //         StatBarLayer4 = electricBlue,
+        //         StatBarLayer5 = magenta,
 
-                Atk = red,
-                Def = lightBlue,
-                Fth = darkPink,
-                Agi = blueGreen,
+        //         Atk = red,
+        //         Def = lightBlue,
+        //         Fth = darkPink,
+        //         Agi = blueGreen,
 
-                Vis = gray,
-                Ignis = red,
-                Glacies = lightBlue,
-                Fulgur = yellow,
-                Ventus = paleGreen,
-                Terra = orange,
-                Lux = paleYellow,
-                Malum = darkPink
+        //         Vis = gray,
+        //         Ignis = red,
+        //         Glacies = lightBlue,
+        //         Fulgur = yellow,
+        //         Ventus = paleGreen,
+        //         Terra = orange,
+        //         Lux = paleYellow,
+        //         Malum = darkPink
 
-            };
-        }
+        //     };
+        // }
 
-        #endregion
+        // #endregion
 
         #region HighContrast
 
@@ -309,7 +318,7 @@ public sealed class Theme : IDescribable, IRegistrable
                 Stat = new(222, 255, 129),
                 Cooldown = elecBlue,
 
-                SpBack = Color.FromRgb(0xd78bff),
+                SpBack = Color.FromRgba(0xd78bff),
                 Overheal = new(238, 130, 239),
                 StatBarLayer4 = Color.Cyan,
                 StatBarLayer5 = Color.Pink,
@@ -335,22 +344,22 @@ public sealed class Theme : IDescribable, IRegistrable
         #region MikuMikuTheme
 
         {
-            Color white = Color.FromRgb(0xfef5f7);
-            Color gray = Color.FromRgb(0xa0a0a0);
-            Color black = Color.FromRgb(0x1f1f1f);
+            Color white = Color.FromRgba(0xfef5f7);
+            Color gray = Color.FromRgba(0xa0a0a0);
+            Color black = Color.FromRgba(0x1f1f1f);
 
-            Color paleBeige = Color.FromRgb(0xd3d3cc);
-            Color darkBeige = Color.FromRgb(0x9f9294);
+            Color paleBeige = Color.FromRgba(0xd3d3cc);
+            Color darkBeige = Color.FromRgba(0x9f9294);
 
-            Color paleGreen = Color.FromRgb(0xb6dbca);
+            Color paleGreen = Color.FromRgba(0xb6dbca);
             Span<Color> hair = Color.FromRgbs(0x89cdc6, 0x51acb6, 0x338397);
 
-            Color paleBlue = Color.FromRgb(0xd6ecf9);
-            Color darkBlue = Color.FromRgb(0x336699);
+            Color paleBlue = Color.FromRgba(0xd6ecf9);
+            Color darkBlue = Color.FromRgba(0x336699);
 
-            Color pink = Color.FromRgb(0xec83a8);
-            Color hotPink = Color.FromRgb(0xe8418f);
-            Color redPink = Color.FromRgb(0xe3004f);
+            Color pink = Color.FromRgba(0xec83a8);
+            Color hotPink = Color.FromRgba(0xe8418f);
+            Color redPink = Color.FromRgba(0xe3004f);
 
             MikuMikuTheme = new(Core.Id, "ThemeMikuMikuTheme")
             {
@@ -467,6 +476,149 @@ public sealed class Theme : IDescribable, IRegistrable
 
         #endregion
     }
+
+    private static void _LoadThemes()
+    {
+        string[] themeFiles;
+        try
+        {
+            themeFiles = Directory.GetFiles("Themes");
+        }
+        catch (Exception e)
+        {
+            Core._LogOrEarlyLog($"Failed to read theme files: {e.Message}",
+                nameof(_LoadThemes), LogLevel.Err);
+            return;
+        }
+
+        foreach (string path in themeFiles)
+        {
+            try
+            {
+                Dictionary<string, string> themeDict = Properties.Parse(path);
+
+                bool hasName = themeDict.TryGetValue("Name", out string? name);
+                bool hasDesc = themeDict.TryGetValue("Desc", out string? desc);
+
+                bool useLangKey;
+
+                if (themeDict.TryGetValue(nameof(UseLangKey), out string? useLangKeyStr))
+                {
+                    if (!bool.TryParse(useLangKeyStr, out bool useLangKey1))
+                    {
+                        Core._LogOrEarlyLog("\"UseLangKey\" is present but invalid. Defaulting to false",
+                            nameof(_LoadThemes), LogLevel.Err);
+                    }
+
+                    useLangKey = useLangKey1;
+                }
+                else
+                {
+                    useLangKey = false;
+                }
+
+                string nameOrMissing = name ?? "MISSING NAME";
+
+                Theme t = new(Core.Id, nameOrMissing,
+                    desc is null && !useLangKey ? "MISSING DESC" : desc, $"Theme{nameOrMissing}")
+                {
+                    Fg = parseColor(nameof(Fg)),
+                    Midtone = parseColor(nameof(Midtone)),
+                    Bg = parseColor(nameof(Bg)),
+                    BgSecondary = parseColor(nameof(BgSecondary)),
+                    BgTrans = parseColor(nameof(BgTrans)),
+
+                    Accent = parseColor(nameof(Accent)),
+                    AccentDeemphasized = parseColor(nameof(AccentDeemphasized)),
+
+                    Positive = parseColor(nameof(Positive)),
+                    Negative = parseColor(nameof(Negative)),
+                    Emphasis = parseColor(nameof(Emphasis)),
+
+                    Ally = parseColor(nameof(Ally)),
+                    Opponent = parseColor(nameof(Opponent)),
+                    Turn = parseColor(nameof(Turn)),
+                    Hp = parseColor(nameof(Hp)),
+                    Sp = parseColor(nameof(Sp)),
+                    Shield = parseColor(nameof(Shield)),
+                    Bloom = parseColor(nameof(Bloom)),
+                    Buff = parseColor(nameof(Buff)),
+                    Skill = parseColor(nameof(Skill)),
+                    Element = parseColor(nameof(Element)),
+                    Passive = parseColor(nameof(Passive)),
+                    Stat = parseColor(nameof(Stat)),
+                    Reticle = parseColor(nameof(Reticle)),
+                    Cooldown = parseColor(nameof(Cooldown)),
+
+                    SpBack = parseColor(nameof(SpBack)),
+                    Overheal = parseColor(nameof(Overheal)),
+                    StatBarLayer4 = parseColor(nameof(StatBarLayer4)),
+                    StatBarLayer5 = parseColor(nameof(StatBarLayer5)),
+
+                    Atk = parseColor(nameof(Atk)),
+                    Def = parseColor(nameof(Def)),
+                    Fth = parseColor(nameof(Fth)),
+                    Agi = parseColor(nameof(Agi)),
+
+                    Vis = parseColor(nameof(Vis)),
+                    Ignis = parseColor(nameof(Ignis)),
+                    Glacies = parseColor(nameof(Glacies)),
+                    Fulgur = parseColor(nameof(Fulgur)),
+                    Ventus = parseColor(nameof(Ventus)),
+                    Terra = parseColor(nameof(Terra)),
+                    Lux = parseColor(nameof(Lux)),
+                    Malum = parseColor(nameof(Malum)),
+                };
+
+                Color parseColor(string key)
+                {
+                    if (!themeDict.TryGetValue(key, out string? colorStr))
+                    {
+                        Core._LogOrEarlyLog($"\"{key}\" is missing. Defaulting to red",
+                            nameof(_LoadThemes), LogLevel.Err);
+                        return Color.Red;
+                    }
+
+                    Assert.NotNull(colorStr);
+
+                    string colorStrFormatted = colorStr.Replace("#", "");
+
+                    if (colorStrFormatted.Length == 6)
+                    {
+                        colorStrFormatted += "ff";
+                    }
+                    else if (colorStrFormatted.Length != 8)
+                    {
+                        return invalidColor();
+                    }
+
+                    if (!uint.TryParse(colorStrFormatted, NumberStyles.HexNumber,
+                        CultureInfo.InvariantCulture, out uint colorVal))
+                    {
+                        return invalidColor();
+                    }
+
+                    return Color.FromRgba(colorVal);
+
+                    Color invalidColor()
+                    {
+                        Core._LogOrEarlyLog(
+                            $"\"{key}\" should be a 6 or 8 digit hex color (#rrggbb or #rrggbbaa), but was {colorStr}. Defaulting to red",
+                            nameof(_LoadThemes), LogLevel.Err);
+                        return Color.Red;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Core._LogOrEarlyLog($"Failed to read theme file at {path}: {e.Message}",
+                    nameof(_LoadThemes), LogLevel.Err);
+            }
+        }
+
+    }
+
+    // private static
 
     #endregion
 
@@ -836,7 +988,12 @@ public sealed class Theme : IDescribable, IRegistrable
 
     public string GetName(ThemeColor color)
     {
-        return color.Str + this.GetLang();
+        if (this.UseLangKey)
+        {
+            return color.Str + this.GetLang();
+        }
+
+        return color.Str + this.KeyName;
     }
 
     public string GetName()
@@ -846,7 +1003,12 @@ public sealed class Theme : IDescribable, IRegistrable
 
     public string GetDesc()
     {
-        return this.KeyDesc.GetLang(this.ModId);
+        if (this.UseLangKey)
+        {
+            return this.KeyDesc.GetLang(this.ModId);
+        }
+
+        return this.KeyDesc;
     }
 
     #endregion

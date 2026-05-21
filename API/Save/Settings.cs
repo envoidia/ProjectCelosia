@@ -121,15 +121,12 @@ public static class Settings
         }
 
         // Gameplay
-        bool langIsSet = AllSettings.TryGetValue(nameof(Language), out string langId);
-
-        if (langIsSet)
+        if (AllSettings.TryGetValue(nameof(Language), out string langId))
         {
             if (!Lang.Language.Langs.TryGetValue(langId, out Lang.Language l))
             {
-                _SettingLog(
-                    new LogMessage($"\"Language\" invalid, defaulting to {Lang.Language.EnUS}",
-                    nameof(Settings), LogLevel.Err));
+                Core._LogOrEarlyLog($"\"Language\" invalid, defaulting to {Lang.Language.EnUS}",
+                    nameof(Settings), LogLevel.Err);
 
                 Language = Lang.Language.English;
             }
@@ -140,9 +137,8 @@ public static class Settings
         }
         else
         {
-            _SettingLog(
-                new LogMessage($"\"Language\" unset, defaulting to {Lang.Language.EnUS}",
-                nameof(Settings), LogLevel.Err));
+            Core._LogOrEarlyLog($"\"Language\" unset, defaulting to {Lang.Language.EnUS}",
+                nameof(Settings), LogLevel.Err);
 
             Language = Lang.Language.English;
         }
@@ -155,9 +151,7 @@ public static class Settings
         Fullscreen = _ParseBoolSetting(nameof(Fullscreen), true);
         EnableVsync = _ParseBoolSetting(nameof(EnableVsync), true);
 
-        bool themeIsSet = AllSettings.TryGetValue(nameof(Theme), out string themeId);
-
-        if (themeIsSet)
+        if (AllSettings.TryGetValue(nameof(Theme), out string themeId))
         {
             IRegistrable? themeMaybe = Registry.Get(themeId!);
 
@@ -167,18 +161,16 @@ public static class Settings
             }
             else
             {
-                _SettingLog(
-                    new LogMessage($"\"Theme\" invalid, defaulting to {Theme.Apollo.GetId()}",
-                    nameof(Settings), LogLevel.Err));
+                Core._LogOrEarlyLog($"\"Theme\" invalid, defaulting to {Theme.Apollo.GetId()}",
+                    nameof(Settings), LogLevel.Err);
 
                 Theme = Theme.Apollo;
             }
         }
         else
         {
-            _SettingLog(
-                new LogMessage($"\"Theme\" unset, defaulting to {Theme.Apollo.GetId()}",
-                nameof(Settings), LogLevel.Err));
+            Core._LogOrEarlyLog($"\"Theme\" unset, defaulting to {Theme.Apollo.GetId()}",
+                nameof(Settings), LogLevel.Err);
 
             Theme = Theme.Apollo;
         }
@@ -319,27 +311,14 @@ public static class Settings
 
     private static void _LogMissing<T>(string? key, T defaultValue)
     {
-        _SettingLog(
-            new LogMessage($"\"{key}\" missing, using default of {defaultValue}",
-            nameof(Settings), LogLevel.Err));
+        Core._LogOrEarlyLog($"\"{key}\" missing, using default of {defaultValue}",
+            nameof(Settings), LogLevel.Err);
     }
 
     private static void _LogInvalid<T>(string? key, T defaultValue, T res)
     {
-        _SettingLog(
-            new LogMessage($"\"{key}\" should be a {typeof(T)} but was set to {res}, using default of {defaultValue}",
-            nameof(Settings), LogLevel.Err));
-    }
-
-    private static void _SettingLog(LogMessage log)
-    {
-        if (Core._allowEarlyLogging)
-        {
-            Core._AddEarlyLog(log);
-            return;
-        }
-
-        DebugConsole.Log(log);
+        Core._LogOrEarlyLog($"\"{key}\" should be a {typeof(T)} but was set to {res}, using default of {defaultValue}",
+            nameof(Settings), LogLevel.Err);
     }
 
     #endregion

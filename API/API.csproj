@@ -24,9 +24,13 @@
         <PackageReference Include="OneOf" Version="3.0.271" />
         <PackageReference Include="ResolutionBuddy" Version="5.0.0" />
 
-    <None Update="Lang/Lang.en-US.properties">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+        <None Update="Lang/Lang.en-US.properties">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Update="Themes">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <Target Name="GenerateBuildDate" BeforeTargets="BeforeCompile">

@@ -78,15 +78,32 @@ public static class ColorExtensions
         }
 
         /// <returns>
-        /// A <c>Color</c> made from the given hex (<c>0xRRGGBB</c>)
+        /// A <c>Color</c> made from the given hex (<c>0xRRGGBB</c> or <c>0xRRGGBBAA</c>)
         /// </returns>
-        // Color is stored as AGBR (WHY???), so we need to swap around some bits
-        public static Color FromRgb(uint rgb)
+        // Color is stored as AGBR, so we need to swap around some bits
+        public static Color FromRgba(uint rgba)
         {
-            return new(0xff000000 // A
-            | ((rgb & 0xff) << 16)             // R
-            | (((rgb >> 8) & 0xff) << 8)       // G
-            | ((rgb >> 16) & 0xff));           // B
+            uint rgb;
+            uint alpha;
+
+            // RGB input
+            if ((rgba & 0xFF000000) == 0)
+            {
+                rgb = rgba & 0x00FFFFFF;
+                alpha = 0xFF;
+            }
+            // RGBA input
+            else
+            {
+                rgb = (rgba >> 8) & 0x00FFFFFF;
+                alpha = rgba & 0xFF;
+            }
+
+            return new Color(
+                (alpha << 24)   // A
+                | ((rgb & 0xff) << 16)       // R
+                | (((rgb >> 8) & 0xff) << 8) // G
+                | ((rgb >> 16) & 0xff));     // B
         }
 
         /// <returns>
@@ -98,7 +115,7 @@ public static class ColorExtensions
 
             for (int i = 0; i < hexes.Length; i++)
             {
-                colors[i] = Color.FromRgb(hexes[i]);
+                colors[i] = Color.FromRgba(hexes[i]);
             }
 
             return colors;

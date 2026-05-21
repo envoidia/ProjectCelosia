@@ -285,4 +285,15 @@ public sealed class Core : Game
         Assert.NotNull(_earlyLogs!);
         _earlyLogs!.Add(log);
     }
+
+    internal static void _LogOrEarlyLog(string msg, string source, LogLevel logLevel)
+    {
+        if (_allowEarlyLogging)
+        {
+            _AddEarlyLog(new(msg, source, logLevel));
+            return;
+        }
+
+        DebugConsole.Log(msg, source, logLevel);
+    }
 }
