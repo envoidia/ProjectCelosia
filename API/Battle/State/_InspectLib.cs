@@ -367,7 +367,6 @@ internal sealed class _InspectLib
         : Menu.State.State.GetInputPromptString(ScrollUpDown, Back);
     }
 
-    // todo fix some shit that fails to change
     internal static void _UpdateInspectUnitPage(int index)
     {
         Unit u = _GetUnitsSortedByAgi()[index];
@@ -395,16 +394,16 @@ internal sealed class _InspectLib
             _StatsBasic[i].MaxVal = baseStat;
         }
 
-        _UpdateInspectPage(_PageTabs.Index);
+        _UpdateInspectPage(_PageTabs.Index, index);
     }
 
-    private static void _UpdateInspectPage(int index)
+    private static void _UpdateInspectPage(int pageTabIndex, int queueIndex)
     {
-        Unit u = _GetUnitsSortedByAgi()[_Queue.Index];
+        Unit u = _GetUnitsSortedByAgi()[queueIndex];
 
-        _SetStatVisibility((_InspectPage) index == _InspectPage.Stats);
+        _SetStatVisibility((_InspectPage) pageTabIndex == _InspectPage.Stats);
 
-        switch ((_InspectPage) index)
+        switch ((_InspectPage) pageTabIndex)
         {
             case _InspectPage.Skills:
                 _PageItems.SetTextL([.. u.SkillInstances.Select(s
@@ -415,7 +414,7 @@ internal sealed class _InspectLib
 
                 _PageItems.CalcLayout();
 
-                _UpdatePageItemDesc(_PageItems.Index, index);
+                _UpdatePageItemDesc(_PageItems.Index, pageTabIndex);
 
                 return;
 
@@ -427,7 +426,7 @@ internal sealed class _InspectLib
 
                 _PageItems.CalcLayout();
 
-                _UpdatePageItemDesc(_PageItems.Index, index);
+                _UpdatePageItemDesc(_PageItems.Index, pageTabIndex);
 
                 return;
 
@@ -440,7 +439,7 @@ internal sealed class _InspectLib
 
                 _PageItems.CalcLayout();
 
-                _UpdatePageItemDesc(_PageItems.Index, index);
+                _UpdatePageItemDesc(_PageItems.Index, pageTabIndex);
 
                 return;
 
@@ -454,6 +453,11 @@ internal sealed class _InspectLib
 
                 return;
         }
+    }
+
+    private static void _UpdateInspectPage(int pageTabIndex)
+    {
+        _UpdateInspectPage(pageTabIndex, _Queue.Index);
     }
 
     private static void _UpdatePageItemDesc(int index, int inspectPageIndex)
